@@ -36,3 +36,51 @@ make clean      # remove .venv
 ```powershell
 uv run jupyter lab
 ```
+
+## Auditoria de factualidade apos reescrita (caso com noticias reais)
+
+Se seus dados originais sao todos reais, o fluxo recomendado e verificar se a reescrita contradiz os fatos do texto original.
+
+Para isso, use o notebook:
+
+- `src/bert_fake_real_workbench.ipynb`
+
+Esse notebook:
+
+- recebe pares de texto (`original` e `reescrito`),
+- usa um modelo NLI para medir `entailment` e `contradiction`,
+- marca cada linha como:
+	- `consistente_com_original`, ou
+	- `potencialmente_falsa_apos_reescrita`.
+
+### Como rodar
+
+1. Abra o Jupyter:
+
+```powershell
+uv run jupyter lab
+```
+
+2. Abra `src/bert_fake_real_workbench.ipynb`.
+3. Na celula 5 (configuracao), ajuste:
+
+- `PAIRED_FILE`
+- `ORIGINAL_COLUMN`
+- `REWRITTEN_COLUMN`
+- opcionalmente `ROW_ID_COLUMN`
+
+4. Execute todas as celulas do notebook em ordem.
+
+### Saida
+
+- arquivo CSV: `data/rewriting_consistency_audit.csv`
+- colunas principais:
+	- `entailment`
+	- `contradiction`
+	- `neutral`
+	- `consistency_flag`
+
+### Interpretacao
+
+- `contradiction` alto e `entailment` baixo indicam maior risco de distorcao factual apos reescrita.
+- Casos com `consistency_flag = potencialmente_falsa_apos_reescrita` devem ser revisados manualmente.
