@@ -37,6 +37,38 @@ make clean      # remove .venv
 uv run jupyter lab
 ```
 
+## Coletar noticias com NewsData.io
+
+O script [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py) busca noticias via API do NewsData.io e salva um novo CSV na pasta [data/](data/).
+
+1. Configure sua chave no `.env`:
+
+```powershell
+NEWSDATA_API_KEY=sua_chave_aqui
+```
+
+2. Execute o script com `uv`:
+
+```powershell
+uv run python src/fetch_newsdata_to_csv.py --output data/newsdata_news.csv --language pt --max-records 200
+```
+
+Exemplo com filtros adicionais:
+
+```powershell
+uv run python src/fetch_newsdata_to_csv.py --query politica --country br --category politics --language pt --max-records 300 --output data/newsdata_politics_br.csv
+```
+
+Argumentos principais:
+
+- `--output`: caminho do CSV de saida (padrao: `data/newsdata_news.csv`)
+- `--query`: termo textual para busca (`q` da API)
+- `--language`: idioma(s), ex.: `pt` ou `pt,en`
+- `--country`: pais(es), ex.: `br` ou `br,us`
+- `--category`: categoria(s), ex.: `politics,technology`
+- `--max-records`: quantidade maxima de registros para salvar
+- `--api-key-env`: nome da variavel de ambiente da chave (padrao: `NEWSDATA_API_KEY`)
+
 ## Auditoria de factualidade apos reescrita (caso com noticias reais)
 
 Se seus dados originais sao todos reais, o fluxo recomendado e verificar se a reescrita contradiz os fatos do texto original.
