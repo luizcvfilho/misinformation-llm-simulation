@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import random
 import time
+from collections.abc import Callable
 
 import pandas as pd
 from enums.providers import Provider
@@ -194,11 +195,15 @@ def generate_rewrite_with_retry_gemini(
 	system_instruction: str,
 	max_attempts: int = 5,
 	base_delay: float = 2.0,
+	before_request_hook: Callable[[], None] | None = None,
 ) -> str:
 	last_error = None
 
 	for attempt in range(1, max_attempts + 1):
 		try:
+			if before_request_hook is not None:
+				before_request_hook()
+
 			response = client.models.generate_content(
 				model=model,
 				config=types.GenerateContentConfig(
@@ -240,11 +245,15 @@ def generate_rewrite_with_retry_openai_compatible(
 	system_instruction: str,
 	max_attempts: int = 5,
 	base_delay: float = 2.0,
+	before_request_hook: Callable[[], None] | None = None,
 ) -> str:
 	last_error = None
 
 	for attempt in range(1, max_attempts + 1):
 		try:
+			if before_request_hook is not None:
+				before_request_hook()
+
 			response = client.chat.completions.create(
 				model=model,
 				temperature=0.8,
@@ -291,6 +300,7 @@ def rewrite_news_with_personality(
 	output_column: str = "rewritten_news",
 	max_rows: int | None = None,
 	sleep_seconds: float = 0.0,
+	max_requests_per_minute: int | None = None,
 	retry_attempts: int = 5,
 	allow_title_fallback: bool = False,
 ) -> pd.DataFrame:
@@ -299,6 +309,9 @@ def rewrite_news_with_personality(
 
 	if not personality or not personality.strip():
 		raise ValueError("Informe uma personalidade valida.")
+
+	if max_requests_per_minute is not None and max_requests_per_minute <= 0:
+		raise ValueError("'max_requests_per_minute' deve ser maior que zero quando informado.")
 
 	provider_normalized = provider.value if isinstance(provider, Provider) else str(provider).strip().lower()
 	if provider_normalized not in {item.value for item in Provider}:
@@ -363,6 +376,28 @@ def rewrite_news_with_personality(
 		"preserve the central facts, and do not add new information."
 	)
 
+	current_minute_bucket = int(time.time() // 60)
+	requests_in_current_minute = 0
+
+	def wait_for_rate_limit_slot() -> None:
+		nonlocal current_minute_bucket, requests_in_current_minute
+
+		if max_requests_per_minute is None:
+			return
+
+		now_bucket = int(time.time() // 60)
+		if now_bucket != current_minute_bucket:
+			current_minute_bucket = now_bucket
+			requests_in_current_minute = 0
+
+		if requests_in_current_minute >= max_requests_per_minute:
+			seconds_until_next_minute = 60 - (time.time() % 60)
+			time.sleep(seconds_until_next_minute)
+			current_minute_bucket = int(time.time() // 60)
+			requests_in_current_minute = 0
+
+		requests_in_current_minute += 1
+
 	for row_index in target_indexes:
 		row = rewritten_df.loc[row_index]
 
@@ -422,6 +457,7 @@ def rewrite_news_with_personality(
 					prompt=prompt,
 					system_instruction=system_instruction,
 					max_attempts=retry_attempts,
+					before_request_hook=wait_for_rate_limit_slot,
 				)
 			else:
 				rewritten_text = generate_rewrite_with_retry_openai_compatible(
@@ -430,6 +466,7 @@ def rewrite_news_with_personality(
 					prompt=prompt,
 					system_instruction=system_instruction,
 					max_attempts=retry_attempts,
+					before_request_hook=wait_for_rate_limit_slot,
 				)
 
 			rewritten_df.at[row_index, output_column] = rewritten_text
