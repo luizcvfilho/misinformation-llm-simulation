@@ -37,6 +37,29 @@ make clean      # remove .venv
 uv run jupyter lab
 ```
 
+## Executar notebooks em sequencia
+
+Use o script [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) para executar notebooks em ordem.
+
+Execucao padrao (carrega `load_dataframes` e depois `bert_fake_real_workbench`):
+
+```powershell
+uv run python src/run_notebooks_sequentially.py
+```
+
+Opcoes uteis:
+
+```powershell
+# Escolher notebooks e ordem
+uv run python src/run_notebooks_sequentially.py --notebooks src/load_dataframes.ipynb src/bert_fake_real_workbench.ipynb
+
+# Continuar mesmo se um notebook falhar
+uv run python src/run_notebooks_sequentially.py --continue-on-error
+
+# Executar no proprio arquivo
+uv run python src/run_notebooks_sequentially.py --inplace
+```
+
 ## Coletar noticias com NewsData.io
 
 O script [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py) busca noticias via API do NewsData.io e salva um novo CSV na pasta [data/](data/).
