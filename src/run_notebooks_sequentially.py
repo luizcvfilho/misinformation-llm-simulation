@@ -27,10 +27,12 @@ def parse_args() -> argparse.Namespace:
         default=[
             "src/llm_simulation_workbench.ipynb",
             "src/bert_fake_real_workbench.ipynb",
+            "src/pretrained_fake_news_detector_workbench.ipynb",
         ],
         help=(
             "Lista de notebooks a executar em ordem. "
-            "Padrao: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb"
+            "Padrao: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb "
+            "src/pretrained_fake_news_detector_workbench.ipynb"
         ),
     )
     parser.add_argument(

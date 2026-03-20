@@ -12,7 +12,7 @@ endif
 
 export UV_PROJECT_ENVIRONMENT := $(VENV_DIR)
 
-NOTEBOOKS ?= src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb
+NOTEBOOKS ?= src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb src/pretrained_fake_news_detector_workbench.ipynb
 OUTPUT ?= data/newsdata_news.csv
 LANGUAGE ?= en
 COUNTRY ?=
