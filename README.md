@@ -36,7 +36,7 @@ make add PKG=package-name
 make notebook   # open Jupyter Lab via uv
 make precommit-install
 make precommit-run
-make notebooks          # run notebooks sequentially (output/executed_notebooks)
+make notebooks          # run notebooks sequentially (output/runs/<run_id>)
 make notebooks-inplace  # run notebooks in-place
 make notebooks-continue # continue even if one notebook fails
 make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
@@ -94,7 +94,7 @@ This notebook does the following:
 
 - load and organize datasets,
 - rewrite content with multiple LLM providers,
-- export results to [output/](output).
+- export results to [output/runs/<run_id>/](output/runs).
 
 Providers are configured through the enum in [src/enums/providers.py](src/enums/providers.py) and used in the notebook as `Provider.GEMINI`, `Provider.OPENROUTER`, and `Provider.LOCAL`.
 
@@ -107,6 +107,8 @@ make notebook
 ## Run Notebooks Sequentially
 
 Use [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) to execute notebooks in order.
+
+Each run now gets a unique `run_id` and is stored under `output/runs/<run_id>/`.
 
 Default flow (LLM simulation + BERT audit):
 
@@ -168,7 +170,7 @@ For that, use:
 
 This notebook:
 
-- reads CSVs generated in [output/](output) by the simulation notebook,
+- reads CSVs generated in [output/runs/<run_id>/](output/runs) by the simulation notebook,
 - uses an NLI model to compute `entailment` and `contradiction`,
 - labels each row as:
 	- `consistente_com_original`, or

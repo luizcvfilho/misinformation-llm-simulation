@@ -31,7 +31,7 @@ help: ## List available targets
 	@echo "  notebook           Open Jupyter Lab using uv"
 	@echo "  precommit-install  Install pre-commit hooks in the local repository"
 	@echo "  precommit-run      Run all hooks across the project"
-	@echo "  notebooks          Run notebooks sequentially and save to output/executed_notebooks"
+	@echo "  notebooks          Run notebooks sequentially and save to output/runs/<run_id>"
 	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
 	@echo "  notebooks-continue Run notebooks and continue even if one fails"
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
@@ -63,7 +63,7 @@ precommit-install: ## Install pre-commit hooks in the local repository
 precommit-run: ## Run all hooks across the project
 	uv run pre-commit run --all-files
 
-notebooks: ## Run notebooks sequentially and save to output/executed_notebooks
+notebooks: ## Run notebooks sequentially and save to output/runs/<run_id>
 	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS)
 
 notebooks-inplace: ## Run notebooks sequentially and save in-place

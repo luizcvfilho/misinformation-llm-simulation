@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 
 
@@ -36,9 +38,20 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--output-dir",
-        default="output/executed_notebooks",
-        help="Pasta onde os notebooks executados serao salvos.",
+        "--runs-root",
+        default="output/runs",
+        help=(
+            "Pasta raiz das execucoes. Cada rodada cria output/runs/<run_id>/... "
+            "com notebooks executados e artefatos dos notebooks."
+        ),
+    )
+    parser.add_argument(
+        "--run-id",
+        default=None,
+        help=(
+            "Identificador da rodada. Se omitido, usa timestamp UTC "
+            "(ex.: 20260320_184500)."
+        ),
     )
     parser.add_argument(
         "--timeout-seconds",
@@ -63,6 +76,8 @@ def run_notebook(
     project_root: Path,
     notebook_relative: str,
     output_dir: Path,
+    run_id: str,
+    run_dir: Path,
     timeout_seconds: int,
     inplace: bool,
 ) -> NotebookRunResult:
@@ -98,11 +113,16 @@ def run_notebook(
         output_file = output_dir / notebook_path.name
 
     start = time.perf_counter()
+    env = dict(os.environ)
+    env["RUN_ID"] = run_id
+    env["RUN_DIR"] = str(run_dir)
+
     process = subprocess.run(
         cmd,
         cwd=project_root,
         capture_output=True,
         text=True,
+        env=env,
     )
     elapsed = time.perf_counter() - start
 
@@ -129,17 +149,23 @@ def run_notebook(
 def main() -> int:
     args = parse_args()
     project_root = Path(__file__).resolve().parent.parent
-    output_dir = (project_root / args.output_dir).resolve()
+    run_id = args.run_id or datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_dir = (project_root / args.runs_root / run_id).resolve()
+    output_dir = run_dir / "executed_notebooks"
 
     results: list[NotebookRunResult] = []
 
     print("Executando notebooks em sequencia...")
+    print(f"RUN_ID: {run_id}")
+    print(f"RUN_DIR: {run_dir}")
     for notebook in args.notebooks:
         print(f"\n[RUN] {notebook}")
         result = run_notebook(
             project_root=project_root,
             notebook_relative=notebook,
             output_dir=output_dir,
+            run_id=run_id,
+            run_dir=run_dir,
             timeout_seconds=args.timeout_seconds,
             inplace=args.inplace,
         )
