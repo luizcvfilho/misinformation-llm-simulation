@@ -41,7 +41,7 @@ uv run jupyter lab
 
 Use o script [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) para executar notebooks em ordem.
 
-Execucao padrao (carrega `load_dataframes` e depois `bert_fake_real_workbench`):
+Execucao padrao (carrega `llm_simulation_workbench` e depois `bert_fake_real_workbench`):
 
 ```powershell
 uv run python src/run_notebooks_sequentially.py
@@ -51,7 +51,7 @@ Opcoes uteis:
 
 ```powershell
 # Escolher notebooks e ordem
-uv run python src/run_notebooks_sequentially.py --notebooks src/load_dataframes.ipynb src/bert_fake_real_workbench.ipynb
+uv run python src/run_notebooks_sequentially.py --notebooks src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb
 
 # Continuar mesmo se um notebook falhar
 uv run python src/run_notebooks_sequentially.py --continue-on-error

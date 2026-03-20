@@ -25,12 +25,12 @@ def parse_args() -> argparse.Namespace:
         "--notebooks",
         nargs="+",
         default=[
-            "src/load_dataframes.ipynb",
+            "src/llm_simulation_workbench.ipynb",
             "src/bert_fake_real_workbench.ipynb",
         ],
         help=(
             "Lista de notebooks a executar em ordem. "
-            "Padrao: src/load_dataframes.ipynb src/bert_fake_real_workbench.ipynb"
+            "Padrao: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb"
         ),
     )
     parser.add_argument(
