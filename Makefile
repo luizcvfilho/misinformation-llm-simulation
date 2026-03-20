@@ -1,12 +1,12 @@
 .PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run notebooks notebooks-inplace notebooks-continue fetch-news clean
 
+.DEFAULT_GOAL := help
+
 ifeq ($(OS),Windows_NT)
 VENV_DIR ?= .venv
-HELP_CMD := findstr /R "^[a-zA-Z_-][a-zA-Z0-9_-]*:.*##" Makefile
 CLEAN_CMD := powershell -NoProfile -Command "if (Test-Path $(VENV_DIR)) { Remove-Item -Recurse -Force $(VENV_DIR) }"
 else
 VENV_DIR ?= .venv-linux
-HELP_CMD := grep -E "^[a-zA-Z_-][a-zA-Z0-9_-]*:.*##" Makefile
 CLEAN_CMD := rm -rf "$(VENV_DIR)"
 endif
 
@@ -21,7 +21,21 @@ QUERY ?=
 MAX_RECORDS ?= 200
 
 help: ## List available targets
-	@$(HELP_CMD)
+	@echo "Available targets:"
+	@echo "  help               List available targets"
+	@echo "  setup              Create .venv, generate lockfile, and sync dependencies (including dev)"
+	@echo "  sync               Sync environment with pyproject.toml and uv.lock"
+	@echo "  sync-dev           Sync environment including development dependencies"
+	@echo "  lock               Update uv.lock from pyproject.toml"
+	@echo "  add                Add dependency (usage: make add PKG=package-name)"
+	@echo "  notebook           Open Jupyter Lab using uv"
+	@echo "  precommit-install  Install pre-commit hooks in the local repository"
+	@echo "  precommit-run      Run all hooks across the project"
+	@echo "  notebooks          Run notebooks sequentially and save to output/executed_notebooks"
+	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
+	@echo "  notebooks-continue Run notebooks and continue even if one fails"
+	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
+	@echo "  clean              Remove virtual environment"
 
 setup: ## Create .venv, generate lockfile, and sync dependencies (including dev)
 	uv venv
