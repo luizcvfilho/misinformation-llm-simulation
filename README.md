@@ -1,141 +1,230 @@
-# misinformation-llm-simulation
+# LLM Misinformation Simulation Workbench
 
-Projeto de simulacao de desinformacao com LLMs.
+An LLM-based misinformation simulation framework with a rewrite, export, and factual-audit pipeline.
 
-## Requisitos
+## Required Dependencies
+
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
+![uv](https://img.shields.io/badge/uv-package%20manager-6A5ACD)
+![Make](https://img.shields.io/badge/Make-automation-064F8C)
+
+## Requirements
 
 - Windows PowerShell
-- `uv` instalado
-- `make` (opcional, para usar os atalhos do Makefile)
+- `uv` installed
+- `make` installed
 
-## Setup com uv
+## Setup
 
-No diretorio do projeto:
+From the project root:
 
 ```powershell
-uv venv
-uv lock
-uv sync
+make setup
 ```
 
-Isso cria o ambiente virtual em `.venv`, resolve as dependencias e instala tudo com o proprio `uv`.
+This command creates `.venv`, updates `uv.lock`, and syncs dependencies (including the dev group).
 
-## Comandos do Makefile
+## Makefile Commands
 
 ```powershell
-make setup      # cria venv, locka e sincroniza
-make sync       # sincroniza dependencias
-make lock       # atualiza uv.lock
-make add PKG=nome-do-pacote
-make notebook   # abre jupyter lab via uv
+make help       # list available targets
+make setup      # create venv, lock, and sync
+make sync       # sync dependencies
+make sync-dev   # sync dependencies + dev
+make lock       # update uv.lock
+make add PKG=package-name
+make notebook   # open Jupyter Lab via uv
+make precommit-install
+make precommit-run
+make notebooks          # run notebooks sequentially (output/executed_notebooks)
+make notebooks-inplace  # run notebooks in-place
+make notebooks-continue # continue even if one notebook fails
+make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 make clean      # remove .venv
 ```
 
-## Rodar notebook
+## Environment Variables (.env)
+
+Create a `.env` file in the project root and define the variables you need for your chosen providers and data sources.
+
+Use [.env.example](.env.example) as the canonical template:
 
 ```powershell
-uv run jupyter lab
+Copy-Item .env.example .env
 ```
 
-## Executar notebooks em sequencia
+### Full example
 
-Use o script [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) para executar notebooks em ordem.
+```dotenv
+# LLM providers
+GEMINI_API_KEY=your_gemini_key
+OPENROUTER_API_KEY=your_openrouter_key
+DEEPSEEK_API_KEY=your_deepseek_key
 
-Execucao padrao (carrega `llm_simulation_workbench` e depois `bert_fake_real_workbench`):
+# Optional OpenRouter metadata
+OPENROUTER_HTTP_REFERER=https://your-project-or-website.example
+OPENROUTER_X_TITLE=llm-misinformation-simulation
+
+# Local OpenAI-compatible endpoint (optional)
+LOCAL_OPENAI_API_KEY=ollama
+LOCAL_OPENAI_BASE_URL=http://127.0.0.1:11434/v1
+
+# NewsData.io (used by make fetch-news)
+NEWSDATA_API_KEY=your_newsdata_key
+```
+
+### Variable reference
+
+- `GEMINI_API_KEY`: Required when using `Provider.GEMINI`.
+- `OPENROUTER_API_KEY`: Required when using `Provider.OPENROUTER`.
+- `DEEPSEEK_API_KEY`: Required when using `Provider.DEEPSEEK`.
+- `OPENROUTER_HTTP_REFERER`: Optional header for OpenRouter requests.
+- `OPENROUTER_X_TITLE`: Optional OpenRouter title header. Default: `misinformation-llm-simulation`.
+- `LOCAL_OPENAI_API_KEY`: Optional key for `Provider.LOCAL`. Default: `ollama`.
+- `LOCAL_OPENAI_BASE_URL`: Optional base URL for `Provider.LOCAL`. Default: `http://127.0.0.1:11434/v1`.
+- `NEWSDATA_API_KEY`: Required by `make fetch-news` (used by `src/fetch_newsdata_to_csv.py`).
+
+Note: In `rewrite_news_with_personality`, you can also pass `api_key=` and `base_url=` directly, which overrides `.env` values for that call.
+
+## Main Simulation Notebook
+
+- [src/llm_simulation_workbench.ipynb](src/llm_simulation_workbench.ipynb)
+
+This notebook does the following:
+
+- load and organize datasets,
+- rewrite content with multiple LLM providers,
+- export results to [output/](output).
+
+Providers are configured through the enum in [src/enums/providers.py](src/enums/providers.py) and used in the notebook as `Provider.GEMINI`, `Provider.OPENROUTER`, and `Provider.LOCAL`.
+
+To open Jupyter:
 
 ```powershell
-uv run python src/run_notebooks_sequentially.py
+make notebook
 ```
 
-Opcoes uteis:
+## Run Notebooks Sequentially
+
+Use [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) to execute notebooks in order.
+
+Default flow (LLM simulation + BERT audit):
 
 ```powershell
-# Escolher notebooks e ordem
-uv run python src/run_notebooks_sequentially.py --notebooks src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb
-
-# Continuar mesmo se um notebook falhar
-uv run python src/run_notebooks_sequentially.py --continue-on-error
-
-# Executar no proprio arquivo
-uv run python src/run_notebooks_sequentially.py --inplace
+make notebooks
 ```
 
-## Coletar noticias com NewsData.io
-
-O script [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py) busca noticias via API do NewsData.io e salva um novo CSV na pasta [data/](data/).
-
-1. Configure sua chave no `.env`:
+Useful options:
 
 ```powershell
-NEWSDATA_API_KEY=sua_chave_aqui
+# Continue even if one notebook fails
+make notebooks-continue
+
+# Run in-place
+make notebooks-inplace
+
+# Choose custom notebook order
+make notebooks NOTEBOOKS="src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb"
 ```
 
-2. Execute o script com `uv`:
+## Fetch News with NewsData.io
+
+The script [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py) fetches news via the NewsData.io API and saves a CSV file to [data/](data/).
+
+1. Configure your key in `.env`:
 
 ```powershell
-uv run python src/fetch_newsdata_to_csv.py --output data/newsdata_news.csv --language pt --max-records 200
+NEWSDATA_API_KEY=your_key_here
 ```
 
-Exemplo com filtros adicionais:
+2. Run via Makefile:
 
 ```powershell
-uv run python src/fetch_newsdata_to_csv.py --query politica --country br --category politics --language pt --max-records 300 --output data/newsdata_politics_br.csv
+make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 ```
 
-Argumentos principais:
+Example with additional filters:
 
-- `--output`: caminho do CSV de saida (padrao: `data/newsdata_news.csv`)
-- `--query`: termo textual para busca (`q` da API)
-- `--language`: idioma(s), ex.: `pt` ou `pt,en`
-- `--country`: pais(es), ex.: `br` ou `br,us`
-- `--category`: categoria(s), ex.: `politics,technology`
-- `--max-records`: quantidade maxima de registros para salvar
-- `--api-key-env`: nome da variavel de ambiente da chave (padrao: `NEWSDATA_API_KEY`)
+```powershell
+make fetch-news QUERY=politica COUNTRY=br CATEGORY=politics LANGUAGE=pt MAX_RECORDS=300 OUTPUT=data/newsdata_politics_br.csv
+```
 
-## Auditoria de factualidade apos reescrita (caso com noticias reais)
+Main arguments:
 
-Se seus dados originais sao todos reais, o fluxo recomendado e verificar se a reescrita contradiz os fatos do texto original.
+- `OUTPUT`: output CSV path (default: `data/newsdata_news.csv`)
+- `QUERY`: search text (`q` API parameter)
+- `LANGUAGE`: language(s), e.g. `pt` or `pt,en`
+- `COUNTRY`: country code(s), e.g. `br` or `br,us`
+- `CATEGORY`: category(ies), e.g. `politics,technology`
+- `MAX_RECORDS`: maximum number of records to save
 
-Para isso, use o notebook:
+## Factuality Audit After Rewriting (Real-News Scenario)
+
+If your original data is fully real, the recommended flow is checking whether the rewrite contradicts facts from the original text.
+
+For that, use:
 
 - `src/bert_fake_real_workbench.ipynb`
 
-Esse notebook:
+This notebook:
 
-- recebe pares de texto (`original` e `reescrito`),
-- usa um modelo NLI para medir `entailment` e `contradiction`,
-- marca cada linha como:
-	- `consistente_com_original`, ou
+- reads CSVs generated in [output/](output) by the simulation notebook,
+- uses an NLI model to compute `entailment` and `contradiction`,
+- labels each row as:
+	- `consistente_com_original`, or
 	- `potencialmente_falsa_apos_reescrita`.
 
-### Como rodar
+### How to Run
 
-1. Abra o Jupyter:
+1. Open Jupyter:
 
 ```powershell
-uv run jupyter lab
+make notebook
 ```
 
-2. Abra `src/bert_fake_real_workbench.ipynb`.
-3. Na celula 5 (configuracao), ajuste:
+2. Open `src/bert_fake_real_workbench.ipynb`.
+3. In Cell 5 (configuration), adjust:
 
-- `PAIRED_FILE`
+- `INPUT_DIR`
+- `DATASET_SELECTOR`
 - `ORIGINAL_COLUMN`
 - `REWRITTEN_COLUMN`
-- opcionalmente `ROW_ID_COLUMN`
+- optionally `ROW_ID_COLUMN`
 
-4. Execute todas as celulas do notebook em ordem.
+4. Run all notebook cells in order.
 
-### Saida
+### Output
 
-- arquivo CSV: `data/rewriting_consistency_audit.csv`
-- colunas principais:
+
+- CSV files in [results/](results):
+	- `all_datasets_consistency_audit.csv`
+	- `audit_summary.csv`
+	- one file per dataset (`*_consistency_audit.csv`)
+- main columns:
 	- `entailment`
 	- `contradiction`
 	- `neutral`
 	- `consistency_flag`
 
-### Interpretacao
+## Pre-commit and Notebooks
 
-- `contradiction` alto e `entailment` baixo indicam maior risco de distorcao factual apos reescrita.
-- Casos com `consistency_flag = potencialmente_falsa_apos_reescrita` devem ser revisados manualmente.
+To install and run hooks:
+
+```powershell
+make precommit-install
+make precommit-run
+```
+
+For notebooks, the hook can modify files and fail on the first attempt. In that case:
+
+```powershell
+git add -A
+make precommit-run
+git add -A
+git commit -m "your message"
+```
+
+### Interpretation
+
+- High `contradiction` with low `entailment` indicates a higher risk of factual distortion after rewriting.
+- Cases with `consistency_flag = potencialmente_falsa_apos_reescrita` should be reviewed manually.
