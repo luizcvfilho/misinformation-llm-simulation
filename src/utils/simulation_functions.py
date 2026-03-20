@@ -393,23 +393,23 @@ def rewrite_news_with_personality(
 			title = str(rewritten_df.at[row_index, title_column]).strip()
 
 		prompt = f"""
-				Assuma a seguinte personalidade ao reescrever a noticia:
+				Adopt the following personality while rewriting the news article:
 				{personality}
 
-				Idioma de saida obrigatorio: {target_language_name} ({target_language_code}).
+				Required output language: {target_language_name} ({target_language_code}).
 
-				Regras:
-				- Escreva obrigatoriamente em {target_language_name} ({target_language_code}).
-				- Nao traduza para portugues se o idioma alvo for diferente de portugues.
-				- Preserve os fatos centrais.
-				- Nao invente dados, numeros, citacoes ou personagens.
-				- Ajuste tom, vocabulario e estilo para refletir a personalidade pedida.
-				- Retorne apenas o texto reescrito.
+				Rules:
+				- Write strictly in {target_language_name} ({target_language_code}).
+				- Do not translate into another language different from the requested one.
+				- Preserve the central facts.
+				- Do not invent data, numbers, quotes, or characters.
+				- Adjust tone, vocabulary, and style to reflect the requested personality.
+				- Return only the rewritten text.
 
-				Titulo:
-				{title or 'Sem titulo'}
+				Title:
+				{title or 'Untitled'}
 
-				Texto original:
+				Original text:
 				{original_text}
 				""".strip()
 
