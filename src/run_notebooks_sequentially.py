@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--timeout-seconds",
         type=int,
-        default=1200,
+        default=None,
         help="Timeout por celula em segundos para o ExecutePreprocessor.",
     )
     parser.add_argument(
