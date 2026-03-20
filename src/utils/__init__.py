@@ -1,3 +1,5 @@
+from enums.providers import Provider
+
 from .simulation_functions import rewrite_news_with_personality
 from .bert_audit_functions import (
 	consistency_flag,
@@ -8,6 +10,7 @@ from .bert_audit_functions import (
 
 __all__ = [
 	"rewrite_news_with_personality",
+	"Provider",
 	"read_dataset",
 	"validate_pair_columns",
 	"consistency_flag",

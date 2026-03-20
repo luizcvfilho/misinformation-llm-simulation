@@ -5,6 +5,7 @@ import random
 import time
 
 import pandas as pd
+from enums.providers import Provider
 from google import genai
 from google.genai import types
 from openai import OpenAI
@@ -284,7 +285,7 @@ def rewrite_news_with_personality(
 	text_column: str | None = None,
 	title_column: str = "title",
 	model: str = "gemini-2.5-flash-lite",
-	provider: str = "gemini",
+	provider: Provider | str = Provider.GEMINI,
 	api_key: str | None = None,
 	base_url: str | None = None,
 	output_column: str = "rewritten_news",
@@ -299,8 +300,8 @@ def rewrite_news_with_personality(
 	if not personality or not personality.strip():
 		raise ValueError("Informe uma personalidade valida.")
 
-	provider_normalized = provider.strip().lower()
-	if provider_normalized not in {"gemini", "openrouter", "deepseek", "local"}:
+	provider_normalized = provider.value if isinstance(provider, Provider) else str(provider).strip().lower()
+	if provider_normalized not in {item.value for item in Provider}:
 		raise ValueError("Provider invalido. Use: gemini, openrouter, deepseek ou local.")
 
 	env_key_name = None
