@@ -1,5 +1,17 @@
 .PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run notebooks notebooks-inplace notebooks-continue fetch-news clean
 
+ifeq ($(OS),Windows_NT)
+VENV_DIR ?= .venv
+HELP_CMD := findstr /R "^[a-zA-Z_-][a-zA-Z0-9_-]*:.*##" Makefile
+CLEAN_CMD := powershell -NoProfile -Command "if (Test-Path $(VENV_DIR)) { Remove-Item -Recurse -Force $(VENV_DIR) }"
+else
+VENV_DIR ?= .venv-linux
+HELP_CMD := grep -E "^[a-zA-Z_-][a-zA-Z0-9_-]*:.*##" Makefile
+CLEAN_CMD := rm -rf "$(VENV_DIR)"
+endif
+
+export UV_PROJECT_ENVIRONMENT := $(VENV_DIR)
+
 NOTEBOOKS ?= src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb
 OUTPUT ?= data/newsdata_news.csv
 LANGUAGE ?= en
@@ -9,7 +21,7 @@ QUERY ?=
 MAX_RECORDS ?= 200
 
 help: ## List available targets
-	@findstr /R "^[a-zA-Z_-][a-zA-Z0-9_-]*:.*##" Makefile
+	@$(HELP_CMD)
 
 setup: ## Create .venv, generate lockfile, and sync dependencies (including dev)
 	uv venv
@@ -50,4 +62,4 @@ fetch-news: ## Fetch news from NewsData.io and save as CSV
 	uv run python src/fetch_newsdata_to_csv.py --output $(OUTPUT) --language $(LANGUAGE) --country $(COUNTRY) --category $(CATEGORY) --query $(QUERY) --max-records $(MAX_RECORDS)
 
 clean: ## Remove virtual environment
-	powershell -NoProfile -Command "if (Test-Path .venv) { Remove-Item -Recurse -Force .venv }"
+	@$(CLEAN_CMD)
