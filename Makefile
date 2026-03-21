@@ -20,6 +20,11 @@ CATEGORY ?=
 QUERY ?=
 MAX_RECORDS ?= 200
 
+FETCH_NEWS_OPTIONAL_ARGS := \
+	$(if $(strip $(COUNTRY)),--country $(COUNTRY),) \
+	$(if $(strip $(CATEGORY)),--category $(CATEGORY),) \
+	$(if $(strip $(QUERY)),--query $(QUERY),)
+
 help: ## List available targets
 	@echo "Available targets:"
 	@echo "  help               List available targets"
@@ -73,7 +78,7 @@ notebooks-continue: ## Run notebooks and continue even if one fails
 	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS) --continue-on-error
 
 fetch-news: ## Fetch news from NewsData.io and save as CSV
-	uv run python src/fetch_newsdata_to_csv.py --output $(OUTPUT) --language $(LANGUAGE) --country $(COUNTRY) --category $(CATEGORY) --query $(QUERY) --max-records $(MAX_RECORDS)
+	uv run python src/fetch_newsdata_to_csv.py --output $(OUTPUT) --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
 
 clean: ## Remove virtual environment
 	@$(CLEAN_CMD)
