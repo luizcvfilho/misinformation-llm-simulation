@@ -110,6 +110,11 @@ Use [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) to ex
 
 Each run now gets a unique `run_id` and is stored under `output/runs/<run_id>/`.
 
+Execution metadata is also appended automatically to a Markdown report:
+
+- sequential runs (`make notebooks`): `output/runs/<run_id>/execution_report.md`
+- manual notebook execution: `output/execution_report.md`
+
 Default flow (LLM simulation + BERT audit):
 
 ```powershell

@@ -6,22 +6,16 @@ import time
 from collections.abc import Callable
 
 import pandas as pd
+from consts.datasets import (
+	DETAILED_TEXT_COLUMNS,
+	LANGUAGE_CODE_TO_NAME,
+	TEXT_COLUMN_CANDIDATES,
+)
+from consts.llm_requests import PROMPT_TEMPLATE, REWRITE_SYSTEM_INSTRUCTION
 from enums.providers import Provider
 from google import genai
 from google.genai import types
 from openai import OpenAI
-
-TEXT_COLUMN_CANDIDATES = ("full_description", "content", "description", "title")
-DETAILED_TEXT_COLUMNS = ("full_description", "content", "description")
-
-LANGUAGE_CODE_TO_NAME = {
-	"en": "English",
-	"pt": "Portuguese",
-	"es": "Spanish",
-	"fr": "French",
-	"de": "German",
-	"it": "Italian",
-}
 
 
 def choose_news_text_column(
@@ -371,10 +365,7 @@ def rewrite_news_with_personality(
 	if max_rows is not None:
 		target_indexes = target_indexes[:max_rows]
 
-	system_instruction = (
-		"You are a news rewriting assistant. Keep the requested output language exactly, "
-		"preserve the central facts, and do not add new information."
-	)
+	system_instruction = REWRITE_SYSTEM_INSTRUCTION
 
 	current_minute_bucket = int(time.time() // 60)
 	requests_in_current_minute = 0
@@ -428,26 +419,13 @@ def rewrite_news_with_personality(
 		if title_column in rewritten_df.columns and pd.notna(rewritten_df.at[row_index, title_column]):
 			title = str(rewritten_df.at[row_index, title_column]).strip()
 
-		prompt = f"""
-				Adopt the following personality while rewriting the news article:
-				{personality}
-
-				Required output language: {target_language_name} ({target_language_code}).
-
-				Rules:
-				- Write strictly in {target_language_name} ({target_language_code}).
-				- Do not translate into another language different from the requested one.
-				- Preserve the central facts.
-				- Do not invent data, numbers, quotes, or characters.
-				- Adjust tone, vocabulary, and style to reflect the requested personality.
-				- Return only the rewritten text.
-
-				Title:
-				{title or 'Untitled'}
-
-				Original text:
-				{original_text}
-				""".strip()
+		prompt = PROMPT_TEMPLATE.format(
+			personality=personality,
+			target_language_name=target_language_name,
+			target_language_code=target_language_code,
+			title=title or "Untitled",
+			original_text=original_text,
+		)
 
 		try:
 			if provider_normalized == "gemini":
