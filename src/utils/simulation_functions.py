@@ -17,6 +17,18 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+DEFAULT_TITLE_COLUMN = "title"
+DEFAULT_OUTPUT_COLUMN = "rewritten_news"
+DEFAULT_TEXT_COLUMN = "description"
+DEFAULT_MAX_ROWS: int | None = None
+DEFAULT_SLEEP_SECONDS = 0.0
+DEFAULT_MAX_REQUESTS_PER_MINUTE: int | None = None
+DEFAULT_RETRY_ATTEMPTS = 5
+DEFAULT_ALLOW_TITLE_FALLBACK = False
+DEFAULT_PERSONALITY: str | None = None
+DEFAULT_DF: pd.DataFrame | None = None
+_UNSET = object()
+
 
 def choose_news_text_column(
 	df: pd.DataFrame,
@@ -283,25 +295,45 @@ def generate_rewrite_with_retry_openai_compatible(
 
 
 def rewrite_news_with_personality(
-	df: pd.DataFrame,
-	personality: str,
-	text_column: str | None = None,
-	title_column: str = "title",
+	df: pd.DataFrame | object = _UNSET,
+	personality: str | object = _UNSET,
+	text_column: str | None | object = _UNSET,
+	title_column: str | object = _UNSET,
 	model: str = "gemini-2.5-flash-lite",
 	provider: Provider | str = Provider.GEMINI,
 	api_key: str | None = None,
 	base_url: str | None = None,
-	output_column: str = "rewritten_news",
-	max_rows: int | None = None,
-	sleep_seconds: float = 0.0,
-	max_requests_per_minute: int | None = None,
-	retry_attempts: int = 5,
-	allow_title_fallback: bool = False,
+	output_column: str | object = _UNSET,
+	max_rows: int | None | object = _UNSET,
+	sleep_seconds: float | object = _UNSET,
+	max_requests_per_minute: int | None | object = _UNSET,
+	retry_attempts: int | object = _UNSET,
+	allow_title_fallback: bool | object = _UNSET,
 ) -> pd.DataFrame:
+	def pick(value, default):
+		return default if value is _UNSET else value
+
+	df = pick(df, DEFAULT_DF)
+	personality = pick(personality, DEFAULT_PERSONALITY)
+	text_column = pick(text_column, DEFAULT_TEXT_COLUMN)
+	title_column = pick(title_column, DEFAULT_TITLE_COLUMN)
+	output_column = pick(output_column, DEFAULT_OUTPUT_COLUMN)
+	max_rows = pick(max_rows, DEFAULT_MAX_ROWS)
+	sleep_seconds = pick(sleep_seconds, DEFAULT_SLEEP_SECONDS)
+	max_requests_per_minute = pick(max_requests_per_minute, DEFAULT_MAX_REQUESTS_PER_MINUTE)
+	retry_attempts = pick(retry_attempts, DEFAULT_RETRY_ATTEMPTS)
+	allow_title_fallback = pick(allow_title_fallback, DEFAULT_ALLOW_TITLE_FALLBACK)
+
+	if df is None:
+		raise ValueError("Informe 'df' na chamada ou defina utils.simulation_functions.DEFAULT_DF.")
+
+	if not isinstance(df, pd.DataFrame):
+		raise ValueError("'df' deve ser um pandas.DataFrame.")
+
 	if df.empty:
 		raise ValueError("O DataFrame esta vazio.")
 
-	if not personality or not personality.strip():
+	if not personality or not str(personality).strip():
 		raise ValueError("Informe uma personalidade valida.")
 
 	if max_requests_per_minute is not None and max_requests_per_minute <= 0:
@@ -327,9 +359,9 @@ def rewrite_news_with_personality(
 		if not resolved_api_key:
 			raise ValueError(f"Defina a {env_key_name} no ambiente ou passe a chave em 'api_key'.")
 
-	resolved_text_column = text_column or choose_news_text_column(df)
-	if resolved_text_column not in df.columns:
-		raise ValueError(f"A coluna '{resolved_text_column}' nao existe no DataFrame.")
+	text_column = text_column or choose_news_text_column(df)
+	if text_column not in df.columns:
+		raise ValueError(f"A coluna '{text_column}' nao existe no DataFrame.")
 
 	if provider_normalized == "gemini":
 		client = genai.Client(api_key=resolved_api_key)
@@ -395,7 +427,7 @@ def rewrite_news_with_personality(
 		try:
 			source_column, original_text = resolve_row_text(
 				row=row,
-				preferred_column=resolved_text_column,
+				preferred_column=text_column,
 				allow_title_fallback=allow_title_fallback,
 			)
 			rewritten_df.at[row_index, "source_text_column"] = source_column
@@ -420,7 +452,7 @@ def rewrite_news_with_personality(
 			title = str(rewritten_df.at[row_index, title_column]).strip()
 
 		prompt = PROMPT_TEMPLATE.format(
-			personality=personality,
+			personality=str(personality),
 			target_language_name=target_language_name,
 			target_language_code=target_language_code,
 			title=title or "Untitled",
