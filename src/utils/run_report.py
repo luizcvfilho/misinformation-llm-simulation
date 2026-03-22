@@ -33,6 +33,95 @@ def _format_markdown_value(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def _humanize_key(key: str) -> str:
+    normalized = key.replace("_", " ").strip()
+    return normalized[:1].upper() + normalized[1:] if normalized else key
+
+
+def _render_scalar_list(lines: list[str], items: list[Any]) -> None:
+    for item in items:
+        lines.append(f"- {_format_markdown_value(item)}")
+
+
+def _render_dict(lines: list[str], content: dict[str, Any]) -> None:
+    if not content:
+        lines.append("- n/a")
+        return
+
+    for sub_key, sub_value in content.items():
+        lines.append(f"- **{_humanize_key(str(sub_key))}**: {_format_markdown_value(sub_value)}")
+
+
+def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]]) -> None:
+    if not metrics:
+        lines.append("- n/a")
+        return
+
+    preferred_columns = [
+        "dataset",
+        "output_name",
+        "provider",
+        "model",
+        "duration_seconds",
+        "rows_requested",
+        "rows_success",
+        "rows_error",
+    ]
+    seen = set()
+    columns: list[str] = []
+
+    for column in preferred_columns:
+        if any(column in row for row in metrics):
+            columns.append(column)
+            seen.add(column)
+
+    for row in metrics:
+        for column in row.keys():
+            if column not in seen:
+                columns.append(column)
+                seen.add(column)
+
+    header_columns = [_humanize_key(str(column)) for column in columns]
+
+    lines.append("| " + " | ".join(header_columns) + " |")
+    lines.append("| " + " | ".join(["---"] * len(columns)) + " |")
+
+    for row in metrics:
+        values = [_format_markdown_value(row.get(column)) for column in columns]
+        lines.append("| " + " | ".join(values) + " |")
+
+
+def _render_detail_section(lines: list[str], key: str, value: Any) -> None:
+    lines.append(f"### {_humanize_key(key)}")
+
+    if isinstance(value, dict):
+        _render_dict(lines, value)
+        lines.append("")
+        return
+
+    if isinstance(value, list):
+        if not value:
+            lines.append("- n/a")
+            lines.append("")
+            return
+
+        if all(isinstance(item, dict) for item in value):
+            if key.lower() in {"rewrite_metrics", "rewrite_run_metrics"}:
+                _render_rewrite_metrics_table(lines, value)
+            else:
+                for idx, item in enumerate(value, start=1):
+                    lines.append(f"- Item {idx}")
+                    _render_dict(lines, item)
+        else:
+            _render_scalar_list(lines, value)
+
+        lines.append("")
+        return
+
+    lines.append(f"- {_format_markdown_value(value)}")
+    lines.append("")
+
+
 def append_execution_report(
     *,
     report_path: Path,
@@ -56,11 +145,14 @@ def append_execution_report(
         f"## {timestamp} - {section_title}",
         f"- notebook: {notebook_name}",
         f"- run_id: {run_id or 'manual'}",
+        "",
+        "### Details",
     ])
 
     for key, value in details.items():
-        lines.append(f"- {key}: {_format_markdown_value(value)}")
+        _render_detail_section(lines, key, value)
 
+    lines.append("---")
     lines.append("")
 
     with report_path.open("a", encoding="utf-8") as handle:
