@@ -38,7 +38,7 @@ def _indent(level: int) -> str:
 
 
 def _escape_markdown_table_cell(value: str) -> str:
-    # Evita quebrar tabelas markdown quando houver pipes ou quebras de linha.
+    # Prevent markdown tables from breaking when there are pipes or line breaks.
     return value.replace("|", "\\|").replace("\n", " ").strip()
 
 

@@ -21,7 +21,7 @@ class NotebookRunResult:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Executa notebooks em sequencia usando jupyter nbconvert."
+        description="Runs notebooks sequentially using jupyter nbconvert."
     )
     parser.add_argument(
         "--notebooks",
@@ -32,8 +32,8 @@ def parse_args() -> argparse.Namespace:
             "src/pretrained_fake_news_detector_workbench.ipynb",
         ],
         help=(
-            "Lista de notebooks a executar em ordem. "
-            "Padrao: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb "
+            "List of notebooks to run in order. "
+            "Default: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb "
             "src/pretrained_fake_news_detector_workbench.ipynb"
         ),
     )
@@ -41,15 +41,15 @@ def parse_args() -> argparse.Namespace:
         "--runs-root",
         default="output/runs",
         help=(
-            "Pasta raiz das execucoes. Cada rodada cria output/runs/<run_id>/... "
-            "com notebooks executados e artefatos dos notebooks."
+            "Root directory for runs. Each run creates output/runs/<run_id>/... "
+            "with executed notebooks and notebook artifacts."
         ),
     )
     parser.add_argument(
         "--run-id",
         default=None,
         help=(
-            "Identificador da rodada. Se omitido, usa timestamp UTC "
+            "Run identifier. If omitted, uses a UTC timestamp "
             "(ex.: 20260320_184500)."
         ),
     )
@@ -57,17 +57,17 @@ def parse_args() -> argparse.Namespace:
         "--timeout-seconds",
         type=int,
         default=None,
-        help="Timeout por celula em segundos para o ExecutePreprocessor.",
+        help="Per-cell timeout in seconds for ExecutePreprocessor.",
     )
     parser.add_argument(
         "--continue-on-error",
         action="store_true",
-        help="Continua para o proximo notebook mesmo se houver falha.",
+        help="Continue to the next notebook even if one fails.",
     )
     parser.add_argument(
         "--inplace",
         action="store_true",
-        help="Executa e salva no proprio arquivo .ipynb (sem usar output-dir).",
+        help="Execute and save in the same .ipynb file (without using output-dir).",
     )
     return parser.parse_args()
 
@@ -88,7 +88,7 @@ def run_notebook(
             status="not_found",
             duration_seconds=0.0,
             output_file=None,
-            error_message="Arquivo nao encontrado.",
+            error_message="File not found.",
         )
 
     cmd = [
@@ -136,7 +136,7 @@ def run_notebook(
 
     stderr = (process.stderr or "").strip()
     stdout = (process.stdout or "").strip()
-    message = stderr or stdout or "Falha sem mensagem retornada pelo nbconvert."
+    message = stderr or stdout or "Failure with no message returned by nbconvert."
     return NotebookRunResult(
         notebook=notebook_path,
         status="error",
@@ -155,7 +155,7 @@ def main() -> int:
 
     results: list[NotebookRunResult] = []
 
-    print("Executando notebooks em sequencia...")
+    print("Running notebooks sequentially...")
     print(f"RUN_ID: {run_id}")
     print(f"RUN_DIR: {run_dir}")
     for notebook in args.notebooks:
@@ -173,17 +173,17 @@ def main() -> int:
 
         if result.status == "ok":
             print(
-                f"[OK] {result.notebook.name} em {result.duration_seconds:.1f}s"
+                f"[OK] {result.notebook.name} in {result.duration_seconds:.1f}s"
                 f" -> {result.output_file}"
             )
             continue
 
         print(f"[ERROR] {result.notebook} ({result.error_message})")
         if not args.continue_on_error:
-            print("Parando execucao por falha. Use --continue-on-error para seguir.")
+            print("Stopping execution due to failure. Use --continue-on-error to continue.")
             break
 
-    print("\nResumo:")
+    print("\nSummary:")
     for item in results:
         msg = (
             f"- {item.notebook.name}: {item.status} "

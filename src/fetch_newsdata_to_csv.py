@@ -46,50 +46,50 @@ load_dotenv()
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(
 		description=(
-			"Busca noticias na API do NewsData.io e salva em CSV para uso no projeto."
+			"Fetches news from the NewsData.io API and saves it to CSV for project use."
 		)
 	)
 	parser.add_argument(
 		"--output",
 		type=Path,
 		default=DEFAULT_OUTPUT,
-		help="Caminho de saida do CSV (padrao: data/newsdata_news.csv).",
+		help="CSV output path (default: data/newsdata_news.csv).",
 	)
 	parser.add_argument(
 		"--query",
 		type=str,
 		default="",
-		help="Filtro de busca textual (parametro q da API).",
+		help="Text search filter (API q parameter).",
 	)
 	parser.add_argument(
 		"--language",
 		type=str,
 		default="en",
-		help="Idioma(s) separados por virgula (ex.: pt,en).",
+		help="Language(s) separated by commas (e.g.: pt,en).",
 	)
 	parser.add_argument(
 		"--country",
 		type=str,
 		default="",
-		help="Pais(es) separados por virgula (ex.: br,us).",
+		help="Country code(s) separated by commas (e.g.: br,us).",
 	)
 	parser.add_argument(
 		"--category",
 		type=str,
 		default="",
-		help="Categoria(s) separadas por virgula (ex.: politics,technology).",
+		help="Category(ies) separated by commas (e.g.: politics,technology).",
 	)
 	parser.add_argument(
 		"--max-records",
 		type=int,
 		default=200,
-		help="Numero maximo de noticias para salvar.",
+		help="Maximum number of news records to save.",
 	)
 	parser.add_argument(
 		"--api-key-env",
 		type=str,
 		default="NEWSDATA_API_KEY",
-		help="Nome da variavel de ambiente com a chave da API.",
+		help="Environment variable name containing the API key.",
 	)
 	return parser.parse_args()
 
@@ -104,17 +104,17 @@ def _request_news(params: dict[str, Any]) -> dict[str, Any]:
 	except HTTPError as error:
 		detail = error.read().decode("utf-8", errors="replace")
 		raise RuntimeError(
-			f"Erro HTTP {error.code} ao consultar NewsData.io: {detail}"
+			f"HTTP error {error.code} while querying NewsData.io: {detail}"
 		) from error
 	except URLError as error:
 		raise RuntimeError(
-			f"Falha de conexao ao consultar NewsData.io: {error.reason}"
+			f"Connection failure while querying NewsData.io: {error.reason}"
 		) from error
 
 	try:
 		return json.loads(payload)
 	except json.JSONDecodeError as error:
-		raise RuntimeError("Resposta da API nao esta em JSON valido.") from error
+		raise RuntimeError("API response is not valid JSON.") from error
 
 
 def _to_text(value: Any) -> str:
@@ -135,7 +135,7 @@ def _split_multi_value(value: Any) -> list[str]:
 		text = str(value)
 		if not text.strip():
 			return []
-		# Alguns campos podem vir separados por ';' ou ','.
+		# Some fields may come separated by ';' or ','.
 		items = []
 		for chunk in text.split(";"):
 			items.extend(chunk.split(","))
@@ -233,7 +233,7 @@ def fetch_news(
 		status = data.get("status")
 		if status != "success":
 			message = data.get("results", data)
-			raise RuntimeError(f"API retornou status inesperado: {status} | {message}")
+			raise RuntimeError(f"API returned unexpected status: {status} | {message}")
 
 		batch = data.get("results", [])
 		if not isinstance(batch, list) or not batch:
@@ -480,15 +480,15 @@ def save_csv(
 def main() -> int:
 	args = parse_args()
 	if args.max_records <= 0:
-		print("Erro: --max-records deve ser maior que zero.", file=sys.stderr)
+		print("Error: --max-records must be greater than zero.", file=sys.stderr)
 		return 2
 
 	api_key = os.getenv(args.api_key_env, "").strip()
 	if not api_key:
 		print(
 			(
-				f"Erro: variavel de ambiente {args.api_key_env} nao encontrada. "
-				"Defina sua chave da NewsData.io antes de executar."
+				f"Error: environment variable {args.api_key_env} not found. "
+				"Set your NewsData.io key before running."
 			),
 			file=sys.stderr,
 		)
@@ -512,10 +512,10 @@ def main() -> int:
 	)
 	rows_fetched, rows_appended, total_rows = save_csv(news, args.output, query_metadata)
 
-	print(f"Noticias buscadas nesta request: {rows_fetched}")
-	print(f"Novas noticias adicionadas no arquivo: {rows_appended}")
-	print(f"Total acumulado de noticias no arquivo: {total_rows}")
-	print(f"Arquivo gerado: {args.output}")
+	print(f"News fetched in this request: {rows_fetched}")
+	print(f"New records appended to file: {rows_appended}")
+	print(f"Total accumulated records in file: {total_rows}")
+	print(f"Generated file: {args.output}")
 	return 0
 
 

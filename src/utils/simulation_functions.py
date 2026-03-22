@@ -63,7 +63,7 @@ def choose_news_text_column(
 	if best_column is not None:
 		return best_column
 
-	raise ValueError("Nenhuma coluna de texto foi encontrada. Informe 'text_column' manualmente.")
+	raise ValueError("No text column was found. Provide 'text_column' manually.")
 
 
 def resolve_row_text(
@@ -96,7 +96,7 @@ def resolve_row_text(
 		if title_text:
 			return "title", title_text
 
-	raise ValueError("A linha nao possui texto utilizavel nas colunas candidatas.")
+	raise ValueError("The row has no usable text in the candidate columns.")
 
 
 def normalize_language_code(raw_language: str | None) -> str | None:
@@ -109,12 +109,8 @@ def normalize_language_code(raw_language: str | None) -> str | None:
 
 	aliases = {
 		"english": "en",
-		"ingles": "en",
 		"portuguese": "pt",
-		"portugues": "pt",
 		"spanish": "es",
-		"espanol": "es",
-		"espanhol": "es",
 		"french": "fr",
 		"german": "de",
 		"italian": "it",
@@ -151,22 +147,12 @@ def infer_text_language(text: str) -> str | None:
 		" with ",
 		" that ",
 	]
-	portuguese_markers = [
-		" que ",
-		" de ",
-		" para ",
-		" com ",
-		" uma ",
-		" nao ",
-		" na ",
-		" no ",
-		" os ",
-		" as ",
-		" em ",
-	]
+	portuguese_char_markers = ["\u00e1", "\u00e0", "\u00e2", "\u00e3", "\u00e9", "\u00ea", "\u00ed", "\u00f3", "\u00f4", "\u00f5", "\u00fa", "\u00e7"]
+	portuguese_pattern_markers = ["\u00e7\u00e3o", "\u00e7\u00f5es", "nh", "lh"]
 
 	en_score = sum(sample.count(marker) for marker in english_markers)
-	pt_score = sum(sample.count(marker) for marker in portuguese_markers)
+	pt_score = sum(sample.count(marker) for marker in portuguese_char_markers)
+	pt_score += sum(sample.count(marker) for marker in portuguese_pattern_markers)
 
 	if pt_score >= 2 and pt_score > en_score:
 		return "pt"
@@ -221,7 +207,7 @@ def generate_rewrite_with_retry_gemini(
 
 			rewritten_text = (response.text or "").strip()
 			if not rewritten_text:
-				raise ValueError("A resposta da API veio vazia.")
+				raise ValueError("The API response was empty.")
 
 			return rewritten_text
 		except Exception as exc:
@@ -271,7 +257,7 @@ def generate_rewrite_with_retry_openai_compatible(
 
 			rewritten_text = (response.choices[0].message.content or "").strip()
 			if not rewritten_text:
-				raise ValueError("A resposta da API veio vazia.")
+				raise ValueError("The API response was empty.")
 
 			return rewritten_text
 		except Exception as exc:
@@ -325,23 +311,23 @@ def rewrite_news_with_personality(
 	allow_title_fallback = pick(allow_title_fallback, DEFAULT_ALLOW_TITLE_FALLBACK)
 
 	if df is None:
-		raise ValueError("Informe 'df' na chamada ou defina utils.simulation_functions.DEFAULT_DF.")
+		raise ValueError("Provide 'df' in the call or set utils.simulation_functions.DEFAULT_DF.")
 
 	if not isinstance(df, pd.DataFrame):
-		raise ValueError("'df' deve ser um pandas.DataFrame.")
+		raise ValueError("'df' must be a pandas.DataFrame.")
 
 	if df.empty:
-		raise ValueError("O DataFrame esta vazio.")
+		raise ValueError("The DataFrame is empty.")
 
 	if not personality or not str(personality).strip():
-		raise ValueError("Informe uma personalidade valida.")
+		raise ValueError("Provide a valid personality.")
 
 	if max_requests_per_minute is not None and max_requests_per_minute <= 0:
-		raise ValueError("'max_requests_per_minute' deve ser maior que zero quando informado.")
+		raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
 
 	provider_normalized = provider.value if isinstance(provider, Provider) else str(provider).strip().lower()
 	if provider_normalized not in {item.value for item in Provider}:
-		raise ValueError("Provider invalido. Use: gemini, openrouter, deepseek ou local.")
+		raise ValueError("Invalid provider. Use: gemini, openrouter, deepseek, or local.")
 
 	env_key_name = None
 	if provider_normalized == "gemini":
@@ -357,11 +343,11 @@ def rewrite_news_with_personality(
 	else:
 		resolved_api_key = api_key or os.getenv(env_key_name)
 		if not resolved_api_key:
-			raise ValueError(f"Defina a {env_key_name} no ambiente ou passe a chave em 'api_key'.")
+			raise ValueError(f"Set {env_key_name} in the environment or pass the key in 'api_key'.")
 
 	text_column = text_column or choose_news_text_column(df)
 	if text_column not in df.columns:
-		raise ValueError(f"A coluna '{text_column}' nao existe no DataFrame.")
+		raise ValueError(f"Column '{text_column}' does not exist in the DataFrame.")
 
 	if provider_normalized == "gemini":
 		client = genai.Client(api_key=resolved_api_key)

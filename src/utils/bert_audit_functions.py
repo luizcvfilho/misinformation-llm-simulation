@@ -14,14 +14,14 @@ def read_dataset(file_path: Path) -> pd.DataFrame:
         return pd.read_csv(file_path)
     if suffix == ".json":
         return pd.read_json(file_path)
-    raise ValueError(f"Formato nao suportado: {file_path}")
+    raise ValueError(f"Unsupported format: {file_path}")
 
 
 def validate_pair_columns(df: pd.DataFrame, original_col: str, rewritten_col: str) -> None:
     if original_col not in df.columns:
-        raise ValueError(f"Coluna original nao encontrada: {original_col}")
+        raise ValueError(f"Original column not found: {original_col}")
     if rewritten_col not in df.columns:
-        raise ValueError(f"Coluna reescrita nao encontrada: {rewritten_col}")
+        raise ValueError(f"Rewritten column not found: {rewritten_col}")
 
 
 def consistency_flag(
@@ -32,8 +32,8 @@ def consistency_flag(
 ) -> str:
     delta = contradiction - entailment
     if contradiction >= contradiction_threshold and delta >= delta_threshold:
-        return "potencialmente_falsa_apos_reescrita"
-    return "consistente_com_original"
+        return "potentially_false_after_rewrite"
+    return "consistent_with_original"
 
 
 def nli_pair_scores(
@@ -74,7 +74,7 @@ def pretrained_fake_news_detector_prediction(
     max_length: int = 512,
 ) -> dict[str, Any]:
     if not isinstance(text, str) or not text.strip():
-        raise ValueError("Texto invalido para predicao.")
+        raise ValueError("Invalid text for prediction.")
 
     encoded = tokenizer(
         text,
