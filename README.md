@@ -2,7 +2,7 @@
 
 An LLM-based misinformation simulation framework with a rewrite, export, and factual-audit pipeline.
 
-## Required Dependencies
+## Dependencies
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-package%20manager-6A5ACD)
@@ -22,38 +22,64 @@ From the project root:
 make setup
 ```
 
-This command creates `.venv`, updates `uv.lock`, and syncs dependencies (including the dev group).
+This command creates `.venv`, updates `uv.lock`, and syncs dependencies (including dev tools).
 
-## Makefile Commands
+## Common Commands
 
 ```powershell
-make help       # list available targets
-make setup      # create venv, lock, and sync
-make sync       # sync dependencies
-make sync-dev   # sync dependencies + dev
-make lock       # update uv.lock
-make add PKG=package-name
-make notebook   # open Jupyter Lab via uv
+make help         # list available targets
+make setup        # create venv, lock, and sync (including dev)
+make sync         # sync dependencies
+make sync-dev     # sync dependencies + dev
+make lock         # update uv.lock
+make add PKG=...  # add dependency
+make notebook     # open Jupyter Lab via uv
+
+make lint         # run ruff check
+make format       # run ruff format
+make lint-format  # run lint then format
+
 make precommit-install
 make precommit-run
+
 make notebooks          # run notebooks sequentially (output/runs/<run_id>)
 make notebooks-inplace  # run notebooks in-place
 make notebooks-continue # continue even if one notebook fails
+
 make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
-make clean      # remove .venv
+make clean
 ```
 
-## Environment Variables (.env)
+## Linting and Formatting
 
-Create a `.env` file in the project root and define the variables you need for your chosen providers and data sources.
+The project uses Ruff for linting and formatting.
 
-Use [.env.example](.env.example) as the canonical template:
+- Local lint: `make lint`
+- Local format: `make format`
+- Combined run: `make lint-format`
+
+Ruff is also configured in pre-commit:
+
+- `ruff` (with `--fix`)
+- `ruff-format`
+- `nbstripout` for notebooks
+
+If pre-commit and local Ruff ever disagree, update the pre-commit Ruff revision and run:
+
+```powershell
+uv run pre-commit clean
+uv run pre-commit run --all-files
+```
+
+## Environment Variables (`.env`)
+
+Create `.env` from the template:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-### Full example
+Example:
 
 ```dotenv
 # LLM providers
@@ -69,53 +95,53 @@ OPENROUTER_X_TITLE=llm-misinformation-simulation
 LOCAL_OPENAI_API_KEY=ollama
 LOCAL_OPENAI_BASE_URL=http://127.0.0.1:11434/v1
 
-# NewsData.io (used by make fetch-news)
+# NewsData.io
 NEWSDATA_API_KEY=your_newsdata_key
 ```
 
-### Variable reference
+Variable reference:
 
-- `GEMINI_API_KEY`: Required when using `Provider.GEMINI`.
-- `OPENROUTER_API_KEY`: Required when using `Provider.OPENROUTER`.
-- `DEEPSEEK_API_KEY`: Required when using `Provider.DEEPSEEK`.
-- `OPENROUTER_HTTP_REFERER`: Optional header for OpenRouter requests.
-- `OPENROUTER_X_TITLE`: Optional OpenRouter title header. Default: `misinformation-llm-simulation`.
-- `LOCAL_OPENAI_API_KEY`: Optional key for `Provider.LOCAL`. Default: `ollama`.
-- `LOCAL_OPENAI_BASE_URL`: Optional base URL for `Provider.LOCAL`. Default: `http://127.0.0.1:11434/v1`.
-- `NEWSDATA_API_KEY`: Required by `make fetch-news` (used by `src/fetch_newsdata_to_csv.py`).
+- `GEMINI_API_KEY`: Required for `Provider.GEMINI`
+- `OPENROUTER_API_KEY`: Required for `Provider.OPENROUTER`
+- `DEEPSEEK_API_KEY`: Required for `Provider.DEEPSEEK`
+- `OPENROUTER_HTTP_REFERER`: Optional OpenRouter header
+- `OPENROUTER_X_TITLE`: Optional OpenRouter header (`misinformation-llm-simulation` default)
+- `LOCAL_OPENAI_API_KEY`: Optional for `Provider.LOCAL` (`ollama` default)
+- `LOCAL_OPENAI_BASE_URL`: Optional for `Provider.LOCAL` (`http://127.0.0.1:11434/v1` default)
+- `NEWSDATA_API_KEY`: Required for `make fetch-news`
 
-Note: In `rewrite_news_with_personality`, you can also pass `api_key=` and `base_url=` directly, which overrides `.env` values for that call.
+Note: You can still pass `api_key=` and `base_url=` directly in `rewrite_news_with_personality`.
 
-## Main Simulation Notebook
+## Main Notebook Workflow
+
+Main simulation notebook:
 
 - [src/llm_simulation_workbench.ipynb](src/llm_simulation_workbench.ipynb)
 
-This notebook does the following:
+It:
 
-- load and organize datasets,
-- rewrite content with multiple LLM providers,
-- export results to [output/runs/<run_id>/](output/runs).
+- loads and organizes datasets,
+- rewrites content with multiple providers,
+- exports rewritten datasets for audit.
 
-Providers are configured through the enum in [src/enums/providers.py](src/enums/providers.py) and used in the notebook as `Provider.GEMINI`, `Provider.OPENROUTER`, and `Provider.LOCAL`.
+Providers are defined in:
 
-To open Jupyter:
+- [src/enums/providers.py](src/enums/providers.py)
+- [src/enums/models.py](src/enums/models.py)
+
+Open Jupyter:
 
 ```powershell
 make notebook
 ```
 
-## Run Notebooks Sequentially
+## Sequential Notebook Execution
 
-Use [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py) to execute notebooks in order.
+Script:
 
-Each run now gets a unique `run_id` and is stored under `output/runs/<run_id>/`.
+- [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py)
 
-Execution metadata is also appended automatically to a Markdown report:
-
-- sequential runs (`make notebooks`): `output/runs/<run_id>/execution_report.md`
-- manual notebook execution: `output/execution_report.md`
-
-Default flow (LLM simulation + BERT audit):
+Default run:
 
 ```powershell
 make notebooks
@@ -124,114 +150,194 @@ make notebooks
 Useful options:
 
 ```powershell
-# Continue even if one notebook fails
 make notebooks-continue
-
-# Run in-place
 make notebooks-inplace
-
-# Choose custom notebook order
 make notebooks NOTEBOOKS="src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb"
 ```
 
+Execution report paths:
+
+- Sequential runs: `output/runs/<run_id>/execution_report.md`
+- Manual notebook execution (outside run orchestration): `output/execution_report.md`
+
 ## Fetch News with NewsData.io
 
-The script [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py) fetches news via the NewsData.io API and saves a CSV file to [data/](data/).
+Script:
 
-1. Configure your key in `.env`:
+- [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py)
 
-```powershell
-NEWSDATA_API_KEY=your_key_here
-```
-
-2. Run via Makefile:
+Example:
 
 ```powershell
 make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 ```
 
-Example with additional filters:
+With filters:
 
 ```powershell
-make fetch-news QUERY=politica COUNTRY=br CATEGORY=politics LANGUAGE=pt MAX_RECORDS=300 OUTPUT=data/newsdata_politics_br.csv
+make fetch-news QUERY=politics COUNTRY=us CATEGORY=politics LANGUAGE=en MAX_RECORDS=300 OUTPUT=data/newsdata_politics_us.csv
 ```
 
 Main arguments:
 
-- `OUTPUT`: output CSV path (default: `data/newsdata_news.csv`)
+- `OUTPUT`: output CSV path (`data/newsdata_news.csv` default)
 - `QUERY`: search text (`q` API parameter)
-- `LANGUAGE`: language(s), e.g. `pt` or `pt,en`
+- `LANGUAGE`: language(s), e.g. `en` or `pt,en`
 - `COUNTRY`: country code(s), e.g. `br` or `br,us`
 - `CATEGORY`: category(ies), e.g. `politics,technology`
-- `MAX_RECORDS`: maximum number of records to save
+- `MAX_RECORDS`: max number of records
 
-## Factuality Audit After Rewriting (Real-News Scenario)
+## Audits
 
-If your original data is fully real, the recommended flow is checking whether the rewrite contradicts facts from the original text.
+### Consistency Audit (NLI)
 
-For that, use:
+Notebook:
 
-- `src/bert_fake_real_workbench.ipynb`
+- [src/bert_fake_real_workbench.ipynb](src/bert_fake_real_workbench.ipynb)
 
-This notebook:
+It computes entailment/contradiction between original and rewritten text and assigns:
 
-- reads CSVs generated in [output/runs/<run_id>/](output/runs) by the simulation notebook,
-- uses an NLI model to compute `entailment` and `contradiction`,
-- labels each row as:
-	- `consistente_com_original`, or
-	- `potencialmente_falsa_apos_reescrita`.
+- `consistent_with_original`
+- `potentially_false_after_rewrite`
 
-### How to Run
+### Pretrained Fake News Detector Audit
 
-1. Open Jupyter:
+Notebook:
 
-```powershell
-make notebook
+- [src/pretrained_fake_news_detector_workbench.ipynb](src/pretrained_fake_news_detector_workbench.ipynb)
+
+It applies a pretrained detector to rewritten text and exports per-dataset and consolidated predictions.
+
+## Output Structure
+
+The `output/` directory has two patterns:
+
+1. Latest/manual outputs (shared folders)
+2. Run-scoped outputs under `output/runs/<run_id>/`
+
+Typical structure:
+
+```text
+output/
+	execution_report.md                        # manual notebook execution report (when not using run_id)
+	rewritten/
+		*.csv                                    # latest rewritten datasets
+	audit/
+		LocalAudit/
+			*_consistency_audit.csv
+			all_datasets_consistency_audit.csv
+			audit_summary.csv
+		PreTrainedAudit/
+			*_pretrained_fake_news_predictions.csv
+			all_datasets_pretrained_fake_news_predictions.csv
+			pretrained_fake_news_summary.csv
+	runs/
+		<run_id>/
+			execution_report.md
+			rewritten/
+				*.csv
+			audit/
+				LocalAudit/
+					*.csv
+				PreTrainedAudit/
+					*.csv
+			executed_notebooks/
+				*.ipynb
 ```
 
-2. Open `src/bert_fake_real_workbench.ipynb`.
-3. In Cell 5 (configuration), adjust:
+### Example: single run
 
-- `INPUT_DIR`
-- `DATASET_SELECTOR`
-- `ORIGINAL_COLUMN`
-- `REWRITTEN_COLUMN`
-- optionally `ROW_ID_COLUMN`
+If `run_id = 20260322_185309`, the main outputs are usually:
 
-4. Run all notebook cells in order.
+- `output/runs/20260322_185309/execution_report.md`
+- `output/runs/20260322_185309/rewritten/local_llama_rewritten_df.csv`
+- `output/runs/20260322_185309/audit/LocalAudit/all_datasets_consistency_audit.csv`
+- `output/runs/20260322_185309/audit/PreTrainedAudit/all_datasets_pretrained_fake_news_predictions.csv`
+- `output/runs/20260322_185309/executed_notebooks/llm_simulation_workbench.ipynb`
 
-### Output
+## CSV Column Guide
 
+This section highlights the most important CSV columns in the pipeline, with emphasis on columns created and analyzed by notebooks.
 
-- CSV files in [results/](results):
-	- `all_datasets_consistency_audit.csv`
-	- `audit_summary.csv`
-	- one file per dataset (`*_consistency_audit.csv`)
-- main columns:
-	- `entailment`
-	- `contradiction`
-	- `neutral`
-	- `consistency_flag`
+### 1) Input dataset columns
 
-## Pre-commit and Notebooks
+| Column | Where it appears | Why it matters |
+| --- | --- | --- |
+| `full_description` | raw dataset / fetched news | Preferred long-text source for rewriting when available |
+| `content` | raw dataset / fetched news | Secondary long-text source |
+| `description` | raw dataset / fetched news | Common source text for rewriting and audits |
+| `title` | raw dataset / fetched news | Fallback source text and prompt context |
+| `language` | raw dataset / fetched news | Helps choose output language in rewriting |
+| `country` | raw dataset / fetched news | Additional signal for output language selection |
+| `category` | raw dataset / fetched news | Dataset profiling and report summaries |
+| `keywords` | raw dataset / fetched news | Dataset profiling and report summaries |
+| `source_name` | raw dataset / fetched news | Dataset profiling and source diversity summaries |
+| `article_id` | fetched news CSV | Record identity and metadata-row marker (`__query_metadata__`) |
 
-To install and run hooks:
+### 2) Columns created during rewriting (`llm_simulation_workbench.ipynb`)
+
+| Column | Created by | Meaning |
+| --- | --- | --- |
+| `rewritten_news` | `rewrite_news_with_personality` | Final rewritten text |
+| `rewrite_status` | `rewrite_news_with_personality` | Rewrite status (`success`, `error`, `skipped`, etc.) |
+| `rewrite_error` | `rewrite_news_with_personality` | Error details when rewrite fails |
+| `source_text_column` | `rewrite_news_with_personality` | Which source text column was actually used |
+| `target_language` | `rewrite_news_with_personality` | Output language code selected for rewriting |
+| `target_language_source` | `rewrite_news_with_personality` | Why language was selected (`row.language`, `row.country`, `heuristic`, `default`) |
+
+### 3) Columns created in consistency audit (`bert_fake_real_workbench.ipynb`)
+
+| Column | Created by | Meaning |
+| --- | --- | --- |
+| `entailment` | NLI scoring | Probability that rewrite is supported by original |
+| `contradiction` | NLI scoring | Probability that rewrite contradicts original |
+| `neutral` | NLI scoring | Neutral probability |
+| `consistency_flag` | `consistency_flag(...)` | Final label (`consistent_with_original` or `potentially_false_after_rewrite`) |
+| `row_index` | audit loop | Row reference in source dataframe |
+| `row_id` | optional from input | Preserved custom identifier (if configured) |
+| `dataset_name` | notebook | Dataset identifier used in grouping and exports |
+| `source_file` | notebook | Original CSV filename for traceability |
+
+### 4) Columns created in pretrained detector audit (`pretrained_fake_news_detector_workbench.ipynb`)
+
+| Column | Created by | Meaning |
+| --- | --- | --- |
+| `prediction_id` | detector inference | Predicted class id |
+| `prediction_label` | detector inference | Predicted class label |
+| `prediction_confidence` | detector inference | Confidence for predicted class |
+| `row_index` | audit loop | Row reference in source dataframe |
+| `dataset_name` | notebook | Dataset identifier used in grouping and exports |
+| `source_file` | notebook | Original CSV filename for traceability |
+
+### 5) Summary CSV columns
+
+| File | Key columns |
+| --- | --- |
+| `audit_summary.csv` | `dataset_name`, `source_file`, `rows`, `suspects`, `suspect_rate` |
+| `pretrained_fake_news_summary.csv` | `dataset_name`, `source_file`, `rows`, `fake_rate` |
+
+### 6) Metadata row in fetched CSVs
+
+Fetched files may contain one special row where:
+
+- `article_id = __query_metadata__`
+- `title = QUERY_METADATA`
+- `description` stores a JSON payload with request history and aggregated dataset summary
+
+This row is useful for provenance and query auditing, and should not be treated as a normal news record.
+
+## Pre-commit Notes
+
+Install and run:
 
 ```powershell
 make precommit-install
 make precommit-run
 ```
 
-For notebooks, the hook can modify files and fail on the first attempt. In that case:
+If hooks modify files, stage again and re-run before commit.
 
-```powershell
-git add -A
-make precommit-run
-git add -A
-git commit -m "your message"
-```
+## Interpretation Notes
 
-### Interpretation
-
-- High `contradiction` with low `entailment` indicates a higher risk of factual distortion after rewriting.
-- Cases with `consistency_flag = potencialmente_falsa_apos_reescrita` should be reviewed manually.
+- High `contradiction` with low `entailment` increases factual distortion risk after rewriting.
+- Rows flagged as `potentially_false_after_rewrite` should be manually reviewed.
