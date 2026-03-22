@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run notebooks notebooks-inplace notebooks-continue fetch-news clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news clean
 
 .DEFAULT_GOAL := help
 
@@ -36,6 +36,9 @@ help: ## List available targets
 	@echo "  notebook           Open Jupyter Lab using uv"
 	@echo "  precommit-install  Install pre-commit hooks in the local repository"
 	@echo "  precommit-run      Run all hooks across the project"
+	@echo "  lint               Run Ruff lint checks"
+	@echo "  format             Format code with Ruff"
+	@echo "  lint-format        Run Ruff lint and format in sequence"
 	@echo "  notebooks          Run notebooks sequentially and save to output/runs/<run_id>"
 	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
 	@echo "  notebooks-continue Run notebooks and continue even if one fails"
@@ -67,6 +70,16 @@ precommit-install: ## Install pre-commit hooks in the local repository
 
 precommit-run: ## Run all hooks across the project
 	uv run pre-commit run --all-files
+
+lint: ## Run Ruff lint checks
+	uv run ruff check .
+
+format: ## Format code with Ruff
+	uv run ruff format .
+
+lint-format: ## Run Ruff lint and format in sequence
+	$(MAKE) lint
+	$(MAKE) format
 
 notebooks: ## Run notebooks sequentially and save to output/runs/<run_id>
 	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS)

@@ -48,10 +48,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id",
         default=None,
-        help=(
-            "Run identifier. If omitted, uses a UTC timestamp "
-            "(ex.: 20260320_184500)."
-        ),
+        help=("Run identifier. If omitted, uses a UTC timestamp (ex.: 20260320_184500)."),
     )
     parser.add_argument(
         "--timeout-seconds",
@@ -185,10 +182,7 @@ def main() -> int:
 
     print("\nSummary:")
     for item in results:
-        msg = (
-            f"- {item.notebook.name}: {item.status} "
-            f"({item.duration_seconds:.1f}s)"
-        )
+        msg = f"- {item.notebook.name}: {item.status} ({item.duration_seconds:.1f}s)"
         if item.output_file:
             msg += f" -> {item.output_file}"
         print(msg)

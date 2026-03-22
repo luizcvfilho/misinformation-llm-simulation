@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import Any
 
 
-def resolve_execution_report_path(default_output_root: Path = Path("../output")) -> tuple[str | None, Path]:
+def resolve_execution_report_path(
+    default_output_root: Path = Path("../output"),
+) -> tuple[str | None, Path]:
     run_id = os.getenv("RUN_ID", "").strip() or None
     run_dir_env = os.getenv("RUN_DIR", "").strip()
 
@@ -57,6 +59,20 @@ def _format_range(value: Any) -> str:
     return f"{start}-{end} (count: {count})"
 
 
+def _extract_date_range_value(summary: dict[str, Any], key: str) -> Any:
+    date_range = summary.get("date_range", {})
+    if not isinstance(date_range, dict):
+        return None
+    return date_range.get(key)
+
+
+def _extract_unique_count(summary: dict[str, Any], key: str) -> Any:
+    section = summary.get(key, {})
+    if not isinstance(section, dict):
+        return None
+    return section.get("unique_count")
+
+
 def _render_newsdata_query_summary(lines: list[str], content: dict[str, Any]) -> None:
     if not content:
         lines.append("- n/a")
@@ -73,26 +89,51 @@ def _render_newsdata_query_summary(lines: list[str], content: dict[str, Any]) ->
             params = {}
 
         lines.append("- **Latest query summary**:")
-        lines.append(f"  - **Fetched at utc**: {_format_markdown_value(latest.get('fetched_at_utc'))}")
+        lines.append(
+            f"  - **Fetched at utc**: {_format_markdown_value(latest.get('fetched_at_utc'))}"
+        )
         lines.append(f"  - **Query**: {_format_markdown_value(params.get('query'))}")
         lines.append(f"  - **Language**: {_format_markdown_value(params.get('language'))}")
         lines.append(f"  - **Country**: {_format_markdown_value(params.get('country'))}")
         lines.append(f"  - **Category**: {_format_markdown_value(params.get('category'))}")
         lines.append(f"  - **Max records**: {_format_markdown_value(params.get('max_records'))}")
-        lines.append(f"  - **Rows fetched**: {_format_markdown_value(latest.get('rows_fetched_in_request'))}")
-        lines.append(f"  - **Rows appended**: {_format_markdown_value(latest.get('rows_appended_to_file'))}")
-        lines.append(f"  - **Rows skipped as duplicates**: {_format_markdown_value(latest.get('rows_skipped_as_duplicates'))}")
-        lines.append(f"  - **Dataset rows**: {_format_range(latest.get('dataset_row_index_range'))}")
+        lines.append(
+            f"  - **Rows fetched**: {_format_markdown_value(latest.get('rows_fetched_in_request'))}"
+        )
+        lines.append(
+            f"  - **Rows appended**: {_format_markdown_value(latest.get('rows_appended_to_file'))}"
+        )
+        lines.append(
+            "  - **Rows skipped as duplicates**: "
+            f"{_format_markdown_value(latest.get('rows_skipped_as_duplicates'))}"
+        )
+        lines.append(
+            f"  - **Dataset rows**: {_format_range(latest.get('dataset_row_index_range'))}"
+        )
         lines.append(f"  - **Csv lines**: {_format_range(latest.get('csv_line_range'))}")
 
         summary = latest.get("query_results_summary", {})
         if isinstance(summary, dict):
             lines.append("  - **Result summary**:")
-            lines.append(f"    - **Rows fetched**: {_format_markdown_value(summary.get('rows_fetched'))}")
-            lines.append(f"    - **Date range min**: {_format_markdown_value(summary.get('date_range', {}).get('min_pubDate') if isinstance(summary.get('date_range'), dict) else None)}")
-            lines.append(f"    - **Date range max**: {_format_markdown_value(summary.get('date_range', {}).get('max_pubDate') if isinstance(summary.get('date_range'), dict) else None)}")
-            lines.append(f"    - **Unique sources**: {_format_markdown_value(summary.get('source_name_summary', {}).get('unique_count') if isinstance(summary.get('source_name_summary'), dict) else None)}")
-            lines.append(f"    - **Unique keywords**: {_format_markdown_value(summary.get('keyword_summary', {}).get('unique_count') if isinstance(summary.get('keyword_summary'), dict) else None)}")
+            lines.append(
+                f"    - **Rows fetched**: {_format_markdown_value(summary.get('rows_fetched'))}"
+            )
+            lines.append(
+                "    - **Date range min**: "
+                f"{_format_markdown_value(_extract_date_range_value(summary, 'min_pubDate'))}"
+            )
+            lines.append(
+                "    - **Date range max**: "
+                f"{_format_markdown_value(_extract_date_range_value(summary, 'max_pubDate'))}"
+            )
+            lines.append(
+                "    - **Unique sources**: "
+                f"{_format_markdown_value(_extract_unique_count(summary, 'source_name_summary'))}"
+            )
+            lines.append(
+                "    - **Unique keywords**: "
+                f"{_format_markdown_value(_extract_unique_count(summary, 'keyword_summary'))}"
+            )
 
     history = content.get("request_history", [])
     if isinstance(history, list) and history:
@@ -143,17 +184,35 @@ def _render_newsdata_query_summary(lines: list[str], content: dict[str, Any]) ->
     accumulated = content.get("accumulated_dataset_summary", {})
     if isinstance(accumulated, dict):
         lines.append("- **Accumulated dataset summary**:")
-        lines.append(f"  - **Rows fetched**: {_format_markdown_value(accumulated.get('rows_fetched'))}")
+        lines.append(
+            f"  - **Rows fetched**: {_format_markdown_value(accumulated.get('rows_fetched'))}"
+        )
 
         date_range = accumulated.get("date_range", {})
         if isinstance(date_range, dict):
-            lines.append(f"  - **Date range min**: {_format_markdown_value(date_range.get('min_pubDate'))}")
-            lines.append(f"  - **Date range max**: {_format_markdown_value(date_range.get('max_pubDate'))}")
+            lines.append(
+                f"  - **Date range min**: {_format_markdown_value(date_range.get('min_pubDate'))}"
+            )
+            lines.append(
+                f"  - **Date range max**: {_format_markdown_value(date_range.get('max_pubDate'))}"
+            )
 
-        lines.append(f"  - **Unique sources**: {_format_markdown_value(accumulated.get('source_name_summary', {}).get('unique_count') if isinstance(accumulated.get('source_name_summary'), dict) else None)}")
-        lines.append(f"  - **Unique countries**: {_format_markdown_value(accumulated.get('country_summary', {}).get('unique_count') if isinstance(accumulated.get('country_summary'), dict) else None)}")
-        lines.append(f"  - **Unique categories**: {_format_markdown_value(accumulated.get('category_summary', {}).get('unique_count') if isinstance(accumulated.get('category_summary'), dict) else None)}")
-        lines.append(f"  - **Unique keywords**: {_format_markdown_value(accumulated.get('keyword_summary', {}).get('unique_count') if isinstance(accumulated.get('keyword_summary'), dict) else None)}")
+        lines.append(
+            "  - **Unique sources**: "
+            f"{_format_markdown_value(_extract_unique_count(accumulated, 'source_name_summary'))}"
+        )
+        lines.append(
+            "  - **Unique countries**: "
+            f"{_format_markdown_value(_extract_unique_count(accumulated, 'country_summary'))}"
+        )
+        lines.append(
+            "  - **Unique categories**: "
+            f"{_format_markdown_value(_extract_unique_count(accumulated, 'category_summary'))}"
+        )
+        lines.append(
+            "  - **Unique keywords**: "
+            f"{_format_markdown_value(_extract_unique_count(accumulated, 'keyword_summary'))}"
+        )
 
 
 def _humanize_key(key: str) -> str:
@@ -242,7 +301,10 @@ def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]
     lines.append("| " + " | ".join(["---"] * len(columns)) + " |")
 
     for row in metrics:
-        values = [_escape_markdown_table_cell(_format_markdown_value(row.get(column))) for column in columns]
+        values = [
+            _escape_markdown_table_cell(_format_markdown_value(row.get(column)))
+            for column in columns
+        ]
         lines.append("| " + " | ".join(values) + " |")
 
 
@@ -294,20 +356,24 @@ def append_execution_report(
 
     lines: list[str] = []
     if not report_path.exists():
-        lines.extend([
-            "# Execution Report",
-            "",
-            "Auto-generated execution metadata per notebook run.",
-            "",
-        ])
+        lines.extend(
+            [
+                "# Execution Report",
+                "",
+                "Auto-generated execution metadata per notebook run.",
+                "",
+            ]
+        )
 
-    lines.extend([
-        f"## {timestamp} - {section_title}",
-        f"- notebook: {notebook_name}",
-        f"- run_id: {run_id or 'manual'}",
-        "",
-        "### Details",
-    ])
+    lines.extend(
+        [
+            f"## {timestamp} - {section_title}",
+            f"- notebook: {notebook_name}",
+            f"- run_id: {run_id or 'manual'}",
+            "",
+            "### Details",
+        ]
+    )
 
     for key, value in details.items():
         _render_detail_section(lines, key, value)

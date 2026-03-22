@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Models(str, Enum):
+class Models(StrEnum):
     GEMINI31FlashLite = "gemini-3.1-flash-lite-preview"
     NEMOTRON3Super120B = "nvidia/nemotron-3-super-120b-a12b:free"
     LLAMA318B = "llama3.1:8b"

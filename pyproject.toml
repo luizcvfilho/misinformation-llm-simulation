@@ -22,4 +22,12 @@ dependencies = [
 package = false
 
 [dependency-groups]
-dev = ["pre-commit", "nbstripout"]
+dev = ["pre-commit", "nbstripout", "ruff"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+exclude = ["output", "data", ".venv", ".venv-linux"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]

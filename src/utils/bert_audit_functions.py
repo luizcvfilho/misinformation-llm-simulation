@@ -92,10 +92,7 @@ def pretrained_fake_news_detector_prediction(
     model_id2label = getattr(getattr(model, "config", None), "id2label", None) or {}
     id2label = {int(k): str(v) for k, v in model_id2label.items()} if model_id2label else {}
 
-    label_probs = {
-        id2label.get(i, str(i)): float(probs[i])
-        for i in range(len(probs))
-    }
+    label_probs = {id2label.get(i, str(i)): float(probs[i]) for i in range(len(probs))}
 
     return {
         "prediction_id": pred_id,
