@@ -5,6 +5,8 @@ import csv
 import json
 import os
 import sys
+from collections import Counter
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from pathlib import Path
 from typing import Any
@@ -15,6 +17,7 @@ from urllib.request import urlopen
 
 API_URL = "https://newsdata.io/api/1/latest"
 DEFAULT_OUTPUT = Path("data/newsdata_news.csv")
+QUERY_METADATA_ROW_ID = "__query_metadata__"
 load_dotenv()
 
 def parse_args() -> argparse.Namespace:
@@ -99,6 +102,96 @@ def _to_text(value: Any) -> str:
 	return str(value)
 
 
+def _split_multi_value(value: Any) -> list[str]:
+	if value is None:
+		return []
+
+	if isinstance(value, list):
+		items = value
+	else:
+		text = str(value)
+		if not text.strip():
+			return []
+		# Alguns campos podem vir separados por ';' ou ','.
+		items = []
+		for chunk in text.split(";"):
+			items.extend(chunk.split(","))
+
+	cleaned = [str(item).strip() for item in items if str(item).strip()]
+	return cleaned
+
+
+def _count_values(news: list[dict[str, Any]], field: str) -> Counter[str]:
+	counter: Counter[str] = Counter()
+	for item in news:
+		counter.update(_split_multi_value(item.get(field)))
+	return counter
+
+
+def _summarize_field(news: list[dict[str, Any]], field: str, top_n: int = 10) -> dict[str, Any]:
+	counts = _count_values(news, field)
+	return {
+		"unique_count": len(counts),
+		"top_values": [
+			{"value": value, "count": count}
+			for value, count in counts.most_common(top_n)
+		],
+	}
+
+
+def _is_non_empty(value: Any) -> bool:
+	if value is None:
+		return False
+	if isinstance(value, str):
+		return bool(value.strip())
+	if isinstance(value, list):
+		return any(str(item).strip() for item in value)
+	return True
+
+
+def _summarize_query_results(news: list[dict[str, Any]], sample_size: int = 5) -> dict[str, Any]:
+	pub_dates = [
+		str(item.get("pubDate", "")).strip()
+		for item in news
+		if str(item.get("pubDate", "")).strip()
+	]
+
+	date_range = {
+		"min_pubDate": min(pub_dates) if pub_dates else None,
+		"max_pubDate": max(pub_dates) if pub_dates else None,
+	}
+
+	content_coverage = {
+		"with_title": sum(1 for item in news if _is_non_empty(item.get("title"))),
+		"with_description": sum(1 for item in news if _is_non_empty(item.get("description"))),
+		"with_content": sum(1 for item in news if _is_non_empty(item.get("content"))),
+		"with_full_description": sum(1 for item in news if _is_non_empty(item.get("full_description"))),
+	}
+
+	sample_articles = []
+	for item in news[:sample_size]:
+		sample_articles.append(
+			{
+				"title": _to_text(item.get("title")),
+				"source_name": _to_text(item.get("source_name")),
+				"pubDate": _to_text(item.get("pubDate")),
+				"link": _to_text(item.get("link")),
+			}
+		)
+
+	return {
+		"rows_fetched": len(news),
+		"date_range": date_range,
+		"source_name_summary": _summarize_field(news, "source_name"),
+		"language_summary": _summarize_field(news, "language"),
+		"country_summary": _summarize_field(news, "country"),
+		"category_summary": _summarize_field(news, "category"),
+		"keyword_summary": _summarize_field(news, "keywords"),
+		"content_coverage": content_coverage,
+		"sample_articles": sample_articles,
+	}
+
+
 def fetch_news(
 	api_key: str,
 	query: str,
@@ -155,7 +248,33 @@ def fetch_news(
 	return records
 
 
-def save_csv(news: list[dict[str, Any]], output_path: Path) -> None:
+def _build_query_metadata(
+	*,
+	query: str,
+	language: str,
+	country: str,
+	category: str,
+	max_records: int,
+	news: list[dict[str, Any]],
+) -> dict[str, Any]:
+	return {
+		"query_parameters": {
+			"query": query,
+			"language": language,
+			"country": country,
+			"category": category,
+			"max_records": max_records,
+		},
+		"query_results_summary": _summarize_query_results(news),
+		"fetched_at_utc": datetime.now(timezone.utc).isoformat(),
+	}
+
+
+def save_csv(
+	news: list[dict[str, Any]],
+	output_path: Path,
+	query_metadata: dict[str, Any],
+) -> None:
 	output_path.parent.mkdir(parents=True, exist_ok=True)
 
 	columns = [
@@ -185,6 +304,15 @@ def save_csv(news: list[dict[str, Any]], output_path: Path) -> None:
 	with output_path.open("w", encoding="utf-8", newline="") as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=columns)
 		writer.writeheader()
+
+		metadata_row = {column: "" for column in columns}
+		metadata_row["article_id"] = QUERY_METADATA_ROW_ID
+		metadata_row["title"] = "QUERY_METADATA"
+		metadata_row["description"] = json.dumps(query_metadata, ensure_ascii=False)
+		metadata_row["language"] = _to_text(query_metadata.get("language"))
+		metadata_row["country"] = _to_text(query_metadata.get("country"))
+		metadata_row["category"] = _to_text(query_metadata.get("category"))
+		writer.writerow(metadata_row)
 
 		for item in news:
 			row = {column: _to_text(item.get(column)) for column in columns}
@@ -216,7 +344,15 @@ def main() -> int:
 		category=args.category.strip(),
 		max_records=args.max_records,
 	)
-	save_csv(news, args.output)
+	query_metadata = _build_query_metadata(
+		query=args.query.strip(),
+		language=args.language.strip(),
+		country=args.country.strip(),
+		category=args.category.strip(),
+		max_records=args.max_records,
+		news=news,
+	)
+	save_csv(news, args.output, query_metadata)
 
 	print(f"Noticias salvas: {len(news)}")
 	print(f"Arquivo gerado: {args.output}")

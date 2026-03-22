@@ -33,6 +33,15 @@ def _format_markdown_value(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def _indent(level: int) -> str:
+    return "  " * max(level, 0)
+
+
+def _escape_markdown_table_cell(value: str) -> str:
+    # Evita quebrar tabelas markdown quando houver pipes ou quebras de linha.
+    return value.replace("|", "\\|").replace("\n", " ").strip()
+
+
 def _humanize_key(key: str) -> str:
     normalized = key.replace("_", " ").strip()
     return normalized[:1].upper() + normalized[1:] if normalized else key
@@ -43,13 +52,45 @@ def _render_scalar_list(lines: list[str], items: list[Any]) -> None:
         lines.append(f"- {_format_markdown_value(item)}")
 
 
+def _render_nested_value(lines: list[str], value: Any, level: int = 0) -> None:
+    prefix = f"{_indent(level)}- "
+
+    if isinstance(value, dict):
+        if not value:
+            lines.append(f"{prefix}n/a")
+            return
+
+        for sub_key, sub_value in value.items():
+            key_label = _humanize_key(str(sub_key))
+            if isinstance(sub_value, (dict, list)):
+                lines.append(f"{prefix}**{key_label}**:")
+                _render_nested_value(lines, sub_value, level + 1)
+            else:
+                lines.append(f"{prefix}**{key_label}**: {_format_markdown_value(sub_value)}")
+        return
+
+    if isinstance(value, list):
+        if not value:
+            lines.append(f"{prefix}n/a")
+            return
+
+        for item in value:
+            if isinstance(item, (dict, list)):
+                lines.append(f"{prefix}Item:")
+                _render_nested_value(lines, item, level + 1)
+            else:
+                lines.append(f"{prefix}{_format_markdown_value(item)}")
+        return
+
+    lines.append(f"{prefix}{_format_markdown_value(value)}")
+
+
 def _render_dict(lines: list[str], content: dict[str, Any]) -> None:
     if not content:
         lines.append("- n/a")
         return
 
-    for sub_key, sub_value in content.items():
-        lines.append(f"- **{_humanize_key(str(sub_key))}**: {_format_markdown_value(sub_value)}")
+    _render_nested_value(lines, content, level=0)
 
 
 def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]]) -> None:
@@ -87,7 +128,7 @@ def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]
     lines.append("| " + " | ".join(["---"] * len(columns)) + " |")
 
     for row in metrics:
-        values = [_format_markdown_value(row.get(column)) for column in columns]
+        values = [_escape_markdown_table_cell(_format_markdown_value(row.get(column))) for column in columns]
         lines.append("| " + " | ".join(values) + " |")
 
 
