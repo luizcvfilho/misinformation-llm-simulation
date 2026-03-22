@@ -42,6 +42,120 @@ def _escape_markdown_table_cell(value: str) -> str:
     return value.replace("|", "\\|").replace("\n", " ").strip()
 
 
+def _format_range(value: Any) -> str:
+    if not isinstance(value, dict):
+        return _format_markdown_value(value)
+
+    start = value.get("start")
+    end = value.get("end")
+    count = value.get("count")
+
+    if start is None and end is None:
+        return "n/a"
+    if start == end:
+        return f"{start} (count: {count})"
+    return f"{start}-{end} (count: {count})"
+
+
+def _render_newsdata_query_summary(lines: list[str], content: dict[str, Any]) -> None:
+    if not content:
+        lines.append("- n/a")
+        lines.append("")
+        return
+
+    lines.append(f"- **Updated at utc**: {_format_markdown_value(content.get('updated_at_utc'))}")
+    lines.append(f"- **Total requests**: {_format_markdown_value(content.get('total_requests'))}")
+
+    latest = content.get("latest_request", {})
+    if isinstance(latest, dict):
+        params = latest.get("query_parameters", {})
+        if not isinstance(params, dict):
+            params = {}
+
+        lines.append("- **Latest query summary**:")
+        lines.append(f"  - **Fetched at utc**: {_format_markdown_value(latest.get('fetched_at_utc'))}")
+        lines.append(f"  - **Query**: {_format_markdown_value(params.get('query'))}")
+        lines.append(f"  - **Language**: {_format_markdown_value(params.get('language'))}")
+        lines.append(f"  - **Country**: {_format_markdown_value(params.get('country'))}")
+        lines.append(f"  - **Category**: {_format_markdown_value(params.get('category'))}")
+        lines.append(f"  - **Max records**: {_format_markdown_value(params.get('max_records'))}")
+        lines.append(f"  - **Rows fetched**: {_format_markdown_value(latest.get('rows_fetched_in_request'))}")
+        lines.append(f"  - **Rows appended**: {_format_markdown_value(latest.get('rows_appended_to_file'))}")
+        lines.append(f"  - **Rows skipped as duplicates**: {_format_markdown_value(latest.get('rows_skipped_as_duplicates'))}")
+        lines.append(f"  - **Dataset rows**: {_format_range(latest.get('dataset_row_index_range'))}")
+        lines.append(f"  - **Csv lines**: {_format_range(latest.get('csv_line_range'))}")
+
+        summary = latest.get("query_results_summary", {})
+        if isinstance(summary, dict):
+            lines.append("  - **Result summary**:")
+            lines.append(f"    - **Rows fetched**: {_format_markdown_value(summary.get('rows_fetched'))}")
+            lines.append(f"    - **Date range min**: {_format_markdown_value(summary.get('date_range', {}).get('min_pubDate') if isinstance(summary.get('date_range'), dict) else None)}")
+            lines.append(f"    - **Date range max**: {_format_markdown_value(summary.get('date_range', {}).get('max_pubDate') if isinstance(summary.get('date_range'), dict) else None)}")
+            lines.append(f"    - **Unique sources**: {_format_markdown_value(summary.get('source_name_summary', {}).get('unique_count') if isinstance(summary.get('source_name_summary'), dict) else None)}")
+            lines.append(f"    - **Unique keywords**: {_format_markdown_value(summary.get('keyword_summary', {}).get('unique_count') if isinstance(summary.get('keyword_summary'), dict) else None)}")
+
+    history = content.get("request_history", [])
+    if isinstance(history, list) and history:
+        lines.append("- **Query history**:")
+        headers = [
+            "#",
+            "fetched_at_utc",
+            "query",
+            "language",
+            "country",
+            "category",
+            "max_records",
+            "rows_fetched",
+            "rows_appended",
+            "rows_skipped",
+            "dataset_rows",
+            "csv_lines",
+        ]
+
+        human_headers = [_humanize_key(h) for h in headers]
+        lines.append("  | " + " | ".join(human_headers) + " |")
+        lines.append("  | " + " | ".join(["---"] * len(headers)) + " |")
+
+        for idx, item in enumerate(history, start=1):
+            if not isinstance(item, dict):
+                continue
+            params = item.get("query_parameters", {})
+            if not isinstance(params, dict):
+                params = {}
+
+            row_values = [
+                str(idx),
+                _format_markdown_value(item.get("fetched_at_utc")),
+                _format_markdown_value(params.get("query")),
+                _format_markdown_value(params.get("language")),
+                _format_markdown_value(params.get("country")),
+                _format_markdown_value(params.get("category")),
+                _format_markdown_value(params.get("max_records")),
+                _format_markdown_value(item.get("rows_fetched_in_request")),
+                _format_markdown_value(item.get("rows_appended_to_file")),
+                _format_markdown_value(item.get("rows_skipped_as_duplicates")),
+                _format_range(item.get("dataset_row_index_range")),
+                _format_range(item.get("csv_line_range")),
+            ]
+            row_values = [_escape_markdown_table_cell(v) for v in row_values]
+            lines.append("  | " + " | ".join(row_values) + " |")
+
+    accumulated = content.get("accumulated_dataset_summary", {})
+    if isinstance(accumulated, dict):
+        lines.append("- **Accumulated dataset summary**:")
+        lines.append(f"  - **Rows fetched**: {_format_markdown_value(accumulated.get('rows_fetched'))}")
+
+        date_range = accumulated.get("date_range", {})
+        if isinstance(date_range, dict):
+            lines.append(f"  - **Date range min**: {_format_markdown_value(date_range.get('min_pubDate'))}")
+            lines.append(f"  - **Date range max**: {_format_markdown_value(date_range.get('max_pubDate'))}")
+
+        lines.append(f"  - **Unique sources**: {_format_markdown_value(accumulated.get('source_name_summary', {}).get('unique_count') if isinstance(accumulated.get('source_name_summary'), dict) else None)}")
+        lines.append(f"  - **Unique countries**: {_format_markdown_value(accumulated.get('country_summary', {}).get('unique_count') if isinstance(accumulated.get('country_summary'), dict) else None)}")
+        lines.append(f"  - **Unique categories**: {_format_markdown_value(accumulated.get('category_summary', {}).get('unique_count') if isinstance(accumulated.get('category_summary'), dict) else None)}")
+        lines.append(f"  - **Unique keywords**: {_format_markdown_value(accumulated.get('keyword_summary', {}).get('unique_count') if isinstance(accumulated.get('keyword_summary'), dict) else None)}")
+
+
 def _humanize_key(key: str) -> str:
     normalized = key.replace("_", " ").strip()
     return normalized[:1].upper() + normalized[1:] if normalized else key
@@ -134,6 +248,11 @@ def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]
 
 def _render_detail_section(lines: list[str], key: str, value: Any) -> None:
     lines.append(f"### {_humanize_key(key)}")
+
+    if key.lower() == "newsdata_query_details" and isinstance(value, dict):
+        _render_newsdata_query_summary(lines, value)
+        lines.append("")
+        return
 
     if isinstance(value, dict):
         _render_dict(lines, value)
