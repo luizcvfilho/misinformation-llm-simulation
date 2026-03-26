@@ -51,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=DEFAULT_OUTPUT,
+        default=None,
         help="CSV output path (default: data/newsdata_news.csv).",
     )
     parser.add_argument(
@@ -91,6 +91,17 @@ def parse_args() -> argparse.Namespace:
         help="Environment variable name containing the API key.",
     )
     return parser.parse_args()
+
+
+def _resolve_output_path(output: Path | None, category: str) -> Path:
+    if output is not None:
+        return output
+
+    category_value = category.strip()
+    if category_value:
+        return DEFAULT_OUTPUT.parent / f"{category_value}_news.csv"
+
+    return DEFAULT_OUTPUT
 
 
 def _request_news(params: dict[str, Any]) -> dict[str, Any]:
@@ -494,28 +505,34 @@ def main() -> int:
         )
         return 2
 
+    query_value = args.query.strip()
+    language_value = args.language.strip()
+    country_value = args.country.strip()
+    category_value = args.category.strip()
+    output_path = _resolve_output_path(args.output, category_value)
+
     news = fetch_news(
         api_key=api_key,
-        query=args.query.strip(),
-        language=args.language.strip(),
-        country=args.country.strip(),
-        category=args.category.strip(),
+        query=query_value,
+        language=language_value,
+        country=country_value,
+        category=category_value,
         max_records=args.max_records,
     )
     query_metadata = _build_query_metadata(
-        query=args.query.strip(),
-        language=args.language.strip(),
-        country=args.country.strip(),
-        category=args.category.strip(),
+        query=query_value,
+        language=language_value,
+        country=country_value,
+        category=category_value,
         max_records=args.max_records,
         news=news,
     )
-    rows_fetched, rows_appended, total_rows = save_csv(news, args.output, query_metadata)
+    rows_fetched, rows_appended, total_rows = save_csv(news, output_path, query_metadata)
 
     print(f"News fetched in this request: {rows_fetched}")
     print(f"New records appended to file: {rows_appended}")
     print(f"Total accumulated records in file: {total_rows}")
-    print(f"Generated file: {args.output}")
+    print(f"Generated file: {output_path}")
     return 0
 
 
