@@ -308,6 +308,31 @@ def _render_rewrite_metrics_table(lines: list[str], metrics: list[dict[str, Any]
         lines.append("| " + " | ".join(values) + " |")
 
 
+def _render_metrics_table(lines: list[str], metrics: list[dict[str, Any]]) -> None:
+    if not metrics:
+        lines.append("- n/a")
+        return
+
+    columns: list[str] = []
+    seen: set[str] = set()
+    for row in metrics:
+        for column in row.keys():
+            if column not in seen:
+                columns.append(column)
+                seen.add(column)
+
+    header_columns = [_humanize_key(str(column)) for column in columns]
+    lines.append("| " + " | ".join(header_columns) + " |")
+    lines.append("| " + " | ".join(["---"] * len(columns)) + " |")
+
+    for row in metrics:
+        values = [
+            _escape_markdown_table_cell(_format_markdown_value(row.get(column)))
+            for column in columns
+        ]
+        lines.append("| " + " | ".join(values) + " |")
+
+
 def _render_detail_section(lines: list[str], key: str, value: Any) -> None:
     lines.append(f"### {_humanize_key(key)}")
 
@@ -328,8 +353,18 @@ def _render_detail_section(lines: list[str], key: str, value: Any) -> None:
             return
 
         if all(isinstance(item, dict) for item in value):
+            table_keys = {
+                "rewrite_metrics",
+                "rewrite_run_metrics",
+                "audit_dataset_metrics",
+                "audit_model_metrics",
+                "detector_dataset_metrics",
+                "fake_rate_by_dataset",
+            }
             if key.lower() in {"rewrite_metrics", "rewrite_run_metrics"}:
                 _render_rewrite_metrics_table(lines, value)
+            elif key.lower() in table_keys:
+                _render_metrics_table(lines, value)
             else:
                 for idx, item in enumerate(value, start=1):
                     lines.append(f"- Item {idx}")
