@@ -14,7 +14,7 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
-from enums.providers import Provider
+from enums import Models, Provider
 from utils.simulation_functions import (
     DEFAULT_ALLOW_TITLE_FALLBACK,
     DEFAULT_MAX_REQUESTS_PER_MINUTE,
@@ -25,7 +25,7 @@ from utils.simulation_functions import (
     resolve_row_text,
 )
 
-DEFAULT_TOPIC_DRIFT_MODEL = "gemini-2.5-flash-lite"
+DEFAULT_TOPIC_DRIFT_MODEL = Models.GEMINI31FlashLite
 DEFAULT_TOPIC_DRIFT_PROVIDER = Provider.GEMINI
 DEFAULT_REWRITTEN_COLUMN = "rewritten_news"
 
@@ -75,6 +75,16 @@ class TopicStructure:
     central_entities: list[str]
     central_relations: list[TopicRelation]
     narrative_frame: str | None = None
+
+
+def _empty_topic_structure() -> TopicStructure:
+    return TopicStructure(
+        main_topic=None,
+        subtopics=[],
+        central_entities=[],
+        central_relations=[],
+        narrative_frame=None,
+    )
 
 
 def _deduplicate_preserve_order(values: list[str]) -> list[str]:
@@ -526,6 +536,129 @@ def _sanitize_column_token(value: str) -> str:
     return normalized or "version"
 
 
+def _topic_structure_field_suffixes() -> tuple[str, ...]:
+    return (
+        "main_topic",
+        "subtopics",
+        "central_entities",
+        "central_relations",
+        "narrative_frame",
+        "json",
+    )
+
+
+def _topic_drift_metric_suffixes() -> tuple[str, ...]:
+    return (
+        "reference_original_label",
+        "reference_incremental_label",
+        "stdi_vs_original",
+        "theme_drift_vs_original",
+        "subtopic_drift_vs_original",
+        "entity_drift_vs_original",
+        "relation_drift_vs_original",
+        "stdi_incremental",
+        "theme_drift_incremental",
+        "subtopic_drift_incremental",
+        "entity_drift_incremental",
+        "relation_drift_incremental",
+        "stdi_cumulative",
+    )
+
+
+def _expected_chain_output_columns(version_tokens: Sequence[str]) -> dict[str, Any]:
+    expected_columns: dict[str, Any] = {
+        "source_text_column": pd.NA,
+        "original_topic_structure_status": "not_requested",
+        "original_topic_structure_error": pd.NA,
+    }
+
+    for suffix in _topic_structure_field_suffixes():
+        expected_columns[f"original_{suffix}"] = pd.NA
+
+    for token in version_tokens:
+        expected_columns[f"{token}_topic_structure_status"] = "not_requested"
+        expected_columns[f"{token}_topic_structure_error"] = pd.NA
+
+        for suffix in _topic_structure_field_suffixes():
+            expected_columns[f"{token}_{suffix}"] = pd.NA
+
+        for suffix in _topic_drift_metric_suffixes():
+            expected_columns[f"{token}_{suffix}"] = pd.NA
+
+    return expected_columns
+
+
+def _default_metric_values(
+    *,
+    reference_original_label: str = "original",
+    reference_incremental_label: str = "original",
+) -> dict[str, Any]:
+    return {
+        "reference_original_label": reference_original_label,
+        "reference_incremental_label": reference_incremental_label,
+        "stdi_vs_original": 0.0,
+        "theme_drift_vs_original": 0.0,
+        "subtopic_drift_vs_original": 0.0,
+        "entity_drift_vs_original": 0.0,
+        "relation_drift_vs_original": 0.0,
+        "stdi_incremental": 0.0,
+        "theme_drift_incremental": 0.0,
+        "subtopic_drift_incremental": 0.0,
+        "entity_drift_incremental": 0.0,
+        "relation_drift_incremental": 0.0,
+        "stdi_cumulative": 0.0,
+    }
+
+
+def _apply_topic_structure_defaults(
+    df: pd.DataFrame,
+    *,
+    row_index: Any,
+    prefix: str,
+) -> None:
+    empty_structure_columns = flatten_topic_structure(
+        _empty_topic_structure(),
+        prefix=prefix,
+    )
+    for column_name, value in empty_structure_columns.items():
+        df.at[row_index, column_name] = value
+
+
+def _apply_metric_defaults(
+    df: pd.DataFrame,
+    *,
+    row_index: Any,
+    token: str,
+    reference_original_label: str = "original",
+    reference_incremental_label: str = "original",
+) -> None:
+    for suffix, value in _default_metric_values(
+        reference_original_label=reference_original_label,
+        reference_incremental_label=reference_incremental_label,
+    ).items():
+        df.at[row_index, f"{token}_{suffix}"] = value
+
+
+def _initialize_chain_metric_columns(
+    df: pd.DataFrame,
+    *,
+    version_tokens: Sequence[str],
+) -> None:
+    for column_name, default_value in _expected_chain_output_columns(version_tokens).items():
+        df[column_name] = default_value
+
+
+def _ensure_expected_chain_output_columns(
+    df: pd.DataFrame,
+    *,
+    version_tokens: Sequence[str],
+) -> pd.DataFrame:
+    for column_name, default_value in _expected_chain_output_columns(version_tokens).items():
+        if column_name not in df.columns:
+            df[column_name] = default_value
+    return df
+
+
 def annotate_stdi_for_version_chain(
     df: pd.DataFrame,
     *,
@@ -564,6 +697,10 @@ def annotate_stdi_for_version_chain(
         result_df[column] = default_value
 
     version_tokens = {column: _sanitize_column_token(column) for column in version_columns}
+    _initialize_chain_metric_columns(
+        result_df,
+        version_tokens=list(version_tokens.values()),
+    )
     for token in version_tokens.values():
         result_df[f"{token}_topic_structure_status"] = "not_requested"
         result_df[f"{token}_topic_structure_error"] = pd.NA
@@ -575,6 +712,12 @@ def annotate_stdi_for_version_chain(
     for row_index in target_indexes:
         row = result_df.loc[row_index]
 
+        _apply_topic_structure_defaults(result_df, row_index=row_index, prefix="original")
+        for version_column in version_columns:
+            token = version_tokens[version_column]
+            _apply_topic_structure_defaults(result_df, row_index=row_index, prefix=token)
+            _apply_metric_defaults(result_df, row_index=row_index, token=token)
+
         try:
             source_column, original_text = resolve_row_text(
                 row=row,
@@ -585,6 +728,12 @@ def annotate_stdi_for_version_chain(
         except ValueError as exc:
             result_df.at[row_index, "original_topic_structure_status"] = "skipped"
             result_df.at[row_index, "original_topic_structure_error"] = str(exc)
+            for version_column in version_columns:
+                token = version_tokens[version_column]
+                result_df.at[row_index, f"{token}_topic_structure_status"] = "blocked"
+                result_df.at[row_index, f"{token}_topic_structure_error"] = (
+                    "Skipped because the original text could not be resolved."
+                )
             continue
 
         title = ""
@@ -612,6 +761,12 @@ def annotate_stdi_for_version_chain(
         except Exception as exc:
             result_df.at[row_index, "original_topic_structure_status"] = "error"
             result_df.at[row_index, "original_topic_structure_error"] = str(exc)
+            for version_column in version_columns:
+                token = version_tokens[version_column]
+                result_df.at[row_index, f"{token}_topic_structure_status"] = "blocked"
+                result_df.at[row_index, f"{token}_topic_structure_error"] = (
+                    "Skipped because original topic extraction failed."
+                )
             continue
 
         chain_structures = [original_structure]
@@ -626,6 +781,13 @@ def annotate_stdi_for_version_chain(
                 result_df.at[row_index, f"{token}_topic_structure_status"] = "skipped"
                 result_df.at[row_index, f"{token}_topic_structure_error"] = (
                     f"Column '{version_column}' has no usable text."
+                )
+                _apply_metric_defaults(
+                    result_df,
+                    row_index=row_index,
+                    token=token,
+                    reference_original_label="original",
+                    reference_incremental_label=chain_labels[-1],
                 )
                 continue
 
@@ -653,6 +815,13 @@ def annotate_stdi_for_version_chain(
             except Exception as exc:
                 result_df.at[row_index, f"{token}_topic_structure_status"] = "error"
                 result_df.at[row_index, f"{token}_topic_structure_error"] = str(exc)
+                _apply_metric_defaults(
+                    result_df,
+                    row_index=row_index,
+                    token=token,
+                    reference_original_label="original",
+                    reference_incremental_label=chain_labels[-1],
+                )
 
             if sleep_seconds > 0:
                 time.sleep(sleep_seconds)
@@ -665,7 +834,10 @@ def annotate_stdi_for_version_chain(
                     continue
                 result_df.at[row_index, f"{token}_{key}"] = value
 
-    return result_df
+    return _ensure_expected_chain_output_columns(
+        result_df,
+        version_tokens=list(version_tokens.values()),
+    )
 
 
 def annotate_stdi_for_rewrites(
