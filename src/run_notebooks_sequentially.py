@@ -29,11 +29,13 @@ def parse_args() -> argparse.Namespace:
         default=[
             "src/llm_simulation_workbench.ipynb",
             "src/bert_fake_real_workbench.ipynb",
+            "src/topic_drift_audit_workbench.ipynb",
             "src/pretrained_fake_news_detector_workbench.ipynb",
         ],
         help=(
             "List of notebooks to run in order. "
             "Default: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb "
+            "src/topic_drift_audit_workbench.ipynb "
             "src/pretrained_fake_news_detector_workbench.ipynb"
         ),
     )

@@ -50,6 +50,58 @@ make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 make clean
 ```
 
+## Structured Topic Drift Index (STDI)
+
+The project now includes a topic-drift utility for comparing rewritten news against the original article.
+
+The extraction step builds a structured representation for each text with:
+
+- `main_topic`
+- `subtopics`
+- `central_entities`
+- `central_relations` in `(subject, action, object)` form
+- `narrative_frame` (optional)
+
+The final score follows:
+
+```text
+D_theme = 0 if main_topic is equal, else 1
+D_subtopic = 1 - Jaccard(subtopics_original, subtopics_version)
+D_entities = 1 - Jaccard(entities_original, entities_version)
+D_relations = 1 - Jaccard(relations_original, relations_version)
+
+STDI = 0.2*D_theme + 0.2*D_subtopic + 0.2*D_entities + 0.4*D_relations
+```
+
+Available helpers in [src/utils/topic_drift_functions.py](src/utils/topic_drift_functions.py):
+
+- `extract_topic_structure(...)`
+- `calculate_stdi(...)`
+- `calculate_stdi_chain_metrics(...)`
+- `annotate_stdi_for_rewrites(...)`
+- `annotate_stdi_for_version_chain(...)`
+
+Example with the current original vs. rewritten flow:
+
+```python
+from utils import annotate_stdi_for_rewrites
+
+rewritten_with_stdi = annotate_stdi_for_rewrites(
+    df=rewritten_df,
+    rewritten_column="rewritten_news",
+    provider="gemini",
+    model="gemini-2.5-flash-lite",
+)
+```
+
+For future sequential rewrite chains, use:
+
+- `stdi_vs_original`: each version compared with the original article
+- `stdi_incremental`: each version compared with the immediately previous version
+- `stdi_cumulative`: running sum of incremental STDI values along the chain
+
+Generated columns include the extracted structures for the original and each version, plus per-version STDI metrics.
+
 ## Linting and Formatting
 
 The project uses Ruff for linting and formatting.
@@ -208,6 +260,21 @@ Notebook:
 
 It applies a pretrained detector to rewritten text and exports per-dataset and consolidated predictions.
 
+### Structured Topic Drift Audit
+
+Notebook:
+
+- [src/topic_drift_audit_workbench.ipynb](src/topic_drift_audit_workbench.ipynb)
+
+It applies STDI to original vs. rewritten news pairs, exports per-dataset and consolidated outputs, and summarizes topic drift using:
+
+- `rewritten_news_stdi_vs_original`
+- `rewritten_news_theme_drift_vs_original`
+- `rewritten_news_subtopic_drift_vs_original`
+- `rewritten_news_entity_drift_vs_original`
+- `rewritten_news_relation_drift_vs_original`
+- `high_topic_drift_flag`
+
 ## Output Structure
 
 The `output/` directory has two patterns:
@@ -222,15 +289,19 @@ output/
 	execution_report.md                        # manual notebook execution report (when not using run_id)
 	rewritten/
 		*.csv                                    # latest rewritten datasets
-	audit/
-		LocalAudit/
-			*_consistency_audit.csv
-			all_datasets_consistency_audit.csv
-			audit_summary.csv
-		PreTrainedAudit/
-			*_pretrained_fake_news_predictions.csv
-			all_datasets_pretrained_fake_news_predictions.csv
-			pretrained_fake_news_summary.csv
+		audit/
+			LocalAudit/
+				*_consistency_audit.csv
+				all_datasets_consistency_audit.csv
+				audit_summary.csv
+			TopicDriftAudit/
+				*_stdi_audit.csv
+				all_datasets_stdi_audit.csv
+				stdi_summary.csv
+			PreTrainedAudit/
+				*_pretrained_fake_news_predictions.csv
+				all_datasets_pretrained_fake_news_predictions.csv
+				pretrained_fake_news_summary.csv
 	runs/
 		<run_id>/
 			execution_report.md
@@ -252,6 +323,7 @@ If `run_id = 20260322_185309`, the main outputs are usually:
 - `output/runs/20260322_185309/execution_report.md`
 - `output/runs/20260322_185309/rewritten/local_llama_rewritten_df.csv`
 - `output/runs/20260322_185309/audit/LocalAudit/all_datasets_consistency_audit.csv`
+- `output/runs/20260322_185309/audit/TopicDriftAudit/all_datasets_stdi_audit.csv`
 - `output/runs/20260322_185309/audit/PreTrainedAudit/all_datasets_pretrained_fake_news_predictions.csv`
 - `output/runs/20260322_185309/executed_notebooks/llm_simulation_workbench.ipynb`
 
@@ -284,6 +356,8 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `source_text_column` | `rewrite_news_with_personality` | Which source text column was actually used |
 | `target_language` | `rewrite_news_with_personality` | Output language code selected for rewriting |
 | `target_language_source` | `rewrite_news_with_personality` | Why language was selected (`row.language`, `row.country`, `heuristic`, `default`) |
+| `original_*` | `annotate_stdi_for_rewrites` / `annotate_stdi_for_version_chain` | Structured topic extraction for the original article |
+| `<version>_*` | `annotate_stdi_for_rewrites` / `annotate_stdi_for_version_chain` | Structured topic extraction and STDI metrics for each rewritten version |
 
 ### 3) Columns created in consistency audit (`bert_fake_real_workbench.ipynb`)
 
@@ -309,14 +383,31 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `dataset_name` | notebook | Dataset identifier used in grouping and exports |
 | `source_file` | notebook | Original CSV filename for traceability |
 
-### 5) Summary CSV columns
+### 5) Columns created in STDI audit (`topic_drift_audit_workbench.ipynb`)
+
+| Column | Created by | Meaning |
+| --- | --- | --- |
+| `original_main_topic` | `annotate_stdi_for_rewrites` | Extracted primary topic of the original article |
+| `original_subtopics` | `annotate_stdi_for_rewrites` | JSON array of extracted original subtopics |
+| `original_central_entities` | `annotate_stdi_for_rewrites` | JSON array of central original entities |
+| `original_central_relations` | `annotate_stdi_for_rewrites` | JSON array of original `(subject, action, object)` relations |
+| `rewritten_news_main_topic` | `annotate_stdi_for_rewrites` | Extracted primary topic of the rewritten article |
+| `rewritten_news_stdi_vs_original` | `annotate_stdi_for_rewrites` | Final STDI score against the original article |
+| `rewritten_news_theme_drift_vs_original` | `annotate_stdi_for_rewrites` | Binary main-topic drift component |
+| `rewritten_news_subtopic_drift_vs_original` | `annotate_stdi_for_rewrites` | Subtopic drift component |
+| `rewritten_news_entity_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-entity drift component |
+| `rewritten_news_relation_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-relation drift component |
+| `high_topic_drift_flag` | STDI notebook | Whether STDI is above the configured threshold |
+
+### 6) Summary CSV columns
 
 | File | Key columns |
 | --- | --- |
 | `audit_summary.csv` | `dataset_name`, `source_file`, `rows`, `suspects`, `suspect_rate` |
+| `stdi_summary.csv` | `dataset_name`, `source_file`, `rows`, `rows_with_successful_stdi`, `high_drift_count`, `high_drift_rate`, `mean_stdi`, `max_stdi` |
 | `pretrained_fake_news_summary.csv` | `dataset_name`, `source_file`, `rows`, `fake_rate` |
 
-### 6) Metadata row in fetched CSVs
+### 7) Metadata row in fetched CSVs
 
 Fetched files may contain one special row where:
 
