@@ -27,16 +27,17 @@ def parse_args() -> argparse.Namespace:
         "--notebooks",
         nargs="+",
         default=[
-            "src/llm_simulation_workbench.ipynb",
-            "src/bert_fake_real_workbench.ipynb",
-            "src/topic_drift_audit_workbench.ipynb",
-            "src/pretrained_fake_news_detector_workbench.ipynb",
+            "notebooks/llm_simulation_workbench.ipynb",
+            "notebooks/bert_fake_real_workbench.ipynb",
+            "notebooks/topic_drift_audit_workbench.ipynb",
+            "notebooks/pretrained_fake_news_detector_workbench.ipynb",
         ],
         help=(
             "List of notebooks to run in order. "
-            "Default: src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb "
-            "src/topic_drift_audit_workbench.ipynb "
-            "src/pretrained_fake_news_detector_workbench.ipynb"
+            "Default: notebooks/llm_simulation_workbench.ipynb "
+            "notebooks/bert_fake_real_workbench.ipynb "
+            "notebooks/topic_drift_audit_workbench.ipynb "
+            "notebooks/pretrained_fake_news_detector_workbench.ipynb"
         ),
     )
     parser.add_argument(
@@ -115,6 +116,13 @@ def run_notebook(
     env = dict(os.environ)
     env["RUN_ID"] = run_id
     env["RUN_DIR"] = str(run_dir)
+    existing_pythonpath = env.get("PYTHONPATH", "").strip()
+    src_pythonpath = str(project_root / "src")
+    env["PYTHONPATH"] = (
+        src_pythonpath
+        if not existing_pythonpath
+        else os.pathsep.join([src_pythonpath, existing_pythonpath])
+    )
 
     process = subprocess.run(
         cmd,

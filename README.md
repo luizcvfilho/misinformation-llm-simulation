@@ -73,7 +73,7 @@ D_relations = 1 - Jaccard(relations_original, relations_version)
 STDI = 0.2*D_theme + 0.2*D_subtopic + 0.2*D_entities + 0.4*D_relations
 ```
 
-Available helpers in [src/utils/topic_drift_functions.py](src/utils/topic_drift_functions.py):
+Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
 
 - `extract_topic_structure(...)`
 - `calculate_stdi(...)`
@@ -84,7 +84,7 @@ Available helpers in [src/utils/topic_drift_functions.py](src/utils/topic_drift_
 Example with the current original vs. rewritten flow:
 
 ```python
-from utils import annotate_stdi_for_rewrites
+from misinformation_simulation.topic_drift import annotate_stdi_for_rewrites
 
 rewritten_with_stdi = annotate_stdi_for_rewrites(
     df=rewritten_df,
@@ -168,7 +168,7 @@ Note: You can still pass `api_key=` and `base_url=` directly in `rewrite_news_wi
 
 Main simulation notebook:
 
-- [src/llm_simulation_workbench.ipynb](src/llm_simulation_workbench.ipynb)
+- [notebooks/llm_simulation_workbench.ipynb](notebooks/llm_simulation_workbench.ipynb)
 
 It:
 
@@ -178,8 +178,8 @@ It:
 
 Providers are defined in:
 
-- [src/enums/providers.py](src/enums/providers.py)
-- [src/enums/models.py](src/enums/models.py)
+- [src/misinformation_simulation/enums/providers.py](src/misinformation_simulation/enums/providers.py)
+- [src/misinformation_simulation/enums/models.py](src/misinformation_simulation/enums/models.py)
 
 Open Jupyter:
 
@@ -191,7 +191,7 @@ make notebook
 
 Script:
 
-- [src/run_notebooks_sequentially.py](src/run_notebooks_sequentially.py)
+- [scripts/run_notebooks.py](scripts/run_notebooks.py)
 
 Default run:
 
@@ -204,7 +204,7 @@ Useful options:
 ```powershell
 make notebooks-continue
 make notebooks-inplace
-make notebooks NOTEBOOKS="src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb"
+make notebooks NOTEBOOKS="notebooks/llm_simulation_workbench.ipynb notebooks/bert_fake_real_workbench.ipynb"
 ```
 
 Execution report paths:
@@ -216,7 +216,7 @@ Execution report paths:
 
 Script:
 
-- [src/fetch_newsdata_to_csv.py](src/fetch_newsdata_to_csv.py)
+- [scripts/fetch_newsdata.py](scripts/fetch_newsdata.py)
 
 Example:
 
@@ -245,7 +245,7 @@ Main arguments:
 
 Notebook:
 
-- [src/bert_fake_real_workbench.ipynb](src/bert_fake_real_workbench.ipynb)
+- [notebooks/bert_fake_real_workbench.ipynb](notebooks/bert_fake_real_workbench.ipynb)
 
 It computes entailment/contradiction between original and rewritten text and assigns:
 
@@ -256,7 +256,7 @@ It computes entailment/contradiction between original and rewritten text and ass
 
 Notebook:
 
-- [src/pretrained_fake_news_detector_workbench.ipynb](src/pretrained_fake_news_detector_workbench.ipynb)
+- [notebooks/pretrained_fake_news_detector_workbench.ipynb](notebooks/pretrained_fake_news_detector_workbench.ipynb)
 
 It applies a pretrained detector to rewritten text and exports per-dataset and consolidated predictions.
 
@@ -264,7 +264,7 @@ It applies a pretrained detector to rewritten text and exports per-dataset and c
 
 Notebook:
 
-- [src/topic_drift_audit_workbench.ipynb](src/topic_drift_audit_workbench.ipynb)
+- [notebooks/topic_drift_audit_workbench.ipynb](notebooks/topic_drift_audit_workbench.ipynb)
 
 It applies STDI to original vs. rewritten news pairs, exports per-dataset and consolidated outputs, and summarizes topic drift using:
 

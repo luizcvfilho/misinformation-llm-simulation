@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import argparse
 import csv
 import json
-import os
-import sys
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
@@ -13,10 +10,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
-from dotenv import load_dotenv
+from misinformation_simulation.config.settings import DEFAULT_RAW_DATA_DIR
 
 API_URL = "https://newsdata.io/api/1/latest"
-DEFAULT_OUTPUT = Path("data/newsdata_news.csv")
+DEFAULT_OUTPUT = DEFAULT_RAW_DATA_DIR / "newsdata_news.csv"
 QUERY_METADATA_ROW_ID = "__query_metadata__"
 CSV_COLUMNS = [
     "article_id",
@@ -41,59 +38,9 @@ CSV_COLUMNS = [
     "keywords",
     "duplicate",
 ]
-load_dotenv()
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description=("Fetches news from the NewsData.io API and saves it to CSV for project use.")
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=None,
-        help="CSV output path (default: data/newsdata_news.csv).",
-    )
-    parser.add_argument(
-        "--query",
-        type=str,
-        default="",
-        help="Text search filter (API q parameter).",
-    )
-    parser.add_argument(
-        "--language",
-        type=str,
-        default="en",
-        help="Language(s) separated by commas (e.g.: pt,en).",
-    )
-    parser.add_argument(
-        "--country",
-        type=str,
-        default="",
-        help="Country code(s) separated by commas (e.g.: br,us).",
-    )
-    parser.add_argument(
-        "--category",
-        type=str,
-        default="",
-        help="Category(ies) separated by commas (e.g.: politics,technology).",
-    )
-    parser.add_argument(
-        "--max-records",
-        type=int,
-        default=200,
-        help="Maximum number of news records to save.",
-    )
-    parser.add_argument(
-        "--api-key-env",
-        type=str,
-        default="NEWSDATA_API_KEY",
-        help="Environment variable name containing the API key.",
-    )
-    return parser.parse_args()
-
-
-def _resolve_output_path(output: Path | None, category: str) -> Path:
+def resolve_output_path(output: Path | None, category: str) -> Path:
     if output is not None:
         return output
 
@@ -145,13 +92,11 @@ def _split_multi_value(value: Any) -> list[str]:
         text = str(value)
         if not text.strip():
             return []
-        # Some fields may come separated by ';' or ','.
         items = []
         for chunk in text.split(";"):
             items.extend(chunk.split(","))
 
-    cleaned = [str(item).strip() for item in items if str(item).strip()]
-    return cleaned
+    return [str(item).strip() for item in items if str(item).strip()]
 
 
 def _count_values(news: list[dict[str, Any]], field: str) -> Counter[str]:
@@ -181,36 +126,32 @@ def _is_non_empty(value: Any) -> bool:
     return True
 
 
-def _summarize_query_results(news: list[dict[str, Any]], sample_size: int = 5) -> dict[str, Any]:
+def summarize_query_results(news: list[dict[str, Any]]) -> dict[str, Any]:
     pub_dates = [
         str(item.get("pubDate", "")).strip()
         for item in news
         if str(item.get("pubDate", "")).strip()
     ]
 
-    date_range = {
-        "min_pubDate": min(pub_dates) if pub_dates else None,
-        "max_pubDate": max(pub_dates) if pub_dates else None,
-    }
-
-    content_coverage = {
-        "with_title": sum(1 for item in news if _is_non_empty(item.get("title"))),
-        "with_description": sum(1 for item in news if _is_non_empty(item.get("description"))),
-        "with_content": sum(1 for item in news if _is_non_empty(item.get("content"))),
-        "with_full_description": sum(
-            1 for item in news if _is_non_empty(item.get("full_description"))
-        ),
-    }
-
     return {
         "rows_fetched": len(news),
-        "date_range": date_range,
+        "date_range": {
+            "min_pubDate": min(pub_dates) if pub_dates else None,
+            "max_pubDate": max(pub_dates) if pub_dates else None,
+        },
         "source_name_summary": _summarize_field(news, "source_name"),
         "language_summary": _summarize_field(news, "language"),
         "country_summary": _summarize_field(news, "country"),
         "category_summary": _summarize_field(news, "category"),
         "keyword_summary": _summarize_field(news, "keywords"),
-        "content_coverage": content_coverage,
+        "content_coverage": {
+            "with_title": sum(1 for item in news if _is_non_empty(item.get("title"))),
+            "with_description": sum(1 for item in news if _is_non_empty(item.get("description"))),
+            "with_content": sum(1 for item in news if _is_non_empty(item.get("content"))),
+            "with_full_description": sum(
+                1 for item in news if _is_non_empty(item.get("full_description"))
+            ),
+        },
     }
 
 
@@ -270,7 +211,7 @@ def fetch_news(
     return records
 
 
-def _build_query_metadata(
+def build_query_metadata(
     *,
     query: str,
     language: str,
@@ -287,7 +228,7 @@ def _build_query_metadata(
             "category": category,
             "max_records": max_records,
         },
-        "query_results_summary": _summarize_query_results(news),
+        "query_results_summary": summarize_query_results(news),
         "fetched_at_utc": datetime.now(UTC).isoformat(),
     }
 
@@ -435,14 +376,12 @@ def _build_merged_metadata(
                 history.append(entry)
     history.append(latest_entry)
 
-    accumulated_summary = _summarize_query_results(merged_rows)
-
     return {
         "updated_at_utc": now_utc,
         "latest_request": latest_entry,
         "request_history": history,
         "total_requests": len(history),
-        "accumulated_dataset_summary": accumulated_summary,
+        "accumulated_dataset_summary": summarize_query_results(merged_rows),
     }
 
 
@@ -486,55 +425,3 @@ def save_csv(
             writer.writerow(row)
 
     return len(new_rows), appended_count, len(merged_rows)
-
-
-def main() -> int:
-    args = parse_args()
-    if args.max_records <= 0:
-        print("Error: --max-records must be greater than zero.", file=sys.stderr)
-        return 2
-
-    api_key = os.getenv(args.api_key_env, "").strip()
-    if not api_key:
-        print(
-            (
-                f"Error: environment variable {args.api_key_env} not found. "
-                "Set your NewsData.io key before running."
-            ),
-            file=sys.stderr,
-        )
-        return 2
-
-    query_value = args.query.strip()
-    language_value = args.language.strip()
-    country_value = args.country.strip()
-    category_value = args.category.strip()
-    output_path = _resolve_output_path(args.output, category_value)
-
-    news = fetch_news(
-        api_key=api_key,
-        query=query_value,
-        language=language_value,
-        country=country_value,
-        category=category_value,
-        max_records=args.max_records,
-    )
-    query_metadata = _build_query_metadata(
-        query=query_value,
-        language=language_value,
-        country=country_value,
-        category=category_value,
-        max_records=args.max_records,
-        news=news,
-    )
-    rows_fetched, rows_appended, total_rows = save_csv(news, output_path, query_metadata)
-
-    print(f"News fetched in this request: {rows_fetched}")
-    print(f"New records appended to file: {rows_appended}")
-    print(f"Total accumulated records in file: {total_rows}")
-    print(f"Generated file: {output_path}")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
