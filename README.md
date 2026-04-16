@@ -46,7 +46,9 @@ make notebooks          # run notebooks sequentially (output/runs/<run_id>)
 make notebooks-inplace  # run notebooks in-place
 make notebooks-continue # continue even if one notebook fails
 
-make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
+make fetch-news OUTPUT=data/raw/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
+make interaction-graph
+make interaction-graph-verbose GRAPH_MAX_ROWS=5
 make clean
 ```
 
@@ -221,23 +223,67 @@ Script:
 Example:
 
 ```powershell
-make fetch-news OUTPUT=data/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
+make fetch-news OUTPUT=data/raw/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 ```
 
 With filters:
 
 ```powershell
-make fetch-news QUERY=politics COUNTRY=us CATEGORY=politics LANGUAGE=en MAX_RECORDS=300 OUTPUT=data/newsdata_politics_us.csv
+make fetch-news QUERY=politics COUNTRY=us CATEGORY=politics LANGUAGE=en MAX_RECORDS=300 OUTPUT=data/raw/newsdata_politics_us.csv
 ```
 
 Main arguments:
 
-- `OUTPUT`: output CSV path (`data/newsdata_news.csv` default)
+- `OUTPUT`: output CSV path (`data/raw/newsdata_news.csv` default)
 - `QUERY`: search text (`q` API parameter)
 - `LANGUAGE`: language(s), e.g. `en` or `pt,en`
 - `COUNTRY`: country code(s), e.g. `br` or `br,us`
 - `CATEGORY`: category(ies), e.g. `politics,technology`
 - `MAX_RECORDS`: max number of records
+
+## Interaction Graph
+
+Script:
+
+- [scripts/run_interaction_graph.py](scripts/run_interaction_graph.py)
+
+This workflow runs a chained LLM interaction graph over a news dataset using:
+
+- an input file such as `data/graph_news.csv`
+- a graph definition such as `data/graph_config.json`
+
+Default Make targets:
+
+```powershell
+make interaction-graph
+make interaction-graph-verbose
+```
+
+Useful overrides:
+
+```powershell
+make interaction-graph GRAPH_INPUT=data/graph_news.csv GRAPH_CONFIG=data/graph_config.json GRAPH_MAX_ROWS=5
+make interaction-graph-verbose GRAPH_TEXT_COLUMN=description GRAPH_OUTPUT_PREFIX=politics_graph
+```
+
+Main variables:
+
+- `GRAPH_INPUT`: input CSV/JSON/JSONL file (`data/graph_news.csv` default)
+- `GRAPH_CONFIG`: graph JSON config (`data/graph_config.json` default)
+- `GRAPH_TEXT_COLUMN`: text column used by the simulation (`description` default)
+- `GRAPH_TITLE_COLUMN`: title column (`title` default)
+- `GRAPH_NEWS_ID_COLUMN`: optional custom id column
+- `GRAPH_MAX_ROWS`: optional row limit
+- `GRAPH_SLEEP_SECONDS`: delay between requests (`0` default)
+- `GRAPH_MAX_REQUESTS_PER_MINUTE`: optional rate limit
+- `GRAPH_RETRY_ATTEMPTS`: retry attempts (`5` default)
+- `GRAPH_ALLOW_TITLE_FALLBACK`: set to any non-empty value to add `--allow-title-fallback`
+- `GRAPH_TOPIC_DRIFT_MODEL`: topic drift model (`gemini-3.1-flash-lite-preview` default)
+- `GRAPH_TOPIC_DRIFT_PROVIDER`: topic drift provider (`gemini` default)
+- `GRAPH_OUTPUT_DIR`: output directory (`output/interaction_graph` default)
+- `GRAPH_OUTPUT_PREFIX`: output file prefix (`simulation` default)
+
+The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
 ## Audits
 

@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose clean
 
 .DEFAULT_GOAL := help
 
@@ -19,12 +19,32 @@ COUNTRY ?=
 CATEGORY ?=
 QUERY ?=
 MAX_RECORDS ?= 200
+GRAPH_INPUT ?= data/graph_news.csv
+GRAPH_CONFIG ?= data/graph_config.json
+GRAPH_TEXT_COLUMN ?= description
+GRAPH_TITLE_COLUMN ?= title
+GRAPH_NEWS_ID_COLUMN ?=
+GRAPH_MAX_ROWS ?=
+GRAPH_SLEEP_SECONDS ?= 0
+GRAPH_MAX_REQUESTS_PER_MINUTE ?=
+GRAPH_RETRY_ATTEMPTS ?= 5
+GRAPH_ALLOW_TITLE_FALLBACK ?=
+GRAPH_TOPIC_DRIFT_MODEL ?= gemini-3.1-flash-lite-preview
+GRAPH_TOPIC_DRIFT_PROVIDER ?= gemini
+GRAPH_OUTPUT_DIR ?= output/interaction_graph
+GRAPH_OUTPUT_PREFIX ?= simulation
 
 FETCH_NEWS_OPTIONAL_ARGS := \
 	$(if $(strip $(OUTPUT)),--output $(OUTPUT),) \
 	$(if $(strip $(COUNTRY)),--country $(COUNTRY),) \
 	$(if $(strip $(CATEGORY)),--category $(CATEGORY),) \
 	$(if $(strip $(QUERY)),--query $(QUERY),)
+
+INTERACTION_GRAPH_OPTIONAL_ARGS := \
+	$(if $(strip $(GRAPH_NEWS_ID_COLUMN)),--news-id-column $(GRAPH_NEWS_ID_COLUMN),) \
+	$(if $(strip $(GRAPH_MAX_ROWS)),--max-rows $(GRAPH_MAX_ROWS),) \
+	$(if $(strip $(GRAPH_MAX_REQUESTS_PER_MINUTE)),--max-requests-per-minute $(GRAPH_MAX_REQUESTS_PER_MINUTE),) \
+	$(if $(strip $(GRAPH_ALLOW_TITLE_FALLBACK)),--allow-title-fallback,)
 
 help: ## List available targets
 	@echo "Available targets:"
@@ -44,6 +64,8 @@ help: ## List available targets
 	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
 	@echo "  notebooks-continue Run notebooks and continue even if one fails"
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
+	@echo "  interaction-graph  Run the interaction graph simulation"
+	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
 	@echo "  clean              Remove virtual environment"
 
 setup: ## Create .venv, generate lockfile, and sync dependencies (including dev)
@@ -93,6 +115,12 @@ notebooks-continue: ## Run notebooks and continue even if one fails
 
 fetch-news: ## Fetch news from NewsData.io and save as CSV
 	uv run python scripts/fetch_newsdata.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
+
+interaction-graph:
+	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) $(INTERACTION_GRAPH_OPTIONAL_ARGS)
+
+interaction-graph-verbose:
+	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) --verbose $(INTERACTION_GRAPH_OPTIONAL_ARGS)
 
 clean: ## Remove virtual environment
 	@$(CLEAN_CMD)
