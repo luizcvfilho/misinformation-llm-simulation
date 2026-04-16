@@ -12,7 +12,7 @@ endif
 
 export UV_PROJECT_ENVIRONMENT := $(VENV_DIR)
 
-NOTEBOOKS ?= src/llm_simulation_workbench.ipynb src/bert_fake_real_workbench.ipynb src/topic_drift_audit_workbench.ipynb src/pretrained_fake_news_detector_workbench.ipynb
+NOTEBOOKS ?= notebooks/llm_simulation_workbench.ipynb notebooks/bert_fake_real_workbench.ipynb notebooks/topic_drift_audit_workbench.ipynb notebooks/pretrained_fake_news_detector_workbench.ipynb
 OUTPUT ?=
 LANGUAGE ?= en
 COUNTRY ?=
@@ -83,16 +83,16 @@ lint-format: ## Run Ruff lint and format in sequence
 	$(MAKE) format
 
 notebooks: ## Run notebooks sequentially and save to output/runs/<run_id>
-	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS)
+	uv run python scripts/run_notebooks.py --notebooks $(NOTEBOOKS)
 
 notebooks-inplace: ## Run notebooks sequentially and save in-place
-	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS) --inplace
+	uv run python scripts/run_notebooks.py --notebooks $(NOTEBOOKS) --inplace
 
 notebooks-continue: ## Run notebooks and continue even if one fails
-	uv run python src/run_notebooks_sequentially.py --notebooks $(NOTEBOOKS) --continue-on-error
+	uv run python scripts/run_notebooks.py --notebooks $(NOTEBOOKS) --continue-on-error
 
 fetch-news: ## Fetch news from NewsData.io and save as CSV
-	uv run python src/fetch_newsdata_to_csv.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
+	uv run python scripts/fetch_newsdata.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
 
 clean: ## Remove virtual environment
 	@$(CLEAN_CMD)
