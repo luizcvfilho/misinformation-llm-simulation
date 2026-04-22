@@ -321,6 +321,26 @@ It applies STDI to original vs. rewritten news pairs, exports per-dataset and co
 - `rewritten_news_relation_drift_vs_original`
 - `high_topic_drift_flag`
 
+### Fake vs True VAD Analysis
+
+Notebook:
+
+- [notebooks/fake_true_vad_workbench.ipynb](notebooks/fake_true_vad_workbench.ipynb)
+
+It loads `data/FakeVsTrueVAD`, applies the reusable VAD module from `src`, and exports:
+
+- row-level VAD scores for each article
+- `fake` vs `true` summary tables
+- subject-level summaries
+- high/low examples by VAD dimension
+
+Primary sources:
+
+- Hugging Face model card: [https://huggingface.co/RobroKools/vad-bert](https://huggingface.co/RobroKools/vad-bert)
+- Model dataset reference: [https://huggingface.co/datasets/reallycarlaost/emobank](https://huggingface.co/datasets/reallycarlaost/emobank)
+
+By default the project uses the Hugging Face model `RobroKools/vad-bert`, loaded through `transformers.AutoModelForSequenceClassification`. The first run may download model weights from Hugging Face.
+
 ## Output Structure
 
 The `output/` directory has two patterns:
