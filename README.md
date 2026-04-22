@@ -63,6 +63,7 @@ The extraction step builds a structured representation for each text with:
 - `central_entities`
 - `central_relations` in `(subject, action, object)` form
 - `narrative_frame` (optional)
+- `has_internal_contradiction` (boolean)
 
 The final score follows:
 
@@ -71,8 +72,14 @@ D_theme = 0 if main_topic is equal, else 1
 D_subtopic = 1 - Jaccard(subtopics_original, subtopics_version)
 D_entities = 1 - Jaccard(entities_original, entities_version)
 D_relations = 1 - Jaccard(relations_original, relations_version)
+D_contradiction = 1 if rewritten text has internal contradiction, else 0
 
-STDI = 0.2*D_theme + 0.2*D_subtopic + 0.2*D_entities + 0.4*D_relations
+STDI =
+  0.15*D_theme +
+  0.15*D_subtopic +
+  0.15*D_entities +
+  0.35*D_relations +
+  0.20*D_contradiction
 ```
 
 When VAD scores are available for the original and rewritten texts, the project also
@@ -85,11 +92,12 @@ D_dominance = abs(dominance_version - dominance_original) / 4
 D_vad = (D_valence + D_arousal + D_dominance) / 3
 
 STDI_with_VAD =
-  0.15*D_theme +
-  0.15*D_subtopic +
-  0.15*D_entities +
-  0.30*D_relations +
-  0.25*D_vad
+  0.12*D_theme +
+  0.12*D_subtopic +
+  0.12*D_entities +
+  0.24*D_relations +
+  0.20*D_contradiction +
+  0.20*D_vad
 ```
 
 Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
@@ -477,12 +485,16 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `original_subtopics` | `annotate_stdi_for_rewrites` | JSON array of extracted original subtopics |
 | `original_central_entities` | `annotate_stdi_for_rewrites` | JSON array of central original entities |
 | `original_central_relations` | `annotate_stdi_for_rewrites` | JSON array of original `(subject, action, object)` relations |
+| `original_has_internal_contradiction` | `annotate_stdi_for_rewrites` | Whether the original text contains internal contradictions |
 | `rewritten_news_main_topic` | `annotate_stdi_for_rewrites` | Extracted primary topic of the rewritten article |
 | `rewritten_news_stdi_vs_original` | `annotate_stdi_for_rewrites` | Final STDI score against the original article |
 | `rewritten_news_theme_drift_vs_original` | `annotate_stdi_for_rewrites` | Binary main-topic drift component |
 | `rewritten_news_subtopic_drift_vs_original` | `annotate_stdi_for_rewrites` | Subtopic drift component |
 | `rewritten_news_entity_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-entity drift component |
 | `rewritten_news_relation_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-relation drift component |
+| `rewritten_news_has_internal_contradiction` | `annotate_stdi_for_rewrites` | Whether the rewritten text contains internal contradictions |
+| `rewritten_news_contradiction_drift_vs_original` | `annotate_stdi_for_rewrites` | Internal-contradiction drift component |
+| `rewritten_news_contradiction_drift_incremental` | `annotate_stdi_for_rewrites` | Incremental internal-contradiction drift component |
 | `high_topic_drift_flag` | STDI notebook | Whether STDI is above the configured threshold |
 
 ### 6) Summary CSV columns

@@ -32,6 +32,7 @@ Analyze the following news item and return a JSON object with exactly these keys
 - central_entities: array of strings
 - central_relations: array of objects with keys subject, action, object
 - narrative_frame: string or null
+- has_internal_contradiction: boolean
 
 Extraction rules:
 - main_topic must capture the primary subject of the article.
@@ -39,6 +40,7 @@ Extraction rules:
 - central_entities must include the most important people, organizations, places, or groups.
 - central_relations must describe core factual relations in (subject, action, object) form.
 - narrative_frame is optional and should summarize the dominant framing if present.
+- has_internal_contradiction must be true only when the text contradicts itself internally.
 - Keep outputs short and normalized.
 - Do not invent facts beyond the text.
 
@@ -141,6 +143,20 @@ def _coerce_relations(value: Any) -> list[TopicRelation]:
     return relations
 
 
+def _coerce_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "1", "yes"}:
+            return True
+        if normalized in {"false", "0", "no"}:
+            return False
+    if isinstance(value, (int, float)) and value in {0, 1}:
+        return bool(value)
+    return False
+
+
 def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
     main_topic = payload.get("main_topic")
     narrative_frame = payload.get("narrative_frame")
@@ -151,6 +167,7 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         central_entities=_coerce_string_list(payload.get("central_entities")),
         central_relations=_coerce_relations(payload.get("central_relations")),
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
+        has_internal_contradiction=_coerce_bool(payload.get("has_internal_contradiction")),
     )
 
 

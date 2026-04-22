@@ -8,17 +8,19 @@ from misinformation_simulation.topic_drift.extraction import _normalize_relation
 from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_STDI_WEIGHTS = {
-    "theme_drift": 0.2,
-    "subtopic_drift": 0.2,
-    "entity_drift": 0.2,
-    "relation_drift": 0.4,
-}
-DEFAULT_STDI_WITH_VAD_WEIGHTS = {
     "theme_drift": 0.15,
     "subtopic_drift": 0.15,
     "entity_drift": 0.15,
-    "relation_drift": 0.3,
-    "vad_drift": 0.25,
+    "relation_drift": 0.35,
+    "contradiction_drift": 0.2,
+}
+DEFAULT_STDI_WITH_VAD_WEIGHTS = {
+    "theme_drift": 0.12,
+    "subtopic_drift": 0.12,
+    "entity_drift": 0.12,
+    "relation_drift": 0.24,
+    "contradiction_drift": 0.2,
+    "vad_drift": 0.2,
 }
 DEFAULT_VAD_SCORE_RANGE = 4.0
 
@@ -115,6 +117,7 @@ def calculate_stdi(
             if all(_normalize_relation(item.subject, item.action, item.object))
         },
     )
+    contradiction_drift = 1.0 if compared_structure.has_internal_contradiction else 0.0
 
     vad_metrics = calculate_vad_drift(
         original_vad,
@@ -131,6 +134,7 @@ def calculate_stdi(
         + weights["subtopic_drift"] * subtopic_drift
         + weights["entity_drift"] * entity_drift
         + weights["relation_drift"] * relation_drift
+        + weights["contradiction_drift"] * contradiction_drift
         + weights.get("vad_drift", 0.0) * vad_metrics["vad_drift"]
     )
 
@@ -139,6 +143,7 @@ def calculate_stdi(
         "subtopic_drift": round(subtopic_drift, 6),
         "entity_drift": round(entity_drift, 6),
         "relation_drift": round(relation_drift, 6),
+        "contradiction_drift": round(contradiction_drift, 6),
         "valence_drift": vad_metrics["valence_drift"],
         "arousal_drift": vad_metrics["arousal_drift"],
         "dominance_drift": vad_metrics["dominance_drift"],
@@ -203,6 +208,7 @@ def calculate_stdi_chain_metrics(
                 "subtopic_drift_vs_original": vs_original["subtopic_drift"],
                 "entity_drift_vs_original": vs_original["entity_drift"],
                 "relation_drift_vs_original": vs_original["relation_drift"],
+                "contradiction_drift_vs_original": vs_original["contradiction_drift"],
                 "valence_drift_vs_original": vs_original["valence_drift"],
                 "arousal_drift_vs_original": vs_original["arousal_drift"],
                 "dominance_drift_vs_original": vs_original["dominance_drift"],
@@ -212,6 +218,7 @@ def calculate_stdi_chain_metrics(
                 "subtopic_drift_incremental": incremental["subtopic_drift"],
                 "entity_drift_incremental": incremental["entity_drift"],
                 "relation_drift_incremental": incremental["relation_drift"],
+                "contradiction_drift_incremental": incremental["contradiction_drift"],
                 "valence_drift_incremental": incremental["valence_drift"],
                 "arousal_drift_incremental": incremental["arousal_drift"],
                 "dominance_drift_incremental": incremental["dominance_drift"],
