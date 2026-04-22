@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import time
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 import pandas as pd
@@ -15,6 +15,11 @@ from misinformation_simulation.llm.rewrite import (
     DEFAULT_RETRY_ATTEMPTS,
     DEFAULT_SLEEP_SECONDS,
     DEFAULT_TEXT_COLUMN,
+)
+from misinformation_simulation.text_metrics.vad import (
+    VADModelBundle,
+    VADScore,
+    predict_text_vad,
 )
 from misinformation_simulation.topic_drift.extraction import (
     DEFAULT_REWRITTEN_COLUMN,
@@ -54,13 +59,25 @@ def _topic_drift_metric_suffixes() -> tuple[str, ...]:
         "subtopic_drift_vs_original",
         "entity_drift_vs_original",
         "relation_drift_vs_original",
+        "valence_drift_vs_original",
+        "arousal_drift_vs_original",
+        "dominance_drift_vs_original",
+        "vad_drift_vs_original",
         "stdi_incremental",
         "theme_drift_incremental",
         "subtopic_drift_incremental",
         "entity_drift_incremental",
         "relation_drift_incremental",
+        "valence_drift_incremental",
+        "arousal_drift_incremental",
+        "dominance_drift_incremental",
+        "vad_drift_incremental",
         "stdi_cumulative",
     )
+
+
+def _topic_drift_vad_suffixes() -> tuple[str, ...]:
+    return ("vad_valence", "vad_arousal", "vad_dominance")
 
 
 def _expected_chain_output_columns(version_tokens: Sequence[str]) -> dict[str, Any]:
@@ -72,12 +89,16 @@ def _expected_chain_output_columns(version_tokens: Sequence[str]) -> dict[str, A
 
     for suffix in _topic_structure_field_suffixes():
         expected_columns[f"original_{suffix}"] = pd.NA
+    for suffix in _topic_drift_vad_suffixes():
+        expected_columns[f"original_{suffix}"] = pd.NA
 
     for token in version_tokens:
         expected_columns[f"{token}_topic_structure_status"] = "not_requested"
         expected_columns[f"{token}_topic_structure_error"] = pd.NA
 
         for suffix in _topic_structure_field_suffixes():
+            expected_columns[f"{token}_{suffix}"] = pd.NA
+        for suffix in _topic_drift_vad_suffixes():
             expected_columns[f"{token}_{suffix}"] = pd.NA
 
         for suffix in _topic_drift_metric_suffixes():
@@ -99,11 +120,19 @@ def _default_metric_values(
         "subtopic_drift_vs_original": 0.0,
         "entity_drift_vs_original": 0.0,
         "relation_drift_vs_original": 0.0,
+        "valence_drift_vs_original": 0.0,
+        "arousal_drift_vs_original": 0.0,
+        "dominance_drift_vs_original": 0.0,
+        "vad_drift_vs_original": 0.0,
         "stdi_incremental": 0.0,
         "theme_drift_incremental": 0.0,
         "subtopic_drift_incremental": 0.0,
         "entity_drift_incremental": 0.0,
         "relation_drift_incremental": 0.0,
+        "valence_drift_incremental": 0.0,
+        "arousal_drift_incremental": 0.0,
+        "dominance_drift_incremental": 0.0,
+        "vad_drift_incremental": 0.0,
         "stdi_cumulative": 0.0,
     }
 
@@ -120,6 +149,32 @@ def _apply_topic_structure_defaults(
     )
     for column_name, value in empty_structure_columns.items():
         df.at[row_index, column_name] = value
+
+
+def _apply_vad_defaults(
+    df: pd.DataFrame,
+    *,
+    row_index: Any,
+    prefix: str,
+) -> None:
+    for suffix in _topic_drift_vad_suffixes():
+        df.at[row_index, f"{prefix}_{suffix}"] = pd.NA
+
+
+def _write_vad_score(
+    df: pd.DataFrame,
+    *,
+    row_index: Any,
+    prefix: str,
+    vad_score: VADScore | None,
+) -> None:
+    if vad_score is None:
+        _apply_vad_defaults(df, row_index=row_index, prefix=prefix)
+        return
+
+    df.at[row_index, f"{prefix}_vad_valence"] = vad_score.valence
+    df.at[row_index, f"{prefix}_vad_arousal"] = vad_score.arousal
+    df.at[row_index, f"{prefix}_vad_dominance"] = vad_score.dominance
 
 
 def _apply_metric_defaults(
@@ -172,6 +227,8 @@ def annotate_stdi_for_version_chain(
     max_requests_per_minute: int | None = DEFAULT_MAX_REQUESTS_PER_MINUTE,
     retry_attempts: int = DEFAULT_RETRY_ATTEMPTS,
     allow_title_fallback: bool = DEFAULT_ALLOW_TITLE_FALLBACK,
+    vad_model_bundle: VADModelBundle | None = None,
+    vad_scorer: Callable[[str], VADScore] | None = None,
 ) -> pd.DataFrame:
     if not isinstance(df, pd.DataFrame):
         raise ValueError("'df' must be a pandas.DataFrame.")
@@ -211,9 +268,11 @@ def annotate_stdi_for_version_chain(
         row = result_df.loc[row_index]
 
         _apply_topic_structure_defaults(result_df, row_index=row_index, prefix="original")
+        _apply_vad_defaults(result_df, row_index=row_index, prefix="original")
         for version_column in version_columns:
             token = version_tokens[version_column]
             _apply_topic_structure_defaults(result_df, row_index=row_index, prefix=token)
+            _apply_vad_defaults(result_df, row_index=row_index, prefix=token)
             _apply_metric_defaults(result_df, row_index=row_index, token=token)
 
         try:
@@ -269,6 +328,18 @@ def annotate_stdi_for_version_chain(
 
         chain_structures = [original_structure]
         chain_labels = ["original"]
+        original_vad = predict_text_vad(
+            original_text,
+            model_bundle=vad_model_bundle,
+            scorer=vad_scorer,
+        )
+        _write_vad_score(
+            result_df,
+            row_index=row_index,
+            prefix="original",
+            vad_score=original_vad,
+        )
+        chain_vad_scores: list[VADScore | None] = [original_vad]
 
         for version_column in version_columns:
             token = version_tokens[version_column]
@@ -307,9 +378,21 @@ def annotate_stdi_for_version_chain(
                     prefix=token,
                 ).items():
                     result_df.at[row_index, column_name] = value
+                version_vad = predict_text_vad(
+                    version_text,
+                    model_bundle=vad_model_bundle,
+                    scorer=vad_scorer,
+                )
+                _write_vad_score(
+                    result_df,
+                    row_index=row_index,
+                    prefix=token,
+                    vad_score=version_vad,
+                )
 
                 chain_structures.append(version_structure)
                 chain_labels.append(token)
+                chain_vad_scores.append(version_vad)
             except Exception as exc:
                 result_df.at[row_index, f"{token}_topic_structure_status"] = "error"
                 result_df.at[row_index, f"{token}_topic_structure_error"] = str(exc)
@@ -324,7 +407,11 @@ def annotate_stdi_for_version_chain(
             if sleep_seconds > 0:
                 time.sleep(sleep_seconds)
 
-        chain_metrics = calculate_stdi_chain_metrics(chain_structures, version_labels=chain_labels)
+        chain_metrics = calculate_stdi_chain_metrics(
+            chain_structures,
+            version_labels=chain_labels,
+            vad_scores=chain_vad_scores,
+        )
         for metric_row in chain_metrics:
             token = metric_row["version_label"]
             for key, value in metric_row.items():
@@ -353,6 +440,8 @@ def annotate_stdi_for_rewrites(
     max_requests_per_minute: int | None = DEFAULT_MAX_REQUESTS_PER_MINUTE,
     retry_attempts: int = DEFAULT_RETRY_ATTEMPTS,
     allow_title_fallback: bool = DEFAULT_ALLOW_TITLE_FALLBACK,
+    vad_model_bundle: VADModelBundle | None = None,
+    vad_scorer: Callable[[str], VADScore] | None = None,
 ) -> pd.DataFrame:
     return annotate_stdi_for_version_chain(
         df=df,
@@ -368,4 +457,6 @@ def annotate_stdi_for_rewrites(
         max_requests_per_minute=max_requests_per_minute,
         retry_attempts=retry_attempts,
         allow_title_fallback=allow_title_fallback,
+        vad_model_bundle=vad_model_bundle,
+        vad_scorer=vad_scorer,
     )

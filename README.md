@@ -75,10 +75,28 @@ D_relations = 1 - Jaccard(relations_original, relations_version)
 STDI = 0.2*D_theme + 0.2*D_subtopic + 0.2*D_entities + 0.4*D_relations
 ```
 
+When VAD scores are available for the original and rewritten texts, the project also
+computes a normalized emotional drift:
+
+```text
+D_valence = abs(valence_version - valence_original) / 4
+D_arousal = abs(arousal_version - arousal_original) / 4
+D_dominance = abs(dominance_version - dominance_original) / 4
+D_vad = (D_valence + D_arousal + D_dominance) / 3
+
+STDI_with_VAD =
+  0.15*D_theme +
+  0.15*D_subtopic +
+  0.15*D_entities +
+  0.30*D_relations +
+  0.25*D_vad
+```
+
 Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
 
 - `extract_topic_structure(...)`
 - `calculate_stdi(...)`
+- `calculate_vad_drift(...)`
 - `calculate_stdi_chain_metrics(...)`
 - `annotate_stdi_for_rewrites(...)`
 - `annotate_stdi_for_version_chain(...)`
@@ -93,6 +111,7 @@ rewritten_with_stdi = annotate_stdi_for_rewrites(
     rewritten_column="rewritten_news",
     provider="gemini",
     model="gemini-2.5-flash-lite",
+    vad_model_bundle=vad_model,
 )
 ```
 
@@ -102,7 +121,8 @@ For future sequential rewrite chains, use:
 - `stdi_incremental`: each version compared with the immediately previous version
 - `stdi_cumulative`: running sum of incremental STDI values along the chain
 
-Generated columns include the extracted structures for the original and each version, plus per-version STDI metrics.
+Generated columns include the extracted structures for the original and each version,
+their VAD scores, and the per-version STDI metrics.
 
 ## Linting and Formatting
 

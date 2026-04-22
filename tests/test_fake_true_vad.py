@@ -58,8 +58,8 @@ class FakeTrueDatasetLoaderTest(unittest.TestCase):
 
 
 class HuggingFaceVADTest(unittest.TestCase):
-    @patch("misinformation_simulation.audits.vad.AutoModelForSequenceClassification")
-    @patch("misinformation_simulation.audits.vad.AutoTokenizer")
+    @patch("misinformation_simulation.text_metrics.vad.AutoModelForSequenceClassification")
+    @patch("misinformation_simulation.text_metrics.vad.AutoTokenizer")
     def test_load_huggingface_vad_model_uses_expected_defaults(
         self,
         tokenizer_cls: Mock,

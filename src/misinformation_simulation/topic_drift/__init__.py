@@ -1,6 +1,6 @@
 from .annotation import annotate_stdi_for_rewrites, annotate_stdi_for_version_chain
 from .extraction import extract_topic_structure
-from .metrics import calculate_stdi, calculate_stdi_chain_metrics
+from .metrics import calculate_stdi, calculate_stdi_chain_metrics, calculate_vad_drift
 from .models import TopicRelation, TopicStructure, flatten_topic_structure, topic_structure_to_dict
 
 __all__ = [
@@ -10,6 +10,7 @@ __all__ = [
     "flatten_topic_structure",
     "extract_topic_structure",
     "calculate_stdi",
+    "calculate_vad_drift",
     "calculate_stdi_chain_metrics",
     "annotate_stdi_for_rewrites",
     "annotate_stdi_for_version_chain",
