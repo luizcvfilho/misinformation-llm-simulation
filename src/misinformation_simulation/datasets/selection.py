@@ -49,7 +49,7 @@ def resolve_row_text(
     row: pd.Series,
     preferred_column: str | None = None,
     candidates=TEXT_COLUMN_CANDIDATES,
-    allow_title_fallback: bool = False,
+    allow_title_fallback: bool = True,
 ) -> tuple[str, str]:
     ordered_candidates = []
     if preferred_column:

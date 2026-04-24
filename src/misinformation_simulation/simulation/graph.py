@@ -317,7 +317,7 @@ def run_news_interaction_graph(
     sleep_seconds: float = 0.0,
     max_requests_per_minute: int | None = None,
     retry_attempts: int = 5,
-    allow_title_fallback: bool = False,
+    allow_title_fallback: bool = True,
     topic_drift_model: str = "gemini-3.1-flash-lite-preview",
     topic_drift_provider: Provider | str = Provider.GEMINI,
     topic_drift_api_key: str | None = None,

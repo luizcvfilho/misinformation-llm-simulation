@@ -897,6 +897,7 @@ def main() -> None:
             )
             allow_title_fallback = st.checkbox(
                 "Allow title fallback when the text column is empty",
+                value=True,
                 help=(
                     "When enabled, the simulation can use the title if the selected text "
                     "column is empty."
