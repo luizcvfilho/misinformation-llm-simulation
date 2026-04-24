@@ -583,6 +583,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         data=json.dumps(summary, ensure_ascii=False, indent=2).encode("utf-8"),
         file_name=f"{run_bundle['output_prefix']}_summary.json",
         mime="application/json",
+        key="download_results_summary_json",
         use_container_width=True,
     )
     download_cols[1].download_button(
@@ -590,6 +591,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         data=steps_df.to_csv(index=False).encode("utf-8"),
         file_name=f"{run_bundle['output_prefix']}_steps.csv",
         mime="text/csv",
+        key="download_results_steps_csv",
         use_container_width=True,
     )
     download_cols[2].download_button(
@@ -597,6 +599,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         data=json.dumps(run_bundle["graph_payload"], ensure_ascii=False, indent=2).encode("utf-8"),
         file_name="graph_config_ui.json",
         mime="application/json",
+        key="download_results_graph_json",
         use_container_width=True,
     )
 
@@ -997,6 +1000,7 @@ def main() -> None:
             data=json.dumps(graph_payload, ensure_ascii=False, indent=2).encode("utf-8"),
             file_name="graph_config_ui.json",
             mime="application/json",
+            key="download_editor_graph_json",
             use_container_width=True,
         )
         export_cols[1].caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
