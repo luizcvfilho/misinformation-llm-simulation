@@ -49,6 +49,7 @@ make notebooks-continue # continue even if one notebook fails
 make fetch-news OUTPUT=data/raw/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 make interaction-graph
 make interaction-graph-verbose GRAPH_MAX_ROWS=5
+make interaction-graph-ui
 make clean
 ```
 
@@ -285,6 +286,7 @@ Default Make targets:
 ```powershell
 make interaction-graph
 make interaction-graph-verbose
+make interaction-graph-ui
 ```
 
 Useful overrides:
@@ -312,6 +314,24 @@ Main variables:
 - `GRAPH_OUTPUT_PREFIX`: output file prefix (`simulation` default)
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
+
+### Interaction Graph UI
+
+The project also includes a Streamlit interface for the interaction graph workflow:
+
+```powershell
+make interaction-graph-ui
+```
+
+The UI lets you:
+
+- load a dataset from the project or upload a CSV/JSON/JSONL file
+- import an existing graph JSON or define the graph directly in the browser
+- add, remove, and reorder nodes in the chain
+- select predefined personalities or write custom personality prompts
+- run the simulation and inspect summaries, per-node metrics, and per-news outputs
+
+Note: the current backend still expects a single connected chain of nodes, so the UI editor follows that same constraint.
 
 ## Audits
 
