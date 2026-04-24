@@ -970,7 +970,7 @@ def main() -> None:
                     )
                 output_dir = st.text_input(
                     "Output directory",
-                    value="output/interaction_graph",
+                    value="output/interaction_graph/app_runs",
                     help="Directory where the summary JSON and step records JSONL will be saved.",
                 )
                 output_prefix = st.text_input(
