@@ -33,7 +33,22 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [dependency-groups]
-dev = ["pre-commit", "nbstripout", "ruff"]
+dev = ["pytest", "coverage", "pre-commit", "nbstripout", "ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["misinformation_simulation"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
 
 [tool.ruff]
 target-version = "py312"
