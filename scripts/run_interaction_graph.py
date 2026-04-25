@@ -5,7 +5,6 @@ import json
 import sys
 from pathlib import Path
 
-import pandas as pd
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -15,11 +14,10 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-from misinformation_simulation.datasets.newsdata import QUERY_METADATA_ROW_ID  # noqa: E402
-from misinformation_simulation.simulation import (  # noqa: E402
-    SimulationEdge,
-    SimulationNode,
-    run_news_interaction_graph,
+from misinformation_simulation.simulation import run_news_interaction_graph  # noqa: E402
+from misinformation_simulation.simulation.io import (  # noqa: E402
+    load_graph_config,
+    load_news_dataframe,
 )
 
 
@@ -53,45 +51,12 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _load_dataframe(path: Path) -> pd.DataFrame:
-    resolved_path = path if path.is_absolute() else PROJECT_ROOT / path
-    if not resolved_path.exists():
-        raise FileNotFoundError(
-            f"Input file not found: {resolved_path}. Pass a valid path in --input/INPUT."
-        )
-    if resolved_path.suffix.lower() == ".csv":
-        df = pd.read_csv(resolved_path)
-        if "article_id" in df.columns:
-            article_ids = df["article_id"].fillna("").astype(str).str.strip().str.lower()
-            df = df[article_ids != QUERY_METADATA_ROW_ID].copy()
-        return df
-    if resolved_path.suffix.lower() in {".jsonl", ".json"}:
-        return pd.read_json(resolved_path, lines=resolved_path.suffix.lower() == ".jsonl")
-    raise ValueError("Unsupported input file. Use CSV, JSON, or JSONL.")
-
-
-def _load_graph_config(
-    path: Path,
-) -> tuple[list[SimulationNode], list[SimulationEdge] | None, str | None]:
-    resolved_path = path if path.is_absolute() else PROJECT_ROOT / path
-    if not resolved_path.exists():
-        raise FileNotFoundError(
-            f"Graph config file not found: {resolved_path}. "
-            "Pass a valid path in --graph-config/GRAPH_CONFIG."
-        )
-    payload = json.loads(resolved_path.read_text(encoding="utf-8"))
-    nodes = [SimulationNode(**node_payload) for node_payload in payload.get("nodes", [])]
-    raw_edges = payload.get("edges")
-    edges = None
-    if raw_edges is not None:
-        edges = [SimulationEdge(**edge_payload) for edge_payload in raw_edges]
-    return nodes, edges, payload.get("start_node_id")
-
-
 def main() -> None:
     args = _parse_args()
-    df = _load_dataframe(Path(args.input))
-    nodes, edges, start_node_id = _load_graph_config(Path(args.graph_config))
+    df = load_news_dataframe(Path(args.input), project_root=PROJECT_ROOT)
+    nodes, edges, start_node_id = load_graph_config(
+        Path(args.graph_config), project_root=PROJECT_ROOT
+    )
     progress_callback = print if args.verbose else None
 
     result = run_news_interaction_graph(

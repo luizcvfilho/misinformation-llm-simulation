@@ -21,6 +21,7 @@ Rules:
 - Do not invent data, numbers, quotes, events, or characters.
 - Change only framing, emphasis, tone, vocabulary, and narrative focus according to the personality.
 - Do not explain the personality, bias, or reasoning process.
+- Do not add titles, headlines, markdown headings, labels, or prefixes.
 - Return only the rewritten text.
 
 Title:
