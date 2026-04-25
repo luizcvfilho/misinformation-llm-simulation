@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -57,6 +57,7 @@ help: ## List available targets
 	@echo "  notebook           Open Jupyter Lab using uv"
 	@echo "  precommit-install  Install pre-commit hooks in the local repository"
 	@echo "  precommit-run      Run all hooks across the project"
+	@echo "  test               Run the test suite"
 	@echo "  lint               Run Ruff lint checks"
 	@echo "  format             Format code with Ruff"
 	@echo "  lint-format        Run Ruff lint and format in sequence"
@@ -94,6 +95,9 @@ precommit-install: ## Install pre-commit hooks in the local repository
 
 precommit-run: ## Run all hooks across the project
 	uv run pre-commit run --all-files
+
+test: ## Run the test suite
+	uv run python -m unittest discover -s tests
 
 lint: ## Run Ruff lint checks
 	uv run ruff check .
