@@ -13,10 +13,6 @@ def render_graph_preview(node_forms: list[dict[str, str]]) -> None:
     preview_parts = [
         """
         <style>
-        body {
-            margin: 0;
-            background: transparent;
-        }
         .graph-preview-shell {
             --preview-bg: var(--background-color, transparent);
             --preview-node-bg: var(--secondary-background-color, rgba(128, 128, 128, 0.08));
