@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -58,6 +58,8 @@ help: ## List available targets
 	@echo "  precommit-install  Install pre-commit hooks in the local repository"
 	@echo "  precommit-run      Run all hooks across the project"
 	@echo "  test               Run the test suite"
+	@echo "  coverage           Run tests and print coverage report"
+	@echo "  coverage-html      Run tests and generate htmlcov/index.html"
 	@echo "  lint               Run Ruff lint checks"
 	@echo "  format             Format code with Ruff"
 	@echo "  lint-format        Run Ruff lint and format in sequence"
@@ -97,7 +99,15 @@ precommit-run: ## Run all hooks across the project
 	uv run pre-commit run --all-files
 
 test: ## Run the test suite
-	uv run python -m unittest discover -s tests
+	uv run pytest
+
+coverage: ## Run tests and print coverage report
+	uv run coverage run -m pytest
+	uv run coverage report
+
+coverage-html: ## Run tests and generate htmlcov/index.html
+	uv run coverage run -m pytest
+	uv run coverage html
 
 lint: ## Run Ruff lint checks
 	uv run ruff check .
