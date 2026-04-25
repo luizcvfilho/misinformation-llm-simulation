@@ -44,6 +44,8 @@ Extraction rules:
 - Keep outputs short and normalized.
 - Do not invent facts beyond the text.
 
+Title: {title}
+
 Text:
 {text}
 """.strip()

@@ -24,6 +24,9 @@ Rules:
 - Do not add titles, headlines, markdown headings, labels, or prefixes.
 - Return only the rewritten text.
 
+Title:
+{title}
+
 Original text:
 {original_text}
 """.strip()
