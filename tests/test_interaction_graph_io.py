@@ -5,12 +5,22 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from misinformation_simulation.apps.interaction_graph_io import load_uploaded_dataframe
 from misinformation_simulation.simulation import SimulationNode
 from misinformation_simulation.simulation.io import (
     build_graph_config_payload,
     load_graph_config,
     load_news_dataframe,
 )
+
+
+class FakeUploadedFile:
+    def __init__(self, name: str, content: str) -> None:
+        self.name = name
+        self._content = content.encode("utf-8")
+
+    def getvalue(self) -> bytes:
+        return self._content
 
 
 class InteractionGraphIOTest(unittest.TestCase):
@@ -28,6 +38,21 @@ class InteractionGraphIOTest(unittest.TestCase):
             csv_path.write_text(csv_content, encoding="utf-8")
 
             df = load_news_dataframe(csv_path)
+
+        self.assertEqual(len(df), 1)
+        self.assertEqual(df.iloc[0]["article_id"], "news-1")
+
+    def test_load_uploaded_dataframe_filters_query_metadata_rows(self) -> None:
+        csv_content = "\n".join(
+            [
+                "article_id,title,description",
+                "__query_metadata__,metadata,row to ignore",
+                "news-1,Headline,Body",
+            ]
+        )
+        uploaded_file = FakeUploadedFile("graph_news.csv", csv_content)
+
+        df = load_uploaded_dataframe(uploaded_file)
 
         self.assertEqual(len(df), 1)
         self.assertEqual(df.iloc[0]["article_id"], "news-1")

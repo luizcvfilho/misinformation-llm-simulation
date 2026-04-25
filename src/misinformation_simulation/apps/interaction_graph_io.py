@@ -10,6 +10,7 @@ import streamlit as st
 
 from misinformation_simulation.simulation.io import (
     DEFAULT_PROJECT_ROOT,
+    filter_query_metadata_rows,
     load_graph_config_payload,
     load_news_dataframe,
 )
@@ -41,10 +42,7 @@ def load_uploaded_dataframe(uploaded_file: Any) -> pd.DataFrame:
     else:
         raise ValueError("Unsupported file type. Use CSV, JSON, or JSONL.")
 
-    if "article_id" in df.columns:
-        article_ids = df["article_id"].fillna("").astype(str).str.strip().str.lower()
-        df = df[article_ids != "__query_metadata__"].copy()
-    return df
+    return filter_query_metadata_rows(df)
 
 
 def load_uploaded_graph_payload(uploaded_file: Any) -> dict[str, Any]:
