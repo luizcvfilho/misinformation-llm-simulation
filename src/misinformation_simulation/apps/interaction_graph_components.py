@@ -203,15 +203,11 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
             key="selected_news_id",
         )
         selected_steps = (
-            steps_df[steps_df["news_id"] == selected_news_id]
-            .copy()
-            .sort_values("step_index")
+            steps_df[steps_df["news_id"] == selected_news_id].copy().sort_values("step_index")
         )
         if not selected_steps.empty:
             st.line_chart(
-                selected_steps.set_index("step_index")[
-                    ["stdi_vs_original", "stdi_incremental"]
-                ]
+                selected_steps.set_index("step_index")[["stdi_vs_original", "stdi_incremental"]]
             )
             st.dataframe(
                 selected_steps[
