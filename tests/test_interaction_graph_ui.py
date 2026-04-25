@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 
+from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
 from misinformation_simulation.apps.interaction_graph_ui import (
     build_linear_graph_payload,
     build_news_summary_dataframe,
@@ -10,7 +11,12 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     create_default_node_form,
     steps_to_dataframe,
 )
-from misinformation_simulation.simulation.graph import SimulationStepResult
+from misinformation_simulation.enums import Provider
+from misinformation_simulation.simulation.graph import (
+    SimulationEdge,
+    SimulationNode,
+    SimulationStepResult,
+)
 
 
 class InteractionGraphUITest(unittest.TestCase):
@@ -31,6 +37,65 @@ class InteractionGraphUITest(unittest.TestCase):
 
         self.assertEqual(payload["start_node_id"], node_a["node_id"])
         self.assertEqual(payload["edges"], [{"source": "node_1", "target": "node_2"}])
+
+    def test_graph_nodes_to_forms_orders_nodes_from_edges(self) -> None:
+        nodes = [
+            SimulationNode(
+                node_id="node_a",
+                model="gemini-3.1-flash-lite-preview",
+                provider=Provider.GEMINI,
+                personality="persona-a",
+            ),
+            SimulationNode(
+                node_id="node_b",
+                model="gpt-4.1-mini",
+                provider=Provider.CHATGPT,
+                personality="persona-b",
+            ),
+            SimulationNode(
+                node_id="node_c",
+                model="gemini-3.1-flash-lite-preview",
+                provider=Provider.GEMINI,
+                personality="persona-c",
+            ),
+        ]
+        edges = [
+            SimulationEdge(source="node_b", target="node_c"),
+            SimulationEdge(source="node_c", target="node_a"),
+        ]
+
+        forms = graph_nodes_to_forms(nodes, edges, start_node_id="node_b")
+
+        self.assertEqual([node["node_id"] for node in forms], ["node_b", "node_c", "node_a"])
+
+    def test_graph_nodes_to_forms_rejects_branching_graphs(self) -> None:
+        nodes = [
+            SimulationNode(
+                node_id="node_a",
+                model="gemini-3.1-flash-lite-preview",
+                provider=Provider.GEMINI,
+                personality="persona-a",
+            ),
+            SimulationNode(
+                node_id="node_b",
+                model="gpt-4.1-mini",
+                provider=Provider.CHATGPT,
+                personality="persona-b",
+            ),
+            SimulationNode(
+                node_id="node_c",
+                model="gemini-3.1-flash-lite-preview",
+                provider=Provider.GEMINI,
+                personality="persona-c",
+            ),
+        ]
+        edges = [
+            SimulationEdge(source="node_a", target="node_b"),
+            SimulationEdge(source="node_a", target="node_c"),
+        ]
+
+        with self.assertRaisesRegex(ValueError, "single chain path"):
+            graph_nodes_to_forms(nodes, edges, start_node_id="node_a")
 
     def test_result_summaries_group_steps(self) -> None:
         steps = [
