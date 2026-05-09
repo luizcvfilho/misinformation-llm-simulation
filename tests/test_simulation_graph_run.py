@@ -59,8 +59,8 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
     )
     monkeypatch.setattr(
         graph,
-        "_extract_structures_and_metrics",
-        lambda **_kwargs: (make_structure("original"), make_structure("rewritten")),
+        "_extract_compared_structure",
+        lambda **_kwargs: make_structure("rewritten"),
     )
     monkeypatch.setattr(
         graph,

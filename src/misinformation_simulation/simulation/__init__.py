@@ -1,9 +1,9 @@
-from .graph import (
+from .graph import run_news_interaction_graph
+from .types import (
     SimulationEdge,
     SimulationNode,
     SimulationResult,
     SimulationStepResult,
-    run_news_interaction_graph,
 )
 
 __all__ = [

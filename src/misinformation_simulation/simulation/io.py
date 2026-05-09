@@ -8,7 +8,7 @@ from typing import Any
 import pandas as pd
 
 from misinformation_simulation.datasets.newsdata import QUERY_METADATA_ROW_ID
-from misinformation_simulation.simulation.graph import SimulationEdge, SimulationNode
+from misinformation_simulation.simulation.types import SimulationEdge, SimulationNode
 
 DEFAULT_PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
