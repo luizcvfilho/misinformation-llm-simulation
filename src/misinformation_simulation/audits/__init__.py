@@ -4,6 +4,7 @@ from .bert_nli import consistency_flag, nli_pair_scores
 from .fake_news_detector import pretrained_fake_news_detector_prediction
 from .vad import (
     DEFAULT_VAD_MODEL_NAME,
+    VAD_DIMENSIONS,
     VADModelBundle,
     VADScore,
     analyze_text_vad,
@@ -23,6 +24,7 @@ __all__ = [
     "nli_pair_scores",
     "pretrained_fake_news_detector_prediction",
     "DEFAULT_VAD_MODEL_NAME",
+    "VAD_DIMENSIONS",
     "VADModelBundle",
     "VADScore",
     "load_huggingface_vad_model",
