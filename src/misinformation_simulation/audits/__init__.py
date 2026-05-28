@@ -2,6 +2,18 @@ from misinformation_simulation.datasets.loading import read_dataset, validate_pa
 
 from .bert_nli import consistency_flag, nli_pair_scores
 from .fake_news_detector import pretrained_fake_news_detector_prediction
+from .topic_matched_vad import (
+    DEFAULT_ORIGINAL_TEXT_COLUMN,
+    DEFAULT_PAIR_COLUMN,
+    DEFAULT_REWRITTEN_TEXT_COLUMN,
+    DEFAULT_TOPIC_COLUMN,
+    build_rewrite_prompt,
+    build_topic_matched_seed_dataset,
+    compute_paired_vad_deltas,
+    prepare_long_vad_frame,
+    summarize_paired_vad_deltas,
+    validate_rewritten_pairs,
+)
 from .vad import (
     DEFAULT_VAD_MODEL_NAME,
     VAD_DIMENSIONS,
@@ -35,4 +47,14 @@ __all__ = [
     "annotate_vad_scores",
     "summarize_vad_by_group",
     "compare_vad_groups",
+    "DEFAULT_PAIR_COLUMN",
+    "DEFAULT_TOPIC_COLUMN",
+    "DEFAULT_ORIGINAL_TEXT_COLUMN",
+    "DEFAULT_REWRITTEN_TEXT_COLUMN",
+    "build_topic_matched_seed_dataset",
+    "build_rewrite_prompt",
+    "validate_rewritten_pairs",
+    "prepare_long_vad_frame",
+    "compute_paired_vad_deltas",
+    "summarize_paired_vad_deltas",
 ]

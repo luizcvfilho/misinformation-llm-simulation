@@ -14,7 +14,7 @@ from misinformation_simulation.audits import (
     predict_text_vad,
     summarize_vad_by_group,
 )
-from misinformation_simulation.datasets import load_fake_true_news_dataset
+from misinformation_simulation.datasets import load_fake_news_dataset, load_fake_true_news_dataset
 
 
 class FakeModel:
@@ -70,6 +70,26 @@ def test_load_fake_true_news_dataset_builds_expected_columns(tmp_path: Path) -> 
     assert loaded.loc[0, "article_text"] == "Explosive claim\n\nShocking crisis spreads quickly."
     assert loaded.loc[0, "source_file"] == "Fake.csv"
     assert loaded.loc[1, "source_file"] == "True.csv"
+
+
+def test_load_fake_news_dataset_reads_only_fake_csv(tmp_path: Path) -> None:
+    pd.DataFrame(
+        [
+            {
+                "title": "Fake only",
+                "text": "Unsupported claim.",
+                "subject": "politics",
+                "date": "2026-04-17",
+            }
+        ]
+    ).to_csv(tmp_path / "Fake.csv", index=False)
+
+    loaded = load_fake_news_dataset(tmp_path)
+
+    assert len(loaded) == 1
+    assert loaded.loc[0, "label"] == "fake"
+    assert loaded.loc[0, "source_file"] == "Fake.csv"
+    assert loaded.loc[0, "article_text"] == "Fake only\n\nUnsupported claim."
 
 
 def test_load_huggingface_vad_model_uses_expected_defaults(

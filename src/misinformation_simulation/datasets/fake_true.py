@@ -58,6 +58,29 @@ def load_fake_true_news_dataset(
     return combined
 
 
+def load_fake_news_dataset(
+    data_dir: Path | str = DEFAULT_FAKE_TRUE_VAD_DIR,
+    *,
+    title_column: str = _DEFAULT_TITLE_COLUMN,
+    text_column: str = _DEFAULT_TEXT_COLUMN,
+    output_text_column: str = "article_text",
+    max_rows: int | None = None,
+    random_state: int = 42,
+) -> pd.DataFrame:
+    dataset_dir = Path(data_dir)
+    frame = _load_labeled_frame(
+        dataset_dir / _LABEL_TO_FILENAME[FAKE_LABEL],
+        label=FAKE_LABEL,
+        title_column=title_column,
+        text_column=text_column,
+        output_text_column=output_text_column,
+        max_rows=max_rows,
+        random_state=random_state,
+    )
+    frame.insert(0, "dataset_name", FAKE_TRUE_VAD_DATASET_NAME)
+    return frame
+
+
 def _load_labeled_frame(
     csv_path: Path,
     *,

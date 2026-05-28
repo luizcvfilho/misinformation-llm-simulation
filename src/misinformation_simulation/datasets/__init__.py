@@ -1,6 +1,7 @@
 from .fake_true import (
     DEFAULT_FAKE_TRUE_VAD_DIR,
     FAKE_TRUE_VAD_DATASET_NAME,
+    load_fake_news_dataset,
     load_fake_true_news_dataset,
 )
 from .loading import read_dataset, validate_pair_columns
@@ -22,6 +23,7 @@ __all__ = [
     "save_csv",
     "FAKE_TRUE_VAD_DATASET_NAME",
     "DEFAULT_FAKE_TRUE_VAD_DIR",
+    "load_fake_news_dataset",
     "load_fake_true_news_dataset",
     "read_dataset",
     "validate_pair_columns",
