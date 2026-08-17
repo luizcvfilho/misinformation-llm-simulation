@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -19,6 +19,15 @@ COUNTRY ?=
 CATEGORY ?=
 QUERY ?=
 MAX_RECORDS ?= 200
+STDI_MANUAL_OUTPUT_DIR ?= output/stdi_manual_evaluation
+STDI_MANUAL_INPUT ?= data/raw/newsdata_news.csv
+STDI_MANUAL_SAMPLE_SIZE ?= 50
+STDI_MANUAL_MODEL ?= gpt-5-mini
+STDI_MANUAL_PROVIDER ?= chatgpt
+STDI_MANUAL_MAX_REQUESTS_PER_MINUTE ?= 20
+STDI_MANUAL_GENERATE ?=
+STDI_MANUAL_SCORE ?=
+STDI_MANUAL_WITHOUT_VAD ?=
 GRAPH_INPUT ?= data/graph_news.csv
 GRAPH_CONFIG ?= data/graph_config.json
 GRAPH_TEXT_COLUMN ?= description
@@ -46,6 +55,11 @@ INTERACTION_GRAPH_OPTIONAL_ARGS := \
 	$(if $(strip $(GRAPH_MAX_REQUESTS_PER_MINUTE)),--max-requests-per-minute $(GRAPH_MAX_REQUESTS_PER_MINUTE),) \
 	$(if $(strip $(GRAPH_ALLOW_TITLE_FALLBACK)),--allow-title-fallback,)
 
+STDI_MANUAL_OPTIONAL_ARGS := \
+	$(if $(strip $(STDI_MANUAL_GENERATE)),--generate,) \
+	$(if $(strip $(STDI_MANUAL_SCORE)),--score,) \
+	$(if $(strip $(STDI_MANUAL_WITHOUT_VAD)),--without-vad,)
+
 help: ## List available targets
 	@echo "Available targets:"
 	@echo "  help               List available targets"
@@ -67,6 +81,8 @@ help: ## List available targets
 	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
 	@echo "  notebooks-continue Run notebooks and continue even if one fails"
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
+	@echo "  prepare-stdi-manual-evaluation  Prepare or score 50 manually reviewed STDI pairs"
+	@echo "  calibrate-stdi     Fit STDI weights from manual annotations"
 	@echo "  interaction-graph  Run the interaction graph simulation"
 	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
 	@echo "  interaction-graph-ui Open the Streamlit UI for the interaction graph workflow"
@@ -130,6 +146,12 @@ notebooks-continue: ## Run notebooks and continue even if one fails
 
 fetch-news: ## Fetch news from NewsData.io and save as CSV
 	uv run python scripts/fetch_newsdata.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
+
+prepare-stdi-manual-evaluation: ## Prepare or score 50 manually reviewed STDI pairs
+	uv run python scripts/prepare_stdi_manual_evaluation.py --input $(STDI_MANUAL_INPUT) --output-dir $(STDI_MANUAL_OUTPUT_DIR) --sample-size $(STDI_MANUAL_SAMPLE_SIZE) --model $(STDI_MANUAL_MODEL) --provider $(STDI_MANUAL_PROVIDER) --max-requests-per-minute $(STDI_MANUAL_MAX_REQUESTS_PER_MINUTE) $(STDI_MANUAL_OPTIONAL_ARGS)
+
+calibrate-stdi: ## Fit STDI weights from manual annotations
+	uv run python scripts/prepare_stdi_manual_evaluation.py --output-dir $(STDI_MANUAL_OUTPUT_DIR) --fit
 
 interaction-graph:
 	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) $(INTERACTION_GRAPH_OPTIONAL_ARGS)

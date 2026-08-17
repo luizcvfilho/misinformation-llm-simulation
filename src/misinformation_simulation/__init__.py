@@ -22,12 +22,19 @@ from .text_metrics import (
     predict_vad_batch,
 )
 from .topic_drift import (
+    ManualSTDICalibrationResult,
     annotate_stdi_for_rewrites,
     annotate_stdi_for_version_chain,
+    build_manual_stdi_evaluation_dataset,
     calculate_stdi,
     calculate_stdi_chain_metrics,
     calculate_vad_drift,
+    compare_stdi_components_semantically,
     extract_topic_structure,
+    fit_manual_stdi_regression,
+    generate_metric_rewrites,
+    score_manual_stdi_evaluation_pairs,
+    summarize_manual_stdi_evaluation,
 )
 
 __all__ = [
@@ -38,6 +45,13 @@ __all__ = [
     "extract_topic_structure",
     "calculate_stdi",
     "calculate_stdi_chain_metrics",
+    "build_manual_stdi_evaluation_dataset",
+    "generate_metric_rewrites",
+    "compare_stdi_components_semantically",
+    "score_manual_stdi_evaluation_pairs",
+    "summarize_manual_stdi_evaluation",
+    "fit_manual_stdi_regression",
+    "ManualSTDICalibrationResult",
     "annotate_stdi_for_rewrites",
     "annotate_stdi_for_version_chain",
     "read_dataset",

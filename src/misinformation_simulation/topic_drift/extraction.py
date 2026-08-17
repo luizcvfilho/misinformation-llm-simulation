@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from typing import Any
 
 from misinformation_simulation.enums import Models, Provider
@@ -181,6 +182,7 @@ def extract_topic_structure(
     base_url: str | None = None,
     max_requests_per_minute: int | None = None,
     retry_attempts: int = 5,
+    before_request_hook: Callable[[], None] | None = None,
 ) -> TopicStructure:
     if not text or not str(text).strip():
         raise ValueError("Provide a non-empty text to extract the topic structure.")
@@ -195,6 +197,7 @@ def extract_topic_structure(
     )
     prompt = TOPIC_DRIFT_PROMPT_TEMPLATE.format(title=title or "Untitled", text=text.strip())
     limiter = MinuteRateLimiter(max_requests_per_minute)
+    request_hook = before_request_hook or limiter.acquire
 
     if provider_normalized == "gemini":
         raw_response = generate_gemini_text_with_retry(
@@ -204,7 +207,7 @@ def extract_topic_structure(
             system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
             temperature=0.1,
             max_attempts=retry_attempts,
-            before_request_hook=limiter.acquire,
+            before_request_hook=request_hook,
         )
     else:
         raw_response = generate_openai_text_with_retry(
@@ -214,7 +217,7 @@ def extract_topic_structure(
             system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
             temperature=0.1,
             max_attempts=retry_attempts,
-            before_request_hook=limiter.acquire,
+            before_request_hook=request_hook,
         )
 
     payload = _extract_json_object(raw_response)
