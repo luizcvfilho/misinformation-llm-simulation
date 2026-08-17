@@ -29,7 +29,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Prepare, score, and calibrate a manually reviewed STDI evaluation set."
     )
-    parser.add_argument("--input", type=Path, default=Path("data") / "Latest_News.csv")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        default=Path("data") / "raw" / "newsdata_news.csv",
+    )
     parser.add_argument(
         "--output-dir", type=Path, default=Path("output") / "stdi_manual_evaluation"
     )
