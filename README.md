@@ -182,6 +182,17 @@ This creates `calibrated_stdi_weights.csv` and `calibration_metrics.json` in the
 directory. Regression features are the calculated STDI components, while the target is
 the manually reviewed `manual_expected_stdi` value.
 
+### CSV Explorer
+
+Open a generic local CSV explorer with:
+
+```powershell
+make csv-explorer
+```
+
+Load any CSV file, select its delimiter, filter values, choose visible columns, inspect a
+single row vertically, and download a filtered copy. The original CSV is not modified.
+
 Each scored pair makes one additional semantic-comparison request. This evaluator compares
 the two news items together and scores theme, subtopic, entity, and relation drift using
 the fixed levels `0`, `0.25`, `0.5`, `0.75`, and `1`. Its explanations are written to the

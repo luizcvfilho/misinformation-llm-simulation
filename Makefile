@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -83,6 +83,7 @@ help: ## List available targets
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
 	@echo "  prepare-stdi-manual-evaluation  Prepare or score 50 manually reviewed STDI pairs"
 	@echo "  calibrate-stdi     Fit STDI weights from manual annotations"
+	@echo "  csv-explorer       Open the generic CSV explorer"
 	@echo "  interaction-graph  Run the interaction graph simulation"
 	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
 	@echo "  interaction-graph-ui Open the Streamlit UI for the interaction graph workflow"
@@ -152,6 +153,9 @@ prepare-stdi-manual-evaluation: ## Prepare or score 50 manually reviewed STDI pa
 
 calibrate-stdi: ## Fit STDI weights from manual annotations
 	uv run python scripts/prepare_stdi_manual_evaluation.py --output-dir $(STDI_MANUAL_OUTPUT_DIR) --fit
+
+csv-explorer: ## Open the generic CSV explorer
+	uv run streamlit run src/misinformation_simulation/apps/csv_explorer_app.py
 
 interaction-graph:
 	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) $(INTERACTION_GRAPH_OPTIONAL_ARGS)
