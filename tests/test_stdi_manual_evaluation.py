@@ -37,6 +37,15 @@ def test_build_manual_dataset_samples_fifty_real_rows_and_balances_prompts() -> 
     assert dataset["manual_expected_stdi"].isna().all()
 
 
+def test_build_manual_dataset_excludes_paid_plan_promotional_text() -> None:
+    source = _source_news(50)
+    source.loc[1, "content"] = "ONLY AVAILABLE IN PAID PLANS"
+
+    dataset = build_manual_stdi_evaluation_dataset(source, sample_size=49)
+
+    assert dataset["original_text"].str.contains("paid plans", case=False).sum() == 0
+
+
 def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> None:
     dataset = build_manual_stdi_evaluation_dataset(_source_news(), sample_size=2)
     dataset["modified_text"] = ["Rewritten report 1", "Rewritten report 2"]

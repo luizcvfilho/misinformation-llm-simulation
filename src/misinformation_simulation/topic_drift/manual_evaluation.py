@@ -25,6 +25,7 @@ from misinformation_simulation.topic_drift.extraction import extract_topic_struc
 from misinformation_simulation.topic_drift.manual_evaluation_definitions import (
     CALCULATED_COMPONENT_COLUMNS,
     CALCULATED_STDI_COLUMN,
+    EXCLUDED_SOURCE_TEXT_MARKERS,
     MANUAL_EXPECTED_STDI_COLUMN,
     MANUAL_REWRITE_PROMPT_TEMPLATE,
     MANUAL_REWRITE_SYSTEM_INSTRUCTION,
@@ -86,6 +87,11 @@ def _prompt_by_metric(metric: str) -> MetricRewritePrompt:
     raise ValueError(f"Unknown target metric: {metric}")
 
 
+def _contains_excluded_source_marker(text: str) -> bool:
+    normalized_text = " ".join(text.casefold().split())
+    return any(marker in normalized_text for marker in EXCLUDED_SOURCE_TEXT_MARKERS)
+
+
 def build_manual_stdi_evaluation_dataset(
     source_dataset: pd.DataFrame,
     *,
@@ -113,6 +119,8 @@ def build_manual_stdi_evaluation_dataset(
                 allow_title_fallback=False,
             )
         except ValueError:
+            continue
+        if _contains_excluded_source_marker(original_text):
             continue
 
         title = ""
@@ -187,7 +195,6 @@ def generate_metric_rewrites(
     missing_columns = sorted(required_columns - set(dataset.columns))
     if missing_columns:
         raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
-
     provider_normalized, client = create_llm_client(
         provider=provider,
         api_key=api_key,
@@ -201,16 +208,16 @@ def generate_metric_rewrites(
         row = result.loc[row_index]
         prompt_definition = _prompt_by_metric(str(row["target_metric"]))
         original_text = str(row["original_text"]).strip()
-        prompt = MANUAL_REWRITE_PROMPT_TEMPLATE.format(
-            instruction=prompt_definition.instruction,
-            title=str(row["title"]).strip() or "Untitled",
-            original_text=original_text,
-        )
         if progress_callback is not None:
             progress_callback(
                 f"[{row_position}/{total_rows}] Rewriting {row['evaluation_id']} "
                 f"for {prompt_definition.metric}."
             )
+        prompt = MANUAL_REWRITE_PROMPT_TEMPLATE.format(
+            instruction=prompt_definition.instruction,
+            title=str(row["title"]).strip() or "Untitled",
+            original_text=original_text,
+        )
         try:
             if provider_normalized == "gemini":
                 rewritten_text = generate_gemini_text_with_retry(

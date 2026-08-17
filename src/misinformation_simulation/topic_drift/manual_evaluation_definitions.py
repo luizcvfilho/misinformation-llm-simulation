@@ -15,6 +15,7 @@ SEMANTIC_COMPONENT_COLUMNS = STDI_COMPONENT_COLUMNS[:4]
 SEMANTIC_DRIFT_LEVELS = (0.0, 0.25, 0.5, 0.75, 1.0)
 MANUAL_EXPECTED_STDI_COLUMN = "manual_expected_stdi"
 CALCULATED_STDI_COLUMN = "calculated_stdi"
+EXCLUDED_SOURCE_TEXT_MARKERS = ("only available in paid plans",)
 
 MANUAL_REWRITE_SYSTEM_INSTRUCTION = """
 You rewrite news articles for a controlled semantic-drift evaluation.
