@@ -38,6 +38,16 @@ class FakeOpenAICompletions:
         return SimpleNamespace(choices=[SimpleNamespace(message=message)])
 
 
+class RecordingOpenAICompletions(FakeOpenAICompletions):
+    def __init__(self, responses: list[object]) -> None:
+        super().__init__(responses)
+        self.kwargs: list[dict[str, object]] = []
+
+    def create(self, **kwargs):
+        self.kwargs.append(kwargs)
+        return super().create(**kwargs)
+
+
 def test_generate_gemini_text_retries_retryable_errors(monkeypatch) -> None:
     sleeps: list[float] = []
     hooks: list[str] = []
@@ -91,6 +101,22 @@ def test_generate_openai_text_retries_and_strips_response(monkeypatch) -> None:
 
     assert text == "rewritten"
     assert completions.calls == 2
+
+
+def test_generate_openai_text_omits_temperature_for_gpt5_models() -> None:
+    completions = RecordingOpenAICompletions([" extracted "])
+    client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
+
+    text = generate_openai_text_with_retry(
+        client,
+        model="gpt-5-mini",
+        prompt="prompt",
+        system_instruction="system",
+        temperature=0.1,
+    )
+
+    assert text == "extracted"
+    assert "temperature" not in completions.kwargs[0]
 
 
 def test_generate_openai_text_rejects_empty_response() -> None:

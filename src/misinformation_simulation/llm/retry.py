@@ -9,6 +9,25 @@ from google.genai import types
 from openai import OpenAI
 
 
+def _openai_chat_completion_kwargs(
+    *,
+    model: str,
+    prompt: str,
+    system_instruction: str,
+    temperature: float,
+) -> dict[str, object]:
+    kwargs: dict[str, object] = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system_instruction},
+            {"role": "user", "content": prompt},
+        ],
+    }
+    if not model.strip().lower().startswith("gpt-5"):
+        kwargs["temperature"] = temperature
+    return kwargs
+
+
 def generate_gemini_text_with_retry(
     client: genai.Client,
     *,
@@ -75,12 +94,12 @@ def generate_openai_text_with_retry(
                 before_request_hook()
 
             response = client.chat.completions.create(
-                model=model,
-                temperature=temperature,
-                messages=[
-                    {"role": "system", "content": system_instruction},
-                    {"role": "user", "content": prompt},
-                ],
+                **_openai_chat_completion_kwargs(
+                    model=model,
+                    prompt=prompt,
+                    system_instruction=system_instruction,
+                    temperature=temperature,
+                )
             )
             text = (response.choices[0].message.content or "").strip()
             if not text:
