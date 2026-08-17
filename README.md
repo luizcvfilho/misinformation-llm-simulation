@@ -107,6 +107,12 @@ Available helpers in [src/misinformation_simulation/topic_drift](src/misinformat
 - `calculate_stdi(...)`
 - `calculate_vad_drift(...)`
 - `calculate_stdi_chain_metrics(...)`
+- `build_manual_stdi_evaluation_dataset(...)`
+- `generate_metric_rewrites(...)`
+- `score_manual_stdi_evaluation_pairs(...)`
+- `summarize_manual_stdi_evaluation(...)`
+- `fit_manual_stdi_regression(...)`
+- `compare_stdi_components_semantically(...)`
 - `annotate_stdi_for_rewrites(...)`
 - `annotate_stdi_for_version_chain(...)`
 
@@ -132,6 +138,49 @@ For future sequential rewrite chains, use:
 
 Generated columns include the extracted structures for the original and each version,
 their VAD scores, and the per-version STDI metrics.
+
+### Manual STDI evaluation and calibration
+
+The calibration workflow now uses 50 real news items sampled reproducibly from
+`data/raw/newsdata_news.csv`. It creates one rewritten version of each news item and assigns
+one of six controlled prompts: main theme, subtopic, central entity, central relation,
+internal contradiction, or emotional framing (VAD). The 50 pairs are distributed as
+evenly as possible across the six target metrics.
+
+Generate the review set, rewrites, and calculated STDI values with:
+
+```powershell
+make prepare-stdi-manual-evaluation STDI_MANUAL_GENERATE=1 STDI_MANUAL_SCORE=1
+```
+
+The default model is `gpt-5-mini`, the provider is `chatgpt`, and the limit is 20
+requests per minute. Set `CHATGPT_API_KEY` or `OPENAI_API_KEY` in `.env` first.
+
+The command writes its files to `output/stdi_manual_evaluation/`:
+
+- `manual_stdi_pairs.csv`: sampled real news items and the six assigned prompts.
+- `generated_stdi_pairs.csv`: generated rewrites.
+- `scored_stdi_pairs.csv`: semantic STDI components, lexical reference values, rationales, and
+  empty manual-review columns.
+- `stdi_evaluation_summary.csv`: calculated results grouped by target metric.
+- `manual_review_guide.md`: annotation rubric.
+
+Review `scored_stdi_pairs.csv`, filling `manual_target_metric_score`,
+`manual_expected_stdi`, `manual_review_status`, and `manual_notes`. Then fit the
+weights from the manually assigned overall STDI values:
+
+```powershell
+make calibrate-stdi
+```
+
+This creates `calibrated_stdi_weights.csv` and `calibration_metrics.json` in the same
+directory. Regression features are the calculated STDI components, while the target is
+the manually reviewed `manual_expected_stdi` value.
+
+Each scored pair makes one additional semantic-comparison request. This evaluator compares
+the two news items together and scores theme, subtopic, entity, and relation drift using
+the fixed levels `0`, `0.25`, `0.5`, `0.75`, and `1`. Its explanations are written to the
+`semantic_*_rationale` columns. Contradiction and VAD continue to use their existing metrics.
 
 ## Linting and Formatting
 

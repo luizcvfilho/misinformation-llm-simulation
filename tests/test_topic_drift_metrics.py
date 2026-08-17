@@ -82,6 +82,38 @@ def test_calculate_stdi_includes_contradiction_weight_in_base_formula() -> None:
     assert metrics["stdi"] == 0.2
 
 
+def test_calculate_stdi_accepts_semantic_component_overrides() -> None:
+    original = TopicStructure(
+        main_topic="football transfer",
+        subtopics=["player sale"],
+        central_entities=["Tottenham"],
+        central_relations=[TopicRelation("Tottenham", "sells", "player")],
+    )
+    compared = TopicStructure(
+        main_topic="agreement to sell Tottenham player",
+        subtopics=["transfer agreement"],
+        central_entities=["Tottenham Hotspur"],
+        central_relations=[TopicRelation("Tottenham", "agrees to sell", "player")],
+    )
+
+    lexical_metrics = calculate_stdi(original, compared)
+    semantic_metrics = calculate_stdi(
+        original,
+        compared,
+        component_overrides={
+            "theme_drift": 0.0,
+            "subtopic_drift": 0.25,
+            "entity_drift": 0.0,
+            "relation_drift": 0.0,
+        },
+    )
+
+    assert lexical_metrics["theme_drift"] == 1.0
+    assert semantic_metrics["theme_drift"] == 0.0
+    assert semantic_metrics["subtopic_drift"] == 0.25
+    assert semantic_metrics["stdi"] < lexical_metrics["stdi"]
+
+
 def test_calculate_stdi_chain_metrics_propagates_vad_columns() -> None:
     original = TopicStructure(
         main_topic="health",

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from misinformation_simulation.text_metrics.vad import VADScore
@@ -84,6 +84,7 @@ def calculate_stdi(
     original_vad: VADScore | None = None,
     compared_vad: VADScore | None = None,
     score_range: float = DEFAULT_VAD_SCORE_RANGE,
+    component_overrides: Mapping[str, float] | None = None,
 ) -> dict[str, float]:
     original_main_topic = _normalize_scalar(original_structure.main_topic)
     compared_main_topic = _normalize_scalar(compared_structure.main_topic)
@@ -129,25 +130,42 @@ def calculate_stdi(
         if original_vad is not None and compared_vad is not None
         else DEFAULT_STDI_WEIGHTS
     )
+    component_values = {
+        "theme_drift": theme_drift,
+        "subtopic_drift": subtopic_drift,
+        "entity_drift": entity_drift,
+        "relation_drift": relation_drift,
+        "contradiction_drift": contradiction_drift,
+        "vad_drift": vad_metrics["vad_drift"],
+    }
+    if component_overrides is not None:
+        invalid_components = sorted(set(component_overrides) - set(component_values))
+        if invalid_components:
+            raise ValueError(f"Unknown STDI component override(s): {', '.join(invalid_components)}")
+        for component, value in component_overrides.items():
+            numeric_value = float(value)
+            if not 0.0 <= numeric_value <= 1.0:
+                raise ValueError(f"STDI component override '{component}' must be between 0 and 1.")
+            component_values[component] = numeric_value
     stdi = (
-        weights["theme_drift"] * theme_drift
-        + weights["subtopic_drift"] * subtopic_drift
-        + weights["entity_drift"] * entity_drift
-        + weights["relation_drift"] * relation_drift
-        + weights["contradiction_drift"] * contradiction_drift
-        + weights.get("vad_drift", 0.0) * vad_metrics["vad_drift"]
+        weights["theme_drift"] * component_values["theme_drift"]
+        + weights["subtopic_drift"] * component_values["subtopic_drift"]
+        + weights["entity_drift"] * component_values["entity_drift"]
+        + weights["relation_drift"] * component_values["relation_drift"]
+        + weights["contradiction_drift"] * component_values["contradiction_drift"]
+        + weights.get("vad_drift", 0.0) * component_values["vad_drift"]
     )
 
     return {
-        "theme_drift": round(theme_drift, 6),
-        "subtopic_drift": round(subtopic_drift, 6),
-        "entity_drift": round(entity_drift, 6),
-        "relation_drift": round(relation_drift, 6),
-        "contradiction_drift": round(contradiction_drift, 6),
+        "theme_drift": round(component_values["theme_drift"], 6),
+        "subtopic_drift": round(component_values["subtopic_drift"], 6),
+        "entity_drift": round(component_values["entity_drift"], 6),
+        "relation_drift": round(component_values["relation_drift"], 6),
+        "contradiction_drift": round(component_values["contradiction_drift"], 6),
         "valence_drift": vad_metrics["valence_drift"],
         "arousal_drift": vad_metrics["arousal_drift"],
         "dominance_drift": vad_metrics["dominance_drift"],
-        "vad_drift": vad_metrics["vad_drift"],
+        "vad_drift": round(component_values["vad_drift"], 6),
         "stdi": round(stdi, 6),
     }
 
