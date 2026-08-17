@@ -142,8 +142,9 @@ METRIC_REWRITE_PROMPTS = (
         metric="vad_drift",
         label="Emotional framing (VAD)",
         instruction=(
-            "Preserve the factual claims, topic, entities, and relations, but use markedly "
-            "more alarming and emotionally charged framing."
+            "Preserve the factual claims, topic, entities, and relations. Make the framing "
+            "clearly more negative and urgent: lower valence and increase arousal through "
+            "alarming but journalistic wording. Do not add, remove, or alter facts."
         ),
     ),
 )

@@ -155,6 +155,11 @@ make prepare-stdi-manual-evaluation STDI_MANUAL_GENERATE=1 STDI_MANUAL_SCORE=1
 
 The default model is `gpt-5-mini`, the provider is `chatgpt`, and the limit is 20
 requests per minute. Set `CHATGPT_API_KEY` or `OPENAI_API_KEY` in `.env` first.
+The source sampler excludes the promotional text `ONLY AVAILABLE IN PAID PLANS`.
+
+For `vad_drift`, the rewrite prompt explicitly requests lower valence and higher arousal.
+The generated text is scored together with all other pairs after rewriting, without an
+automatic acceptance threshold or additional rewrite attempts.
 
 The command writes its files to `output/stdi_manual_evaluation/`:
 
