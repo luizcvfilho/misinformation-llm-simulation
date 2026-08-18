@@ -30,7 +30,12 @@ def _read_uploaded_csv(uploaded_file: Any, delimiter: str | None) -> pd.DataFram
     return read_csv_bytes(uploaded_file.getvalue(), delimiter=delimiter)
 
 
-def _render_filters(dataframe: pd.DataFrame, *, key_prefix: str) -> tuple[pd.DataFrame, list[str]]:
+def _render_filters(
+    dataframe: pd.DataFrame,
+    *,
+    key_prefix: str,
+    default_display_columns: list[str] | None = None,
+) -> tuple[pd.DataFrame, list[str]]:
     st.sidebar.header("Filters")
     search_text = st.sidebar.text_input("Search text", key=f"{key_prefix}-search-text")
     search_columns = st.sidebar.multiselect(
@@ -93,7 +98,8 @@ def _render_filters(dataframe: pd.DataFrame, *, key_prefix: str) -> tuple[pd.Dat
     display_columns = st.sidebar.multiselect(
         "Visible columns",
         options=list(dataframe.columns),
-        default=list(dataframe.columns[: min(12, len(dataframe.columns))]),
+        default=default_display_columns
+        or list(dataframe.columns[: min(12, len(dataframe.columns))]),
         key=f"{key_prefix}-visible-columns",
     )
     return filtered, display_columns
@@ -137,11 +143,34 @@ def _render_chart(dataframe: pd.DataFrame, *, key_prefix: str) -> None:
     st.bar_chart(chart_data)
 
 
-def _render_row_details(dataframe: pd.DataFrame, *, key_prefix: str) -> None:
+def _render_row_details(
+    dataframe: pd.DataFrame,
+    *,
+    key_prefix: str,
+    left_columns: list[str] | None = None,
+    right_columns: list[str] | None = None,
+) -> None:
     if dataframe.empty:
         st.info("No rows match the current filters.")
         return
 
+    left_column_set = set(left_columns or [])
+    right_column_set = set(right_columns or [])
+    if left_column_set or right_column_set:
+        st.html(
+            f"""
+            <style>
+                [class*="st-key-{key_prefix}-csv-1-details"] textarea {{
+                    background-color: {CSV_1_COLOR} !important;
+                    color: {COMPARISON_TEXT_COLOR} !important;
+                }}
+                [class*="st-key-{key_prefix}-csv-2-details"] textarea {{
+                    background-color: {CSV_2_COLOR} !important;
+                    color: {COMPARISON_TEXT_COLOR} !important;
+                }}
+            </style>
+            """
+        )
     row_index = st.selectbox(
         "Row",
         options=dataframe.index,
@@ -149,7 +178,37 @@ def _render_row_details(dataframe: pd.DataFrame, *, key_prefix: str) -> None:
         key=f"{key_prefix}-row",
     )
     row = dataframe.loc[row_index]
-    for column, value in row.items():
+    neutral_columns = [
+        column for column in row.index if column not in left_column_set | right_column_set
+    ]
+    _render_detail_fields(row, neutral_columns, key_prefix=key_prefix, row_index=row_index)
+    if left_column_set:
+        with st.container(key=f"{key_prefix}-csv-1-details"):
+            _render_detail_fields(
+                row,
+                [column for column in row.index if column in left_column_set],
+                key_prefix=key_prefix,
+                row_index=row_index,
+            )
+    if right_column_set:
+        with st.container(key=f"{key_prefix}-csv-2-details"):
+            _render_detail_fields(
+                row,
+                [column for column in row.index if column in right_column_set],
+                key_prefix=key_prefix,
+                row_index=row_index,
+            )
+
+
+def _render_detail_fields(
+    row: pd.Series,
+    columns: list[str],
+    *,
+    key_prefix: str,
+    row_index: object,
+) -> None:
+    for column in columns:
+        value = row[column]
         text_value = "" if pd.isna(value) else str(value)
         estimated_lines = sum(max(1, ceil(len(line) / 100)) for line in text_value.splitlines())
         height = min(max(68, 24 * max(estimated_lines, 1) + 16), 800)
@@ -218,7 +277,12 @@ def _render_data_views(
     with chart_tab:
         _render_chart(dataframe, key_prefix=key_prefix)
     with details_tab:
-        _render_row_details(dataframe, key_prefix=key_prefix)
+        _render_row_details(
+            dataframe,
+            key_prefix=key_prefix,
+            left_columns=left_columns,
+            right_columns=right_columns,
+        )
 
 
 def _render_single_csv(dataframe: pd.DataFrame, *, file_name: str) -> None:
@@ -260,18 +324,30 @@ def _render_csv_comparison(
         options=list(join_types),
         key="comparison-join-type",
     )
-    left_columns = st.sidebar.multiselect(
-        "CSV 1 columns",
+    left_table_columns = st.sidebar.multiselect(
+        "CSV 1 table columns",
         options=[column for column in left_dataframe.columns if column != left_join_column],
         default=[column for column in left_dataframe.columns if column != left_join_column],
-        key="comparison-left-columns",
+        key="comparison-left-table-columns",
     )
-    right_columns = st.sidebar.multiselect(
-        "CSV 2 columns",
+    right_table_columns = st.sidebar.multiselect(
+        "CSV 2 table columns",
         options=[column for column in right_dataframe.columns if column != right_join_column],
         default=[column for column in right_dataframe.columns if column != right_join_column],
-        key="comparison-right-columns",
+        key="comparison-right-table-columns",
     )
+    left_detail_columns = st.sidebar.multiselect(
+        "CSV 1 additional Row details columns",
+        options=[column for column in left_dataframe.columns if column != left_join_column],
+        key="comparison-left-detail-columns",
+    )
+    right_detail_columns = st.sidebar.multiselect(
+        "CSV 2 additional Row details columns",
+        options=[column for column in right_dataframe.columns if column != right_join_column],
+        key="comparison-right-detail-columns",
+    )
+    left_columns = list(dict.fromkeys([*left_table_columns, *left_detail_columns]))
+    right_columns = list(dict.fromkeys([*right_table_columns, *right_detail_columns]))
     try:
         comparison = build_csv_comparison(
             left_dataframe,
@@ -286,7 +362,17 @@ def _render_csv_comparison(
         st.error(f"Unable to compare CSVs: {error}")
         return
 
-    filtered, display_columns = _render_filters(comparison.dataframe, key_prefix="comparison")
+    join_key_column = f"Join key: {left_join_column} = {right_join_column}"
+    default_display_columns = [
+        join_key_column,
+        *[f"CSV 1: {column}" for column in left_table_columns],
+        *[f"CSV 2: {column}" for column in right_table_columns],
+    ]
+    filtered, display_columns = _render_filters(
+        comparison.dataframe,
+        key_prefix="comparison",
+        default_display_columns=default_display_columns,
+    )
     _render_data_views(
         filtered,
         display_columns=display_columns,
