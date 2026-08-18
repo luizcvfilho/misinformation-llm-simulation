@@ -265,7 +265,7 @@ def score_manual_stdi_evaluation_pairs(
     vad_scorer: Callable[[str], VADScore] | None = None,
     progress_callback: Callable[[str], None] | None = None,
 ) -> pd.DataFrame:
-    required_columns = {"evaluation_id", "title", "original_text", "modified_text"}
+    required_columns = {"evaluation_id", "original_text", "modified_text"}
     missing_columns = sorted(required_columns - set(dataset.columns))
     if missing_columns:
         raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
@@ -287,7 +287,7 @@ def score_manual_stdi_evaluation_pairs(
             if progress_callback is not None:
                 progress_callback(f"[{row_position}/{total_rows}] Scoring {row['evaluation_id']}.")
             extraction_kwargs = {
-                "title": str(row["title"]).strip(),
+                "title": None,
                 "model": model,
                 "provider": provider,
                 "api_key": api_key,
@@ -298,15 +298,12 @@ def score_manual_stdi_evaluation_pairs(
             if extractor is extract_topic_structure:
                 extraction_kwargs["before_request_hook"] = limiter.acquire
             original_structure = extractor(text=str(row["original_text"]), **extraction_kwargs)
-            modified_structure = extractor(
-                text=modified_text,
-                **{**extraction_kwargs, "title": None},
-            )
+            modified_structure = extractor(text=modified_text, **extraction_kwargs)
             lexical_metrics = calculate_stdi(original_structure, modified_structure)
             semantic_comparison_kwargs = {
                 "original_text": str(row["original_text"]),
                 "modified_text": modified_text,
-                "title": str(row["title"]).strip(),
+                "title": None,
                 "original_structure": original_structure,
                 "modified_structure": modified_structure,
                 "model": model,

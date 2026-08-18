@@ -50,6 +50,7 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
     dataset = build_manual_stdi_evaluation_dataset(_source_news(), sample_size=2)
     dataset["modified_text"] = ["Rewritten report 1", "Rewritten report 2"]
     extraction_calls: list[tuple[str, object]] = []
+    semantic_comparison_calls: list[object] = []
 
     def fake_extract_topic_structure(**kwargs: object) -> TopicStructure:
         text = str(kwargs["text"])
@@ -68,7 +69,8 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
             central_relations=[TopicRelation("government", "reports", "inflation")],
         )
 
-    def fake_semantic_comparison(**_kwargs: object) -> SemanticSTDIComparison:
+    def fake_semantic_comparison(**kwargs: object) -> SemanticSTDIComparison:
+        semantic_comparison_calls.append(kwargs["title"])
         return SemanticSTDIComparison(
             component_drifts={
                 "theme_drift": 0.0,
@@ -105,11 +107,12 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
     assert scored["semantic_relation_drift_rationale"].eq("Same factual relation.").all()
     assert summary["pair_count"].sum() == 2
     assert extraction_calls == [
-        (dataset.iloc[0]["original_text"], dataset.iloc[0]["title"]),
+        (dataset.iloc[0]["original_text"], None),
         (dataset.iloc[0]["modified_text"], None),
-        (dataset.iloc[1]["original_text"], dataset.iloc[1]["title"]),
+        (dataset.iloc[1]["original_text"], None),
         (dataset.iloc[1]["modified_text"], None),
     ]
+    assert semantic_comparison_calls == [None, None]
 
 
 def test_fit_manual_regression_uses_reviewed_expected_stdi() -> None:
