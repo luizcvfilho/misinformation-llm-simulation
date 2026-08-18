@@ -34,6 +34,7 @@ Analyze the following news item and return a JSON object with exactly these keys
 - central_relations: array of objects with keys subject, action, object
 - narrative_frame: string or null
 - has_internal_contradiction: boolean
+- internal_contradiction_score: number between 0 and 1
 
 Extraction rules:
 - main_topic must capture the primary subject of the article.
@@ -42,6 +43,9 @@ Extraction rules:
 - central_relations must describe core factual relations in (subject, action, object) form.
 - narrative_frame is optional and should summarize the dominant framing if present.
 - has_internal_contradiction must be true only when the text contradicts itself internally.
+- internal_contradiction_score must grade the severity/centrality of internal contradiction:
+  0 means none, 0.25 means slight or peripheral tension, 0.5 means partial contradiction,
+  0.75 means strong contradiction in an important claim, and 1 means a central contradiction.
 - Keep outputs short and normalized.
 - Do not invent facts beyond the text.
 
@@ -158,9 +162,24 @@ def _coerce_bool(value: Any) -> bool:
     return False
 
 
+def _coerce_unit_score(value: Any, *, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return 1.0 if value else 0.0
+    try:
+        numeric_value = float(value)
+    except (TypeError, ValueError):
+        return default
+    return min(max(numeric_value, 0.0), 1.0)
+
+
 def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
     main_topic = payload.get("main_topic")
     narrative_frame = payload.get("narrative_frame")
+    has_internal_contradiction = _coerce_bool(payload.get("has_internal_contradiction"))
+    internal_contradiction_score = _coerce_unit_score(
+        payload.get("internal_contradiction_score"),
+        default=1.0 if has_internal_contradiction else 0.0,
+    )
 
     return TopicStructure(
         main_topic=str(main_topic).strip() if main_topic else None,
@@ -168,7 +187,8 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         central_entities=_coerce_string_list(payload.get("central_entities")),
         central_relations=_coerce_relations(payload.get("central_relations")),
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
-        has_internal_contradiction=_coerce_bool(payload.get("has_internal_contradiction")),
+        has_internal_contradiction=has_internal_contradiction or internal_contradiction_score > 0.0,
+        internal_contradiction_score=internal_contradiction_score,
     )
 
 

@@ -42,6 +42,7 @@ def test_calculate_stdi_uses_vad_drift_when_topic_structure_is_identical() -> No
         central_relations=[TopicRelation("central bank", "raises", "rates")],
         narrative_frame="economic update",
         has_internal_contradiction=True,
+        internal_contradiction_score=1.0,
     )
 
     metrics_without_vad = calculate_stdi(structure, structure)
@@ -120,12 +121,13 @@ def test_calculate_stdi_includes_contradiction_weight_in_base_formula() -> None:
         central_relations=[TopicRelation("central bank", "raises", "rates")],
         narrative_frame="economic update",
         has_internal_contradiction=True,
+        internal_contradiction_score=0.5,
     )
 
     metrics = calculate_stdi(original, compared)
 
-    assert metrics["contradiction_drift"] == 1.0
-    assert metrics["stdi"] == 0.2
+    assert metrics["contradiction_drift"] == 0.5
+    assert metrics["stdi"] == 0.1
 
 
 def test_calculate_stdi_accepts_semantic_component_overrides() -> None:
@@ -175,6 +177,7 @@ def test_calculate_stdi_chain_metrics_propagates_vad_columns() -> None:
         central_relations=[TopicRelation("ministry", "announces", "campaign")],
         narrative_frame="public health",
         has_internal_contradiction=True,
+        internal_contradiction_score=0.75,
     )
 
     metrics = calculate_stdi_chain_metrics(
@@ -192,8 +195,8 @@ def test_calculate_stdi_chain_metrics_propagates_vad_columns() -> None:
     assert "vad_drift_incremental" in metric_row
     assert "contradiction_drift_vs_original" in metric_row
     assert "contradiction_drift_incremental" in metric_row
-    assert metric_row["contradiction_drift_vs_original"] == 1.0
-    assert metric_row["contradiction_drift_incremental"] == 1.0
+    assert metric_row["contradiction_drift_vs_original"] == 0.75
+    assert metric_row["contradiction_drift_incremental"] == 0.75
     assert metric_row["vad_drift_vs_original"] > 0.0
     assert metric_row["stdi_vs_original"] > 0.0
 
@@ -212,6 +215,7 @@ def test_build_topic_structure_defaults_missing_contradiction_to_false() -> None
     )
 
     assert not structure.has_internal_contradiction
+    assert structure.internal_contradiction_score == 0.0
 
 
 def test_annotate_stdi_for_rewrites_adds_contradiction_columns(
@@ -233,6 +237,7 @@ def test_annotate_stdi_for_rewrites_adds_contradiction_columns(
                 central_relations=[TopicRelation("central bank", "raises", "rates")],
                 narrative_frame="economic update",
                 has_internal_contradiction=True,
+                internal_contradiction_score=0.25,
             ),
         ]
     )
@@ -263,9 +268,11 @@ def test_annotate_stdi_for_rewrites_adds_contradiction_columns(
 
     assert "original_has_internal_contradiction" in result.columns
     assert "rewritten_news_has_internal_contradiction" in result.columns
+    assert "rewritten_news_internal_contradiction_score" in result.columns
     assert "rewritten_news_contradiction_drift_vs_original" in result.columns
     assert "rewritten_news_contradiction_drift_incremental" in result.columns
     assert not result.at[0, "original_has_internal_contradiction"]
     assert result.at[0, "rewritten_news_has_internal_contradiction"]
-    assert result.at[0, "rewritten_news_contradiction_drift_vs_original"] == 1.0
-    assert result.at[0, "rewritten_news_contradiction_drift_incremental"] == 1.0
+    assert result.at[0, "rewritten_news_internal_contradiction_score"] == 0.25
+    assert result.at[0, "rewritten_news_contradiction_drift_vs_original"] == 0.25
+    assert result.at[0, "rewritten_news_contradiction_drift_incremental"] == 0.25

@@ -8,6 +8,7 @@ from misinformation_simulation.topic_drift.extraction import (
     _coerce_bool,
     _coerce_relations,
     _coerce_string_list,
+    _coerce_unit_score,
     _deduplicate_preserve_order,
     _extract_json_object,
     extract_topic_structure,
@@ -40,6 +41,9 @@ def test_coercion_helpers_normalize_lists_relations_and_booleans() -> None:
     assert _coerce_bool("yes")
     assert _coerce_bool(1)
     assert not _coerce_bool("maybe")
+    assert _coerce_unit_score(0.75) == 0.75
+    assert _coerce_unit_score(2.0) == 1.0
+    assert _coerce_unit_score("invalid", default=0.25) == 0.25
 
     relations = _coerce_relations(
         [
@@ -65,6 +69,7 @@ def test_build_topic_structure_trims_scalars_and_defaults_missing_values() -> No
             ],
             "narrative_frame": " Alert ",
             "has_internal_contradiction": "true",
+            "internal_contradiction_score": 0.5,
         }
     )
 
@@ -72,6 +77,7 @@ def test_build_topic_structure_trims_scalars_and_defaults_missing_values() -> No
     assert structure.subtopics == ["inflation"]
     assert structure.narrative_frame == "Alert"
     assert structure.has_internal_contradiction
+    assert structure.internal_contradiction_score == 0.5
 
 
 def test_extract_topic_structure_validates_inputs() -> None:

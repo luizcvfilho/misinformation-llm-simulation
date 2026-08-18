@@ -73,12 +73,14 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
                 "subtopic_drift": 0.25,
                 "entity_drift": 0.0,
                 "relation_drift": 0.0,
+                "contradiction_drift": 0.25,
             },
             rationales={
                 "theme_drift": "Same economic story.",
                 "subtopic_drift": "Slightly different angle.",
                 "entity_drift": "Same actor.",
                 "relation_drift": "Same factual relation.",
+                "contradiction_drift": "Only a small tension.",
             },
         )
 
@@ -97,6 +99,7 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
     assert scored["calculated_theme_drift"].eq(0.0).all()
     assert scored["lexical_theme_drift"].eq(0.0).all()
     assert scored["semantic_subtopic_drift"].eq(0.25).all()
+    assert scored["semantic_contradiction_drift"].eq(0.25).all()
     assert scored["semantic_relation_drift_rationale"].eq("Same factual relation.").all()
     assert summary["pair_count"].sum() == 2
 

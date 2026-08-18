@@ -26,6 +26,7 @@ def _topic_structure_field_suffixes() -> tuple[str, ...]:
         "central_relations",
         "narrative_frame",
         "has_internal_contradiction",
+        "internal_contradiction_score",
         "json",
     )
 

@@ -65,6 +65,7 @@ The extraction step builds a structured representation for each text with:
 - `central_relations` in `(subject, action, object)` form
 - `narrative_frame` (optional)
 - `has_internal_contradiction` (boolean)
+- `internal_contradiction_score` from 0 to 1
 
 The final score follows:
 
@@ -73,7 +74,7 @@ D_theme = 0 if main_topic is equal, else 1
 D_subtopic = 1 - Jaccard(subtopics_original, subtopics_version)
 D_entities = 1 - Jaccard(entities_original, entities_version)
 D_relations = 1 - Jaccard(relations_original, relations_version)
-D_contradiction = 1 if rewritten text has internal contradiction, else 0
+D_contradiction = internal contradiction severity/centrality score from 0 to 1
 
 content_drift =
   0.15*D_theme +
@@ -573,6 +574,7 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `original_central_entities` | `annotate_stdi_for_rewrites` | JSON array of central original entities |
 | `original_central_relations` | `annotate_stdi_for_rewrites` | JSON array of original `(subject, action, object)` relations |
 | `original_has_internal_contradiction` | `annotate_stdi_for_rewrites` | Whether the original text contains internal contradictions |
+| `original_internal_contradiction_score` | `annotate_stdi_for_rewrites` | Severity/centrality of internal contradiction in the original text |
 | `rewritten_news_main_topic` | `annotate_stdi_for_rewrites` | Extracted primary topic of the rewritten article |
 | `rewritten_news_stdi_vs_original` | `annotate_stdi_for_rewrites` | Final STDI score against the original article |
 | `rewritten_news_theme_drift_vs_original` | `annotate_stdi_for_rewrites` | Binary main-topic drift component |
@@ -580,6 +582,7 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `rewritten_news_entity_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-entity drift component |
 | `rewritten_news_relation_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-relation drift component |
 | `rewritten_news_has_internal_contradiction` | `annotate_stdi_for_rewrites` | Whether the rewritten text contains internal contradictions |
+| `rewritten_news_internal_contradiction_score` | `annotate_stdi_for_rewrites` | Severity/centrality of internal contradiction in the rewritten text |
 | `rewritten_news_contradiction_drift_vs_original` | `annotate_stdi_for_rewrites` | Internal-contradiction drift component |
 | `rewritten_news_contradiction_drift_incremental` | `annotate_stdi_for_rewrites` | Incremental internal-contradiction drift component |
 | `high_topic_drift_flag` | STDI notebook | Whether STDI is above the configured threshold |

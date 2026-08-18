@@ -11,7 +11,7 @@ STDI_COMPONENT_COLUMNS = (
     "vad_drift",
 )
 CALCULATED_COMPONENT_COLUMNS = tuple(f"calculated_{column}" for column in STDI_COMPONENT_COLUMNS)
-SEMANTIC_COMPONENT_COLUMNS = STDI_COMPONENT_COLUMNS[:4]
+SEMANTIC_COMPONENT_COLUMNS = STDI_COMPONENT_COLUMNS[:5]
 SEMANTIC_DRIFT_LEVELS = (0.0, 0.25, 0.5, 0.75, 1.0)
 MANUAL_EXPECTED_STDI_COLUMN = "manual_expected_stdi"
 CALCULATED_STDI_COLUMN = "calculated_stdi"
@@ -54,7 +54,8 @@ exactly these keys:
 - subtopic_drift: one of 0, 0.25, 0.5, 0.75, 1
 - entity_drift: one of 0, 0.25, 0.5, 0.75, 1
 - relation_drift: one of 0, 0.25, 0.5, 0.75, 1
-- rationales: object with exactly the four component keys and concise explanations
+- contradiction_drift: one of 0, 0.25, 0.5, 0.75, 1
+- rationales: object with exactly the five component keys and concise explanations
 
 Scoring scale:
 - 0: semantically equivalent for that component
@@ -73,6 +74,9 @@ Component rules:
   descriptions refer to the same entity. Replacing an actor with a different actor increases it.
 - relation_drift concerns factual actions, causality, responsibility, or roles. Equivalent
   active/passive wording has zero drift; reversing roles or changing a factual assertion raises it.
+- contradiction_drift concerns internal contradiction introduced in the modified text. Score 0
+  for no contradiction, 0.25 for slight/peripheral tension, 0.5 for partial contradiction,
+  0.75 for a strong contradiction in an important claim, and 1 for a central contradiction.
 
 Title: {title}
 

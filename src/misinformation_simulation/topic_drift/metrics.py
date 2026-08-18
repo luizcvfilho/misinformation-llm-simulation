@@ -111,7 +111,10 @@ def calculate_stdi(
             if all(_normalize_relation(item.subject, item.action, item.object))
         },
     )
-    contradiction_drift = 1.0 if compared_structure.has_internal_contradiction else 0.0
+    contradiction_drift = min(
+        max(float(compared_structure.internal_contradiction_score), 0.0),
+        1.0,
+    )
 
     vad_metrics = calculate_vad_drift(
         original_vad,
