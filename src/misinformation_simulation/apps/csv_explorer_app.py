@@ -35,6 +35,7 @@ def _render_filters(
     *,
     key_prefix: str,
     default_display_columns: list[str] | None = None,
+    table_columns: list[str] | None = None,
 ) -> tuple[pd.DataFrame, list[str]]:
     st.sidebar.header("Filters")
     search_text = st.sidebar.text_input("Search text", key=f"{key_prefix}-search-text")
@@ -95,11 +96,20 @@ def _render_filters(
         categorical_filters=categorical_filters,
         numeric_ranges=numeric_ranges,
     )
+    visible_column_options = [
+        column
+        for column in (table_columns or list(dataframe.columns))
+        if column in dataframe.columns
+    ]
+    default_visible_columns = [
+        column
+        for column in (default_display_columns or visible_column_options[:12])
+        if column in visible_column_options
+    ]
     display_columns = st.sidebar.multiselect(
         "Visible columns",
-        options=list(dataframe.columns),
-        default=default_display_columns
-        or list(dataframe.columns[: min(12, len(dataframe.columns))]),
+        options=visible_column_options,
+        default=default_visible_columns,
         key=f"{key_prefix}-visible-columns",
     )
     return filtered, display_columns
@@ -249,6 +259,7 @@ def _render_data_views(
     display_columns: list[str],
     file_name: str,
     key_prefix: str,
+    table_columns: list[str] | None = None,
     left_columns: list[str] | None = None,
     right_columns: list[str] | None = None,
 ) -> None:
@@ -259,7 +270,9 @@ def _render_data_views(
 
     table_tab, chart_tab, details_tab = st.tabs(["Table", "Chart", "Row details"])
     with table_tab:
-        visible_data = dataframe[display_columns] if display_columns else dataframe
+        fallback_columns = table_columns or list(dataframe.columns)
+        visible_columns = display_columns or fallback_columns
+        visible_data = dataframe[[column for column in visible_columns if column in dataframe]]
         if left_columns is not None and right_columns is not None:
             visible_data = _style_comparison_dataframe(
                 visible_data,
@@ -368,16 +381,21 @@ def _render_csv_comparison(
         *[f"CSV 1: {column}" for column in left_table_columns],
         *[f"CSV 2: {column}" for column in right_table_columns],
     ]
+    table_columns = [
+        column for column in default_display_columns if column in comparison.dataframe.columns
+    ]
     filtered, display_columns = _render_filters(
         comparison.dataframe,
         key_prefix="comparison",
         default_display_columns=default_display_columns,
+        table_columns=table_columns,
     )
     _render_data_views(
         filtered,
         display_columns=display_columns,
         file_name=f"comparison_{left_file_name}_{right_file_name}",
         key_prefix="comparison",
+        table_columns=table_columns,
         left_columns=comparison.left_columns,
         right_columns=comparison.right_columns,
     )
