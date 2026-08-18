@@ -16,6 +16,16 @@ SEMANTIC_DRIFT_LEVELS = (0.0, 0.25, 0.5, 0.75, 1.0)
 MANUAL_EXPECTED_STDI_COLUMN = "manual_expected_stdi"
 CALCULATED_STDI_COLUMN = "calculated_stdi"
 EXCLUDED_SOURCE_TEXT_MARKERS = ("only available in paid plans",)
+TRUNCATED_SOURCE_TEXT_MARKERS = (
+    "read more",
+    "continue reading",
+    "full story",
+    "click here",
+)
+TRUNCATED_SOURCE_ENDINGS = ("...", "…", "[...]")
+MINIMUM_SOURCE_WORD_COUNT = 50
+REWRITE_MINIMUM_WORD_RATIO = 0.85
+REWRITE_MAXIMUM_WORD_RATIO = 1.15
 
 MANUAL_REWRITE_SYSTEM_INSTRUCTION = """
 You rewrite news articles for a controlled semantic-drift evaluation.
@@ -32,7 +42,11 @@ Requested controlled change:
 Constraints:
 - Make the requested change clearly observable.
 - Avoid adding an internal contradiction unless the requested change explicitly requires one.
-- Keep the result as a coherent news report of similar length and journalistic style.
+- Keep the result as a coherent news report in a journalistic style.
+- The original body has {original_word_count} words. Write between {minimum_word_count} and
+  {maximum_word_count} words.
+- Do not expand the report with background, examples, recommendations, or other details that
+  are not needed for the requested controlled change.
 
 Title: {title}
 

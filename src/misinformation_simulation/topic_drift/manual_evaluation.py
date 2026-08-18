@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+from collections import Counter
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from typing import Any
@@ -30,6 +32,11 @@ from misinformation_simulation.topic_drift.manual_evaluation_definitions import 
     MANUAL_REWRITE_PROMPT_TEMPLATE,
     MANUAL_REWRITE_SYSTEM_INSTRUCTION,
     METRIC_REWRITE_PROMPTS,
+    MINIMUM_SOURCE_WORD_COUNT,
+    REWRITE_MAXIMUM_WORD_RATIO,
+    REWRITE_MINIMUM_WORD_RATIO,
+    TRUNCATED_SOURCE_ENDINGS,
+    TRUNCATED_SOURCE_TEXT_MARKERS,
     MetricRewritePrompt,
 )
 from misinformation_simulation.topic_drift.metrics import calculate_stdi
@@ -92,6 +99,26 @@ def _contains_excluded_source_marker(text: str) -> bool:
     return any(marker in normalized_text for marker in EXCLUDED_SOURCE_TEXT_MARKERS)
 
 
+def _source_exclusion_reason(text: str) -> str | None:
+    normalized_text = " ".join(text.casefold().split())
+    if any(marker in normalized_text for marker in EXCLUDED_SOURCE_TEXT_MARKERS):
+        return "excluded_marker"
+    if len(normalized_text.split()) < MINIMUM_SOURCE_WORD_COUNT:
+        return "too_short"
+    if normalized_text.endswith(TRUNCATED_SOURCE_ENDINGS):
+        return "terminal_ellipsis"
+    if any(marker in normalized_text for marker in TRUNCATED_SOURCE_TEXT_MARKERS):
+        return "continuation_marker"
+    return None
+
+
+def _rewrite_word_count_bounds(original_text: str) -> tuple[int, int, int]:
+    original_word_count = len(original_text.split())
+    minimum_word_count = math.ceil(original_word_count * REWRITE_MINIMUM_WORD_RATIO)
+    maximum_word_count = math.floor(original_word_count * REWRITE_MAXIMUM_WORD_RATIO)
+    return original_word_count, minimum_word_count, maximum_word_count
+
+
 def build_manual_stdi_evaluation_dataset(
     source_dataset: pd.DataFrame,
     *,
@@ -109,6 +136,7 @@ def build_manual_stdi_evaluation_dataset(
 
     resolved_text_column = text_column or choose_news_text_column(source_dataset)
     candidates: list[dict[str, Any]] = []
+    excluded_source_counts: Counter[str] = Counter()
     for source_row_index, row in source_dataset.iterrows():
         if article_id_column in row.index and str(row[article_id_column]) == "__query_metadata__":
             continue
@@ -120,7 +148,9 @@ def build_manual_stdi_evaluation_dataset(
             )
         except ValueError:
             continue
-        if _contains_excluded_source_marker(original_text):
+        exclusion_reason = _source_exclusion_reason(original_text)
+        if exclusion_reason is not None:
+            excluded_source_counts[exclusion_reason] += 1
             continue
 
         title = ""
@@ -143,9 +173,13 @@ def build_manual_stdi_evaluation_dataset(
         )
 
     if len(candidates) < sample_size:
+        excluded_summary = ", ".join(
+            f"{reason}={count}" for reason, count in sorted(excluded_source_counts.items())
+        )
+        exclusion_details = f" Excluded candidates: {excluded_summary}." if excluded_summary else ""
         raise ValueError(
             f"The source dataset has only {len(candidates)} usable news items; "
-            f"{sample_size} are required."
+            f"{sample_size} are required.{exclusion_details}"
         )
 
     sampled = (
@@ -177,7 +211,9 @@ def build_manual_stdi_evaluation_dataset(
                 "manual_notes": pd.NA,
             }
         )
-    return pd.DataFrame(records)
+    result = pd.DataFrame(records)
+    result.attrs["excluded_source_counts"] = dict(excluded_source_counts)
+    return result
 
 
 def generate_metric_rewrites(
@@ -208,6 +244,9 @@ def generate_metric_rewrites(
         row = result.loc[row_index]
         prompt_definition = _prompt_by_metric(str(row["target_metric"]))
         original_text = str(row["original_text"]).strip()
+        original_word_count, minimum_word_count, maximum_word_count = _rewrite_word_count_bounds(
+            original_text
+        )
         if progress_callback is not None:
             progress_callback(
                 f"[{row_position}/{total_rows}] Rewriting {row['evaluation_id']} "
@@ -217,6 +256,9 @@ def generate_metric_rewrites(
             instruction=prompt_definition.instruction,
             title=str(row["title"]).strip() or "Untitled",
             original_text=original_text,
+            original_word_count=original_word_count,
+            minimum_word_count=minimum_word_count,
+            maximum_word_count=maximum_word_count,
         )
         try:
             if provider_normalized == "gemini":

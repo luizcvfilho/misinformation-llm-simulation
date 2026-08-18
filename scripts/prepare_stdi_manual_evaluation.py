@@ -118,6 +118,12 @@ def main() -> None:
     )
     pairs.to_csv(pairs_path, index=False)
     print(f"Saved {len(pairs)} manual review pairs to {pairs_path}")
+    excluded_source_counts = pairs.attrs.get("excluded_source_counts", {})
+    if excluded_source_counts:
+        summary = ", ".join(
+            f"{reason}={count}" for reason, count in sorted(excluded_source_counts.items())
+        )
+        print(f"Excluded source candidates: {summary}")
     print(f"Saved review guide to {guide_path}")
 
     generated = pairs

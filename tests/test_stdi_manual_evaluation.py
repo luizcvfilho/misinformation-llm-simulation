@@ -17,11 +17,12 @@ from misinformation_simulation.topic_drift import (
 
 
 def _source_news(count: int = 60) -> pd.DataFrame:
+    article_texts = [f"News report {index}. " + " ".join(["Detail"] * 50) for index in range(count)]
     return pd.DataFrame(
         {
             "article_id": ["__query_metadata__", *[f"article-{index}" for index in range(count)]],
             "title": ["metadata", *[f"Title {index}" for index in range(count)]],
-            "content": ["metadata", *[f"News report {index}" for index in range(count)]],
+            "content": ["metadata", *article_texts],
         }
     )
 
@@ -44,6 +45,22 @@ def test_build_manual_dataset_excludes_paid_plan_promotional_text() -> None:
     dataset = build_manual_stdi_evaluation_dataset(source, sample_size=49)
 
     assert dataset["original_text"].str.contains("paid plans", case=False).sum() == 0
+
+
+def test_build_manual_dataset_excludes_short_and_truncated_sources() -> None:
+    source = _source_news(52)
+    source.loc[1, "content"] = "Too short to use as a source."
+    source.loc[2, "content"] = " ".join(["Complete"] * 50) + " ..."
+    source.loc[3, "content"] = " ".join(["Complete"] * 50) + " Read more"
+
+    dataset = build_manual_stdi_evaluation_dataset(source, sample_size=49)
+
+    assert {"article-0", "article-1", "article-2"}.isdisjoint(dataset["article_id"])
+    assert dataset.attrs["excluded_source_counts"] == {
+        "continuation_marker": 1,
+        "terminal_ellipsis": 1,
+        "too_short": 1,
+    }
 
 
 def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> None:
