@@ -190,6 +190,11 @@ make csv-explorer
 Load any CSV file, select its delimiter, filter values, choose visible columns, inspect a
 single row vertically, and download a filtered copy. The original CSV is not modified.
 
+Use `Compare CSVs` to load two files, choose the join key for each source, select the
+columns to compare, and display matching fields side by side. Result columns are prefixed
+and color-coded by source, while filters, charts, row details, and downloads remain
+available for the joined data.
+
 Each scored pair makes one additional semantic-comparison request. This evaluator compares
 the two news items together and scores theme, subtopic, entity, and relation drift using
 the fixed levels `0`, `0.25`, `0.5`, `0.75`, and `1`. Its explanations are written to the
