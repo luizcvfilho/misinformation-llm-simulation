@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from math import ceil
 from pathlib import Path
 from typing import Any
 
@@ -114,8 +115,17 @@ def _render_row_details(dataframe: pd.DataFrame) -> None:
 
     row_index = st.selectbox("Row", options=dataframe.index, format_func=lambda value: str(value))
     row = dataframe.loc[row_index]
-    details = pd.DataFrame({"column": row.index, "value": row.values})
-    st.dataframe(details, use_container_width=True, height=560, hide_index=True)
+    for column, value in row.items():
+        text_value = "" if pd.isna(value) else str(value)
+        estimated_lines = sum(max(1, ceil(len(line) / 100)) for line in text_value.splitlines())
+        height = min(max(68, 24 * max(estimated_lines, 1) + 16), 800)
+        st.text_area(
+            label=column,
+            value=text_value,
+            height=height,
+            disabled=True,
+            key=f"row-detail-{row_index}-{column}",
+        )
 
 
 def main() -> None:
