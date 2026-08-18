@@ -298,7 +298,10 @@ def score_manual_stdi_evaluation_pairs(
             if extractor is extract_topic_structure:
                 extraction_kwargs["before_request_hook"] = limiter.acquire
             original_structure = extractor(text=str(row["original_text"]), **extraction_kwargs)
-            modified_structure = extractor(text=modified_text, **extraction_kwargs)
+            modified_structure = extractor(
+                text=modified_text,
+                **{**extraction_kwargs, "title": None},
+            )
             lexical_metrics = calculate_stdi(original_structure, modified_structure)
             semantic_comparison_kwargs = {
                 "original_text": str(row["original_text"]),

@@ -49,9 +49,11 @@ def test_build_manual_dataset_excludes_paid_plan_promotional_text() -> None:
 def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> None:
     dataset = build_manual_stdi_evaluation_dataset(_source_news(), sample_size=2)
     dataset["modified_text"] = ["Rewritten report 1", "Rewritten report 2"]
+    extraction_calls: list[tuple[str, object]] = []
 
     def fake_extract_topic_structure(**kwargs: object) -> TopicStructure:
         text = str(kwargs["text"])
+        extraction_calls.append((text, kwargs["title"]))
         if text.startswith("Rewritten"):
             return TopicStructure(
                 main_topic="economy",
@@ -102,6 +104,12 @@ def test_score_manual_pairs_calculates_stdi_and_summarizes_target_metric() -> No
     assert scored["semantic_contradiction_drift"].eq(0.25).all()
     assert scored["semantic_relation_drift_rationale"].eq("Same factual relation.").all()
     assert summary["pair_count"].sum() == 2
+    assert extraction_calls == [
+        (dataset.iloc[0]["original_text"], dataset.iloc[0]["title"]),
+        (dataset.iloc[0]["modified_text"], None),
+        (dataset.iloc[1]["original_text"], dataset.iloc[1]["title"]),
+        (dataset.iloc[1]["modified_text"], None),
+    ]
 
 
 def test_fit_manual_regression_uses_reviewed_expected_stdi() -> None:
