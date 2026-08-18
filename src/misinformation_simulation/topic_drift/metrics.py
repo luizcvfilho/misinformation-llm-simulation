@@ -14,14 +14,7 @@ DEFAULT_STDI_WEIGHTS = {
     "relation_drift": 0.35,
     "contradiction_drift": 0.2,
 }
-DEFAULT_STDI_WITH_VAD_WEIGHTS = {
-    "theme_drift": 0.12,
-    "subtopic_drift": 0.12,
-    "entity_drift": 0.12,
-    "relation_drift": 0.24,
-    "contradiction_drift": 0.2,
-    "vad_drift": 0.2,
-}
+DEFAULT_VAD_CONTRIBUTION_WEIGHT = 0.2
 DEFAULT_VAD_SCORE_RANGE = 4.0
 
 
@@ -125,11 +118,6 @@ def calculate_stdi(
         compared_vad,
         score_range=score_range,
     )
-    weights = (
-        DEFAULT_STDI_WITH_VAD_WEIGHTS
-        if original_vad is not None and compared_vad is not None
-        else DEFAULT_STDI_WEIGHTS
-    )
     component_values = {
         "theme_drift": theme_drift,
         "subtopic_drift": subtopic_drift,
@@ -147,13 +135,11 @@ def calculate_stdi(
             if not 0.0 <= numeric_value <= 1.0:
                 raise ValueError(f"STDI component override '{component}' must be between 0 and 1.")
             component_values[component] = numeric_value
-    stdi = (
-        weights["theme_drift"] * component_values["theme_drift"]
-        + weights["subtopic_drift"] * component_values["subtopic_drift"]
-        + weights["entity_drift"] * component_values["entity_drift"]
-        + weights["relation_drift"] * component_values["relation_drift"]
-        + weights["contradiction_drift"] * component_values["contradiction_drift"]
-        + weights.get("vad_drift", 0.0) * component_values["vad_drift"]
+    content_drift = sum(
+        weight * component_values[component] for component, weight in DEFAULT_STDI_WEIGHTS.items()
+    )
+    stdi = content_drift + (
+        (1.0 - content_drift) * DEFAULT_VAD_CONTRIBUTION_WEIGHT * component_values["vad_drift"]
     )
 
     return {
@@ -166,6 +152,7 @@ def calculate_stdi(
         "arousal_drift": vad_metrics["arousal_drift"],
         "dominance_drift": vad_metrics["dominance_drift"],
         "vad_drift": round(component_values["vad_drift"], 6),
+        "content_drift": round(content_drift, 6),
         "stdi": round(stdi, 6),
     }
 
@@ -231,6 +218,7 @@ def calculate_stdi_chain_metrics(
                 "arousal_drift_vs_original": vs_original["arousal_drift"],
                 "dominance_drift_vs_original": vs_original["dominance_drift"],
                 "vad_drift_vs_original": vs_original["vad_drift"],
+                "content_drift_vs_original": vs_original["content_drift"],
                 "stdi_incremental": incremental["stdi"],
                 "theme_drift_incremental": incremental["theme_drift"],
                 "subtopic_drift_incremental": incremental["subtopic_drift"],
@@ -241,6 +229,7 @@ def calculate_stdi_chain_metrics(
                 "arousal_drift_incremental": incremental["arousal_drift"],
                 "dominance_drift_incremental": incremental["dominance_drift"],
                 "vad_drift_incremental": incremental["vad_drift"],
+                "content_drift_incremental": incremental["content_drift"],
                 "stdi_cumulative": round(cumulative_stdi, 6),
             }
         )

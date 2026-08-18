@@ -59,6 +59,52 @@ def test_calculate_stdi_uses_vad_drift_when_topic_structure_is_identical() -> No
     assert metrics_with_vad["stdi"] > 0.0
 
 
+def test_calculate_stdi_uses_vad_only_for_remaining_semantic_distance() -> None:
+    structure = TopicStructure(
+        main_topic="economy",
+        subtopics=["inflation"],
+        central_entities=["central bank"],
+        central_relations=[TopicRelation("central bank", "raises", "rates")],
+    )
+
+    metrics = calculate_stdi(
+        structure,
+        structure,
+        original_vad=VADScore(valence=3.0, arousal=3.0, dominance=3.0),
+        compared_vad=VADScore(valence=2.0, arousal=3.0, dominance=3.0),
+    )
+
+    assert metrics["content_drift"] == 0.0
+    assert metrics["vad_drift"] == 0.083333
+    assert metrics["stdi"] == 0.016667
+
+
+def test_calculate_stdi_does_not_promote_theme_drift_above_other_components() -> None:
+    original = TopicStructure(
+        main_topic="government shutdown",
+        subtopics=["federal workers"],
+        central_entities=["TSA"],
+        central_relations=[TopicRelation("TSA", "delays", "payments")],
+    )
+    compared = TopicStructure(
+        main_topic="TSA payroll",
+        subtopics=["federal workers"],
+        central_entities=["TSA"],
+        central_relations=[TopicRelation("TSA", "delays", "payments")],
+    )
+
+    metrics = calculate_stdi(
+        original,
+        compared,
+        original_vad=VADScore(valence=3.0, arousal=3.0, dominance=3.0),
+        compared_vad=VADScore(valence=3.1, arousal=3.0, dominance=3.0),
+    )
+
+    assert metrics["theme_drift"] == 1.0
+    assert metrics["content_drift"] == 0.15
+    assert metrics["stdi"] == 0.151417
+
+
 def test_calculate_stdi_includes_contradiction_weight_in_base_formula() -> None:
     original = TopicStructure(
         main_topic="economy",

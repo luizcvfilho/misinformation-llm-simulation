@@ -44,6 +44,7 @@ def _topic_drift_metric_suffixes() -> tuple[str, ...]:
         "arousal_drift_vs_original",
         "dominance_drift_vs_original",
         "vad_drift_vs_original",
+        "content_drift_vs_original",
         "stdi_incremental",
         "theme_drift_incremental",
         "subtopic_drift_incremental",
@@ -54,6 +55,7 @@ def _topic_drift_metric_suffixes() -> tuple[str, ...]:
         "arousal_drift_incremental",
         "dominance_drift_incremental",
         "vad_drift_incremental",
+        "content_drift_incremental",
         "stdi_cumulative",
     )
 
@@ -107,6 +109,7 @@ def _default_metric_values(
         "arousal_drift_vs_original": 0.0,
         "dominance_drift_vs_original": 0.0,
         "vad_drift_vs_original": 0.0,
+        "content_drift_vs_original": 0.0,
         "stdi_incremental": 0.0,
         "theme_drift_incremental": 0.0,
         "subtopic_drift_incremental": 0.0,
@@ -117,6 +120,7 @@ def _default_metric_values(
         "arousal_drift_incremental": 0.0,
         "dominance_drift_incremental": 0.0,
         "vad_drift_incremental": 0.0,
+        "content_drift_incremental": 0.0,
         "stdi_cumulative": 0.0,
     }
 

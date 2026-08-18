@@ -75,7 +75,7 @@ D_entities = 1 - Jaccard(entities_original, entities_version)
 D_relations = 1 - Jaccard(relations_original, relations_version)
 D_contradiction = 1 if rewritten text has internal contradiction, else 0
 
-STDI =
+content_drift =
   0.15*D_theme +
   0.15*D_subtopic +
   0.15*D_entities +
@@ -92,14 +92,11 @@ D_arousal = abs(arousal_version - arousal_original) / 4
 D_dominance = abs(dominance_version - dominance_original) / 4
 D_vad = (D_valence + D_arousal + D_dominance) / 3
 
-STDI_with_VAD =
-  0.12*D_theme +
-  0.12*D_subtopic +
-  0.12*D_entities +
-  0.24*D_relations +
-  0.20*D_contradiction +
-  0.20*D_vad
+STDI = content_drift + (1 - content_drift) * 0.20 * D_vad
 ```
+
+VAD can only add a limited increment to the remaining distance; it never lowers the
+semantic score.
 
 Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
 
