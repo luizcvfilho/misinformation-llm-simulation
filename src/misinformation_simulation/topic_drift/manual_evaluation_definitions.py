@@ -119,10 +119,7 @@ METRIC_REWRITE_PROMPTS = (
     MetricRewritePrompt(
         metric="theme_drift",
         label="Main theme",
-        instruction=(
-            "Change the main theme to a clearly different but plausible subject. "
-            "Do not create an internal contradiction."
-        ),
+        instruction=("Change the main theme to a clearly different but plausible subject. "),
     ),
     MetricRewritePrompt(
         metric="subtopic_drift",
