@@ -8,12 +8,12 @@ from misinformation_simulation.topic_drift.extraction import _normalize_relation
 from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_STDI_WEIGHTS = {
-    "theme_drift": 0.15,
-    "subtopic_drift": 0.15,
-    "entity_drift": 0.15,
-    "relation_drift": 0.35,
-    "contradiction_drift": 0.2,
+    "theme_drift": 0.2,
+    "subtopic_drift": 0.2,
+    "entity_drift": 0.2,
+    "relation_drift": 0.4,
 }
+DEFAULT_CONTRADICTION_CONTRIBUTION_WEIGHT = 0.2
 DEFAULT_VAD_CONTRIBUTION_WEIGHT = 0.2
 DEFAULT_VAD_SCORE_RANGE = 4.0
 
@@ -141,8 +141,16 @@ def calculate_stdi(
     content_drift = sum(
         weight * component_values[component] for component, weight in DEFAULT_STDI_WEIGHTS.items()
     )
-    stdi = content_drift + (
-        (1.0 - content_drift) * DEFAULT_VAD_CONTRIBUTION_WEIGHT * component_values["vad_drift"]
+    contradiction_increment = (
+        (1.0 - content_drift)
+        * DEFAULT_CONTRADICTION_CONTRIBUTION_WEIGHT
+        * component_values["contradiction_drift"]
+    )
+    drift_with_contradiction = content_drift + contradiction_increment
+    stdi = drift_with_contradiction + (
+        (1.0 - drift_with_contradiction)
+        * DEFAULT_VAD_CONTRIBUTION_WEIGHT
+        * component_values["vad_drift"]
     )
 
     return {

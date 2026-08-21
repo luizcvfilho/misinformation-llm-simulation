@@ -77,11 +77,10 @@ D_relations = 1 - Jaccard(relations_original, relations_version)
 D_contradiction = internal contradiction severity/centrality score from 0 to 1
 
 content_drift =
-  0.15*D_theme +
-  0.15*D_subtopic +
-  0.15*D_entities +
-  0.35*D_relations +
-  0.20*D_contradiction
+  0.2*D_theme +
+  0.2*D_subtopic +
+  0.2*D_entities +
+  0.4*D_relations
 ```
 
 When VAD scores are available for the original and rewritten texts, the project also
@@ -93,11 +92,13 @@ D_arousal = abs(arousal_version - arousal_original) / 4
 D_dominance = abs(dominance_version - dominance_original) / 4
 D_vad = (D_valence + D_arousal + D_dominance) / 3
 
-STDI = content_drift + (1 - content_drift) * 0.20 * D_vad
+contradiction_increment = (1 - content_drift) * 0.20 * D_contradiction
+drift_with_contradiction = content_drift + contradiction_increment
+STDI = drift_with_contradiction + (1 - drift_with_contradiction) * 0.20 * D_vad
 ```
 
-VAD can only add a limited increment to the remaining distance; it never lowers the
-semantic score.
+Contradiction and VAD can only add a limited increment to the remaining distance;
+neither is required for a score of 1 when the content has already diverged completely.
 
 Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
 

@@ -102,11 +102,11 @@ def test_calculate_stdi_does_not_promote_theme_drift_above_other_components() ->
     )
 
     assert metrics["theme_drift"] == 1.0
-    assert metrics["content_drift"] == 0.15
-    assert metrics["stdi"] == 0.151417
+    assert metrics["content_drift"] == 0.1875
+    assert metrics["stdi"] == 0.188854
 
 
-def test_calculate_stdi_includes_contradiction_weight_in_base_formula() -> None:
+def test_calculate_stdi_uses_contradiction_as_an_extra_component() -> None:
     original = TopicStructure(
         main_topic="economy",
         subtopics=["inflation"],
@@ -128,6 +128,27 @@ def test_calculate_stdi_includes_contradiction_weight_in_base_formula() -> None:
 
     assert metrics["contradiction_drift"] == 0.5
     assert metrics["stdi"] == 0.1
+
+
+def test_calculate_stdi_does_not_require_contradiction_for_complete_content_drift() -> None:
+    original = TopicStructure(
+        main_topic="economy",
+        subtopics=["inflation"],
+        central_entities=["central bank"],
+        central_relations=[TopicRelation("central bank", "raises", "rates")],
+    )
+    compared = TopicStructure(
+        main_topic="football",
+        subtopics=["championship"],
+        central_entities=["club"],
+        central_relations=[TopicRelation("club", "wins", "match")],
+    )
+
+    metrics = calculate_stdi(original, compared)
+
+    assert metrics["content_drift"] == 1.0
+    assert metrics["contradiction_drift"] == 0.0
+    assert metrics["stdi"] == 1.0
 
 
 def test_calculate_stdi_accepts_semantic_component_overrides() -> None:
