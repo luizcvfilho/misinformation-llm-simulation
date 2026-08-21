@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class Models(StrEnum):
     GEMINI31FlashLite = "gemini-3.1-flash-lite-preview"
+    GPT56Luna = "gpt-5.6-luna"
     GPT5Mini = "gpt-5-mini"
     GPT5Nano = "gpt-5-nano"
     GPT41Mini = "gpt-4.1-mini"

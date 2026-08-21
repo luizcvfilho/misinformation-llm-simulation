@@ -152,8 +152,9 @@ Generate the review set, rewrites, and calculated STDI values with:
 make prepare-stdi-manual-evaluation STDI_MANUAL_GENERATE=1 STDI_MANUAL_SCORE=1
 ```
 
-The default model is `gpt-5-mini`, the provider is `chatgpt`, and the limit is 20
-requests per minute. Set `CHATGPT_API_KEY` or `OPENAI_API_KEY` in `.env` first.
+The default model is `gpt-5.6-luna`, the provider is `chatgpt`, and the limit is 450
+requests per minute. This leaves headroom below the Tier 1 500 RPM limit for retries and
+other API traffic. Set `CHATGPT_API_KEY` or `OPENAI_API_KEY` in `.env` first.
 The source sampler excludes the promotional text `ONLY AVAILABLE IN PAID PLANS`, bodies with
 fewer than 50 words, terminal ellipses, and common continuation markers such as `Read more`.
 Rewrite prompts instruct the model to keep the body between 85% and 115% of the original word

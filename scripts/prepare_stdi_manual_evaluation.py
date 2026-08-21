@@ -49,11 +49,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fit", action="store_true", help="Fit weights using manual_expected_stdi."
     )
-    parser.add_argument("--model", default="gpt-5-mini")
+    parser.add_argument("--model", default="gpt-5.6-luna")
     parser.add_argument("--provider", default="chatgpt")
     parser.add_argument("--api-key", default=None)
     parser.add_argument("--base-url", default=None)
-    parser.add_argument("--max-requests-per-minute", type=int, default=20)
+    parser.add_argument("--max-requests-per-minute", type=int, default=450)
     parser.add_argument("--retry-attempts", type=int, default=5)
     parser.add_argument("--without-vad", action="store_false", dest="include_vad")
     parser.set_defaults(include_vad=True)
