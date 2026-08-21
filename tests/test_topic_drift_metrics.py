@@ -102,8 +102,8 @@ def test_calculate_stdi_does_not_promote_theme_drift_above_other_components() ->
     )
 
     assert metrics["theme_drift"] == 1.0
-    assert metrics["content_drift"] == 0.1875
-    assert metrics["stdi"] == 0.188854
+    assert metrics["content_drift"] == 0.2
+    assert metrics["stdi"] == 0.201333
 
 
 def test_calculate_stdi_uses_contradiction_as_an_extra_component() -> None:

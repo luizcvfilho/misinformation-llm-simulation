@@ -33,11 +33,13 @@ def test_semantic_comparison_uses_one_structured_openai_request(monkeypatch) -> 
             "subtopic_drift": 0.3,
             "entity_drift": 0,
             "relation_drift": 0.75,
+            "contradiction_drift": 0,
             "rationales": {
                 "theme_drift": "Same transfer story.",
                 "subtopic_drift": "Slight focus shift.",
                 "entity_drift": "Same club.",
-                "relation_drift": "The actor role changes."
+                "relation_drift": "The actor role changes.",
+                "contradiction_drift": "No internal contradiction."
             }
         }"""
 
@@ -58,6 +60,7 @@ def test_semantic_comparison_uses_one_structured_openai_request(monkeypatch) -> 
         "subtopic_drift": 0.25,
         "entity_drift": 0.0,
         "relation_drift": 0.75,
+        "contradiction_drift": 0.0,
     }
     assert result.rationales["theme_drift"] == "Same transfer story."
     assert hook_calls == ["called"]
