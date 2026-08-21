@@ -11,3 +11,12 @@ repos:
     hooks:
       - id: nbstripout
         files: \.ipynb$
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: Run test suite
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
