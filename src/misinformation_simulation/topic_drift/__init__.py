@@ -1,4 +1,16 @@
 from .annotation import annotate_stdi_for_rewrites, annotate_stdi_for_version_chain
+from .cluster_comparison import (
+    ClusterSTDIComparator,
+    ClusterSTDIComparison,
+    TransformerTextEmbedder,
+)
+from .comparison_workflow import (
+    ComparisonWorkflowResult,
+    compare_method_outputs,
+    load_comparison_input,
+    run_comparison_workflow,
+    write_comparison_output,
+)
 from .extraction import extract_topic_structure
 from .manual_evaluation import (
     ManualSTDICalibrationResult,
@@ -43,6 +55,14 @@ __all__ = [
     "fit_manual_stdi_regression",
     "SemanticSTDIComparison",
     "compare_stdi_components_semantically",
+    "ClusterSTDIComparator",
+    "ClusterSTDIComparison",
+    "TransformerTextEmbedder",
+    "ComparisonWorkflowResult",
+    "run_comparison_workflow",
+    "load_comparison_input",
+    "write_comparison_output",
+    "compare_method_outputs",
     "annotate_stdi_for_rewrites",
     "annotate_stdi_for_version_chain",
 ]

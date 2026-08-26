@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -83,6 +83,7 @@ help: ## List available targets
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
 	@echo "  prepare-stdi-manual-evaluation  Prepare or score 50 manually reviewed STDI pairs"
 	@echo "  calibrate-stdi     Fit STDI weights from manual annotations"
+	@echo "  topic-drift-comparison Run LLM or cluster comparison over shared structures"
 	@echo "  csv-explorer       Open the generic CSV explorer"
 	@echo "  interaction-graph  Run the interaction graph simulation"
 	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
@@ -153,6 +154,9 @@ prepare-stdi-manual-evaluation: ## Prepare or score 50 manually reviewed STDI pa
 
 calibrate-stdi: ## Fit STDI weights from manual annotations
 	uv run python scripts/prepare_stdi_manual_evaluation.py --output-dir $(STDI_MANUAL_OUTPUT_DIR) --fit
+
+topic-drift-comparison: ## Run a topic-drift comparison (set TOPIC_DRIFT_COMPARISON_ARGS)
+	uv run python scripts/run_topic_drift_comparison.py $(TOPIC_DRIFT_COMPARISON_ARGS)
 
 csv-explorer: ## Open the generic CSV explorer
 	uv run streamlit run src/misinformation_simulation/apps/csv_explorer_app.py

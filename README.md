@@ -206,6 +206,31 @@ the two news items together and scores theme, subtopic, entity, and relation dri
 the fixed levels `0`, `0.25`, `0.5`, `0.75`, and `1`. Its explanations are written to the
 `semantic_*_rationale` columns. Contradiction and VAD continue to use their existing metrics.
 
+### Reusable LLM and clustering comparisons
+
+The project can compare the same LLM-extracted structures using two methods:
+
+- `llm_semantic`: an LLM judges theme, subtopic, entity, and relation drift.
+- `cluster`: all extracted labels and triples are embedded with
+  `sentence-transformers/all-MiniLM-L6-v2`, clustered globally for the run, and compared
+  deterministically. The extraction step remains shared with `llm_semantic`.
+
+Both methods read the same pair schema (`original_text`, `modified_text`, and optional
+`original_*` / `modified_*` extracted fields) and produce `comparison_results.csv` with the
+same base drift columns. A result folder can be re-used as input for the other method.
+
+```powershell
+# First method. Missing structures are extracted once by the configured LLM.
+make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input output/stdi_manual_evaluation/scored_stdi_pairs.csv --output-dir output/topic_drift/llm --method llm_semantic --extraction-provider chatgpt --extraction-model gpt-5.6-luna"
+
+# Reuse the structures and texts from the first output, with no new extraction calls.
+make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topic_drift/llm --output-dir output/topic_drift/cluster --method cluster --compare-with output/topic_drift/llm"
+```
+
+The second command writes `method_comparison.csv`, joined by `pair_id`, and cluster assignments
+under `cluster_artifacts/`. Cluster identifiers are meaningful only inside the run that fitted
+them; fit one shared model over the complete collection of original and rewritten structures.
+
 ## Linting and Formatting
 
 The project uses Ruff for linting and formatting.
