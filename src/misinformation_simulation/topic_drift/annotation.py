@@ -55,6 +55,7 @@ def annotate_stdi_for_version_chain(
     allow_title_fallback: bool = DEFAULT_ALLOW_TITLE_FALLBACK,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
+    progress_callback: Callable[[int, int], None] | None = None,
 ) -> pd.DataFrame:
     if not isinstance(df, pd.DataFrame):
         raise ValueError("'df' must be a pandas.DataFrame.")
@@ -80,7 +81,8 @@ def annotate_stdi_for_version_chain(
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
 
-    for row_index in target_indexes:
+    total_rows = len(target_indexes)
+    for completed_rows, row_index in enumerate(target_indexes, start=1):
         row = result_df.loc[row_index]
 
         _apply_topic_structure_defaults(result_df, row_index=row_index, prefix="original")
@@ -107,6 +109,7 @@ def annotate_stdi_for_version_chain(
                 result_df.at[row_index, f"{token}_topic_structure_error"] = (
                     "Skipped because the original text could not be resolved."
                 )
+            _notify_progress(progress_callback, completed_rows, total_rows)
             continue
 
         title = ""
@@ -140,6 +143,7 @@ def annotate_stdi_for_version_chain(
                 result_df.at[row_index, f"{token}_topic_structure_error"] = (
                     "Skipped because original topic extraction failed."
                 )
+            _notify_progress(progress_callback, completed_rows, total_rows)
             continue
 
         chain_structures = [original_structure]
@@ -234,6 +238,7 @@ def annotate_stdi_for_version_chain(
                 if key == "version_label":
                     continue
                 result_df.at[row_index, f"{token}_{key}"] = value
+        _notify_progress(progress_callback, completed_rows, total_rows)
 
     return _ensure_expected_chain_output_columns(
         result_df,
@@ -258,6 +263,7 @@ def annotate_stdi_for_rewrites(
     allow_title_fallback: bool = DEFAULT_ALLOW_TITLE_FALLBACK,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
+    progress_callback: Callable[[int, int], None] | None = None,
 ) -> pd.DataFrame:
     return annotate_stdi_for_version_chain(
         df=df,
@@ -275,4 +281,14 @@ def annotate_stdi_for_rewrites(
         allow_title_fallback=allow_title_fallback,
         vad_model_bundle=vad_model_bundle,
         vad_scorer=vad_scorer,
+        progress_callback=progress_callback,
     )
+
+
+def _notify_progress(
+    progress_callback: Callable[[int, int], None] | None,
+    completed_rows: int,
+    total_rows: int,
+) -> None:
+    if progress_callback is not None:
+        progress_callback(completed_rows, total_rows)

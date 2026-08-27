@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import pandas as pd
@@ -66,6 +67,7 @@ def rewrite_false_news_as_true(
     max_rows: int | None = None,
     skip_successful: bool = True,
     checkpoint_path: str | Path | None = None,
+    progress_callback: Callable[[int, int, str], None] | None = None,
 ) -> pd.DataFrame:
     """Rewrite false-news rows into neutral, truthful versions without VAD processing.
 
@@ -106,8 +108,10 @@ def rewrite_false_news_as_true(
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
 
-    for row_index in target_indexes:
+    total_rows = len(target_indexes)
+    for completed_rows, row_index in enumerate(target_indexes, start=1):
         if skip_successful and rewritten_df.at[row_index, status_column] == "success":
+            _notify_progress(progress_callback, completed_rows, total_rows, "reused")
             continue
 
         row = rewritten_df.loc[row_index]
@@ -116,6 +120,7 @@ def rewrite_false_news_as_true(
             rewritten_df.at[row_index, status_column] = "skipped"
             rewritten_df.at[row_index, error_column] = f"No usable text in '{text_column}'."
             _save_checkpoint(rewritten_df, checkpoint_file)
+            _notify_progress(progress_callback, completed_rows, total_rows, "skipped")
             continue
 
         topic = (
@@ -143,11 +148,14 @@ def rewrite_false_news_as_true(
             )
             rewritten_df.at[row_index, output_column] = rewritten_text
             rewritten_df.at[row_index, status_column] = "success"
+            progress_status = "success"
         except Exception as exc:
             rewritten_df.at[row_index, status_column] = "error"
             rewritten_df.at[row_index, error_column] = str(exc)
+            progress_status = "error"
 
         _save_checkpoint(rewritten_df, checkpoint_file)
+        _notify_progress(progress_callback, completed_rows, total_rows, progress_status)
 
         if sleep_seconds > 0:
             time.sleep(sleep_seconds)
@@ -194,3 +202,13 @@ def _safe_text(value: object) -> str:
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return ""
     return str(value).strip()
+
+
+def _notify_progress(
+    progress_callback: Callable[[int, int, str], None] | None,
+    completed_rows: int,
+    total_rows: int,
+    status: str,
+) -> None:
+    if progress_callback is not None:
+        progress_callback(completed_rows, total_rows, status)

@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -28,6 +28,18 @@ STDI_MANUAL_MAX_REQUESTS_PER_MINUTE ?= 450
 STDI_MANUAL_GENERATE ?=
 STDI_MANUAL_SCORE ?=
 STDI_MANUAL_WITHOUT_VAD ?=
+STDI_REGRESSION_INPUT ?=
+STDI_REGRESSION_OUTPUT_DIR ?= output/stdi_logistic_regression
+STDI_REGRESSION_TRUE_REFERENCE_INPUT ?=
+STDI_REGRESSION_TEXT_COLUMN ?= text
+STDI_REGRESSION_TRUE_TEXT_COLUMN ?=
+STDI_REGRESSION_TITLE_COLUMN ?= title
+STDI_REGRESSION_TOPIC_COLUMN ?= subject
+STDI_REGRESSION_MODEL ?= gpt-5.6-luna
+STDI_REGRESSION_PROVIDER ?= chatgpt
+STDI_REGRESSION_MAX_ROWS ?=
+STDI_REGRESSION_MAX_REQUESTS_PER_MINUTE ?= 450
+STDI_REGRESSION_SKIP_REWRITE ?=
 GRAPH_INPUT ?= data/graph_news.csv
 GRAPH_CONFIG ?= data/graph_config.json
 GRAPH_TEXT_COLUMN ?= description
@@ -64,6 +76,12 @@ STDI_MANUAL_OPTIONAL_ARGS := \
 	$(if $(strip $(STDI_MANUAL_SCORE)),--score,) \
 	$(if $(strip $(STDI_MANUAL_WITHOUT_VAD)),--without-vad,)
 
+STDI_REGRESSION_OPTIONAL_ARGS := \
+	$(if $(strip $(STDI_REGRESSION_TRUE_REFERENCE_INPUT)),--true-input $(STDI_REGRESSION_TRUE_REFERENCE_INPUT),) \
+	$(if $(strip $(STDI_REGRESSION_TRUE_TEXT_COLUMN)),--true-text-column $(STDI_REGRESSION_TRUE_TEXT_COLUMN),) \
+	$(if $(strip $(STDI_REGRESSION_MAX_ROWS)),--max-rows $(STDI_REGRESSION_MAX_ROWS),) \
+	$(if $(strip $(STDI_REGRESSION_SKIP_REWRITE)),--skip-rewrite,)
+
 help: ## List available targets
 	@echo "Available targets:"
 	@echo "  help               List available targets"
@@ -88,6 +106,7 @@ help: ## List available targets
 	@echo "  prepare-stdi-manual-evaluation  Prepare or score 50 manually reviewed STDI pairs"
 	@echo "  calibrate-stdi     Fit STDI weights from manual annotations"
 	@echo "  topic-drift-comparison Run LLM or cluster comparison over shared structures"
+	@echo "  stdi-logistic-regression Analyze STDI features using false/true reference groups"
 	@echo "  csv-explorer       Open the generic CSV explorer"
 	@echo "  interaction-graph  Run the interaction graph simulation"
 	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
@@ -161,6 +180,9 @@ calibrate-stdi: ## Fit STDI weights from manual annotations
 
 topic-drift-comparison: ## Run a topic-drift comparison (set TOPIC_DRIFT_COMPARISON_ARGS)
 	uv run python scripts/run_topic_drift_comparison.py $(TOPIC_DRIFT_COMPARISON_ARGS)
+
+stdi-logistic-regression: ## Requires STDI_REGRESSION_INPUT; optional independent true-reference CSV
+	uv run python scripts/run_stdi_logistic_regression.py --input $(STDI_REGRESSION_INPUT) --output-dir $(STDI_REGRESSION_OUTPUT_DIR) --text-column $(STDI_REGRESSION_TEXT_COLUMN) --title-column $(STDI_REGRESSION_TITLE_COLUMN) --topic-column $(STDI_REGRESSION_TOPIC_COLUMN) --provider $(STDI_REGRESSION_PROVIDER) --model $(STDI_REGRESSION_MODEL) --max-requests-per-minute $(STDI_REGRESSION_MAX_REQUESTS_PER_MINUTE) $(STDI_REGRESSION_OPTIONAL_ARGS)
 
 csv-explorer: ## Open the generic CSV explorer
 	uv run streamlit run src/misinformation_simulation/apps/csv_explorer_app.py

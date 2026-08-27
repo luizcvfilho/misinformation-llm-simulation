@@ -31,6 +31,18 @@ from .manual_evaluation_definitions import (
 from .metrics import calculate_stdi, calculate_stdi_chain_metrics, calculate_vad_drift
 from .models import TopicRelation, TopicStructure, flatten_topic_structure, topic_structure_to_dict
 from .semantic_comparison import SemanticSTDIComparison, compare_stdi_components_semantically
+from .stdi_logistic_regression import run_stdi_logistic_regression_analysis
+from .stdi_regression_features import (
+    FEATURE_COLUMNS as STDI_REGRESSION_FEATURE_COLUMNS,
+)
+from .stdi_regression_features import (
+    PAIR_FEATURE_COLUMNS as STDI_PAIR_FEATURE_COLUMNS,
+)
+from .stdi_regression_features import (
+    build_stdi_pair_dataset,
+    build_stdi_regression_dataset,
+    fit_stdi_logistic_regression,
+)
 
 __all__ = [
     "TopicRelation",
@@ -65,4 +77,10 @@ __all__ = [
     "compare_method_outputs",
     "annotate_stdi_for_rewrites",
     "annotate_stdi_for_version_chain",
+    "STDI_REGRESSION_FEATURE_COLUMNS",
+    "STDI_PAIR_FEATURE_COLUMNS",
+    "build_stdi_regression_dataset",
+    "build_stdi_pair_dataset",
+    "fit_stdi_logistic_regression",
+    "run_stdi_logistic_regression_analysis",
 ]

@@ -325,6 +325,28 @@ quota error or an interrupted execution.
 The function asks the model to correct or remove unsupported claims, but it does not perform
 external fact-checking. Validate factual claims independently before treating an output as true.
 
+### STDI logistic-regression analysis
+
+The resumable workflow below rewrites a false-news CSV, reuses successful rewrites and STDI
+annotations already present in the selected output directory, and creates an interpretable
+logistic-regression analysis. Its features are numeric representations of the STDI structures:
+counts of subtopics, entities, and relations, internal contradiction, VAD dimensions, and text
+length. A separate pair-level CSV preserves STDI and delta features for each false-to-rewrite pair.
+
+```powershell
+make stdi-logistic-regression STDI_REGRESSION_INPUT=data/FakeVsTrueVAD/Fake.csv STDI_REGRESSION_TEXT_COLUMN=text STDI_REGRESSION_OUTPUT_DIR=output/stdi_logistic_regression
+```
+
+For each row in `Fake.csv`, the workflow uses the original false article and its own truthified
+rewrite as a controlled pair. These are the reference classes used to study which STDI-derived
+features distinguish the versions; the resulting model is not a factual verifier. The optional
+`STDI_REGRESSION_TRUE_REFERENCE_INPUT` adds an external reference group, but is not needed for the
+paired analysis. The output directory contains STDI audits, the regression dataset, pair metrics,
+feature importance, model metrics, a manifest, and a short report.
+
+Set `STDI_REGRESSION_SKIP_REWRITE=1` to reuse the truthified CSV in later runs. If that CSV
+does not yet exist in the output directory, the workflow creates it automatically.
+
 ## Main Notebook Workflow
 
 Main simulation notebook:

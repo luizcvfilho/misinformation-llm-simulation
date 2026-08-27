@@ -40,6 +40,7 @@ from .topic_drift import (
     score_manual_stdi_evaluation_pairs,
     summarize_manual_stdi_evaluation,
 )
+from .topic_drift.stdi_logistic_regression import run_stdi_logistic_regression_analysis
 
 __all__ = [
     "DefaultPersonality",
@@ -71,6 +72,7 @@ __all__ = [
     "pretrained_fake_news_detector_prediction",
     "nli_pair_scores",
     "load_fake_true_news_dataset",
+    "run_stdi_logistic_regression_analysis",
     "DEFAULT_VAD_MODEL_NAME",
     "VADModelBundle",
     "VADScore",
