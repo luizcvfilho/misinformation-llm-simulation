@@ -138,6 +138,7 @@ def run_comparison_workflow(
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
     n_clusters: int | None = None,
     random_state: int = 42,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
     resolved_method = _validate_method(str(method))
@@ -152,7 +153,11 @@ def run_comparison_workflow(
     prepared_pairs: list[TopicStructurePair] = []
     row_structures: dict[Any, tuple[TopicStructure, TopicStructure]] = {}
 
-    for row_index, row in result.iterrows():
+    total_rows = len(result)
+    for row_position, (row_index, row) in enumerate(result.iterrows(), start=1):
+        pair_id = result.at[row_index, "pair_id"]
+        if progress_callback is not None:
+            progress_callback(f"[{row_position}/{total_rows}] Preparing pair '{pair_id}'.")
         original_text = _as_non_empty_text(row[original_text_column])
         modified_text = _as_non_empty_text(row[modified_text_column])
         if not original_text or not modified_text:
@@ -164,6 +169,10 @@ def run_comparison_workflow(
         modified_structure = topic_structure_from_row(row, prefix="modified")
         try:
             if original_structure is None:
+                if progress_callback is not None:
+                    progress_callback(
+                        f"[{row_position}/{total_rows}] Extracting original structure."
+                    )
                 original_structure = extraction_fn(
                     text=original_text,
                     title=title,
@@ -173,6 +182,10 @@ def run_comparison_workflow(
                     base_url=extraction_base_url,
                 )
             if modified_structure is None:
+                if progress_callback is not None:
+                    progress_callback(
+                        f"[{row_position}/{total_rows}] Extracting modified structure."
+                    )
                 modified_structure = extraction_fn(
                     text=modified_text,
                     title=title,
@@ -185,6 +198,8 @@ def run_comparison_workflow(
             result.at[row_index, "comparison_status"] = "error"
             result.at[row_index, "comparison_error"] = str(exc)
             continue
+        if progress_callback is not None:
+            progress_callback(f"[{row_position}/{total_rows}] Reusing shared structures.")
         row_structures[row_index] = (original_structure, modified_structure)
         prepared_pairs.append(
             TopicStructurePair(
@@ -201,6 +216,10 @@ def run_comparison_workflow(
     cluster_comparator: ClusterSTDIComparator | None = None
     cluster_artifacts: pd.DataFrame | None = None
     if resolved_method == "cluster" and prepared_pairs:
+        if progress_callback is not None:
+            progress_callback(
+                f"Fitting shared clusters from {len(prepared_pairs)} prepared pair(s)."
+            )
         cluster_comparator = ClusterSTDIComparator(
             embedder=embedder,
             embedding_model=embedding_model,
@@ -209,9 +228,16 @@ def run_comparison_workflow(
         ).fit(prepared_pairs)
         cluster_artifacts = pd.DataFrame(cluster_comparator.artifact_rows())
 
-    for row_index, (original_structure, modified_structure) in row_structures.items():
+    for row_position, (row_index, (original_structure, modified_structure)) in enumerate(
+        row_structures.items(), start=1
+    ):
         row = result.loc[row_index]
         try:
+            if progress_callback is not None:
+                progress_callback(
+                    f"[{row_position}/{len(row_structures)}] Comparing pair "
+                    f"'{result.at[row_index, 'pair_id']}' with {resolved_method}."
+                )
             details: dict[str, dict[str, float | int]] = {}
             rationales: dict[str, str] = {}
             if resolved_method == "llm_semantic":

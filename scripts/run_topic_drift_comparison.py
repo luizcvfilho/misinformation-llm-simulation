@@ -86,6 +86,7 @@ def main() -> None:
         embedding_model=args.embedding_model,
         n_clusters=args.n_clusters,
         random_state=args.random_state,
+        progress_callback=print,
     )
     write_comparison_output(args.output_dir, workflow)
     print(f"Saved {len(workflow.results)} comparison rows to {args.output_dir}.")

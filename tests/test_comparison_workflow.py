@@ -68,6 +68,7 @@ def _pairs() -> pd.DataFrame:
 
 def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> None:
     calls: list[str] = []
+    progress_messages: list[str] = []
 
     def extractor(**_kwargs: object) -> TopicStructure:
         calls.append("called")
@@ -79,6 +80,7 @@ def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> No
         extraction_fn=extractor,
         embedder=StableEmbedder(),
         random_state=1,
+        progress_callback=progress_messages.append,
     )
 
     assert not calls
@@ -87,6 +89,9 @@ def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> No
     assert workflow.results.loc[0, "theme_drift"] == 0.0
     assert workflow.results.loc[1, "theme_drift"] > 0.0
     assert workflow.cluster_artifacts is not None
+    assert any("Reusing shared structures" in message for message in progress_messages)
+    assert any("Fitting shared clusters" in message for message in progress_messages)
+    assert any("Comparing pair" in message for message in progress_messages)
 
 
 def test_llm_workflow_and_output_reuse(tmp_path) -> None:
