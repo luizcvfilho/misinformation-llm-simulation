@@ -8,3 +8,6 @@ class Provider(StrEnum):
     DEEPSEEK = "deepseek"
     GROK = "grok"
     LOCAL = "local"
+
+
+DEFAULT_LLM_PROVIDER = Provider.CHATGPT

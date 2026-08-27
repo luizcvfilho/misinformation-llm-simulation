@@ -11,3 +11,6 @@ class Models(StrEnum):
     LLAMA318B = "llama3.1:8b"
     STEP35FLASH = "stepfun/step-3.5-flash:free"
     GROK41FastNonReasoning = "grok-4-1-fast-non-reasoning"
+
+
+DEFAULT_LLM_MODEL = Models.GPT56Luna

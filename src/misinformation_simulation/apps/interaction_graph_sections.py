@@ -24,6 +24,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     steps_to_dataframe,
     validate_node_forms,
 )
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
@@ -148,7 +149,11 @@ def _render_advanced_settings() -> dict[str, Any]:
         topic_drift_provider = st.selectbox(
             "Topic drift provider",
             AVAILABLE_PROVIDERS,
-            index=AVAILABLE_PROVIDERS.index("gemini") if "gemini" in AVAILABLE_PROVIDERS else 0,
+            index=(
+                AVAILABLE_PROVIDERS.index(DEFAULT_LLM_PROVIDER.value)
+                if DEFAULT_LLM_PROVIDER.value in AVAILABLE_PROVIDERS
+                else 0
+            ),
             help="Provider used to extract topic structures for STDI/topic drift metrics.",
         )
         topic_drift_model = _render_topic_drift_model_selector()
@@ -178,7 +183,7 @@ def _render_advanced_settings() -> dict[str, Any]:
 
 
 def _render_topic_drift_model_selector() -> str:
-    topic_drift_model_default = "gemini-3.1-flash-lite-preview"
+    topic_drift_model_default = DEFAULT_LLM_MODEL.value
     topic_drift_model_options = AVAILABLE_MODELS + [CUSTOM_OPTION]
     selected_topic_drift_model_option = (
         topic_drift_model_default

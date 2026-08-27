@@ -5,7 +5,13 @@ from uuid import uuid4
 
 import pandas as pd
 
-from misinformation_simulation.enums import DefaultPersonality, Models, Provider
+from misinformation_simulation.enums import (
+    DEFAULT_LLM_MODEL,
+    DEFAULT_LLM_PROVIDER,
+    DefaultPersonality,
+    Models,
+    Provider,
+)
 from misinformation_simulation.simulation import SimulationNode, SimulationStepResult
 from misinformation_simulation.simulation.io import build_graph_config_payload
 
@@ -24,8 +30,8 @@ def create_default_node_form(position: int) -> dict[str, str]:
         "uid": uuid4().hex,
         "node_id": f"node_{position}",
         "label": f"Node {position}",
-        "provider": Provider.GEMINI.value,
-        "model": Models.GEMINI31FlashLite.value,
+        "provider": DEFAULT_LLM_PROVIDER.value,
+        "model": DEFAULT_LLM_MODEL.value,
         "personality_mode": "preset",
         "personality_preset": preset_name,
         "personality_custom": "",

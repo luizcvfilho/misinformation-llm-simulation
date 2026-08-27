@@ -121,7 +121,12 @@ def test_rewrite_news_respects_max_rows(monkeypatch) -> None:
     )
     df = pd.DataFrame([{"description": "first"}, {"description": "second"}])
 
-    result = rewrite_news_with_personality(df=df, personality="persona", max_rows=1)
+    result = rewrite_news_with_personality(
+        df=df,
+        personality="persona",
+        provider="gemini",
+        max_rows=1,
+    )
 
     assert result.at[0, "rewrite_status"] == "success"
     assert result.at[1, "rewrite_status"] == "not_requested"

@@ -9,6 +9,7 @@ from typing import Any, Literal
 import numpy as np
 import pandas as pd
 
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.topic_drift.cluster_comparison import (
     ClusterSTDIComparator,
     TextEmbedder,
@@ -125,8 +126,8 @@ def run_comparison_workflow(
     modified_text_column: str = "modified_text",
     title_column: str = "title",
     pair_id_column: str | None = None,
-    extraction_model: str = "gpt-5.6-luna",
-    extraction_provider: str = "chatgpt",
+    extraction_model: str = DEFAULT_LLM_MODEL,
+    extraction_provider: str = DEFAULT_LLM_PROVIDER,
     extraction_api_key: str | None = None,
     extraction_base_url: str | None = None,
     extraction_fn: Callable[..., TopicStructure] = extract_topic_structure,

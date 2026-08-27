@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER  # noqa: E402
 from misinformation_simulation.topic_drift.comparison_workflow import (  # noqa: E402
     SUPPORTED_COMPARISON_METHODS,
     compare_method_outputs,
@@ -42,8 +43,8 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional limit for a small validation run.",
     )
-    parser.add_argument("--extraction-model", default="gpt-5.6-luna")
-    parser.add_argument("--extraction-provider", default="chatgpt")
+    parser.add_argument("--extraction-model", default=DEFAULT_LLM_MODEL.value)
+    parser.add_argument("--extraction-provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument("--api-key", default=None)
     parser.add_argument("--base-url", default=None)
     parser.add_argument("--llm-comparison-model", default=None)

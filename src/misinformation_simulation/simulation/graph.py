@@ -15,7 +15,7 @@ from misinformation_simulation.datasets.selection import (
     resolve_output_language_name,
     resolve_row_text,
 )
-from misinformation_simulation.enums import Provider
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client, normalize_provider
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.llm.retry import (
@@ -130,8 +130,8 @@ def run_news_interaction_graph(
     max_requests_per_minute: int | None = None,
     retry_attempts: int = 5,
     allow_title_fallback: bool = True,
-    topic_drift_model: str = "gemini-3.1-flash-lite-preview",
-    topic_drift_provider: Provider | str = Provider.GEMINI,
+    topic_drift_model: str = DEFAULT_LLM_MODEL,
+    topic_drift_provider: Provider | str = DEFAULT_LLM_PROVIDER,
     topic_drift_api_key: str | None = None,
     topic_drift_base_url: str | None = None,
     output_dir: Path | str | None = None,

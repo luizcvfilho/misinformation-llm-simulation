@@ -14,6 +14,10 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from misinformation_simulation.enums import (  # noqa: E402
+    DEFAULT_LLM_MODEL,
+    DEFAULT_LLM_PROVIDER,
+)
 from misinformation_simulation.simulation import run_news_interaction_graph  # noqa: E402
 from misinformation_simulation.simulation.io import (  # noqa: E402
     load_graph_config,
@@ -39,8 +43,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--max-requests-per-minute", type=int)
     parser.add_argument("--retry-attempts", type=int, default=5)
     parser.add_argument("--allow-title-fallback", action="store_true")
-    parser.add_argument("--topic-drift-model", default="gemini-3.1-flash-lite-preview")
-    parser.add_argument("--topic-drift-provider", default="gemini")
+    parser.add_argument("--topic-drift-model", default=DEFAULT_LLM_MODEL.value)
+    parser.add_argument("--topic-drift-provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument("--output-dir", default="output/interaction_graph")
     parser.add_argument("--output-prefix", default="simulation")
     parser.add_argument(

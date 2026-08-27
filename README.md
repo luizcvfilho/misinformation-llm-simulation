@@ -123,8 +123,8 @@ from misinformation_simulation.topic_drift import annotate_stdi_for_rewrites
 rewritten_with_stdi = annotate_stdi_for_rewrites(
     df=rewritten_df,
     rewritten_column="rewritten_news",
-    provider="gemini",
-    model="gemini-2.5-flash-lite",
+    provider="chatgpt",
+    model="gpt-5.6-luna",
     vad_model_bundle=vad_model,
 )
 ```
@@ -221,7 +221,7 @@ same base drift columns. A result folder can be re-used as input for the other m
 
 ```powershell
 # First method. Missing structures are extracted once by the configured LLM.
-make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input output/stdi_manual_evaluation/scored_stdi_pairs.csv --output-dir output/topic_drift/llm --method llm_semantic --extraction-provider chatgpt --extraction-model gpt-5.6-luna"
+make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input output/stdi_manual_evaluation/scored_stdi_pairs.csv --output-dir output/topic_drift/llm --method llm_semantic"
 
 # Reuse the structures and texts from the first output, with no new extraction calls.
 make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topic_drift/llm --output-dir output/topic_drift/cluster --method cluster --compare-with output/topic_drift/llm"
@@ -312,8 +312,8 @@ rewritten = rewrite_false_news_as_true(
     text_column="original_article_text",
     topic_column="subject",
     title_column="title",
-    provider="gemini",
-    model="gemini-2.5-flash-lite",
+    provider="chatgpt",
+    model="gpt-5.6-luna",
     checkpoint_path="false_news_rewritten_as_true.csv",
 )
 ```
@@ -438,8 +438,10 @@ Main variables:
 - `GRAPH_MAX_REQUESTS_PER_MINUTE`: optional rate limit
 - `GRAPH_RETRY_ATTEMPTS`: retry attempts (`5` default)
 - `GRAPH_ALLOW_TITLE_FALLBACK`: set to any non-empty value to add `--allow-title-fallback`
-- `GRAPH_TOPIC_DRIFT_MODEL`: topic drift model (`gemini-3.1-flash-lite-preview` default)
-- `GRAPH_TOPIC_DRIFT_PROVIDER`: topic drift provider (`gemini` default)
+- `GRAPH_TOPIC_DRIFT_MODEL`: optional topic drift model override (the application default is
+  `gpt-5.6-luna`)
+- `GRAPH_TOPIC_DRIFT_PROVIDER`: optional topic drift provider override (the application default
+  is `chatgpt`)
 - `GRAPH_OUTPUT_DIR`: output directory (`output/interaction_graph` default)
 - `GRAPH_OUTPUT_PREFIX`: output file prefix (`simulation` default)
 

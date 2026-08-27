@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
 load_dotenv(PROJECT_ROOT / ".env")
 
 from misinformation_simulation.datasets.loading import read_dataset  # noqa: E402
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER  # noqa: E402
 from misinformation_simulation.topic_drift import (  # noqa: E402
     build_manual_stdi_evaluation_dataset,
     fit_manual_stdi_regression,
@@ -49,8 +50,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fit", action="store_true", help="Fit weights using manual_expected_stdi."
     )
-    parser.add_argument("--model", default="gpt-5.6-luna")
-    parser.add_argument("--provider", default="chatgpt")
+    parser.add_argument("--model", default=DEFAULT_LLM_MODEL.value)
+    parser.add_argument("--provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument("--api-key", default=None)
     parser.add_argument("--base-url", default=None)
     parser.add_argument("--max-requests-per-minute", type=int, default=450)

@@ -5,7 +5,7 @@ import re
 from collections.abc import Callable
 from typing import Any
 
-from misinformation_simulation.enums import Models, Provider
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.llm.retry import (
@@ -14,8 +14,8 @@ from misinformation_simulation.llm.retry import (
 )
 from misinformation_simulation.topic_drift.models import TopicRelation, TopicStructure
 
-DEFAULT_TOPIC_DRIFT_MODEL = Models.GEMINI31FlashLite
-DEFAULT_TOPIC_DRIFT_PROVIDER = Provider.GEMINI
+DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
+DEFAULT_TOPIC_DRIFT_PROVIDER = DEFAULT_LLM_PROVIDER
 DEFAULT_REWRITTEN_COLUMN = "rewritten_news"
 
 TOPIC_DRIFT_SYSTEM_INSTRUCTION = """

@@ -11,7 +11,7 @@ from misinformation_simulation.datasets.selection import (
     resolve_output_language_name,
     resolve_row_text,
 )
-from misinformation_simulation.enums import Provider
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client, normalize_provider
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.llm.retry import (
@@ -37,8 +37,8 @@ def rewrite_news_with_personality(
     personality: str | object = _UNSET,
     text_column: str | None | object = _UNSET,
     title_column: str | object = _UNSET,
-    model: str = "gemini-2.5-flash-lite",
-    provider: Provider | str = Provider.GEMINI,
+    model: str = DEFAULT_LLM_MODEL,
+    provider: Provider | str = DEFAULT_LLM_PROVIDER,
     api_key: str | None = None,
     base_url: str | None = None,
     output_column: str | object = _UNSET,

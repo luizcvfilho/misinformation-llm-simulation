@@ -8,7 +8,7 @@ from .audits import (
     validate_pair_columns,
 )
 from .datasets import load_fake_true_news_dataset
-from .enums import DefaultPersonality, Models, Provider
+from .enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, DefaultPersonality, Models, Provider
 from .llm import rewrite_false_news_as_true, rewrite_news_with_personality
 from .text_metrics import (
     DEFAULT_VAD_MODEL_NAME,
@@ -44,6 +44,8 @@ from .topic_drift import (
 __all__ = [
     "DefaultPersonality",
     "Models",
+    "DEFAULT_LLM_MODEL",
+    "DEFAULT_LLM_PROVIDER",
     "Provider",
     "rewrite_news_with_personality",
     "rewrite_false_news_as_true",

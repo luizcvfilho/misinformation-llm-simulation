@@ -22,8 +22,8 @@ MAX_RECORDS ?= 200
 STDI_MANUAL_OUTPUT_DIR ?= output/stdi_manual_evaluation
 STDI_MANUAL_INPUT ?= data/raw/newsdata_news.csv
 STDI_MANUAL_SAMPLE_SIZE ?= 50
-STDI_MANUAL_MODEL ?= gpt-5.6-luna
-STDI_MANUAL_PROVIDER ?= chatgpt
+STDI_MANUAL_MODEL ?=
+STDI_MANUAL_PROVIDER ?=
 STDI_MANUAL_MAX_REQUESTS_PER_MINUTE ?= 450
 STDI_MANUAL_GENERATE ?=
 STDI_MANUAL_SCORE ?=
@@ -38,8 +38,8 @@ GRAPH_SLEEP_SECONDS ?= 0
 GRAPH_MAX_REQUESTS_PER_MINUTE ?=
 GRAPH_RETRY_ATTEMPTS ?= 5
 GRAPH_ALLOW_TITLE_FALLBACK ?=
-GRAPH_TOPIC_DRIFT_MODEL ?= gemini-3.1-flash-lite-preview
-GRAPH_TOPIC_DRIFT_PROVIDER ?= gemini
+GRAPH_TOPIC_DRIFT_MODEL ?=
+GRAPH_TOPIC_DRIFT_PROVIDER ?=
 GRAPH_OUTPUT_DIR ?= output/interaction_graph
 GRAPH_OUTPUT_PREFIX ?= simulation
 
@@ -53,9 +53,13 @@ INTERACTION_GRAPH_OPTIONAL_ARGS := \
 	$(if $(strip $(GRAPH_NEWS_ID_COLUMN)),--news-id-column $(GRAPH_NEWS_ID_COLUMN),) \
 	$(if $(strip $(GRAPH_MAX_ROWS)),--max-rows $(GRAPH_MAX_ROWS),) \
 	$(if $(strip $(GRAPH_MAX_REQUESTS_PER_MINUTE)),--max-requests-per-minute $(GRAPH_MAX_REQUESTS_PER_MINUTE),) \
+	$(if $(strip $(GRAPH_TOPIC_DRIFT_MODEL)),--topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL),) \
+	$(if $(strip $(GRAPH_TOPIC_DRIFT_PROVIDER)),--topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER),) \
 	$(if $(strip $(GRAPH_ALLOW_TITLE_FALLBACK)),--allow-title-fallback,)
 
 STDI_MANUAL_OPTIONAL_ARGS := \
+	$(if $(strip $(STDI_MANUAL_MODEL)),--model $(STDI_MANUAL_MODEL),) \
+	$(if $(strip $(STDI_MANUAL_PROVIDER)),--provider $(STDI_MANUAL_PROVIDER),) \
 	$(if $(strip $(STDI_MANUAL_GENERATE)),--generate,) \
 	$(if $(strip $(STDI_MANUAL_SCORE)),--score,) \
 	$(if $(strip $(STDI_MANUAL_WITHOUT_VAD)),--without-vad,)
@@ -150,7 +154,7 @@ fetch-news: ## Fetch news from NewsData.io and save as CSV
 	uv run python scripts/fetch_newsdata.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
 
 prepare-stdi-manual-evaluation: ## Prepare or score 50 manually reviewed STDI pairs
-	uv run python scripts/prepare_stdi_manual_evaluation.py --input $(STDI_MANUAL_INPUT) --output-dir $(STDI_MANUAL_OUTPUT_DIR) --sample-size $(STDI_MANUAL_SAMPLE_SIZE) --model $(STDI_MANUAL_MODEL) --provider $(STDI_MANUAL_PROVIDER) --max-requests-per-minute $(STDI_MANUAL_MAX_REQUESTS_PER_MINUTE) $(STDI_MANUAL_OPTIONAL_ARGS)
+	uv run python scripts/prepare_stdi_manual_evaluation.py --input $(STDI_MANUAL_INPUT) --output-dir $(STDI_MANUAL_OUTPUT_DIR) --sample-size $(STDI_MANUAL_SAMPLE_SIZE) --max-requests-per-minute $(STDI_MANUAL_MAX_REQUESTS_PER_MINUTE) $(STDI_MANUAL_OPTIONAL_ARGS)
 
 calibrate-stdi: ## Fit STDI weights from manual annotations
 	uv run python scripts/prepare_stdi_manual_evaluation.py --output-dir $(STDI_MANUAL_OUTPUT_DIR) --fit
@@ -162,10 +166,10 @@ csv-explorer: ## Open the generic CSV explorer
 	uv run streamlit run src/misinformation_simulation/apps/csv_explorer_app.py
 
 interaction-graph:
-	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) $(INTERACTION_GRAPH_OPTIONAL_ARGS)
+	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) $(INTERACTION_GRAPH_OPTIONAL_ARGS)
 
 interaction-graph-verbose:
-	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --topic-drift-model $(GRAPH_TOPIC_DRIFT_MODEL) --topic-drift-provider $(GRAPH_TOPIC_DRIFT_PROVIDER) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) --verbose $(INTERACTION_GRAPH_OPTIONAL_ARGS)
+	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) --verbose $(INTERACTION_GRAPH_OPTIONAL_ARGS)
 
 interaction-graph-ui:
 	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_app.py

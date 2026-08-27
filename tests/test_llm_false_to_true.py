@@ -40,7 +40,12 @@ def test_rewrite_false_news_as_true_records_success(monkeypatch) -> None:
         [{"subject": "politics", "title": "False claim", "original_article_text": "False text"}]
     )
 
-    result = rewrite_false_news_as_true(frame, model="gemini-test", retry_attempts=2)
+    result = rewrite_false_news_as_true(
+        frame,
+        model="gemini-test",
+        provider="gemini",
+        retry_attempts=2,
+    )
 
     assert result.at[0, "rewritten_article_text"] == "Neutral rewrite."
     assert result.at[0, "rewrite_status"] == "success"
@@ -100,7 +105,11 @@ def test_rewrite_false_news_as_true_saves_a_checkpoint_after_each_rewrite(
     )
     frame = pd.DataFrame([{"original_article_text": "First"}, {"original_article_text": "Second"}])
 
-    result = rewrite_false_news_as_true(frame, checkpoint_path=checkpoint_path)
+    result = rewrite_false_news_as_true(
+        frame,
+        provider="gemini",
+        checkpoint_path=checkpoint_path,
+    )
     saved = pd.read_csv(checkpoint_path)
 
     assert result["rewrite_status"].tolist() == ["success", "success"]
