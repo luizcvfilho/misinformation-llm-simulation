@@ -6,6 +6,8 @@ from collections.abc import Iterable
 import pandas as pd
 from scipy.stats import wilcoxon
 
+from misinformation_simulation.llm.false_to_true import build_false_to_true_prompt
+
 from .vad import VAD_DIMENSIONS
 
 DEFAULT_PAIR_COLUMN = "pair_id"
@@ -70,16 +72,10 @@ def build_rewrite_prompt(
     text_column: str = DEFAULT_ORIGINAL_TEXT_COLUMN,
 ) -> str:
     """Create a rewriting prompt that preserves topic while correcting false claims."""
-    topic = _safe_text(row.get(topic_column, "unknown"))
-    title = _safe_text(row.get(title_column, ""))
-    article = _safe_text(row.get(text_column, ""))
-    return (
-        "Rewrite the following false news article as a truthful news article about the same "
-        "topic. Preserve the approximate style, structure, and length, but correct or remove "
-        "unsupported claims. Do not add sensational claims. Return only the rewritten article.\n\n"
-        f"Topic: {topic}\n"
-        f"Original title: {title}\n\n"
-        f"False article:\n{article}"
+    return build_false_to_true_prompt(
+        row.get(text_column, ""),
+        topic=row.get(topic_column, "unknown"),
+        title=row.get(title_column, ""),
     )
 
 

@@ -9,7 +9,7 @@ from .audits import (
 )
 from .datasets import load_fake_true_news_dataset
 from .enums import DefaultPersonality, Models, Provider
-from .llm import rewrite_news_with_personality
+from .llm import rewrite_false_news_as_true, rewrite_news_with_personality
 from .text_metrics import (
     DEFAULT_VAD_MODEL_NAME,
     VADModelBundle,
@@ -46,6 +46,7 @@ __all__ = [
     "Models",
     "Provider",
     "rewrite_news_with_personality",
+    "rewrite_false_news_as_true",
     "extract_topic_structure",
     "calculate_stdi",
     "ClusterSTDIComparator",

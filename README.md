@@ -293,6 +293,38 @@ Variable reference:
 
 Note: You can still pass `api_key=` and `base_url=` directly in `rewrite_news_with_personality`.
 
+### Rewriting false news as truthful news
+
+`rewrite_false_news_as_true` is the project's central implementation for rewriting false or
+unsupported news into neutral, truthful versions. The topic-matched VAD analysis uses this same
+function, and it can also be called directly with any compatible DataFrame.
+
+It expects an `original_article_text` column and returns a copy with the generated article in
+`rewritten_article_text`, along with the prompt, model, provider, status, and error columns.
+
+```python
+import pandas as pd
+from misinformation_simulation.llm import rewrite_false_news_as_true
+
+false_news = pd.read_csv("false_news.csv")
+rewritten = rewrite_false_news_as_true(
+    false_news,
+    text_column="original_article_text",
+    topic_column="subject",
+    title_column="title",
+    provider="gemini",
+    model="gemini-2.5-flash-lite",
+    checkpoint_path="false_news_rewritten_as_true.csv",
+)
+```
+
+With `checkpoint_path`, the CSV is saved before and after each rewrite. A later call can then
+resume without reprocessing rows whose `rewrite_status` is `success`, including after an API
+quota error or an interrupted execution.
+
+The function asks the model to correct or remove unsupported claims, but it does not perform
+external fact-checking. Validate factual claims independently before treating an output as true.
+
 ## Main Notebook Workflow
 
 Main simulation notebook:
