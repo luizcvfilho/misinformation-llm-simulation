@@ -142,11 +142,11 @@ class _ComponentClusterIndex:
         if _normalize(left) == _normalize(right):
             return 1.0
         vectors = self._embedder.encode([left, right])
-        cosine_similarity = max(0.0, float(np.dot(vectors[0], vectors[1])))
-        left_cluster = self.cluster_id(left)
-        right_cluster = self.cluster_id(right)
-        cluster_bonus = 0.15 if left_cluster is not None and left_cluster == right_cluster else 0.0
-        return min(1.0, 0.85 * cosine_similarity + cluster_bonus)
+        norms = np.linalg.norm(vectors, axis=1)
+        cosine_similarity = float(
+            np.dot(vectors[0], vectors[1]) / np.clip(np.prod(norms), 1e-12, None)
+        )
+        return max(0.0, cosine_similarity)
 
     def artifact_rows(self, component: str) -> list[dict[str, Any]]:
         return [
@@ -265,9 +265,21 @@ class ClusterSTDIComparator:
     ) -> ClusterSTDIComparison:
         if not self._fitted:
             raise RuntimeError("Fit ClusterSTDIComparator before comparing structures.")
-        theme_similarity = self._topic_index.similarity(
+        topic_embedding_similarity = self._topic_index.similarity(
             original_structure.main_topic or "", modified_structure.main_topic or ""
         )
+        original_domain = _normalize(original_structure.topic_domain)
+        modified_domain = _normalize(modified_structure.topic_domain)
+        domain_known = bool(original_domain and modified_domain)
+        domain_match = domain_known and original_domain == modified_domain
+        domain_gate_applied = domain_known and not domain_match
+
+        if domain_gate_applied:
+            theme_similarity = 0.0
+        elif _normalize(original_structure.main_topic) == _normalize(modified_structure.main_topic):
+            theme_similarity = 1.0
+        else:
+            theme_similarity = topic_embedding_similarity
         subtopic_similarity = _greedy_matching_similarity(
             original_structure.subtopics,
             modified_structure.subtopics,
@@ -292,8 +304,11 @@ class ClusterSTDIComparator:
         details = {
             "theme": {
                 "similarity": round(theme_similarity, 6),
+                "embedding_similarity": round(topic_embedding_similarity, 6),
                 "original_cluster": self._resolved_cluster_id(original_structure.main_topic or ""),
                 "modified_cluster": self._resolved_cluster_id(modified_structure.main_topic or ""),
+                "domain_match": -1 if not domain_known else int(domain_match),
+                "domain_gate_applied": int(domain_gate_applied),
             },
             "subtopic": {
                 "similarity": round(subtopic_similarity, 6),

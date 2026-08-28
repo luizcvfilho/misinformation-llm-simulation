@@ -81,6 +81,15 @@ def _as_non_empty_text(value: Any) -> str:
     return str(value).strip()
 
 
+def _write_structure(
+    result: pd.DataFrame, *, row_index: Any, structure: TopicStructure, prefix: str
+) -> None:
+    for column, value in flatten_topic_structure(structure, prefix=prefix).items():
+        if column in result.columns:
+            result[column] = result[column].astype("object")
+        result.at[row_index, column] = value
+
+
 def topic_structure_from_row(row: pd.Series, *, prefix: str) -> TopicStructure | None:
     main_topic_value = row.get(f"{prefix}_main_topic")
     subtopics_value = row.get(f"{prefix}_subtopics")
@@ -95,6 +104,7 @@ def topic_structure_from_row(row: pd.Series, *, prefix: str) -> TopicStructure |
         subtopics=_decode_list(subtopics_value),
         central_entities=_decode_list(entities_value),
         central_relations=_decode_relations(relations_value),
+        topic_domain=_as_non_empty_text(row.get(f"{prefix}_topic_domain")) or None,
     )
 
 
@@ -138,6 +148,7 @@ def run_comparison_workflow(
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
     n_clusters: int | None = None,
     random_state: int = 42,
+    reuse_structures: bool = True,
     progress_callback: Callable[[str], None] | None = None,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
@@ -165,8 +176,12 @@ def run_comparison_workflow(
             result.at[row_index, "comparison_error"] = "Both texts must be non-empty."
             continue
         title = _as_non_empty_text(row.get(title_column, ""))
-        original_structure = topic_structure_from_row(row, prefix="original")
-        modified_structure = topic_structure_from_row(row, prefix="modified")
+        original_structure = (
+            topic_structure_from_row(row, prefix="original") if reuse_structures else None
+        )
+        modified_structure = (
+            topic_structure_from_row(row, prefix="modified") if reuse_structures else None
+        )
         try:
             if original_structure is None:
                 if progress_callback is not None:
@@ -199,7 +214,7 @@ def run_comparison_workflow(
             result.at[row_index, "comparison_error"] = str(exc)
             continue
         if progress_callback is not None:
-            progress_callback(f"[{row_position}/{total_rows}] Reusing shared structures.")
+            progress_callback(f"[{row_position}/{total_rows}] Shared structures ready.")
         row_structures[row_index] = (original_structure, modified_structure)
         prepared_pairs.append(
             TopicStructurePair(
@@ -208,10 +223,18 @@ def run_comparison_workflow(
                 modified=modified_structure,
             )
         )
-        for column, value in flatten_topic_structure(original_structure, prefix="original").items():
-            result.at[row_index, column] = value
-        for column, value in flatten_topic_structure(modified_structure, prefix="modified").items():
-            result.at[row_index, column] = value
+        _write_structure(
+            result,
+            row_index=row_index,
+            structure=original_structure,
+            prefix="original",
+        )
+        _write_structure(
+            result,
+            row_index=row_index,
+            structure=modified_structure,
+            prefix="modified",
+        )
 
     cluster_comparator: ClusterSTDIComparator | None = None
     cluster_artifacts: pd.DataFrame | None = None
@@ -308,6 +331,7 @@ def run_comparison_workflow(
         "shared_extraction": {
             "model": extraction_model,
             "provider": extraction_provider,
+            "reused_existing_structures": reuse_structures,
         },
         "cluster": (
             {

@@ -21,6 +21,7 @@ def _sanitize_column_token(value: str) -> str:
 def _topic_structure_field_suffixes() -> tuple[str, ...]:
     return (
         "main_topic",
+        "topic_domain",
         "subtopics",
         "central_entities",
         "central_relations",

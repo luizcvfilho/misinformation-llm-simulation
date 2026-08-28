@@ -53,6 +53,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--n-clusters", type=int, default=None)
     parser.add_argument("--random-state", type=int, default=42)
     parser.add_argument(
+        "--refresh-structures",
+        action="store_true",
+        help="Re-extract every structure, including topic_domain, instead of reusing CSV fields.",
+    )
+    parser.add_argument(
         "--compare-with",
         type=Path,
         default=None,
@@ -86,6 +91,7 @@ def main() -> None:
         embedding_model=args.embedding_model,
         n_clusters=args.n_clusters,
         random_state=args.random_state,
+        reuse_structures=not args.refresh_structures,
         progress_callback=print,
     )
     write_comparison_output(args.output_dir, workflow)

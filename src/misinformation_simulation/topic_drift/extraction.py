@@ -29,6 +29,7 @@ If a field is unavailable, use null or an empty array.
 TOPIC_DRIFT_PROMPT_TEMPLATE = """
 Analyze the following news item and return a JSON object with exactly these keys:
 - main_topic: string or null
+- topic_domain: string or null
 - subtopics: array of strings
 - central_entities: array of strings
 - central_relations: array of objects with keys subject, action, object
@@ -38,6 +39,10 @@ Analyze the following news item and return a JSON object with exactly these keys
 
 Extraction rules:
 - main_topic must capture the primary subject of the article.
+- topic_domain must be exactly one of: business_and_economy, crime_and_justice,
+  culture_and_entertainment, education, environment, government_and_public_policy, health,
+  international_affairs, science_and_technology, sports, or other. Select the article's primary
+  domain; use null only when no domain can be determined.
 - subtopics must list secondary themes or angles.
 - central_entities must include the most important people, organizations, places, or groups.
 - central_relations must describe core factual relations in (subject, action, object) form.
@@ -174,6 +179,7 @@ def _coerce_unit_score(value: Any, *, default: float = 0.0) -> float:
 
 def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
     main_topic = payload.get("main_topic")
+    topic_domain = payload.get("topic_domain")
     narrative_frame = payload.get("narrative_frame")
     has_internal_contradiction = _coerce_bool(payload.get("has_internal_contradiction"))
     internal_contradiction_score = _coerce_unit_score(
@@ -186,6 +192,7 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         subtopics=_coerce_string_list(payload.get("subtopics")),
         central_entities=_coerce_string_list(payload.get("central_entities")),
         central_relations=_coerce_relations(payload.get("central_relations")),
+        topic_domain=str(topic_domain).strip() if topic_domain else None,
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
         has_internal_contradiction=has_internal_contradiction or internal_contradiction_score > 0.0,
         internal_contradiction_score=internal_contradiction_score,

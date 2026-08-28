@@ -60,6 +60,7 @@ The project now includes a topic-drift utility for comparing rewritten news agai
 The extraction step builds a structured representation for each text with:
 
 - `main_topic`
+- `topic_domain` using a controlled high-level category
 - `subtopics`
 - `central_entities`
 - `central_relations` in `(subject, action, object)` form
@@ -230,6 +231,15 @@ make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topi
 The second command writes `method_comparison.csv`, joined by `pair_id`, and cluster assignments
 under `cluster_artifacts/`. Cluster identifiers are meaningful only inside the run that fitted
 them; fit one shared model over the complete collection of original and rewritten structures.
+
+The cluster theme score is the direct embedding similarity between `main_topic` labels. When the
+shared extraction identifies different `topic_domain` values, the theme drift is set to `1.0`.
+Outputs generated before `topic_domain` was introduced can be reprocessed with fresh shared
+extraction:
+
+```powershell
+make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topic_drift/previous_run --output-dir output/topic_drift/refreshed_cluster --method cluster --refresh-structures"
+```
 
 ## Linting and Formatting
 

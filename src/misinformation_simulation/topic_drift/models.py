@@ -18,6 +18,7 @@ class TopicStructure:
     subtopics: list[str]
     central_entities: list[str]
     central_relations: list[TopicRelation]
+    topic_domain: str | None = None
     narrative_frame: str | None = None
     has_internal_contradiction: bool = False
     internal_contradiction_score: float = 0.0
@@ -29,6 +30,7 @@ def empty_topic_structure() -> TopicStructure:
         subtopics=[],
         central_entities=[],
         central_relations=[],
+        topic_domain=None,
         narrative_frame=None,
         has_internal_contradiction=False,
         internal_contradiction_score=0.0,
@@ -45,6 +47,7 @@ def topic_structure_to_dict(structure: TopicStructure) -> dict[str, Any]:
         "subtopics": list(structure.subtopics),
         "central_entities": list(structure.central_entities),
         "central_relations": [asdict(item) for item in structure.central_relations],
+        "topic_domain": structure.topic_domain,
         "narrative_frame": structure.narrative_frame,
         "has_internal_contradiction": structure.has_internal_contradiction,
         "internal_contradiction_score": structure.internal_contradiction_score,
@@ -60,6 +63,7 @@ def flatten_topic_structure(structure: TopicStructure, *, prefix: str) -> dict[s
             ensure_ascii=False,
         ),
         f"{prefix}_central_relations": serialize_relations(structure.central_relations),
+        f"{prefix}_topic_domain": structure.topic_domain,
         f"{prefix}_narrative_frame": structure.narrative_frame,
         f"{prefix}_has_internal_contradiction": structure.has_internal_contradiction,
         f"{prefix}_internal_contradiction_score": structure.internal_contradiction_score,

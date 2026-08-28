@@ -32,9 +32,17 @@ class StableEmbedder:
         return np.asarray(vectors, dtype=float)
 
 
-def _structure_columns(prefix: str, topic: str, entity: str, action: str) -> dict[str, str]:
+def _structure_columns(
+    prefix: str,
+    topic: str,
+    entity: str,
+    action: str,
+    *,
+    domain: str = "other",
+) -> dict[str, str]:
     return {
         f"{prefix}_main_topic": topic,
+        f"{prefix}_topic_domain": domain,
         f"{prefix}_subtopics": json.dumps([topic]),
         f"{prefix}_central_entities": json.dumps([entity]),
         f"{prefix}_central_relations": json.dumps(
@@ -51,16 +59,36 @@ def _pairs() -> pd.DataFrame:
                 "title": "Policy update",
                 "original_text": "The central bank announces policy.",
                 "modified_text": "The central bank announces policy.",
-                **_structure_columns("original", "economy policy", "Central Bank", "announces"),
-                **_structure_columns("modified", "economy policy", "Central Bank", "announces"),
+                **_structure_columns(
+                    "original",
+                    "economy policy",
+                    "Central Bank",
+                    "announces",
+                    domain="business_and_economy",
+                ),
+                **_structure_columns(
+                    "modified",
+                    "economy policy",
+                    "Central Bank",
+                    "announces",
+                    domain="business_and_economy",
+                ),
             },
             {
                 "evaluation_id": "pair_b",
                 "title": "Policy update",
                 "original_text": "The central bank announces policy.",
                 "modified_text": "The health minister cancels policy.",
-                **_structure_columns("original", "economy policy", "Central Bank", "announces"),
-                **_structure_columns("modified", "health policy", "Health Minister", "cancels"),
+                **_structure_columns(
+                    "original",
+                    "economy policy",
+                    "Central Bank",
+                    "announces",
+                    domain="business_and_economy",
+                ),
+                **_structure_columns(
+                    "modified", "health policy", "Health Minister", "cancels", domain="health"
+                ),
             },
         ]
     )
@@ -89,7 +117,7 @@ def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> No
     assert workflow.results.loc[0, "theme_drift"] == 0.0
     assert workflow.results.loc[1, "theme_drift"] > 0.0
     assert workflow.cluster_artifacts is not None
-    assert any("Reusing shared structures" in message for message in progress_messages)
+    assert any("Shared structures ready" in message for message in progress_messages)
     assert any("Fitting shared clusters" in message for message in progress_messages)
     assert any("Comparing pair" in message for message in progress_messages)
 
@@ -133,3 +161,33 @@ def test_llm_workflow_and_output_reuse(tmp_path) -> None:
 
     assert len(comparison) == 2
     assert "delta_relation_drift" in comparison
+
+
+def test_refresh_structures_accepts_empty_numeric_structure_columns() -> None:
+    source = _pairs()
+    source["original_narrative_frame"] = float("nan")
+    source["modified_narrative_frame"] = float("nan")
+    extracted_structures = iter(
+        [
+            TopicStructure(
+                main_topic="economy policy",
+                topic_domain="business_and_economy",
+                subtopics=["economy"],
+                central_entities=["Central Bank"],
+                central_relations=[],
+                narrative_frame="Economic update",
+            )
+            for _ in range(len(source) * 2)
+        ]
+    )
+
+    workflow = run_comparison_workflow(
+        source,
+        method="cluster",
+        reuse_structures=False,
+        extraction_fn=lambda **_kwargs: next(extracted_structures),
+        embedder=StableEmbedder(),
+    )
+
+    assert workflow.results["original_narrative_frame"].eq("Economic update").all()
+    assert workflow.results["modified_narrative_frame"].eq("Economic update").all()
