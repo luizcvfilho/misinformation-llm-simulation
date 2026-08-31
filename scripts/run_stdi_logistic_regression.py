@@ -37,7 +37,7 @@ class ProgressReporter:
         remaining = max(total - completed, 0) * average
         print(
             f"[{self.stage}] {completed}/{total} | {status} | "
-            f"decorrido: {_format_duration(elapsed)} | ETA: {_format_duration(remaining)}",
+            f"elapsed: {_format_duration(elapsed)} | ETA: {_format_duration(remaining)}",
             flush=True,
         )
 
@@ -84,7 +84,7 @@ def main() -> None:
         topic_column=args.topic_column,
         max_rows=args.max_rows,
         skip_rewrite=args.skip_rewrite,
-        log=lambda message: print(f"[Fluxo] {message}", flush=True),
+        log=lambda message: print(f"[Flow] {message}", flush=True),
         rewrite_kwargs={
             "provider": args.provider,
             "model": args.model,

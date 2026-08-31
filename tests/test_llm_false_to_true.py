@@ -82,7 +82,7 @@ def test_rewrite_false_news_as_true_skips_successful_rows_and_marks_empty_text(m
     assert "No usable text" in result.at[1, "rewrite_error"]
 
 
-def test_rewrite_false_news_as_true_saves_a_checkpoint_after_each_rewrite(
+def test_rewrite_false_news_as_true_saves_a_checkpoint_at_the_configured_interval(
     monkeypatch, tmp_path
 ) -> None:
     checkpoint_path = tmp_path / "rewrites.csv"
@@ -109,6 +109,7 @@ def test_rewrite_false_news_as_true_saves_a_checkpoint_after_each_rewrite(
         frame,
         provider="gemini",
         checkpoint_path=checkpoint_path,
+        checkpoint_interval=1,
     )
     saved = pd.read_csv(checkpoint_path)
 

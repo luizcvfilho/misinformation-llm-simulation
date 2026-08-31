@@ -328,9 +328,10 @@ rewritten = rewrite_false_news_as_true(
 )
 ```
 
-With `checkpoint_path`, the CSV is saved before and after each rewrite. A later call can then
-resume without reprocessing rows whose `rewrite_status` is `success`, including after an API
-quota error or an interrupted execution.
+With `checkpoint_path`, the CSV is saved initially, every ten attempted rewrites, and at the end
+of the call. Writes are atomic and retried to reduce failures caused by transient file locks. A
+later call can then resume without reprocessing rows whose `rewrite_status` is `success`, including
+after an API quota error or an interrupted execution.
 
 The function asks the model to correct or remove unsupported claims, but it does not perform
 external fact-checking. Validate factual claims independently before treating an output as true.

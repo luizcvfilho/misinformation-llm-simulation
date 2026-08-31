@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from os import replace
 from pathlib import Path
+from uuid import uuid4
 
 import pandas as pd
 
@@ -67,13 +69,15 @@ def rewrite_false_news_as_true(
     max_rows: int | None = None,
     skip_successful: bool = True,
     checkpoint_path: str | Path | None = None,
+    checkpoint_interval: int = 10,
     progress_callback: Callable[[int, int, str], None] | None = None,
 ) -> pd.DataFrame:
     """Rewrite false-news rows into neutral, truthful versions without VAD processing.
 
     Failed rows are retained and marked ``error`` so they can be retried in a later call.
     Existing successful rows are left untouched by default. When ``checkpoint_path`` is set,
-    the DataFrame is saved before and after each attempted rewrite.
+    the DataFrame is saved initially, periodically, and at completion. Checkpoint
+    writes are atomic and retried to tolerate transient file locks.
     """
     if not isinstance(df, pd.DataFrame):
         raise ValueError("'df' must be a pandas.DataFrame.")
@@ -85,6 +89,8 @@ def rewrite_false_news_as_true(
         raise ValueError("'retry_attempts' must be greater than zero.")
     if max_requests_per_minute is not None and max_requests_per_minute <= 0:
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+    if checkpoint_interval <= 0:
+        raise ValueError("'checkpoint_interval' must be greater than zero.")
 
     provider_name = normalize_provider(provider)
     _, client = create_llm_client(
@@ -109,6 +115,7 @@ def rewrite_false_news_as_true(
         target_indexes = target_indexes[:max_rows]
 
     total_rows = len(target_indexes)
+    attempted_since_checkpoint = 0
     for completed_rows, row_index in enumerate(target_indexes, start=1):
         if skip_successful and rewritten_df.at[row_index, status_column] == "success":
             _notify_progress(progress_callback, completed_rows, total_rows, "reused")
@@ -119,7 +126,10 @@ def rewrite_false_news_as_true(
         if not article_text:
             rewritten_df.at[row_index, status_column] = "skipped"
             rewritten_df.at[row_index, error_column] = f"No usable text in '{text_column}'."
-            _save_checkpoint(rewritten_df, checkpoint_file)
+            attempted_since_checkpoint += 1
+            if attempted_since_checkpoint >= checkpoint_interval:
+                _save_checkpoint(rewritten_df, checkpoint_file)
+                attempted_since_checkpoint = 0
             _notify_progress(progress_callback, completed_rows, total_rows, "skipped")
             continue
 
@@ -134,7 +144,6 @@ def rewrite_false_news_as_true(
         rewritten_df.at[row_index, output_column] = pd.NA
         rewritten_df.at[row_index, status_column] = "running"
         rewritten_df.at[row_index, error_column] = pd.NA
-        _save_checkpoint(rewritten_df, checkpoint_file)
 
         try:
             rewritten_text = _generate_rewrite(
@@ -154,12 +163,17 @@ def rewrite_false_news_as_true(
             rewritten_df.at[row_index, error_column] = str(exc)
             progress_status = "error"
 
-        _save_checkpoint(rewritten_df, checkpoint_file)
+        attempted_since_checkpoint += 1
+        if attempted_since_checkpoint >= checkpoint_interval:
+            _save_checkpoint(rewritten_df, checkpoint_file)
+            attempted_since_checkpoint = 0
         _notify_progress(progress_callback, completed_rows, total_rows, progress_status)
 
         if sleep_seconds > 0:
             time.sleep(sleep_seconds)
 
+    if attempted_since_checkpoint:
+        _save_checkpoint(rewritten_df, checkpoint_file)
     return rewritten_df
 
 
@@ -195,7 +209,17 @@ def _save_checkpoint(df: pd.DataFrame, checkpoint_path: Path | None) -> None:
     if checkpoint_path is None:
         return
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(checkpoint_path, index=False)
+    temporary_path = checkpoint_path.with_name(f".{checkpoint_path.name}.{uuid4().hex}.tmp")
+    for attempt in range(3):
+        try:
+            df.to_csv(temporary_path, index=False)
+            replace(temporary_path, checkpoint_path)
+            return
+        except OSError:
+            temporary_path.unlink(missing_ok=True)
+            if attempt == 2:
+                raise
+            time.sleep(attempt + 1)
 
 
 def _safe_text(value: object) -> str:
