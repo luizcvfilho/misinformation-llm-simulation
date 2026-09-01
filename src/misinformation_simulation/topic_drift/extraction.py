@@ -17,6 +17,25 @@ from misinformation_simulation.topic_drift.models import TopicRelation, TopicStr
 DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
 DEFAULT_TOPIC_DRIFT_PROVIDER = DEFAULT_LLM_PROVIDER
 DEFAULT_REWRITTEN_COLUMN = "rewritten_news"
+TOPIC_DOMAINS = (
+    "accidents_and_emergencies",
+    "business_and_economy",
+    "crime_and_justice",
+    "culture_and_entertainment",
+    "education",
+    "environment",
+    "government_and_public_policy",
+    "health",
+    "international_affairs",
+    "science_and_technology",
+    "sports",
+    "other",
+)
+TOPIC_DOMAIN_VALUES = ", ".join(TOPIC_DOMAINS)
+TOPIC_DOMAIN_CLASSIFICATION_RULE = (
+    "Select the article's primary domain from this controlled vocabulary: "
+    f"{TOPIC_DOMAIN_VALUES}. Use other only when none of the named domains applies."
+)
 
 TOPIC_DRIFT_SYSTEM_INSTRUCTION = """
 You extract the semantic structure of a news report for topic-drift analysis.
@@ -26,7 +45,7 @@ Use concise, factual phrases grounded in the provided text.
 If a field is unavailable, use null or an empty array.
 """.strip()
 
-TOPIC_DRIFT_PROMPT_TEMPLATE = """
+TOPIC_DRIFT_PROMPT_TEMPLATE = f"""
 Analyze the following news item and return a JSON object with exactly these keys:
 - main_topic: string or null
 - topic_domain: string or null
@@ -39,10 +58,9 @@ Analyze the following news item and return a JSON object with exactly these keys
 
 Extraction rules:
 - main_topic must capture the primary subject of the article.
-- topic_domain must be exactly one of: business_and_economy, crime_and_justice,
-  culture_and_entertainment, education, environment, government_and_public_policy, health,
-  international_affairs, science_and_technology, sports, or other. Select the article's primary
-  domain; use null only when no domain can be determined.
+- topic_domain must be exactly one of the controlled vocabulary values.
+  {TOPIC_DOMAIN_CLASSIFICATION_RULE}
+  Use null only when no domain can be determined.
 - subtopics must list secondary themes or angles.
 - central_entities must include the most important people, organizations, places, or groups.
 - central_relations must describe core factual relations in (subject, action, object) form.
@@ -54,10 +72,10 @@ Extraction rules:
 - Keep outputs short and normalized.
 - Do not invent facts beyond the text.
 
-Title: {title}
+Title: {{title}}
 
 Text:
-{text}
+{{text}}
 """.strip()
 
 

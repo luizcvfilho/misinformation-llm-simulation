@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news audit-topic-domain-coverage prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui clean
 
 .DEFAULT_GOAL := help
 
@@ -19,6 +19,12 @@ COUNTRY ?=
 CATEGORY ?=
 QUERY ?=
 MAX_RECORDS ?= 200
+DOMAIN_AUDIT_INPUT ?= data/raw/newsdata_news.csv
+DOMAIN_AUDIT_OUTPUT_DIR ?= output/audit/topic_domain_coverage
+DOMAIN_AUDIT_MAX_ROWS ?= 120
+DOMAIN_AUDIT_MAX_REQUESTS_PER_MINUTE ?= 60
+DOMAIN_AUDIT_MODEL ?=
+DOMAIN_AUDIT_PROVIDER ?=
 STDI_MANUAL_OUTPUT_DIR ?= output/stdi_manual_evaluation
 STDI_MANUAL_INPUT ?= data/raw/newsdata_news.csv
 STDI_MANUAL_SAMPLE_SIZE ?= 50
@@ -63,6 +69,10 @@ FETCH_NEWS_OPTIONAL_ARGS := \
 	$(if $(strip $(CATEGORY)),--category $(CATEGORY),) \
 	$(if $(strip $(QUERY)),--query $(QUERY),)
 
+DOMAIN_AUDIT_OPTIONAL_ARGS := \
+	$(if $(strip $(DOMAIN_AUDIT_MODEL)),--model $(DOMAIN_AUDIT_MODEL),) \
+	$(if $(strip $(DOMAIN_AUDIT_PROVIDER)),--provider $(DOMAIN_AUDIT_PROVIDER),)
+
 INTERACTION_GRAPH_OPTIONAL_ARGS := \
 	$(if $(strip $(GRAPH_NEWS_ID_COLUMN)),--news-id-column $(GRAPH_NEWS_ID_COLUMN),) \
 	$(if $(strip $(GRAPH_MAX_ROWS)),--max-rows $(GRAPH_MAX_ROWS),) \
@@ -105,6 +115,7 @@ help: ## List available targets
 	@echo "  notebooks-inplace  Run notebooks sequentially and save in-place"
 	@echo "  notebooks-continue Run notebooks and continue even if one fails"
 	@echo "  fetch-news         Fetch news from NewsData.io and save as CSV"
+	@echo "  audit-topic-domain-coverage  Audit controlled-domain coverage using domain-only extraction"
 	@echo "  prepare-stdi-manual-evaluation  Prepare or score 50 manually reviewed STDI pairs"
 	@echo "  calibrate-stdi     Fit STDI weights from manual annotations"
 	@echo "  topic-drift-comparison Run LLM or cluster comparison over shared structures"
@@ -173,6 +184,9 @@ notebooks-continue: ## Run notebooks and continue even if one fails
 
 fetch-news: ## Fetch news from NewsData.io and save as CSV
 	uv run python scripts/fetch_newsdata.py --language $(LANGUAGE) $(FETCH_NEWS_OPTIONAL_ARGS) --max-records $(MAX_RECORDS)
+
+audit-topic-domain-coverage: ## Audit domain coverage with a stratified sample
+	uv run python scripts/audit_topic_domain_coverage.py --input $(DOMAIN_AUDIT_INPUT) --output-dir $(DOMAIN_AUDIT_OUTPUT_DIR) --max-rows $(DOMAIN_AUDIT_MAX_ROWS) --max-requests-per-minute $(DOMAIN_AUDIT_MAX_REQUESTS_PER_MINUTE) $(DOMAIN_AUDIT_OPTIONAL_ARGS)
 
 prepare-stdi-manual-evaluation: ## Prepare or score 50 manually reviewed STDI pairs
 	uv run python scripts/prepare_stdi_manual_evaluation.py --input $(STDI_MANUAL_INPUT) --output-dir $(STDI_MANUAL_OUTPUT_DIR) --sample-size $(STDI_MANUAL_SAMPLE_SIZE) --max-requests-per-minute $(STDI_MANUAL_MAX_REQUESTS_PER_MINUTE) $(STDI_MANUAL_OPTIONAL_ARGS)
