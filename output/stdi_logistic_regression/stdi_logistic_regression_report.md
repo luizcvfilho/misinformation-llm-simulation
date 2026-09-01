@@ -10,3 +10,8 @@ Top variables by permutation importance:
 - has_internal_contradiction: 0.0070
 - entity_count: 0.0051
 - relation_count: 0.0019
+
+TF-IDF ablation (same holdout split):
+- stdi_only: ROC-AUC 0.921
+- tfidf_only: ROC-AUC 1.000
+- stdi_plus_tfidf: ROC-AUC 0.980

@@ -40,6 +40,8 @@ STDI_REGRESSION_PROVIDER ?= chatgpt
 STDI_REGRESSION_MAX_ROWS ?=
 STDI_REGRESSION_MAX_REQUESTS_PER_MINUTE ?= 450
 STDI_REGRESSION_SKIP_REWRITE ?=
+STDI_REGRESSION_TFIDF_MAX_FEATURES ?= 10000
+STDI_REGRESSION_TFIDF_MIN_DF ?= 5
 GRAPH_INPUT ?= data/graph_news.csv
 GRAPH_CONFIG ?= data/graph_config.json
 GRAPH_TEXT_COLUMN ?= description
@@ -182,7 +184,7 @@ topic-drift-comparison: ## Run a topic-drift comparison (set TOPIC_DRIFT_COMPARI
 	uv run python scripts/run_topic_drift_comparison.py $(TOPIC_DRIFT_COMPARISON_ARGS)
 
 stdi-logistic-regression: ## Requires STDI_REGRESSION_INPUT; optional independent true-reference CSV
-	uv run python scripts/run_stdi_logistic_regression.py --input $(STDI_REGRESSION_INPUT) --output-dir $(STDI_REGRESSION_OUTPUT_DIR) --text-column $(STDI_REGRESSION_TEXT_COLUMN) --title-column $(STDI_REGRESSION_TITLE_COLUMN) --topic-column $(STDI_REGRESSION_TOPIC_COLUMN) --provider $(STDI_REGRESSION_PROVIDER) --model $(STDI_REGRESSION_MODEL) --max-requests-per-minute $(STDI_REGRESSION_MAX_REQUESTS_PER_MINUTE) $(STDI_REGRESSION_OPTIONAL_ARGS)
+	uv run python scripts/run_stdi_logistic_regression.py --input $(STDI_REGRESSION_INPUT) --output-dir $(STDI_REGRESSION_OUTPUT_DIR) --text-column $(STDI_REGRESSION_TEXT_COLUMN) --title-column $(STDI_REGRESSION_TITLE_COLUMN) --topic-column $(STDI_REGRESSION_TOPIC_COLUMN) --provider $(STDI_REGRESSION_PROVIDER) --model $(STDI_REGRESSION_MODEL) --max-requests-per-minute $(STDI_REGRESSION_MAX_REQUESTS_PER_MINUTE) --tfidf-max-features $(STDI_REGRESSION_TFIDF_MAX_FEATURES) --tfidf-min-df $(STDI_REGRESSION_TFIDF_MIN_DF) $(STDI_REGRESSION_OPTIONAL_ARGS)
 
 csv-explorer: ## Open the generic CSV explorer
 	uv run streamlit run src/misinformation_simulation/apps/csv_explorer_app.py

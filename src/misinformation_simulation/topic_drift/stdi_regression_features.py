@@ -8,6 +8,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
@@ -51,6 +53,9 @@ PAIR_FEATURE_COLUMNS = [
     "relation_count_delta",
     "word_count_ratio",
 ]
+TEXT_COLUMN = "document_text"
+DEFAULT_TFIDF_MAX_FEATURES = 10_000
+DEFAULT_TFIDF_MIN_DF = 5
 
 
 def build_stdi_regression_dataset(
@@ -182,7 +187,107 @@ def fit_stdi_logistic_regression(dataset: pd.DataFrame) -> tuple[pd.DataFrame, d
     }
 
 
-def build_stdi_regression_report(metrics: Mapping[str, Any], importance: pd.DataFrame) -> str:
+def fit_stdi_tfidf_comparison(
+    dataset: pd.DataFrame,
+    *,
+    max_features: int = DEFAULT_TFIDF_MAX_FEATURES,
+    min_df: int = DEFAULT_TFIDF_MIN_DF,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+    """Compare structural STDI, lexical TF-IDF, and combined logistic models.
+
+    The models share the same group-safe split so score differences represent the
+    added feature block rather than a different train/test sample.
+    """
+    required = {"reference_class_label", ROW_ID_COLUMN, TEXT_COLUMN, *FEATURE_COLUMNS}
+    if dataset.empty or not required.issubset(dataset.columns):
+        return (
+            _empty_comparison(),
+            _empty_ngram_importance(),
+            _not_fitted_tfidf("No supervised dataset with article text was available."),
+        )
+    if max_features <= 0 or min_df <= 0:
+        raise ValueError("'max_features' and 'min_df' must be greater than zero.")
+
+    data = dataset.dropna(subset=["reference_class_label"]).copy()
+    labels = data["reference_class_label"].astype(int)
+    if labels.nunique() < 2 or len(data) < 8:
+        return (
+            _empty_comparison(),
+            _empty_ngram_importance(),
+            _not_fitted_tfidf("At least eight rows and both reference classes are required."),
+        )
+    features = data[[*FEATURE_COLUMNS, TEXT_COLUMN]].copy()
+    features[FEATURE_COLUMNS] = (
+        features[FEATURE_COLUMNS].apply(pd.to_numeric, errors="coerce").fillna(0.0)
+    )
+    features[TEXT_COLUMN] = features[TEXT_COLUMN].fillna("").astype(str)
+    train, test = _split_indexes(features, labels, data[ROW_ID_COLUMN])
+    if train is None or test is None:
+        return (
+            _empty_comparison(),
+            _empty_ngram_importance(),
+            _not_fitted_tfidf("Could not create a two-class train/test split."),
+        )
+
+    x_train, x_test = features.iloc[train], features.iloc[test]
+    y_train, y_test = labels.iloc[train], labels.iloc[test]
+    effective_min_df = min(min_df, max(1, len(x_train) // 4))
+    models = {
+        "stdi_only": _model(max_iter=2000),
+        "tfidf_only": _tfidf_model(
+            include_stdi=False,
+            max_features=max_features,
+            min_df=effective_min_df,
+        ),
+        "stdi_plus_tfidf": _tfidf_model(
+            include_stdi=True,
+            max_features=max_features,
+            min_df=effective_min_df,
+        ),
+    }
+    rows: list[dict[str, Any]] = []
+    combined_model: Pipeline | None = None
+    for name, model in models.items():
+        model.fit(x_train if name != "stdi_only" else x_train[FEATURE_COLUMNS], y_train)
+        evaluation_input = x_test if name != "stdi_only" else x_test[FEATURE_COLUMNS]
+        probabilities = model.predict_proba(evaluation_input)[:, 1]
+        predictions = (probabilities >= 0.5).astype(int)
+        rows.append(
+            {
+                "model": name,
+                "feature_blocks": _model_feature_blocks(name),
+                "roc_auc": float(roc_auc_score(y_test, probabilities)),
+                "average_precision": float(average_precision_score(y_test, probabilities)),
+                "f1": float(f1_score(y_test, predictions, zero_division=0)),
+                "precision": float(precision_score(y_test, predictions, zero_division=0)),
+                "recall": float(recall_score(y_test, predictions, zero_division=0)),
+                "train_rows": len(train),
+                "test_rows": len(test),
+            }
+        )
+        if name == "stdi_plus_tfidf":
+            combined_model = model
+
+    comparison = pd.DataFrame(rows)
+    ngram_importance = _top_ngram_coefficients(combined_model, limit=100)
+    metrics = {
+        "fitted": True,
+        "ngram_range": [1, 2],
+        "configured_min_df": min_df,
+        "effective_min_df": effective_min_df,
+        "max_features": max_features,
+        "train_rows": len(train),
+        "test_rows": len(test),
+        "class_counts": {str(key): int(value) for key, value in labels.value_counts().items()},
+    }
+    return comparison, ngram_importance, metrics
+
+
+def build_stdi_regression_report(
+    metrics: Mapping[str, Any],
+    importance: pd.DataFrame,
+    tfidf_comparison: pd.DataFrame | None = None,
+) -> str:
     lines = ["# STDI logistic-regression analysis", ""]
     if not metrics.get("fitted"):
         return "\n".join(
@@ -199,6 +304,10 @@ def build_stdi_regression_report(metrics: Mapping[str, Any], importance: pd.Data
     )
     for _, row in importance.head(5).iterrows():
         lines.append(f"- {row['feature']}: {row['permutation_importance_mean']:.4f}")
+    if tfidf_comparison is not None and not tfidf_comparison.empty:
+        lines.extend(["", "TF-IDF ablation (same holdout split):"])
+        for _, row in tfidf_comparison.iterrows():
+            lines.append(f"- {row['model']}: ROC-AUC {row['roc_auc']:.3f}")
     return "\n".join(lines) + "\n"
 
 
@@ -220,6 +329,7 @@ def _feature_rows(
             ROW_ID_COLUMN: frame[ROW_ID_COLUMN].astype(str).values,
             "reference_class_label": label,
             "reference_group": group,
+            TEXT_COLUMN: _text_series(frame, text_column).values,
             "main_topic_present": frame.get(f"{prefix}_main_topic", "")
             .fillna("")
             .astype(str)
@@ -260,6 +370,65 @@ def _model(*, max_iter: int) -> Pipeline:
                 LogisticRegression(class_weight="balanced", max_iter=max_iter, random_state=42),
             ),
         ]
+    )
+
+
+def _tfidf_model(*, include_stdi: bool, max_features: int, min_df: int) -> Pipeline:
+    transformers: list[tuple[str, object, str | list[str]]] = [
+        (
+            "tfidf",
+            TfidfVectorizer(
+                ngram_range=(1, 2),
+                min_df=min_df,
+                max_df=0.90,
+                max_features=max_features,
+                sublinear_tf=True,
+            ),
+            TEXT_COLUMN,
+        )
+    ]
+    if include_stdi:
+        transformers.insert(0, ("stdi", StandardScaler(), FEATURE_COLUMNS))
+    return Pipeline(
+        [
+            ("features", ColumnTransformer(transformers, remainder="drop")),
+            (
+                "logistic",
+                LogisticRegression(
+                    class_weight="balanced",
+                    max_iter=4000,
+                    random_state=42,
+                    solver="saga",
+                ),
+            ),
+        ]
+    )
+
+
+def _model_feature_blocks(model_name: str) -> str:
+    return {
+        "stdi_only": "STDI_structural",
+        "tfidf_only": "TF-IDF_1-2grams",
+        "stdi_plus_tfidf": "STDI_structural + TF-IDF_1-2grams",
+    }[model_name]
+
+
+def _top_ngram_coefficients(model: Pipeline | None, *, limit: int) -> pd.DataFrame:
+    if model is None:
+        return _empty_ngram_importance()
+    names = model.named_steps["features"].get_feature_names_out()
+    coefficients = model.named_steps["logistic"].coef_[0]
+    result = pd.DataFrame(
+        {"feature": names, "coefficient": coefficients, "odds_ratio": np.exp(coefficients)}
+    )
+    result = result.loc[result["feature"].str.startswith("tfidf__")].copy()
+    result["ngram"] = result["feature"].str.removeprefix("tfidf__")
+    result["absolute_coefficient"] = result["coefficient"].abs()
+    return (
+        result.sort_values("absolute_coefficient", ascending=False, kind="stable")
+        .head(limit)
+        .drop(columns="feature")
+        .reset_index(drop=True)
     )
 
 
@@ -319,6 +488,10 @@ def _word_count(values: pd.Series | object) -> pd.Series:
     return series.fillna("").astype(str).str.findall(r"\b\w+\b").str.len().astype(int)
 
 
+def _text_series(frame: pd.DataFrame, column: str) -> pd.Series:
+    return frame.get(column, pd.Series("", index=frame.index)).fillna("").astype(str)
+
+
 def _boolean(values: pd.Series | object) -> pd.Series:
     series = values if isinstance(values, pd.Series) else pd.Series(values)
     return series.map(lambda value: str(value).strip().lower() in {"true", "1", "yes"}).astype(int)
@@ -338,5 +511,34 @@ def _empty_importance() -> pd.DataFrame:
     )
 
 
+def _empty_comparison() -> pd.DataFrame:
+    return pd.DataFrame(
+        columns=[
+            "model",
+            "feature_blocks",
+            "roc_auc",
+            "average_precision",
+            "f1",
+            "precision",
+            "recall",
+            "train_rows",
+            "test_rows",
+        ]
+    )
+
+
+def _empty_ngram_importance() -> pd.DataFrame:
+    return pd.DataFrame(columns=["coefficient", "odds_ratio", "ngram", "absolute_coefficient"])
+
+
 def _not_fitted(reason: str) -> dict[str, Any]:
     return {"fitted": False, "reason": reason, "feature_columns": FEATURE_COLUMNS}
+
+
+def _not_fitted_tfidf(reason: str) -> dict[str, Any]:
+    return {
+        "fitted": False,
+        "reason": reason,
+        "ngram_range": [1, 2],
+        "feature_blocks": ["STDI_structural", "TF-IDF_1-2grams"],
+    }

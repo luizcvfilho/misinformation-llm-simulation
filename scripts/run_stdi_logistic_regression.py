@@ -64,6 +64,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="gpt-5.6-luna")
     parser.add_argument("--max-rows", type=int)
     parser.add_argument("--max-requests-per-minute", type=int, default=450)
+    parser.add_argument("--tfidf-max-features", type=int, default=10_000)
+    parser.add_argument("--tfidf-min-df", type=int, default=5)
     parser.add_argument("--skip-rewrite", action="store_true")
     return parser.parse_args()
 
@@ -84,6 +86,8 @@ def main() -> None:
         topic_column=args.topic_column,
         max_rows=args.max_rows,
         skip_rewrite=args.skip_rewrite,
+        tfidf_max_features=args.tfidf_max_features,
+        tfidf_min_df=args.tfidf_min_df,
         log=lambda message: print(f"[Flow] {message}", flush=True),
         rewrite_kwargs={
             "provider": args.provider,

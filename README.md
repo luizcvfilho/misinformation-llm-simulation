@@ -358,6 +358,14 @@ feature importance, model metrics, a manifest, and a short report.
 Set `STDI_REGRESSION_SKIP_REWRITE=1` to reuse the truthified CSV in later runs. If that CSV
 does not yet exist in the output directory, the workflow creates it automatically.
 
+The workflow also fits a lexical comparison with TF-IDF unigrams and bigrams. It writes
+`stdi_tfidf_model_comparison.csv`, comparing `stdi_only`, `tfidf_only`, and
+`stdi_plus_tfidf` on the same group-safe holdout split, plus `stdi_tfidf_top_ngrams.csv` with
+the strongest lexical coefficients. This keeps lexical performance separate from the structural
+STDI importance report. The defaults are 10,000 terms, `min_df=5`, and an `(1, 2)` n-gram range;
+adjust the first two with `STDI_REGRESSION_TFIDF_MAX_FEATURES` and
+`STDI_REGRESSION_TFIDF_MIN_DF`.
+
 ## Main Notebook Workflow
 
 Main simulation notebook:

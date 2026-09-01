@@ -21,6 +21,7 @@ from misinformation_simulation.topic_drift.stdi_regression_features import (
     build_stdi_regression_dataset,
     build_stdi_regression_report,
     fit_stdi_logistic_regression,
+    fit_stdi_tfidf_comparison,
 )
 
 _FILES = {
@@ -31,6 +32,9 @@ _FILES = {
     "pair_dataset": "stdi_pair_metrics.csv",
     "importance": "stdi_regression_feature_importance.csv",
     "metrics": "stdi_logistic_regression_metrics.json",
+    "tfidf_comparison": "stdi_tfidf_model_comparison.csv",
+    "tfidf_ngrams": "stdi_tfidf_top_ngrams.csv",
+    "tfidf_metrics": "stdi_tfidf_metrics.json",
     "manifest": "stdi_logistic_regression_manifest.json",
     "report": "stdi_logistic_regression_report.md",
 }
@@ -50,6 +54,8 @@ def run_stdi_logistic_regression_analysis(
     annotation_kwargs: Mapping[str, Any] | None = None,
     max_rows: int | None = None,
     skip_rewrite: bool = False,
+    tfidf_max_features: int = 10_000,
+    tfidf_min_df: int = 5,
     log: Callable[[str], None] | None = None,
     rewriter: Callable[..., pd.DataFrame] = rewrite_false_news_as_true,
     false_annotator: Callable[..., pd.DataFrame] = annotate_stdi_for_rewrites,
@@ -107,11 +113,19 @@ def run_stdi_logistic_regression_analysis(
     )
     pair_dataset = build_stdi_pair_dataset(false_audit, text_column=text_column)
     importance, metrics = fit_stdi_logistic_regression(dataset)
+    tfidf_comparison, tfidf_ngrams, tfidf_metrics = fit_stdi_tfidf_comparison(
+        dataset,
+        max_features=tfidf_max_features,
+        min_df=tfidf_min_df,
+    )
     _log(log, f"Logistic regression: {len(dataset)} reference sample(s).")
     _save(dataset, files["regression_dataset"])
     _save(pair_dataset, files["pair_dataset"])
     _save(importance, files["importance"])
     _json(metrics, files["metrics"])
+    _save(tfidf_comparison, files["tfidf_comparison"])
+    _save(tfidf_ngrams, files["tfidf_ngrams"])
+    _json(tfidf_metrics, files["tfidf_metrics"])
     _json(
         {
             "analysis": "stdi_logistic_regression",
@@ -122,10 +136,14 @@ def run_stdi_logistic_regression_analysis(
             "source_hash": _hash(source, text_column),
             "text_column": text_column,
             "true_text_column": true_text,
+            "tfidf_max_features": tfidf_max_features,
+            "tfidf_min_df": tfidf_min_df,
         },
         files["manifest"],
     )
-    files["report"].write_text(build_stdi_regression_report(metrics, importance), encoding="utf-8")
+    files["report"].write_text(
+        build_stdi_regression_report(metrics, importance, tfidf_comparison), encoding="utf-8"
+    )
     _log(log, "Completed. Outputs saved to " + str(output))
     return files
 

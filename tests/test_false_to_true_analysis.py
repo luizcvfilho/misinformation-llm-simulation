@@ -12,6 +12,7 @@ from misinformation_simulation.topic_drift.stdi_regression_features import (
     build_stdi_pair_dataset,
     build_stdi_regression_dataset,
     fit_stdi_logistic_regression,
+    fit_stdi_tfidf_comparison,
 )
 
 
@@ -122,6 +123,36 @@ def test_fit_stdi_logistic_regression_returns_interpretable_importance() -> None
     assert "odds_ratio" in importance.columns
 
 
+def test_tfidf_comparison_uses_unigrams_and_bigrams_without_replacing_stdi() -> None:
+    rows = []
+    for index in range(12):
+        rows.append(
+            {
+                "workflow_row_id": f"f-{index}",
+                "reference_class_label": 0,
+                "document_text": f"unsupported false claim {index}",
+                **{feature: float(index % 2) for feature in FEATURE_COLUMNS},
+            }
+        )
+        rows.append(
+            {
+                "workflow_row_id": f"t-{index}",
+                "reference_class_label": 1,
+                "document_text": f"neutral verified report {index}",
+                **{feature: float(10 + (index % 2)) for feature in FEATURE_COLUMNS},
+            }
+        )
+
+    comparison, ngrams, metrics = fit_stdi_tfidf_comparison(
+        pd.DataFrame(rows), max_features=100, min_df=2
+    )
+
+    assert metrics["fitted"] is True
+    assert set(comparison["model"]) == {"stdi_only", "tfidf_only", "stdi_plus_tfidf"}
+    assert not ngrams.empty
+    assert {"ngram", "coefficient", "odds_ratio"}.issubset(ngrams.columns)
+
+
 def test_workflow_reuses_successful_rewrites_and_audits(tmp_path: Path) -> None:
     calls = {"rewriter": 0, "false_annotator": 0, "true_annotator": 0}
 
@@ -158,6 +189,8 @@ def test_workflow_reuses_successful_rewrites_and_audits(tmp_path: Path) -> None:
 
     assert calls == {"rewriter": 2, "false_annotator": 1, "true_annotator": 0}
     assert outputs["report"].exists()
+    assert outputs["tfidf_comparison"].exists()
+    assert outputs["tfidf_ngrams"].exists()
     rewrites = pd.read_csv(outputs["rewrites"])
     assert rewrites["rewrite_status"].eq("success").all()
     assert rewrites["verification_status"].eq("unverified_generated").all()

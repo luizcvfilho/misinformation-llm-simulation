@@ -42,6 +42,7 @@ from .stdi_regression_features import (
     build_stdi_pair_dataset,
     build_stdi_regression_dataset,
     fit_stdi_logistic_regression,
+    fit_stdi_tfidf_comparison,
 )
 
 __all__ = [
@@ -82,5 +83,6 @@ __all__ = [
     "build_stdi_regression_dataset",
     "build_stdi_pair_dataset",
     "fit_stdi_logistic_regression",
+    "fit_stdi_tfidf_comparison",
     "run_stdi_logistic_regression_analysis",
 ]
