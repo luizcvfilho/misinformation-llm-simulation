@@ -8,10 +8,10 @@ from misinformation_simulation.topic_drift.extraction import _normalize_relation
 from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_STDI_WEIGHTS = {
-    "theme_drift": 0.2,
-    "subtopic_drift": 0.2,
-    "entity_drift": 0.2,
-    "relation_drift": 0.4,
+    "theme_drift": 0.25,
+    "subtopic_drift": 0.25,
+    "entity_drift": 0.25,
+    "relation_drift": 0.25,
 }
 DEFAULT_CONTRADICTION_CONTRIBUTION_WEIGHT = 0.2
 DEFAULT_VAD_CONTRIBUTION_WEIGHT = 0.2

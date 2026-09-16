@@ -78,10 +78,10 @@ D_relations = 1 - Jaccard(relations_original, relations_version)
 D_contradiction = internal contradiction severity/centrality score from 0 to 1
 
 content_drift =
-  0.2*D_theme +
-  0.2*D_subtopic +
-  0.2*D_entities +
-  0.4*D_relations
+  0.25*D_theme +
+  0.25*D_subtopic +
+  0.25*D_entities +
+  0.25*D_relations
 ```
 
 When VAD scores are available for the original and rewritten texts, the project also

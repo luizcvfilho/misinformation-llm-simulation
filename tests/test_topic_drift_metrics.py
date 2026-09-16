@@ -80,7 +80,7 @@ def test_calculate_stdi_uses_vad_only_for_remaining_semantic_distance() -> None:
     assert metrics["stdi"] == 0.016667
 
 
-def test_calculate_stdi_does_not_promote_theme_drift_above_other_components() -> None:
+def test_calculate_stdi_uses_equal_content_component_weights() -> None:
     original = TopicStructure(
         main_topic="government shutdown",
         subtopics=["federal workers"],
@@ -102,8 +102,8 @@ def test_calculate_stdi_does_not_promote_theme_drift_above_other_components() ->
     )
 
     assert metrics["theme_drift"] == 1.0
-    assert metrics["content_drift"] == 0.2
-    assert metrics["stdi"] == 0.201333
+    assert metrics["content_drift"] == 0.25
+    assert metrics["stdi"] == 0.25125
 
 
 def test_calculate_stdi_uses_contradiction_as_an_extra_component() -> None:
