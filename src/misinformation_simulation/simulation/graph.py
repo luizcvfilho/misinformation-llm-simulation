@@ -36,6 +36,12 @@ from misinformation_simulation.simulation.types import (
     SimulationResult,
     SimulationStepResult,
 )
+from misinformation_simulation.text_metrics.vad import (
+    DEFAULT_VAD_MODEL_NAME,
+    VADModelBundle,
+    VADScore,
+    predict_text_vad,
+)
 from misinformation_simulation.topic_drift import (
     calculate_stdi,
     extract_topic_structure,
@@ -45,6 +51,19 @@ from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
 ProgressCallback = Callable[[str], None]
+STDI_COMPONENTS = (
+    "stdi",
+    "theme_drift",
+    "subtopic_drift",
+    "entity_drift",
+    "relation_drift",
+    "contradiction_drift",
+    "valence_drift",
+    "arousal_drift",
+    "dominance_drift",
+    "vad_drift",
+    "content_drift",
+)
 
 
 def _generate_rewrite(
@@ -116,6 +135,33 @@ def _emit_progress(
         progress_callback(message)
 
 
+def _score_vad(
+    text: str,
+    *,
+    model_bundle: VADModelBundle | None,
+    scorer: Callable[[str], VADScore] | None,
+) -> VADScore:
+    score = predict_text_vad(text, model_bundle=model_bundle, scorer=scorer)
+    if any(getattr(score, dimension) is None for dimension in ("valence", "arousal", "dominance")):
+        raise ValueError("VAD scoring must return valence, arousal, and dominance.")
+    return score
+
+
+def _record_vad(step: SimulationStepResult, prefix: str, score: VADScore) -> None:
+    for dimension in ("valence", "arousal", "dominance"):
+        step.metadata[f"{prefix}_vad_{dimension}"] = getattr(score, dimension)
+
+
+def _record_stdi_metrics(
+    step: SimulationStepResult,
+    *,
+    suffix: str,
+    metrics: dict[str, float],
+) -> None:
+    for component in STDI_COMPONENTS:
+        setattr(step, f"{component}_{suffix}", metrics[component])
+
+
 def run_news_interaction_graph(
     df: pd.DataFrame,
     *,
@@ -134,6 +180,8 @@ def run_news_interaction_graph(
     topic_drift_provider: Provider | str = DEFAULT_LLM_PROVIDER,
     topic_drift_api_key: str | None = None,
     topic_drift_base_url: str | None = None,
+    vad_model_bundle: VADModelBundle | None = None,
+    vad_scorer: Callable[[str], VADScore] | None = None,
     output_dir: Path | str | None = None,
     output_prefix: str = "simulation",
     persist_results: bool = True,
@@ -189,6 +237,7 @@ def run_news_interaction_graph(
             f"[{row_position}/{total_rows}] Preparing news '{news_id}' ({title or 'Untitled'}).",
         )
 
+        original_structure_ready = False
         try:
             source_column, original_text = resolve_row_text(
                 row=row,
@@ -208,6 +257,12 @@ def run_news_interaction_graph(
                 base_url=topic_drift_base_url,
                 max_requests_per_minute=max_requests_per_minute,
                 retry_attempts=retry_attempts,
+            )
+            original_structure_ready = True
+            original_vad = _score_vad(
+                original_text,
+                model_bundle=vad_model_bundle,
+                scorer=vad_scorer,
             )
             _emit_progress(
                 progress_callback,
@@ -240,8 +295,18 @@ def run_news_interaction_graph(
                         target_language_source="unresolved",
                         rewrite_status="blocked",
                         rewrite_error=f"Original text could not be prepared: {exc}",
-                        original_topic_structure_status="error",
-                        original_topic_structure_error=str(exc),
+                        original_topic_structure_status=(
+                            "success" if original_structure_ready else "error"
+                        ),
+                        original_topic_structure_error=(
+                            None if original_structure_ready else str(exc)
+                        ),
+                        original_vad_status=("error" if original_structure_ready else "blocked"),
+                        original_vad_error=(
+                            str(exc)
+                            if original_structure_ready
+                            else "Skipped because original preprocessing failed."
+                        ),
                         rewritten_topic_structure_status="blocked",
                         rewritten_topic_structure_error=(
                             "Skipped because original preprocessing failed."
@@ -257,7 +322,9 @@ def run_news_interaction_graph(
         previous_node_label = source_column
         previous_text = original_text
         previous_structure = original_structure
+        previous_vad = original_vad
         previous_rewritten_text: str | None = None
+        cumulative_stdi = 0.0
 
         for step_index, node_id in enumerate(ordered_node_ids, start=1):
             node = nodes_by_id[node_id]
@@ -293,12 +360,18 @@ def run_news_interaction_graph(
                 target_language_source=target_language_source,
                 rewrite_status="not_requested",
                 rewrite_error=None,
+                original_topic_structure_status="success",
+                original_vad_status="success",
                 metadata={
                     "title": title,
                     "source_text_column": source_column,
                 },
             )
+            _record_vad(step_result, "original", original_vad)
+            _record_vad(step_result, "source", previous_vad)
 
+            rewritten_structure_ready = False
+            rewritten_vad_ready = False
             try:
                 rewritten_text = _generate_rewrite(
                     provider_normalized=provider_normalized,
@@ -328,37 +401,54 @@ def run_news_interaction_graph(
                     max_requests_per_minute=max_requests_per_minute,
                     retry_attempts=retry_attempts,
                 )
-                vs_original_metrics = calculate_stdi(original_structure, rewritten_structure)
+                rewritten_structure_ready = True
+                step_result.rewritten_topic_structure_status = "success"
+                rewritten_vad = _score_vad(
+                    rewritten_text,
+                    model_bundle=vad_model_bundle,
+                    scorer=vad_scorer,
+                )
+                rewritten_vad_ready = True
+                step_result.rewritten_vad_status = "success"
+                _record_vad(step_result, "rewritten", rewritten_vad)
+                vs_original_metrics = calculate_stdi(
+                    original_structure,
+                    rewritten_structure,
+                    original_vad=original_vad,
+                    compared_vad=rewritten_vad,
+                )
                 for key, value in {
                     **flatten_topic_structure(original_structure, prefix="original"),
                     **flatten_topic_structure(rewritten_structure, prefix="rewritten"),
                 }.items():
                     step_result.metadata[key] = value
-                step_result.original_topic_structure_status = "success"
-                step_result.rewritten_topic_structure_status = "success"
-                step_result.stdi_vs_original = vs_original_metrics["stdi"]
-                step_result.theme_drift_vs_original = vs_original_metrics["theme_drift"]
-                step_result.subtopic_drift_vs_original = vs_original_metrics["subtopic_drift"]
-                step_result.entity_drift_vs_original = vs_original_metrics["entity_drift"]
-                step_result.relation_drift_vs_original = vs_original_metrics["relation_drift"]
+                _record_stdi_metrics(
+                    step_result,
+                    suffix="vs_original",
+                    metrics=vs_original_metrics,
+                )
 
                 if previous_rewritten_text is None:
-                    step_result.stdi_incremental = step_result.stdi_vs_original
-                    step_result.theme_drift_incremental = step_result.theme_drift_vs_original
-                    step_result.subtopic_drift_incremental = step_result.subtopic_drift_vs_original
-                    step_result.entity_drift_incremental = step_result.entity_drift_vs_original
-                    step_result.relation_drift_incremental = step_result.relation_drift_vs_original
+                    incremental_metrics = vs_original_metrics
                 else:
-                    incremental_metrics = calculate_stdi(previous_structure, rewritten_structure)
-                    step_result.stdi_incremental = incremental_metrics["stdi"]
-                    step_result.theme_drift_incremental = incremental_metrics["theme_drift"]
-                    step_result.subtopic_drift_incremental = incremental_metrics["subtopic_drift"]
-                    step_result.entity_drift_incremental = incremental_metrics["entity_drift"]
-                    step_result.relation_drift_incremental = incremental_metrics["relation_drift"]
+                    incremental_metrics = calculate_stdi(
+                        previous_structure,
+                        rewritten_structure,
+                        original_vad=previous_vad,
+                        compared_vad=rewritten_vad,
+                    )
+                _record_stdi_metrics(
+                    step_result,
+                    suffix="incremental",
+                    metrics=incremental_metrics,
+                )
+                cumulative_stdi += incremental_metrics["stdi"]
+                step_result.stdi_cumulative = round(cumulative_stdi, 6)
 
                 previous_text = rewritten_text
                 previous_rewritten_text = rewritten_text
                 previous_structure = rewritten_structure
+                previous_vad = rewritten_vad
                 previous_node_id = node.node_id
                 previous_node_label = node_label
                 _emit_progress(
@@ -373,6 +463,14 @@ def run_news_interaction_graph(
             except Exception as exc:
                 step_result.rewrite_status = "error"
                 step_result.rewrite_error = str(exc)
+                if rewritten_structure_ready and not rewritten_vad_ready:
+                    step_result.rewritten_vad_status = "error"
+                    step_result.rewritten_vad_error = str(exc)
+                elif step_result.rewritten_text is not None:
+                    step_result.rewritten_topic_structure_status = "error"
+                    step_result.rewritten_topic_structure_error = str(exc)
+                    step_result.rewritten_vad_status = "blocked"
+                    step_result.rewritten_vad_error = "Skipped because topic extraction failed."
                 _emit_progress(
                     progress_callback,
                     (
@@ -388,11 +486,17 @@ def run_news_interaction_graph(
 
     success_count = sum(1 for step in step_results if step.rewrite_status == "success")
     error_count = sum(1 for step in step_results if step.rewrite_status == "error")
+    vad_model_name = DEFAULT_VAD_MODEL_NAME
+    if vad_model_bundle is not None:
+        vad_model_name = vad_model_bundle.model_name
+    if vad_scorer is not None:
+        vad_model_name = "custom_scorer"
     summary = {
         "rows_processed": len(target_indexes),
         "steps_total": len(step_results),
         "steps_success": success_count,
         "steps_error": error_count,
+        "vad_model": vad_model_name,
         "graph": {
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,

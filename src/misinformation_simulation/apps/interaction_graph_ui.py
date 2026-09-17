@@ -155,6 +155,9 @@ def build_node_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
             errors=("rewrite_status", lambda values: int((values == "error").sum())),
             mean_stdi_vs_original=("stdi_vs_original", "mean"),
             mean_stdi_incremental=("stdi_incremental", "mean"),
+            mean_stdi_cumulative=("stdi_cumulative", "mean"),
+            mean_vad_drift_vs_original=("vad_drift_vs_original", "mean"),
+            mean_contradiction_drift_vs_original=("contradiction_drift_vs_original", "mean"),
         )
         .reset_index()
         .sort_values("step_index")
@@ -176,6 +179,7 @@ def build_news_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
             errors=("rewrite_status", lambda values: int((values == "error").sum())),
             max_stdi_vs_original=("stdi_vs_original", "max"),
             max_stdi_incremental=("stdi_incremental", "max"),
+            max_stdi_cumulative=("stdi_cumulative", "max"),
         )
         .reset_index()
         .sort_values(["errors", "max_stdi_vs_original", "news_id"], ascending=[False, False, True])

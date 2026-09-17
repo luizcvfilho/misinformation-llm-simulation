@@ -506,6 +506,16 @@ The UI lets you:
 
 Note: the current backend still expects a single connected chain of nodes, so the UI editor follows that same constraint.
 
+Each graph step computes VAD (valence, arousal, and dominance) for the source article and
+the rewritten text using the project's default `RobroKools/vad-bert` model. The STDI
+includes both VAD drift and the existing internal-contradiction contribution. Step records
+include these components against the original article and the previous version, together
+with the raw VAD scores. The VAD model is loaded locally and may need to be downloaded on
+its first use. A graph run requires all three VAD scores for each evaluated text.
+Graph step records also include `stdi_cumulative`, the running sum of successful incremental
+STDI values for each news item. Failed steps have no cumulative score; a later successful step
+continues from the last successful version. This sum is not normalized and can exceed 1.
+
 ## Audits
 
 ### Consistency Audit (NLI)

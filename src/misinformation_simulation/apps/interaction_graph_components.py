@@ -183,6 +183,9 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     "success_rate",
                     "mean_stdi_vs_original",
                     "mean_stdi_incremental",
+                    "mean_stdi_cumulative",
+                    "mean_vad_drift_vs_original",
+                    "mean_contradiction_drift_vs_original",
                 ]
             ],
             use_container_width=True,
@@ -217,6 +220,11 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         "rewrite_status",
                         "stdi_vs_original",
                         "stdi_incremental",
+                        "stdi_cumulative",
+                        "vad_drift_vs_original",
+                        "vad_drift_incremental",
+                        "contradiction_drift_vs_original",
+                        "contradiction_drift_incremental",
                         "rewrite_error",
                     ]
                 ],
@@ -231,6 +239,22 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     info_cols[1].metric("Incremental STDI", format_metric(row["stdi_incremental"]))
                     info_cols[2].metric("Provider", str(row["provider"]))
                     info_cols[3].metric("Model", str(row["model"]))
+                    st.metric("Cumulative STDI", format_metric(row["stdi_cumulative"]))
+                    component_cols = st.columns(4)
+                    component_cols[0].metric(
+                        "VAD vs original", format_metric(row["vad_drift_vs_original"])
+                    )
+                    component_cols[1].metric(
+                        "Incremental VAD", format_metric(row["vad_drift_incremental"])
+                    )
+                    component_cols[2].metric(
+                        "Contradiction vs original",
+                        format_metric(row["contradiction_drift_vs_original"]),
+                    )
+                    component_cols[3].metric(
+                        "Incremental contradiction",
+                        format_metric(row["contradiction_drift_incremental"]),
+                    )
                     if pd.notna(row.get("rewrite_error")) and str(row["rewrite_error"]).strip():
                         st.error(str(row["rewrite_error"]))
                     text_cols = st.columns(2)

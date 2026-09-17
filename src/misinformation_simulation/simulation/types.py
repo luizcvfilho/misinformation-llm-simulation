@@ -46,15 +46,32 @@ class SimulationStepResult:
     subtopic_drift_vs_original: float | None = None
     entity_drift_vs_original: float | None = None
     relation_drift_vs_original: float | None = None
+    contradiction_drift_vs_original: float | None = None
+    valence_drift_vs_original: float | None = None
+    arousal_drift_vs_original: float | None = None
+    dominance_drift_vs_original: float | None = None
+    vad_drift_vs_original: float | None = None
+    content_drift_vs_original: float | None = None
     stdi_incremental: float | None = None
     theme_drift_incremental: float | None = None
     subtopic_drift_incremental: float | None = None
     entity_drift_incremental: float | None = None
     relation_drift_incremental: float | None = None
+    contradiction_drift_incremental: float | None = None
+    valence_drift_incremental: float | None = None
+    arousal_drift_incremental: float | None = None
+    dominance_drift_incremental: float | None = None
+    vad_drift_incremental: float | None = None
+    content_drift_incremental: float | None = None
+    stdi_cumulative: float | None = None
     original_topic_structure_status: str = "not_requested"
     original_topic_structure_error: str | None = None
+    original_vad_status: str = "not_requested"
+    original_vad_error: str | None = None
     rewritten_topic_structure_status: str = "not_requested"
     rewritten_topic_structure_error: str | None = None
+    rewritten_vad_status: str = "not_requested"
+    rewritten_vad_error: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_record(self) -> dict[str, Any]:
