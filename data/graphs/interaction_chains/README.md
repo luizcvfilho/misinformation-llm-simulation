@@ -31,7 +31,7 @@ or exposure from multiple neighbors.
 Example from the project root:
 
 ```powershell
-uv run python scripts/run_interaction_graph.py --input data/graph_news.csv --graph-config data/graphs/interaction_chains/05_ccpp.json --output-prefix ccpp
+uv run python scripts/run_interaction_graph.py --input data/graphs/graph_news.csv --graph-config data/graphs/interaction_chains/05_ccpp.json --output-prefix ccpp
 ```
 
 Use a different `--output-prefix` for each scenario so the output files do not overwrite

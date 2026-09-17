@@ -449,8 +449,8 @@ Script:
 
 This workflow runs a chained LLM interaction graph over a news dataset using:
 
-- an input file such as `data/graph_news.csv`
-- a graph definition such as `data/graph_config.json`
+- an input file such as `data/graphs/graph_news.csv`
+- a graph definition such as `data/graphs/graph_config.json`
 
 Default Make targets:
 
@@ -463,14 +463,14 @@ make interaction-graph-ui
 Useful overrides:
 
 ```powershell
-make interaction-graph GRAPH_INPUT=data/graph_news.csv GRAPH_CONFIG=data/graph_config.json GRAPH_MAX_ROWS=5
+make interaction-graph GRAPH_INPUT=data/graphs/graph_news.csv GRAPH_CONFIG=data/graphs/graph_config.json GRAPH_MAX_ROWS=5
 make interaction-graph-verbose GRAPH_TEXT_COLUMN=description GRAPH_OUTPUT_PREFIX=politics_graph
 ```
 
 Main variables:
 
-- `GRAPH_INPUT`: input CSV/JSON/JSONL file (`data/graph_news.csv` default)
-- `GRAPH_CONFIG`: graph JSON config (`data/graph_config.json` default)
+- `GRAPH_INPUT`: input CSV/JSON/JSONL file (`data/graphs/graph_news.csv` default)
+- `GRAPH_CONFIG`: graph JSON config (`data/graphs/graph_config.json` default)
 - `GRAPH_TEXT_COLUMN`: text column used by the simulation (`description` default)
 - `GRAPH_TITLE_COLUMN`: title column (`title` default)
 - `GRAPH_NEWS_ID_COLUMN`: optional custom id column

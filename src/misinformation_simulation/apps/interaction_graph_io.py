@@ -16,8 +16,8 @@ from misinformation_simulation.simulation.io import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_DATASET_PATH = "data/graph_news.csv"
-DEFAULT_GRAPH_CONFIG_PATH = "data/graph_config.json"
+DEFAULT_DATASET_PATH = "data/graphs/graph_news.csv"
+DEFAULT_GRAPH_CONFIG_PATH = "data/graphs/graph_config.json"
 
 
 @st.cache_data(show_spinner=False)
