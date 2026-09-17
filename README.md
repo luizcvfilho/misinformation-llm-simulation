@@ -504,6 +504,8 @@ The UI lets you:
 - add snapshots of multiple graphs to a queue, reorder them, and run them sequentially without further input
 - select predefined personalities or write custom personality prompts
 - inspect each graph's status, summary, per-node metrics, and per-news outputs
+- compare extracted main topics, subtopics, entities, and relations for the original and rewritten
+  text at each node, alongside the drift score for each category
 
 To queue graphs, enter a name and choose **Add current graph**. You can then edit the graph or
 import another JSON config and add it too. **Run graph queue** processes each saved graph against

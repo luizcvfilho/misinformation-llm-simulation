@@ -313,6 +313,11 @@ def run_news_interaction_graph(
                         ),
                         metadata={
                             "title": title,
+                            **(
+                                flatten_topic_structure(original_structure, prefix="original")
+                                if original_structure_ready
+                                else {}
+                            ),
                         },
                     )
                 )
@@ -365,6 +370,7 @@ def run_news_interaction_graph(
                 metadata={
                     "title": title,
                     "source_text_column": source_column,
+                    **flatten_topic_structure(original_structure, prefix="original"),
                 },
             )
             _record_vad(step_result, "original", original_vad)
@@ -403,6 +409,9 @@ def run_news_interaction_graph(
                 )
                 rewritten_structure_ready = True
                 step_result.rewritten_topic_structure_status = "success"
+                step_result.metadata.update(
+                    flatten_topic_structure(rewritten_structure, prefix="rewritten")
+                )
                 rewritten_vad = _score_vad(
                     rewritten_text,
                     model_bundle=vad_model_bundle,
@@ -417,11 +426,6 @@ def run_news_interaction_graph(
                     original_vad=original_vad,
                     compared_vad=rewritten_vad,
                 )
-                for key, value in {
-                    **flatten_topic_structure(original_structure, prefix="original"),
-                    **flatten_topic_structure(rewritten_structure, prefix="rewritten"),
-                }.items():
-                    step_result.metadata[key] = value
                 _record_stdi_metrics(
                     step_result,
                     suffix="vs_original",

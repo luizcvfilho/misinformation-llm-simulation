@@ -103,6 +103,8 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
     assert persisted_step["metadata_title"] == "Title"
     assert persisted_step["metadata_original_vad_valence"] == 3.0
     assert persisted_step["metadata_rewritten_vad_arousal"] == 4.0
+    assert json.loads(persisted_step["metadata_original_json"])["main_topic"] == "original"
+    assert json.loads(persisted_step["metadata_rewritten_json"])["main_topic"] == "rewritten"
     assert persisted_step["vad_drift_vs_original"] == pytest.approx(0.166667)
     assert persisted_step["stdi_cumulative"] == pytest.approx(0.275)
     assert any("Run finished" in message for message in progress)
@@ -206,6 +208,7 @@ def test_graph_blocks_original_when_vad_is_incomplete(monkeypatch) -> None:
     assert step.rewrite_status == "blocked"
     assert step.original_topic_structure_status == "success"
     assert step.original_vad_status == "error"
+    assert json.loads(step.metadata["original_json"])["main_topic"] == "topic"
     assert "VAD scoring must return" in step.original_vad_error
 
 
@@ -231,6 +234,7 @@ def test_graph_does_not_report_stdi_when_rewritten_vad_fails(monkeypatch) -> Non
     assert step.rewritten_text == "rewritten text"
     assert step.rewritten_topic_structure_status == "success"
     assert step.rewritten_vad_status == "error"
+    assert json.loads(step.metadata["rewritten_json"])["main_topic"] == "topic"
     assert step.stdi_vs_original is None
     assert step.stdi_cumulative is None
 

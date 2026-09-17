@@ -270,9 +270,95 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         height=220,
                         disabled=True,
                     )
+                    render_topic_comparison(row)
 
     st.subheader("All step records")
     st.dataframe(steps_df, use_container_width=True)
+
+
+def render_topic_comparison(row: pd.Series) -> None:
+    st.markdown("#### Extracted topics and category scores")
+    st.caption(
+        "Scores measure category drift: 0 means unchanged and 1 means maximum change. "
+        "The original score compares with the source article; the input score compares "
+        "with the text entering this node. Individual items do not have separate scores."
+    )
+    original = topic_structure_from_step(row, "original")
+    rewritten = topic_structure_from_step(row, "rewritten")
+    if original is None and rewritten is None:
+        st.info("Topic extraction is unavailable for this step.")
+        return
+
+    categories = (
+        ("Main topic", "main_topic", "theme_drift"),
+        ("Subtopics", "subtopics", "subtopic_drift"),
+        ("Entities", "central_entities", "entity_drift"),
+        ("Relations", "central_relations", "relation_drift"),
+    )
+    for label, field, metric in categories:
+        with st.container(border=True):
+            st.markdown(f"**{label}**")
+            columns = st.columns([3, 3, 1, 1])
+            columns[0].caption("Original article")
+            columns[0].text(format_topic_items(original, field))
+            columns[1].caption("Rewritten text")
+            columns[1].text(format_topic_items(rewritten, field))
+            columns[2].metric("vs original", format_metric(row.get(f"{metric}_vs_original")))
+            columns[3].metric("vs input", format_metric(row.get(f"{metric}_incremental")))
+
+    if original is None:
+        st.caption(f"Original topic extraction: {row.get('original_topic_structure_status', '-')}")
+    if rewritten is None:
+        st.caption(
+            f"Rewritten topic extraction: {row.get('rewritten_topic_structure_status', '-')}"
+        )
+
+
+def topic_structure_from_step(row: pd.Series, prefix: str) -> dict[str, Any] | None:
+    value = row.get(f"metadata_{prefix}_json")
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str) and value.strip():
+        try:
+            decoded = json.loads(value)
+            if isinstance(decoded, dict):
+                return decoded
+        except json.JSONDecodeError:
+            pass
+
+    fields = ("main_topic", "subtopics", "central_entities", "central_relations")
+    structure = {}
+    for field in fields:
+        value = row.get(f"metadata_{prefix}_{field}")
+        if value is None or value is pd.NA or (isinstance(value, float) and pd.isna(value)):
+            continue
+        if isinstance(value, str) and field != "main_topic":
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError:
+                pass
+        structure[field] = value
+    return structure or None
+
+
+def format_topic_items(structure: dict[str, Any] | None, field: str) -> str:
+    if structure is None:
+        return "Unavailable"
+    value = structure.get(field)
+    if not value:
+        return "—"
+    if field == "main_topic":
+        return str(value)
+    if not isinstance(value, list):
+        return str(value)
+    if field == "central_relations":
+        return "\n".join(
+            f"• {item.get('subject', '')} — {item.get('action', '')} — {item.get('object', '')}"
+            if isinstance(item, dict)
+            else f"• {item}"
+            for item in value
+        )
+    return "\n".join(f"• {item}" for item in value)
 
 
 def format_metric(value: Any) -> str:
