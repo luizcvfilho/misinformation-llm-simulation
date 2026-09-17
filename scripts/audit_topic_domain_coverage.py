@@ -73,12 +73,18 @@ def resolve_text_column(frame: pd.DataFrame, requested_column: str | None) -> st
         if requested_column not in frame.columns:
             raise ValueError(f"Text column '{requested_column}' was not found in the input.")
         return requested_column
-    for column in TEXT_COLUMN_CANDIDATES:
-        if column in frame.columns:
-            return column
-    raise ValueError(
-        "Could not infer a text column. Pass --text-column with one of the input columns."
-    )
+
+    candidate_columns = [column for column in TEXT_COLUMN_CANDIDATES if column in frame.columns]
+    if not candidate_columns:
+        raise ValueError(
+            "Could not infer a text column. Pass --text-column with one of the input columns."
+        )
+
+    character_counts = {
+        column: int(frame[column].fillna("").astype(str).str.strip().str.len().sum())
+        for column in candidate_columns
+    }
+    return max(candidate_columns, key=character_counts.__getitem__)
 
 
 def normalized_category(value: object) -> str:
@@ -193,6 +199,8 @@ def main() -> None:
         raise ValueError("'--retry-attempts' must be greater than zero.")
 
     source = pd.read_csv(args.input)
+    if "article_id" in source.columns:
+        source = source[source["article_id"].fillna("").ne("QUERY_METADATA")].copy()
     text_column = resolve_text_column(source, args.text_column)
     if args.title_column not in source.columns:
         source[args.title_column] = ""
@@ -200,8 +208,6 @@ def main() -> None:
         source[args.category_column] = ""
 
     source = source[source[text_column].fillna("").astype(str).str.strip().ne("")].copy()
-    if "article_id" in source.columns:
-        source = source[source["article_id"].fillna("").ne("QUERY_METADATA")].copy()
     source["source_category"] = source[args.category_column].map(normalized_category)
     sample = stratified_sample(source, max_rows=args.max_rows, seed=args.seed)
     limiter = MinuteRateLimiter(args.max_requests_per_minute)
