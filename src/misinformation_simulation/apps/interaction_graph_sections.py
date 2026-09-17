@@ -74,7 +74,7 @@ def _render_dataset_preview(df: pd.DataFrame | None, dataset_label: str) -> list
 
     st.caption(f"Source: `{dataset_label}`")
     preview_cols = [column for column in df.columns[:8]]
-    st.dataframe(df[preview_cols].head(8), use_container_width=True)
+    st.dataframe(df[preview_cols].head(8), width="stretch")
     return df.columns.tolist()
 
 
@@ -250,7 +250,7 @@ def _render_graph_export(graph_payload: dict[str, Any]) -> None:
         file_name="graph_config_ui.json",
         mime="application/json",
         key="download_editor_graph_json",
-        use_container_width=True,
+        width="stretch",
     )
     export_cols[1].caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
 
@@ -263,7 +263,7 @@ def _render_graph_queue() -> None:
     )
     add_cols = st.columns([3, 1])
     name = add_cols[0].text_input("Graph name", key="queued_graph_name")
-    if add_cols[1].button("Add current graph", use_container_width=True):
+    if add_cols[1].button("Add current graph", width="stretch"):
         try:
             add_graph(st.session_state.graph_queue, name, st.session_state.graph_nodes)
             st.rerun()
@@ -325,7 +325,7 @@ def _render_run_controls(
     run_button = st.button(
         "Run graph queue" if queue else "Run simulation",
         type="primary",
-        use_container_width=True,
+        width="stretch",
         disabled=active_job is not None,
     )
     if run_button:
@@ -394,7 +394,7 @@ def _render_run_monitor() -> None:
 
     if job.cancel_event.is_set():
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
-    elif st.button("Cancel simulation", type="secondary", use_container_width=True):
+    elif st.button("Cancel simulation", type="secondary", width="stretch"):
         job.cancel_event.set()
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
     if st.session_state.run_messages:
@@ -485,7 +485,7 @@ def render_results_tab() -> None:
                     "failure": bundle.get("error", ""),
                 }
             )
-        st.dataframe(pd.DataFrame(rows), use_container_width=True)
+        st.dataframe(pd.DataFrame(rows), width="stretch")
         selected_index = st.selectbox(
             "Inspect graph result",
             range(len(bundles)),
@@ -496,14 +496,14 @@ def render_results_tab() -> None:
         if action_cols[0].button(
             "Remove selected imported result",
             disabled=selected.get("source") != "imported",
-            use_container_width=True,
+            width="stretch",
         ):
             remove_imported_result(bundles, selected_index)
             st.rerun()
         if action_cols[1].button(
             "Clear imported results",
             disabled=not any(bundle.get("source") == "imported" for bundle in bundles),
-            use_container_width=True,
+            width="stretch",
         ):
             clear_imported_results(bundles)
             st.rerun()

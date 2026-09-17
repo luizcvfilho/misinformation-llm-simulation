@@ -20,16 +20,14 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
     with st.container(border=True):
         action_cols = st.columns([5, 1, 1, 1])
         action_cols[0].markdown(f"#### Node {index + 1}")
-        if action_cols[1].button(
-            "↑", key=f"up_{uid}", disabled=index == 0, use_container_width=True
-        ):
+        if action_cols[1].button("↑", key=f"up_{uid}", disabled=index == 0, width="stretch"):
             move_node(index, -1)
             st.rerun()
         if action_cols[2].button(
             "↓",
             key=f"down_{uid}",
             disabled=index == len(st.session_state.graph_nodes) - 1,
-            use_container_width=True,
+            width="stretch",
         ):
             move_node(index, 1)
             st.rerun()
@@ -37,7 +35,7 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             "Remove",
             key=f"remove_{uid}",
             disabled=len(st.session_state.graph_nodes) == 1,
-            use_container_width=True,
+            width="stretch",
         ):
             remove_node(index)
             st.rerun()
@@ -147,7 +145,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         file_name=f"{run_bundle['output_prefix']}_summary.json",
         mime="application/json",
         key="download_results_summary_json",
-        use_container_width=True,
+        width="stretch",
     )
     download_cols[1].download_button(
         "Download steps CSV",
@@ -155,7 +153,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         file_name=f"{run_bundle['output_prefix']}_steps.csv",
         mime="text/csv",
         key="download_results_steps_csv",
-        use_container_width=True,
+        width="stretch",
     )
     if run_bundle.get("graph_payload") is not None:
         download_cols[2].download_button(
@@ -166,7 +164,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
             file_name="graph_config_ui.json",
             mime="application/json",
             key="download_results_graph_json",
-            use_container_width=True,
+            width="stretch",
         )
 
     if steps_df.empty:
@@ -195,7 +193,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     "mean_contradiction_drift_vs_original",
                 ]
             ],
-            use_container_width=True,
+            width="stretch",
         )
         chart_df = node_summary_df.set_index("node_label")[
             ["mean_stdi_vs_original", "mean_stdi_incremental"]
@@ -206,7 +204,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     if news_summary_df.empty:
         st.info("No per-news summary available yet.")
     else:
-        st.dataframe(news_summary_df, use_container_width=True)
+        st.dataframe(news_summary_df, width="stretch")
         selected_news_id = st.selectbox(
             "Inspect one news item",
             news_summary_df["news_id"].tolist(),
@@ -235,7 +233,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         "rewrite_error",
                     ]
                 ],
-                use_container_width=True,
+                width="stretch",
             )
             for _, row in selected_steps.iterrows():
                 with st.expander(
@@ -280,7 +278,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     render_topic_comparison(row)
 
     st.subheader("All step records")
-    st.dataframe(steps_df, use_container_width=True)
+    st.dataframe(steps_df, width="stretch")
 
 
 def render_topic_comparison(row: pd.Series) -> None:

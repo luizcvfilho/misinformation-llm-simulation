@@ -47,7 +47,7 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
         if dataset_path_cols[1].button(
             "Browse...",
             key="browse_dataset_path",
-            use_container_width=True,
+            width="stretch",
         ):
             try:
                 selected_path = select_local_file(
@@ -101,7 +101,7 @@ def _render_graph_importer() -> None:
         if graph_path_cols[1].button(
             "Browse...",
             key="browse_graph_config_path",
-            use_container_width=True,
+            width="stretch",
         ):
             try:
                 selected_path = select_local_file(
@@ -116,7 +116,7 @@ def _render_graph_importer() -> None:
                     st.rerun()
             except Exception as exc:
                 st.error(str(exc))
-        if st.button("Load graph config", use_container_width=True):
+        if st.button("Load graph config", width="stretch"):
             try:
                 import_graph_payload(
                     load_local_graph_payload_cached(st.session_state.graph_config_path)
@@ -128,7 +128,7 @@ def _render_graph_importer() -> None:
                 st.error(str(exc))
     else:
         uploaded_graph = st.file_uploader("Upload graph JSON", type=["json"], key="graph_upload")
-        if st.button("Import uploaded graph", use_container_width=True):
+        if st.button("Import uploaded graph", width="stretch"):
             try:
                 import_graph_payload(load_uploaded_graph_payload(uploaded_graph))
                 st.session_state.current_graph_name = Path(uploaded_graph.name).stem
@@ -140,11 +140,11 @@ def _render_graph_importer() -> None:
 
 def _render_graph_actions() -> None:
     sidebar_action_cols = st.columns(2)
-    if sidebar_action_cols[0].button("Add node", use_container_width=True):
+    if sidebar_action_cols[0].button("Add node", width="stretch"):
         st.session_state.graph_nodes.append(
             create_default_node_form(len(st.session_state.graph_nodes) + 1)
         )
         st.rerun()
-    if sidebar_action_cols[1].button("Reset graph", use_container_width=True):
+    if sidebar_action_cols[1].button("Reset graph", width="stretch"):
         reset_graph()
         st.rerun()
