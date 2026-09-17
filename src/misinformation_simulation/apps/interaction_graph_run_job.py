@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
+from pathlib import Path
 from queue import Queue
 from threading import Event, Thread
 from typing import Any
@@ -56,6 +57,20 @@ def start_graph_run_job(
     return job
 
 
+def _reserve_output_directory(base_dir: Path, prefix: str) -> tuple[Path, str]:
+    base_dir.mkdir(parents=True, exist_ok=True)
+    attempt = 1
+    while True:
+        name = prefix if attempt == 1 else f"{prefix}_{attempt:02d}"
+        directory = base_dir / name
+        try:
+            directory.mkdir()
+        except FileExistsError:
+            attempt += 1
+            continue
+        return directory, name
+
+
 def _run_graph_queue(
     *,
     job: GraphRunJob,
@@ -74,14 +89,13 @@ def _run_graph_queue(
                 cancelled = True
                 break
             name = graph["name"]
-            prefix = (
-                output_prefix_for_graph(settings["output_prefix"], index, name)
-                if queue_mode
-                else settings["output_prefix"]
+            prefix = output_prefix_for_graph(
+                settings["output_prefix"], index if queue_mode else 1, name
             )
             label = f"Graph {index}/{len(graphs)}: {name}"
             job.events.put(("progress", f"{label} — starting"))
             try:
+                run_dir, prefix = _reserve_output_directory(Path(settings["output_dir"]), prefix)
                 nodes = build_simulation_nodes(graph["nodes"])
                 result = runner(
                     df=df,
@@ -98,7 +112,7 @@ def _run_graph_queue(
                     topic_drift_model=settings["topic_drift_model"],
                     topic_drift_provider=settings["topic_drift_provider"],
                     stdi_comparison_method="cluster",
-                    output_dir=settings["output_dir"],
+                    output_dir=run_dir,
                     output_prefix=prefix,
                     progress_callback=lambda message, label=label: job.events.put(
                         ("progress", f"{label}: {message}")

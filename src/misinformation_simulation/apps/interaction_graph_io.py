@@ -76,3 +76,22 @@ def select_local_file(
         root.destroy()
 
     return selected_path or None
+
+
+def select_local_directory(*, title: str) -> str | None:
+    try:
+        import tkinter as tk
+        from tkinter import filedialog
+    except Exception as exc:
+        raise RuntimeError("Could not open the local folder explorer.") from exc
+
+    root = tk.Tk()
+    root.withdraw()
+    try:
+        root.attributes("-topmost", True)
+        root.update()
+        selected_path = filedialog.askdirectory(title=title, initialdir=str(PROJECT_ROOT))
+    finally:
+        root.destroy()
+
+    return selected_path or None

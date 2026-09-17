@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
@@ -119,6 +121,7 @@ def _render_graph_importer() -> None:
                 import_graph_payload(
                     load_local_graph_payload_cached(st.session_state.graph_config_path)
                 )
+                st.session_state.current_graph_name = Path(st.session_state.graph_config_path).stem
                 st.success("Graph config loaded into the editor.")
                 st.rerun()
             except Exception as exc:
@@ -128,6 +131,7 @@ def _render_graph_importer() -> None:
         if st.button("Import uploaded graph", use_container_width=True):
             try:
                 import_graph_payload(load_uploaded_graph_payload(uploaded_graph))
+                st.session_state.current_graph_name = Path(uploaded_graph.name).stem
                 st.success("Uploaded graph config loaded into the editor.")
                 st.rerun()
             except Exception as exc:

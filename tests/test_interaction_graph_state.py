@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 from misinformation_simulation.apps import interaction_graph_state as state
@@ -24,6 +25,7 @@ def test_initialize_state_sets_defaults(monkeypatch) -> None:
     assert fake_st.session_state.graph_config_path == state.DEFAULT_GRAPH_CONFIG_PATH
     assert fake_st.session_state.graph_nodes == [{"node_id": "node_1"}]
     assert fake_st.session_state.run_bundle is None
+    assert fake_st.session_state.current_graph_name == Path(state.DEFAULT_GRAPH_CONFIG_PATH).stem
 
 
 def test_move_and_remove_node_update_session_state(monkeypatch) -> None:

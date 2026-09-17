@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from datetime import datetime
+from pathlib import Path
 from queue import Empty
 from typing import Any
 
@@ -13,10 +14,18 @@ from misinformation_simulation.apps.interaction_graph_components import (
     render_node_editor,
     render_result_bundle,
 )
+from misinformation_simulation.apps.interaction_graph_io import select_local_directory
 from misinformation_simulation.apps.interaction_graph_preview import render_graph_preview
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
+    add_graphs_from_directory,
     move_graph,
+)
+from misinformation_simulation.apps.interaction_graph_results import (
+    clear_imported_results,
+    find_saved_results,
+    load_saved_result,
+    remove_imported_result,
 )
 from misinformation_simulation.apps.interaction_graph_run_job import start_graph_run_job
 from misinformation_simulation.apps.interaction_graph_sidebar import render_sidebar
@@ -29,6 +38,8 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
+
+GRAPH_OUTPUT_LAYOUT_VERSION = 4
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -72,6 +83,11 @@ def _render_execution_settings(
     available_columns: list[str],
 ) -> dict[str, Any]:
     st.subheader("Execution settings")
+    graph_name = st.text_input(
+        "Current graph name",
+        key="current_graph_name",
+        help="Name used for this graph in the results folder and filenames.",
+    )
     default_text_column = (
         "description" if "description" in available_columns else _first_column(available_columns)
     )
@@ -121,6 +137,7 @@ def _render_execution_settings(
 
     advanced_settings = _render_advanced_settings()
     return {
+        "graph_name": graph_name,
         "text_column": text_column,
         "title_column": title_column,
         "news_id_column": news_id_column,
@@ -168,14 +185,14 @@ def _render_advanced_settings() -> dict[str, Any]:
         output_dir = st.text_input(
             "Output directory",
             value="output/interaction_graph/app_runs",
-            help="Directory where the summary JSON and step records JSONL will be saved.",
+            help="Parent directory for a named subfolder per graph run.",
         )
         output_prefix = st.text_input(
             "Output prefix",
             value=advanced_label,
             help=(
-                "Prefix used in generated result filenames, such as "
-                "<prefix>_summary.json and <prefix>_steps.jsonl."
+                "Date and time prefix for the run folder and files; "
+                "the graph name is added automatically."
             ),
         )
 
@@ -253,6 +270,34 @@ def _render_graph_queue() -> None:
         except ValueError as exc:
             st.error(str(exc))
 
+    with st.expander("Add graphs from a folder"):
+        folder_cols = st.columns([3, 1], vertical_alignment="bottom")
+        folder_cols[0].text_input(
+            "Graph folder path",
+            key="graph_queue_folder_path",
+            help="Adds every JSON graph config directly inside this folder, in filename order.",
+        )
+        if folder_cols[1].button("Browse...", key="browse_graph_queue_folder"):
+            try:
+                selected_folder = select_local_directory(title="Select folder with graph configs")
+                if selected_folder:
+                    st.session_state.graph_queue_folder_path = selected_folder
+                    st.rerun()
+            except Exception as exc:
+                st.error(str(exc))
+        if st.button("Add folder to queue", disabled=st.session_state.get("run_job") is not None):
+            try:
+                added, errors = add_graphs_from_directory(
+                    st.session_state.graph_queue, st.session_state.graph_queue_folder_path
+                )
+            except (OSError, ValueError) as exc:
+                st.error(str(exc))
+            else:
+                if added:
+                    st.success(f"Added {len(added)} graph(s): {', '.join(added)}")
+                for error in errors:
+                    st.error(error)
+
     for index, graph in enumerate(st.session_state.graph_queue):
         cols = st.columns([5, 1, 1, 1])
         cols[0].write(f"{index + 1}. **{graph['name']}** ({len(graph['nodes'])} nodes)")
@@ -287,7 +332,12 @@ def _render_run_controls(
         graphs = (
             deepcopy(queue)
             if queue
-            else [{"name": "Current graph", "nodes": deepcopy(st.session_state.graph_nodes)}]
+            else [
+                {
+                    "name": settings["graph_name"].strip(),
+                    "nodes": deepcopy(st.session_state.graph_nodes),
+                }
+            ]
         )
         validation_errors = _validate_run_inputs(df, settings, graphs)
         if validation_errors:
@@ -364,6 +414,8 @@ def _validate_run_inputs(
     ]
     if df is None:
         validation_errors.append("Load a valid dataset before running the simulation.")
+    if not st.session_state.graph_queue and not settings["graph_name"].strip():
+        validation_errors.append("Enter a name for the current graph.")
     if not settings["text_column"]:
         validation_errors.append("Select a text column before running the simulation.")
     if not settings["title_column"]:
@@ -377,9 +429,45 @@ def _validate_run_inputs(
 
 def render_results_tab() -> None:
     st.subheader("Simulation outputs")
+    with st.expander("Import a saved simulation"):
+        output_dir = Path("output/interaction_graph/app_runs")
+        saved_results = find_saved_results(output_dir)
+        if saved_results:
+            selected_path = st.selectbox(
+                "Saved results",
+                saved_results,
+                format_func=lambda path: str(path.relative_to(output_dir)),
+                key="saved_result_selection",
+            )
+        else:
+            selected_path = None
+            st.caption("No saved simulations found in the default output directory.")
+        custom_path = st.text_input(
+            "Or enter a summary JSON path",
+            key="saved_result_path",
+            help="The matching _steps.jsonl file must be in the same folder.",
+        )
+        if st.button("Import result", disabled=not (custom_path.strip() or selected_path)):
+            try:
+                path = Path(custom_path.strip()) if custom_path.strip() else selected_path
+                if path is None:
+                    raise ValueError("Select a saved result.")
+                bundle = load_saved_result(path)
+            except (OSError, ValueError, json.JSONDecodeError, KeyError) as exc:
+                st.error(f"Could not import result: {exc}")
+            else:
+                existing = st.session_state.run_bundles
+                existing[:] = [
+                    item
+                    for item in existing
+                    if item.get("source") != "imported"
+                    or item.get("summary_path") != bundle["summary_path"]
+                ]
+                existing.append(bundle)
+                st.success(f"Imported {bundle['output_prefix']}.")
     bundles = st.session_state.run_bundles
     if not bundles:
-        st.info("Run the simulation from the Configuration tab to populate this dashboard.")
+        st.info("Run a simulation or import a saved result to populate this dashboard.")
     else:
         rows = []
         for index, bundle in enumerate(bundles, start=1):
@@ -389,6 +477,7 @@ def render_results_tab() -> None:
                     "order": index,
                     "graph": bundle["name"],
                     "status": bundle["status"],
+                    "source": bundle.get("source", "current run"),
                     "rows": summary.get("rows_processed"),
                     "steps": summary.get("steps_total"),
                     "errors": summary.get("steps_error"),
@@ -403,6 +492,22 @@ def render_results_tab() -> None:
             format_func=lambda index: f"{index + 1}. {bundles[index]['name']}",
         )
         selected = bundles[selected_index]
+        action_cols = st.columns(2)
+        if action_cols[0].button(
+            "Remove selected imported result",
+            disabled=selected.get("source") != "imported",
+            use_container_width=True,
+        ):
+            remove_imported_result(bundles, selected_index)
+            st.rerun()
+        if action_cols[1].button(
+            "Clear imported results",
+            disabled=not any(bundle.get("source") == "imported" for bundle in bundles),
+            use_container_width=True,
+        ):
+            clear_imported_results(bundles)
+            st.rerun()
+        st.caption("Removing imported results from this view does not delete saved files.")
         if selected["status"] == "failed":
             st.error(selected["error"])
         else:

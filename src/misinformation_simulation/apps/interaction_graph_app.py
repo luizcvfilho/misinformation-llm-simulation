@@ -16,9 +16,13 @@ if str(SRC_ROOT) not in sys.path:
 load_dotenv(PROJECT_ROOT / ".env")
 
 from misinformation_simulation import simulation  # noqa: E402
-from misinformation_simulation.apps import interaction_graph_sections  # noqa: E402
-from misinformation_simulation.apps.interaction_graph_state import (  # noqa: E402
-    initialize_state,
+from misinformation_simulation.apps import (  # noqa: E402
+    interaction_graph_io,
+    interaction_graph_queue,
+    interaction_graph_run_job,
+    interaction_graph_sections,
+    interaction_graph_sidebar,
+    interaction_graph_state,
 )
 from misinformation_simulation.simulation import graph as simulation_graph  # noqa: E402
 
@@ -32,7 +36,12 @@ def _refresh_graph_backend_if_stale() -> None:
         if not required_parameters.issubset(inspect.signature(current_runner).parameters):
             raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
         simulation.run_news_interaction_graph = current_runner
-    if not hasattr(interaction_graph_sections, "_render_run_monitor"):
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 4:
+        importlib.reload(interaction_graph_io)
+        importlib.reload(interaction_graph_state)
+        importlib.reload(interaction_graph_queue)
+        importlib.reload(interaction_graph_run_job)
+        importlib.reload(interaction_graph_sidebar)
         importlib.reload(interaction_graph_sections)
     interaction_graph_sections.run_news_interaction_graph = current_runner
 
@@ -44,7 +53,7 @@ def main() -> None:
         page_icon="",
         layout="wide",
     )
-    initialize_state()
+    interaction_graph_state.initialize_state()
 
     st.title("Interaction Graph Studio")
     st.caption(

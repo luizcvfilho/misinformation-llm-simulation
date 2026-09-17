@@ -157,14 +157,21 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         key="download_results_steps_csv",
         use_container_width=True,
     )
-    download_cols[2].download_button(
-        "Download graph JSON",
-        data=json.dumps(run_bundle["graph_payload"], ensure_ascii=False, indent=2).encode("utf-8"),
-        file_name="graph_config_ui.json",
-        mime="application/json",
-        key="download_results_graph_json",
-        use_container_width=True,
-    )
+    if run_bundle.get("graph_payload") is not None:
+        download_cols[2].download_button(
+            "Download graph JSON",
+            data=json.dumps(run_bundle["graph_payload"], ensure_ascii=False, indent=2).encode(
+                "utf-8"
+            ),
+            file_name="graph_config_ui.json",
+            mime="application/json",
+            key="download_results_graph_json",
+            use_container_width=True,
+        )
+
+    if steps_df.empty:
+        st.info("This simulation has no completed step records.")
+        return
 
     st.subheader("Node performance")
     if node_summary_df.empty:

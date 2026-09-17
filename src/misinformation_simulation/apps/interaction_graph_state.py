@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import streamlit as st
@@ -32,6 +33,8 @@ def initialize_state() -> None:
         st.session_state.graph_config_path = DEFAULT_GRAPH_CONFIG_PATH
     if "graph_nodes" not in st.session_state:
         st.session_state.graph_nodes = load_initial_graph_nodes()
+    if "current_graph_name" not in st.session_state:
+        st.session_state.current_graph_name = Path(DEFAULT_GRAPH_CONFIG_PATH).stem
     if "run_bundle" not in st.session_state:
         st.session_state.run_bundle = None
     if "graph_queue" not in st.session_state:
