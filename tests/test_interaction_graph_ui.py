@@ -46,6 +46,27 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
     assert simulation.run_news_interaction_graph is updated_runner
 
 
+def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
+    def current_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+        return df
+
+    def updated_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+        return df
+
+    monkeypatch.setattr(interaction_graph_sections, "run_news_interaction_graph", current_runner)
+    monkeypatch.setattr(interaction_graph_app.simulation_graph, "GRAPH_STEP_SCHEMA_VERSION", 1)
+    monkeypatch.setattr(
+        interaction_graph_app.importlib,
+        "reload",
+        lambda _module: SimpleNamespace(run_news_interaction_graph=updated_runner),
+    )
+
+    interaction_graph_app._refresh_graph_backend_if_stale()
+
+    assert interaction_graph_sections.run_news_interaction_graph is updated_runner
+    assert simulation.run_news_interaction_graph is updated_runner
+
+
 def test_build_simulation_nodes_resolves_preset_personality() -> None:
     node_form = create_default_node_form(1)
 

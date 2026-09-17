@@ -39,11 +39,6 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
     dataset_label = ""
     if dataset_mode == "Project file":
         dataset_path_cols = st.columns([3, 1], vertical_alignment="bottom")
-        dataset_path_cols[0].text_input(
-            "Dataset path",
-            key="dataset_path",
-            help="CSV, JSON, or JSONL file with the news rows used as simulation input.",
-        )
         if dataset_path_cols[1].button(
             "Browse...",
             key="browse_dataset_path",
@@ -64,6 +59,11 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
                     st.rerun()
             except Exception as exc:
                 st.error(str(exc))
+        dataset_path_cols[0].text_input(
+            "Dataset path",
+            key="dataset_path",
+            help="CSV, JSON, or JSONL file with the news rows used as simulation input.",
+        )
         dataset_label = st.session_state.dataset_path
         try:
             df = load_local_dataframe_cached(dataset_label)
@@ -93,11 +93,6 @@ def _render_graph_importer() -> None:
     graph_mode = st.radio("Graph source", ["Project file", "Upload"], horizontal=True)
     if graph_mode == "Project file":
         graph_path_cols = st.columns([3, 1], vertical_alignment="bottom")
-        graph_path_cols[0].text_input(
-            "Graph config path",
-            key="graph_config_path",
-            help="JSON file with nodes, edges, and optional start_node_id for the graph.",
-        )
         if graph_path_cols[1].button(
             "Browse...",
             key="browse_graph_config_path",
@@ -116,6 +111,11 @@ def _render_graph_importer() -> None:
                     st.rerun()
             except Exception as exc:
                 st.error(str(exc))
+        graph_path_cols[0].text_input(
+            "Graph config path",
+            key="graph_config_path",
+            help="JSON file with nodes, edges, and optional start_node_id for the graph.",
+        )
         if st.button("Load graph config", width="stretch"):
             try:
                 import_graph_payload(

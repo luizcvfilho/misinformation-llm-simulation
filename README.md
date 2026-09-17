@@ -504,6 +504,7 @@ The UI lets you:
 - add snapshots of multiple graphs to a queue, reorder them, and run them sequentially without further input
 - select predefined personalities or write custom personality prompts
 - inspect each graph's status, summary, per-node metrics, and per-news outputs
+- compare success rates and drift metrics by NewsData `category` across queued graphs and download the comparison as CSV
 - compare extracted main topics, subtopics, entities, and relations for the original and rewritten
   text at each node, alongside the drift score for each category
 
@@ -516,7 +517,11 @@ example, `app_runs/simulation_ui_20260917_123456_01_investigative_skeptic/`). A 
 uses the editable **Current graph name**. Repeating a run with the same name and timestamp adds
 a numeric suffix so previous results are preserved. If one graph fails, the queue records the
 error and continues with the next graph. The Results tab lists every graph and lets you inspect
-its output.
+its output. When the input has a `category` column, every step record saves its original
+category value as `metadata_category`; the News category comparison in Results separates
+semicolon-delimited labels such as `politics; top`. An article contributes to each of its
+labels, so category counts overlap. Saved runs can be imported for the same comparison;
+older step files without `metadata_category` need their original category data restored or a new run.
 
 Each graph in the queue is a single connected chain of nodes, as required by the backend.
 

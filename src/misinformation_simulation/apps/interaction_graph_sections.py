@@ -10,6 +10,9 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.apps.interaction_graph_categories import (
+    build_category_comparison_dataframe,
+)
 from misinformation_simulation.apps.interaction_graph_components import (
     render_node_editor,
     render_result_bundle,
@@ -39,7 +42,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 4
+GRAPH_OUTPUT_LAYOUT_VERSION = 7
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -272,11 +275,6 @@ def _render_graph_queue() -> None:
 
     with st.expander("Add graphs from a folder"):
         folder_cols = st.columns([3, 1], vertical_alignment="bottom")
-        folder_cols[0].text_input(
-            "Graph folder path",
-            key="graph_queue_folder_path",
-            help="Adds every JSON graph config directly inside this folder, in filename order.",
-        )
         if folder_cols[1].button("Browse...", key="browse_graph_queue_folder"):
             try:
                 selected_folder = select_local_directory(title="Select folder with graph configs")
@@ -285,6 +283,11 @@ def _render_graph_queue() -> None:
                     st.rerun()
             except Exception as exc:
                 st.error(str(exc))
+        folder_cols[0].text_input(
+            "Graph folder path",
+            key="graph_queue_folder_path",
+            help="Adds every JSON graph config directly inside this folder, in filename order.",
+        )
         if st.button("Add folder to queue", disabled=st.session_state.get("run_job") is not None):
             try:
                 added, errors = add_graphs_from_directory(
@@ -469,6 +472,7 @@ def render_results_tab() -> None:
     if not bundles:
         st.info("Run a simulation or import a saved result to populate this dashboard.")
     else:
+        _refresh_category_data_from_saved_results(bundles)
         rows = []
         for index, bundle in enumerate(bundles, start=1):
             summary = bundle.get("summary", {})
@@ -486,6 +490,7 @@ def render_results_tab() -> None:
                 }
             )
         st.dataframe(pd.DataFrame(rows), width="stretch")
+        _render_category_comparison(bundles)
         selected_index = st.selectbox(
             "Inspect graph result",
             range(len(bundles)),
@@ -514,6 +519,132 @@ def render_results_tab() -> None:
             if selected["status"] == "cancelled":
                 st.warning("Simulation cancelled; showing completed steps.")
             render_result_bundle(selected)
+
+
+def _refresh_category_data_from_saved_results(bundles: list[dict[str, Any]]) -> None:
+    for bundle in bundles:
+        steps_df = bundle.get("steps_df")
+        if (
+            not isinstance(steps_df, pd.DataFrame)
+            or steps_df.empty
+            or "metadata_category" in steps_df.columns
+            or bundle.get("_category_refresh_attempted")
+        ):
+            continue
+        bundle["_category_refresh_attempted"] = True
+        summary_path = bundle.get("summary_path")
+        if not summary_path:
+            continue
+        try:
+            saved_bundle = load_saved_result(Path(summary_path))
+        except (OSError, ValueError, json.JSONDecodeError, KeyError):
+            continue
+        if "metadata_category" in saved_bundle["steps_df"].columns:
+            bundle["steps_df"] = saved_bundle["steps_df"]
+            bundle["news_summary_df"] = saved_bundle["news_summary_df"]
+
+
+def _render_category_comparison(bundles: list[dict[str, Any]]) -> None:
+    st.subheader("News category comparison")
+    comparison = build_category_comparison_dataframe(bundles)
+    if comparison.empty:
+        st.info(
+            "Category analysis is available for runs made with a dataset containing 'category'."
+        )
+        return
+
+    st.caption(
+        "Categories come from the input dataset. NewsData may assign several categories to one "
+        "article, so category counts overlap. Runs without saved category data are omitted. "
+        "Metric means use available step scores."
+    )
+    st.download_button(
+        "Download category comparison CSV",
+        data=comparison.to_csv(index=False).encode("utf-8"),
+        file_name="graph_category_comparison.csv",
+        mime="text/csv",
+    )
+    categories = sorted(comparison["category"].unique())
+    selected_categories = st.multiselect(
+        "News categories",
+        categories,
+        default=categories,
+        key="category_comparison_categories",
+    )
+    if not selected_categories:
+        st.info("Select at least one category to compare.")
+        return
+
+    filtered = comparison[comparison["category"].isin(selected_categories)].copy()
+    step_options = ["Final step of each graph", *sorted(filtered["step_index"].unique())]
+    selected_step = st.selectbox("Graph step", step_options, key="category_comparison_step")
+    if selected_step == "Final step of each graph":
+        filtered = filtered[
+            filtered["step_index"] == filtered.groupby("run")["step_index"].transform("max")
+        ]
+    else:
+        filtered = filtered[filtered["step_index"] == selected_step]
+
+    metric_labels = {
+        "success_rate": "Success rate",
+        "mean_stdi_vs_original": "Mean STDI vs original",
+        "mean_stdi_incremental": "Mean incremental STDI",
+        "mean_stdi_cumulative": "Mean cumulative STDI",
+        "mean_vad_drift_vs_original": "Mean VAD drift vs original",
+        "mean_contradiction_drift_vs_original": "Mean contradiction drift vs original",
+    }
+    selected_metric = st.selectbox(
+        "Comparison metric",
+        list(metric_labels),
+        format_func=metric_labels.get,
+        key="category_comparison_metric",
+    )
+    chart_data = (
+        filtered.groupby(["category", "run"], as_index=False)[selected_metric]
+        .mean()
+        .dropna(subset=[selected_metric])
+    )
+    if chart_data.empty:
+        st.info("No numeric values are available for this metric and step.")
+    else:
+        if (chart_data[selected_metric] == 0).all():
+            st.caption("All compared values are zero for this metric.")
+        scale = {"domain": [0, 1]} if selected_metric == "success_rate" else {"zero": True}
+        st.vega_lite_chart(
+            chart_data,
+            spec={
+                "mark": "bar",
+                "encoding": {
+                    "x": {"field": "category", "type": "nominal", "title": "News category"},
+                    "xOffset": {"field": "run", "type": "nominal"},
+                    "y": {
+                        "field": selected_metric,
+                        "type": "quantitative",
+                        "title": metric_labels[selected_metric],
+                        "scale": scale,
+                    },
+                    "color": {
+                        "field": "run",
+                        "type": "nominal",
+                        "title": "Graph",
+                        "legend": {"orient": "top"},
+                    },
+                    "tooltip": [
+                        {"field": "category", "type": "nominal", "title": "Category"},
+                        {"field": "run", "type": "nominal", "title": "Graph"},
+                        {
+                            "field": selected_metric,
+                            "type": "quantitative",
+                            "title": metric_labels[selected_metric],
+                            "format": ".3f",
+                        },
+                    ],
+                },
+            },
+            width="stretch",
+            height=320,
+        )
+    st.dataframe(filtered, width="stretch")
 
 
 def _first_column(available_columns: list[str]) -> str:

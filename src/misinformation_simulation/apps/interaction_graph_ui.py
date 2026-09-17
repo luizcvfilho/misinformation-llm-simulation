@@ -170,10 +170,13 @@ def build_news_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
     if steps_df.empty:
         return pd.DataFrame()
 
+    aggregations = {"title": ("metadata_title", "first")}
+    if "metadata_category" in steps_df.columns:
+        aggregations["category"] = ("metadata_category", "first")
     grouped = (
         steps_df.groupby("news_id", dropna=False)
         .agg(
-            title=("metadata_title", "first"),
+            **aggregations,
             steps=("rewrite_status", "size"),
             successes=("rewrite_status", lambda values: int((values == "success").sum())),
             errors=("rewrite_status", lambda values: int((values == "error").sum())),

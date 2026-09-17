@@ -201,6 +201,7 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
                 "title": "Title",
                 "description": "Original text",
                 "language": "en",
+                "category": "politics; top",
             }
         ]
     )
@@ -231,6 +232,7 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
     assert json.loads(result.summary_path.read_text(encoding="utf-8"))["steps_success"] == 1
     persisted_step = json.loads(result.steps_path.read_text(encoding="utf-8").strip())
     assert persisted_step["metadata_title"] == "Title"
+    assert persisted_step["metadata_category"] == "politics; top"
     assert persisted_step["metadata_original_vad_valence"] == 3.0
     assert persisted_step["metadata_rewritten_vad_arousal"] == 4.0
     assert json.loads(persisted_step["metadata_original_json"])["main_topic"] == "original"
@@ -242,7 +244,7 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
 
 def test_run_news_interaction_graph_blocks_steps_when_original_text_fails(monkeypatch) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("gemini", object()))
-    df = pd.DataFrame([{"title": "Title", "description": ""}])
+    df = pd.DataFrame([{"title": "Title", "description": "", "category": "science"}])
 
     result = run_news_interaction_graph(
         stdi_comparison_method="lexical",
@@ -254,6 +256,7 @@ def test_run_news_interaction_graph_blocks_steps_when_original_text_fails(monkey
 
     assert result.summary["steps_success"] == 0
     assert result.step_results[0].rewrite_status == "blocked"
+    assert result.step_results[0].to_record()["metadata_category"] == "science"
     assert result.step_results[0].original_topic_structure_status == "error"
 
 

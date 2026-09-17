@@ -186,6 +186,9 @@ def _record_stdi_metrics(
         setattr(step, f"{component}_{suffix}", metrics[component])
 
 
+GRAPH_STEP_SCHEMA_VERSION = 2
+
+
 def run_news_interaction_graph(
     df: pd.DataFrame,
     *,
@@ -280,6 +283,9 @@ def run_news_interaction_graph(
         title = ""
         if title_column in row.index and pd.notna(row[title_column]):
             title = str(row[title_column]).strip()
+        category = ""
+        if "category" in row.index and pd.notna(row["category"]):
+            category = str(row["category"]).strip()
         _emit_progress(
             progress_callback,
             f"[{row_position}/{total_rows}] Preparing news '{news_id}' ({title or 'Untitled'}).",
@@ -367,6 +373,7 @@ def run_news_interaction_graph(
                         ),
                         metadata={
                             "title": title,
+                            "category": category,
                             **(
                                 flatten_topic_structure(original_structure, prefix="original")
                                 if original_structure_ready
@@ -426,6 +433,7 @@ def run_news_interaction_graph(
                 original_vad_status="success",
                 metadata={
                     "title": title,
+                    "category": category,
                     "source_text_column": source_column,
                     **flatten_topic_structure(original_structure, prefix="original"),
                 },
