@@ -9,9 +9,11 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_node_summary_dataframe,
     build_simulation_nodes,
     create_default_node_form,
+    detect_matching_personality_preset,
+    normalize_node_form,
     steps_to_dataframe,
 )
-from misinformation_simulation.enums import Provider
+from misinformation_simulation.enums import DefaultPersonality, Provider
 from misinformation_simulation.simulation.graph import (
     SimulationEdge,
     SimulationNode,
@@ -27,6 +29,25 @@ def test_build_simulation_nodes_resolves_preset_personality() -> None:
     assert len(nodes) == 1
     assert nodes[0].node_id == "node_1"
     assert nodes[0].personality.startswith("You are")
+
+
+@pytest.mark.parametrize(
+    "preset",
+    [DefaultPersonality.EmotionalAmplifier, DefaultPersonality.ConciliatoryCommunicator],
+)
+def test_new_personality_presets_round_trip_through_graph_editor(
+    preset: DefaultPersonality,
+) -> None:
+    node_form = create_default_node_form(1)
+    node_form["personality_preset"] = preset.name
+
+    node = build_simulation_nodes([node_form])[0]
+    restored_form = normalize_node_form(node, 1)
+
+    assert node.personality == preset.value
+    assert detect_matching_personality_preset(node.personality) == preset.name
+    assert restored_form["personality_mode"] == "preset"
+    assert restored_form["personality_preset"] == preset.name
 
 
 def test_build_linear_graph_payload_creates_chain_edges() -> None:
