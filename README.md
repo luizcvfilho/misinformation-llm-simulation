@@ -501,10 +501,18 @@ The UI lets you:
 - load a dataset from the project or upload a CSV/JSON/JSONL file
 - import an existing graph JSON or define the graph directly in the browser
 - add, remove, and reorder nodes in the chain
+- add snapshots of multiple graphs to a queue, reorder them, and run them sequentially without further input
 - select predefined personalities or write custom personality prompts
-- run the simulation and inspect summaries, per-node metrics, and per-news outputs
+- inspect each graph's status, summary, per-node metrics, and per-news outputs
 
-Note: the current backend still expects a single connected chain of nodes, so the UI editor follows that same constraint.
+To queue graphs, enter a name and choose **Add current graph**. You can then edit the graph or
+import another JSON config and add it too. **Run graph queue** processes each saved graph against
+the selected dataset using the execution settings shown in the UI. Each graph writes separate
+files using the output prefix plus its queue position and name. If one graph fails, the queue
+records the error and continues with the next graph. The Results tab lists every graph and lets
+you inspect its output.
+
+Each graph in the queue is a single connected chain of nodes, as required by the backend.
 
 Each graph step computes VAD (valence, arousal, and dominance) for the source article and
 the rewritten text using the project's default `RobroKools/vad-bert` model. The STDI

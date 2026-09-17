@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from datetime import datetime
 from typing import Any
 
@@ -12,6 +13,11 @@ from misinformation_simulation.apps.interaction_graph_components import (
     render_result_bundle,
 )
 from misinformation_simulation.apps.interaction_graph_preview import render_graph_preview
+from misinformation_simulation.apps.interaction_graph_queue import (
+    add_graph,
+    move_graph,
+    output_prefix_for_graph,
+)
 from misinformation_simulation.apps.interaction_graph_sidebar import render_sidebar
 from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
@@ -48,7 +54,8 @@ def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> Non
 
     graph_payload = build_linear_graph_payload(st.session_state.graph_nodes)
     _render_graph_export(graph_payload)
-    _render_run_controls(df, settings, graph_payload)
+    _render_graph_queue()
+    _render_run_controls(df, settings)
 
 
 def _render_dataset_preview(df: pd.DataFrame | None, dataset_label: str) -> list[str]:
@@ -230,19 +237,61 @@ def _render_graph_export(graph_payload: dict[str, Any]) -> None:
     export_cols[1].caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
 
 
+def _render_graph_queue() -> None:
+    st.subheader("Graph queue")
+    st.caption(
+        "Add a copy of the current graph, then edit or import another graph and add it. "
+        "The queued graphs run in the order shown below."
+    )
+    add_cols = st.columns([3, 1])
+    name = add_cols[0].text_input("Graph name", key="queued_graph_name")
+    if add_cols[1].button("Add current graph", use_container_width=True):
+        try:
+            add_graph(st.session_state.graph_queue, name, st.session_state.graph_nodes)
+            st.rerun()
+        except ValueError as exc:
+            st.error(str(exc))
+
+    for index, graph in enumerate(st.session_state.graph_queue):
+        cols = st.columns([5, 1, 1, 1])
+        cols[0].write(f"{index + 1}. **{graph['name']}** ({len(graph['nodes'])} nodes)")
+        if cols[1].button("↑", key=f"queue_up_{graph['id']}", disabled=index == 0):
+            move_graph(st.session_state.graph_queue, index, -1)
+            st.rerun()
+        if cols[2].button(
+            "↓",
+            key=f"queue_down_{graph['id']}",
+            disabled=index == len(st.session_state.graph_queue) - 1,
+        ):
+            move_graph(st.session_state.graph_queue, index, 1)
+            st.rerun()
+        if cols[3].button("Remove", key=f"queue_remove_{graph['id']}"):
+            st.session_state.graph_queue.pop(index)
+            st.rerun()
+
+
 def _render_run_controls(
     df: pd.DataFrame | None,
     settings: dict[str, Any],
-    graph_payload: dict[str, Any],
 ) -> None:
     run_placeholder = st.empty()
     log_placeholder = st.empty()
-    run_button = st.button("Run simulation", type="primary", use_container_width=True)
+    queue = st.session_state.graph_queue
+    run_button = st.button(
+        "Run graph queue" if queue else "Run simulation",
+        type="primary",
+        use_container_width=True,
+    )
 
     if not run_button:
         return
 
-    validation_errors = _validate_run_inputs(df, settings)
+    graphs = (
+        deepcopy(queue)
+        if queue
+        else [{"name": "Current graph", "nodes": deepcopy(st.session_state.graph_nodes)}]
+    )
+    validation_errors = _validate_run_inputs(df, settings, graphs)
     if validation_errors:
         for error in validation_errors:
             st.error(error)
@@ -255,47 +304,90 @@ def _render_run_controls(
         run_placeholder.info(message)
         log_placeholder.code("\n".join(progress_messages[-20:]), language="text")
 
-    try:
-        nodes = build_simulation_nodes(st.session_state.graph_nodes)
-        result = run_news_interaction_graph(
-            df=df,
-            nodes=nodes,
-            start_node_id=nodes[0].node_id,
-            text_column=settings["text_column"],
-            title_column=settings["title_column"],
-            news_id_column=settings["news_id_column"] or None,
-            max_rows=int(settings["max_rows"]),
-            sleep_seconds=float(settings["sleep_seconds"]),
-            max_requests_per_minute=_normalize_rate_limit(int(settings["max_requests_per_minute"])),
-            retry_attempts=int(settings["retry_attempts"]),
-            allow_title_fallback=settings["allow_title_fallback"],
-            topic_drift_model=settings["topic_drift_model"],
-            topic_drift_provider=settings["topic_drift_provider"],
-            output_dir=settings["output_dir"],
-            output_prefix=settings["output_prefix"],
-            progress_callback=progress_callback,
+    st.session_state.run_bundles = []
+    st.session_state.run_bundle = None
+    for index, graph in enumerate(graphs, start=1):
+        name = graph["name"]
+        prefix = (
+            output_prefix_for_graph(settings["output_prefix"], index, name)
+            if queue
+            else settings["output_prefix"]
         )
-        steps_df = steps_to_dataframe(result.step_results)
-        st.session_state.run_bundle = {
-            "summary": result.summary,
-            "summary_path": str(result.summary_path) if result.summary_path is not None else None,
-            "steps_path": str(result.steps_path) if result.steps_path is not None else None,
-            "steps_df": steps_df,
-            "node_summary_df": build_node_summary_dataframe(steps_df),
-            "news_summary_df": build_news_summary_dataframe(steps_df),
-            "output_prefix": settings["output_prefix"],
-            "graph_payload": graph_payload,
-        }
-        run_placeholder.success("Simulation finished. Open the Results tab to inspect the outputs.")
-    except Exception as exc:
-        run_placeholder.error(f"Simulation failed: {exc}")
+        progress_callback(f"Graph {index}/{len(graphs)}: {name} — starting")
+        try:
+            nodes = build_simulation_nodes(graph["nodes"])
+            result = run_news_interaction_graph(
+                df=df,
+                nodes=nodes,
+                start_node_id=nodes[0].node_id,
+                text_column=settings["text_column"],
+                title_column=settings["title_column"],
+                news_id_column=settings["news_id_column"] or None,
+                max_rows=int(settings["max_rows"]),
+                sleep_seconds=float(settings["sleep_seconds"]),
+                max_requests_per_minute=_normalize_rate_limit(
+                    int(settings["max_requests_per_minute"])
+                ),
+                retry_attempts=int(settings["retry_attempts"]),
+                allow_title_fallback=settings["allow_title_fallback"],
+                topic_drift_model=settings["topic_drift_model"],
+                topic_drift_provider=settings["topic_drift_provider"],
+                output_dir=settings["output_dir"],
+                output_prefix=prefix,
+                progress_callback=lambda message, graph_index=index, graph_name=name: (
+                    progress_callback(
+                        f"Graph {graph_index}/{len(graphs)} ({graph_name}): {message}"
+                    )
+                ),
+            )
+            steps_df = steps_to_dataframe(result.step_results)
+            bundle = {
+                "name": name,
+                "status": "completed",
+                "summary": result.summary,
+                "summary_path": str(result.summary_path)
+                if result.summary_path is not None
+                else None,
+                "steps_path": str(result.steps_path) if result.steps_path is not None else None,
+                "steps_df": steps_df,
+                "node_summary_df": build_node_summary_dataframe(steps_df),
+                "news_summary_df": build_news_summary_dataframe(steps_df),
+                "output_prefix": prefix,
+                "graph_payload": build_linear_graph_payload(graph["nodes"]),
+            }
+            st.session_state.run_bundle = bundle
+            st.session_state.run_bundles.append(bundle)
+            progress_callback(f"Graph {index}/{len(graphs)}: {name} — finished")
+        except Exception as exc:
+            st.session_state.run_bundles.append(
+                {
+                    "name": name,
+                    "status": "failed",
+                    "error": str(exc),
+                    "output_prefix": prefix,
+                }
+            )
+            progress_callback(f"Graph {index}/{len(graphs)}: {name} — failed: {exc}")
+
+    completed = sum(bundle["status"] == "completed" for bundle in st.session_state.run_bundles)
+    failed = len(graphs) - completed
+    message = f"Queue finished: {completed} completed, {failed} failed. Open the Results tab."
+    if failed:
+        run_placeholder.warning(message)
+    else:
+        run_placeholder.success(message)
 
 
 def _validate_run_inputs(
     df: pd.DataFrame | None,
     settings: dict[str, Any],
+    graphs: list[dict[str, Any]],
 ) -> list[str]:
-    validation_errors = validate_node_forms(st.session_state.graph_nodes)
+    validation_errors = [
+        f"Graph {index} ({graph['name']}): {error}"
+        for index, graph in enumerate(graphs, start=1)
+        for error in validate_node_forms(graph["nodes"])
+    ]
     if df is None:
         validation_errors.append("Load a valid dataset before running the simulation.")
     if not settings["text_column"]:
@@ -304,15 +396,43 @@ def _validate_run_inputs(
         validation_errors.append("Select a title column before running the simulation.")
     if not settings["topic_drift_model"].strip():
         validation_errors.append("Select or enter a topic drift model before running.")
+    if not settings["output_prefix"].strip():
+        validation_errors.append("Enter an output prefix before running.")
     return validation_errors
 
 
 def render_results_tab() -> None:
     st.subheader("Simulation outputs")
-    if st.session_state.run_bundle is None:
+    bundles = st.session_state.run_bundles
+    if not bundles:
         st.info("Run the simulation from the Configuration tab to populate this dashboard.")
     else:
-        render_result_bundle(st.session_state.run_bundle)
+        rows = []
+        for index, bundle in enumerate(bundles, start=1):
+            summary = bundle.get("summary", {})
+            rows.append(
+                {
+                    "order": index,
+                    "graph": bundle["name"],
+                    "status": bundle["status"],
+                    "rows": summary.get("rows_processed"),
+                    "steps": summary.get("steps_total"),
+                    "errors": summary.get("steps_error"),
+                    "output_prefix": bundle["output_prefix"],
+                    "failure": bundle.get("error", ""),
+                }
+            )
+        st.dataframe(pd.DataFrame(rows), use_container_width=True)
+        selected_index = st.selectbox(
+            "Inspect graph result",
+            range(len(bundles)),
+            format_func=lambda index: f"{index + 1}. {bundles[index]['name']}",
+        )
+        selected = bundles[selected_index]
+        if selected["status"] == "failed":
+            st.error(selected["error"])
+        else:
+            render_result_bundle(selected)
 
 
 def _first_column(available_columns: list[str]) -> str:
