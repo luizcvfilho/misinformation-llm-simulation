@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
+from misinformation_simulation import simulation
+from misinformation_simulation.apps import interaction_graph_app, interaction_graph_sections
 from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
 from misinformation_simulation.apps.interaction_graph_ui import (
     build_linear_graph_payload,
@@ -19,6 +23,27 @@ from misinformation_simulation.simulation.graph import (
     SimulationNode,
     SimulationStepResult,
 )
+
+
+def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch) -> None:
+    def legacy_runner(df):
+        return df
+
+    def updated_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+        return df, stdi_comparison_method
+
+    monkeypatch.setattr(interaction_graph_sections, "run_news_interaction_graph", legacy_runner)
+    monkeypatch.setattr(simulation, "run_news_interaction_graph", legacy_runner)
+    monkeypatch.setattr(
+        interaction_graph_app.importlib,
+        "reload",
+        lambda _module: SimpleNamespace(run_news_interaction_graph=updated_runner),
+    )
+
+    interaction_graph_app._refresh_graph_backend_if_stale()
+
+    assert interaction_graph_sections.run_news_interaction_graph is updated_runner
+    assert simulation.run_news_interaction_graph is updated_runner
 
 
 def test_build_simulation_nodes_resolves_preset_personality() -> None:

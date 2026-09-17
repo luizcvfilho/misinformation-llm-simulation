@@ -45,6 +45,15 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--allow-title-fallback", action="store_true")
     parser.add_argument("--topic-drift-model", default=DEFAULT_LLM_MODEL.value)
     parser.add_argument("--topic-drift-provider", default=DEFAULT_LLM_PROVIDER.value)
+    parser.add_argument(
+        "--stdi-comparison-method",
+        choices=("cluster", "lexical"),
+        default="cluster",
+    )
+    parser.add_argument(
+        "--stdi-embedding-model",
+        default="sentence-transformers/all-MiniLM-L6-v2",
+    )
     parser.add_argument("--output-dir", default="output/interaction_graph")
     parser.add_argument("--output-prefix", default="simulation")
     parser.add_argument(
@@ -78,6 +87,8 @@ def main() -> None:
         allow_title_fallback=args.allow_title_fallback,
         topic_drift_model=args.topic_drift_model,
         topic_drift_provider=args.topic_drift_provider,
+        stdi_comparison_method=args.stdi_comparison_method,
+        stdi_embedding_model=args.stdi_embedding_model,
         output_dir=args.output_dir,
         output_prefix=args.output_prefix,
         progress_callback=progress_callback,

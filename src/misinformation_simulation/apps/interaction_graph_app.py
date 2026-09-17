@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import importlib
+import inspect
 import sys
 from pathlib import Path
 
@@ -13,17 +15,30 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-from misinformation_simulation.apps.interaction_graph_sections import (  # noqa: E402
-    render_configuration_tab,
-    render_results_tab,
-    render_sidebar,
-)
+from misinformation_simulation import simulation  # noqa: E402
+from misinformation_simulation.apps import interaction_graph_sections  # noqa: E402
 from misinformation_simulation.apps.interaction_graph_state import (  # noqa: E402
     initialize_state,
 )
+from misinformation_simulation.simulation import graph as simulation_graph  # noqa: E402
+
+
+def _refresh_graph_backend_if_stale() -> None:
+    current_runner = interaction_graph_sections.run_news_interaction_graph
+    required_parameters = {"stdi_comparison_method", "cancel_check"}
+    if not required_parameters.issubset(inspect.signature(current_runner).parameters):
+        updated_module = importlib.reload(simulation_graph)
+        current_runner = updated_module.run_news_interaction_graph
+        if not required_parameters.issubset(inspect.signature(current_runner).parameters):
+            raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
+        simulation.run_news_interaction_graph = current_runner
+    if not hasattr(interaction_graph_sections, "_render_run_monitor"):
+        importlib.reload(interaction_graph_sections)
+    interaction_graph_sections.run_news_interaction_graph = current_runner
 
 
 def main() -> None:
+    _refresh_graph_backend_if_stale()
     st.set_page_config(
         page_title="Interaction Graph Studio",
         page_icon="",
@@ -41,14 +56,14 @@ def main() -> None:
         "constraint while still letting you add, reorder, and compare as many nodes as you need."
     )
 
-    df, dataset_label = render_sidebar()
+    df, dataset_label = interaction_graph_sections.render_sidebar()
     config_tab, results_tab = st.tabs(["Configuration", "Results"])
 
     with config_tab:
-        render_configuration_tab(df, dataset_label)
+        interaction_graph_sections.render_configuration_tab(df, dataset_label)
 
     with results_tab:
-        render_results_tab()
+        interaction_graph_sections.render_results_tab()
 
 
 if __name__ == "__main__":

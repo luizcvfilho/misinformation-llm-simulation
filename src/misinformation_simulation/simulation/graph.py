@@ -47,10 +47,17 @@ from misinformation_simulation.topic_drift import (
     extract_topic_structure,
     flatten_topic_structure,
 )
+from misinformation_simulation.topic_drift.cluster_comparison import (
+    ClusterSTDIComparator,
+    TextEmbedder,
+    TopicStructurePair,
+)
 from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
+DEFAULT_STDI_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 ProgressCallback = Callable[[str], None]
+CancelCheck = Callable[[], bool]
 STDI_COMPONENTS = (
     "stdi",
     "theme_drift",
@@ -135,6 +142,23 @@ def _emit_progress(
         progress_callback(message)
 
 
+def _cancel_requested(cancel_check: CancelCheck | None) -> bool:
+    return cancel_check is not None and cancel_check()
+
+
+def _wait_between_steps(seconds: float, cancel_check: CancelCheck | None) -> bool:
+    if cancel_check is None:
+        time.sleep(seconds)
+        return False
+    deadline = time.monotonic() + seconds
+    while not _cancel_requested(cancel_check):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(remaining, 0.1))
+    return True
+
+
 def _score_vad(
     text: str,
     *,
@@ -180,12 +204,16 @@ def run_news_interaction_graph(
     topic_drift_provider: Provider | str = DEFAULT_LLM_PROVIDER,
     topic_drift_api_key: str | None = None,
     topic_drift_base_url: str | None = None,
+    stdi_comparison_method: str = "cluster",
+    stdi_embedding_model: str = DEFAULT_STDI_EMBEDDING_MODEL,
+    stdi_embedder: TextEmbedder | None = None,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
     output_dir: Path | str | None = None,
     output_prefix: str = "simulation",
     persist_results: bool = True,
     progress_callback: ProgressCallback | None = None,
+    cancel_check: CancelCheck | None = None,
 ) -> SimulationResult:
     if not isinstance(df, pd.DataFrame):
         raise ValueError("'df' must be a pandas.DataFrame.")
@@ -193,6 +221,8 @@ def run_news_interaction_graph(
         raise ValueError("The DataFrame is empty.")
     if max_requests_per_minute is not None and max_requests_per_minute <= 0:
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+    if stdi_comparison_method not in {"cluster", "lexical"}:
+        raise ValueError("'stdi_comparison_method' must be 'cluster' or 'lexical'.")
 
     nodes_by_id = _normalize_nodes(nodes)
     normalized_edges = _normalize_edges(nodes_by_id, edges)
@@ -221,12 +251,30 @@ def run_news_interaction_graph(
         limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
     step_results: list[SimulationStepResult] = []
+    scoring_contexts: list[
+        tuple[
+            int,
+            SimulationStepResult,
+            TopicStructure,
+            TopicStructure,
+            TopicStructure,
+            VADScore,
+            VADScore,
+            VADScore,
+        ]
+    ] = []
     target_indexes = list(df.index)
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
     total_rows = len(target_indexes)
+    rows_started = 0
+    cancelled = False
 
     for row_position, row_index in enumerate(target_indexes, start=1):
+        if _cancel_requested(cancel_check):
+            cancelled = True
+            break
+        rows_started = row_position
         row = df.loc[row_index]
         news_id = _news_identifier(row_index, row, news_id_column)
         title = ""
@@ -259,6 +307,9 @@ def run_news_interaction_graph(
                 retry_attempts=retry_attempts,
             )
             original_structure_ready = True
+            if _cancel_requested(cancel_check):
+                cancelled = True
+                break
             original_vad = _score_vad(
                 original_text,
                 model_bundle=vad_model_bundle,
@@ -269,6 +320,9 @@ def run_news_interaction_graph(
                 f"[{row_position}/{total_rows}] Original text ready for '{news_id}'.",
             )
         except Exception as exc:
+            if _cancel_requested(cancel_check):
+                cancelled = True
+                break
             _emit_progress(
                 progress_callback,
                 f"[{row_position}/{total_rows}] Failed to prepare '{news_id}': {exc}",
@@ -332,6 +386,9 @@ def run_news_interaction_graph(
         cumulative_stdi = 0.0
 
         for step_index, node_id in enumerate(ordered_node_ids, start=1):
+            if _cancel_requested(cancel_check):
+                cancelled = True
+                break
             node = nodes_by_id[node_id]
             provider_normalized, client = clients_by_node_id[node.node_id]
             node_label = _node_label(node)
@@ -389,6 +446,9 @@ def run_news_interaction_graph(
                 )
                 step_result.rewritten_text = rewritten_text
                 step_result.rewrite_status = "success"
+                if _cancel_requested(cancel_check):
+                    cancelled = True
+                    break
                 _emit_progress(
                     progress_callback,
                     (
@@ -408,6 +468,9 @@ def run_news_interaction_graph(
                     retry_attempts=retry_attempts,
                 )
                 rewritten_structure_ready = True
+                if _cancel_requested(cancel_check):
+                    cancelled = True
+                    break
                 step_result.rewritten_topic_structure_status = "success"
                 step_result.metadata.update(
                     flatten_topic_structure(rewritten_structure, prefix="rewritten")
@@ -420,34 +483,43 @@ def run_news_interaction_graph(
                 rewritten_vad_ready = True
                 step_result.rewritten_vad_status = "success"
                 _record_vad(step_result, "rewritten", rewritten_vad)
-                vs_original_metrics = calculate_stdi(
-                    original_structure,
-                    rewritten_structure,
-                    original_vad=original_vad,
-                    compared_vad=rewritten_vad,
-                )
-                _record_stdi_metrics(
-                    step_result,
-                    suffix="vs_original",
-                    metrics=vs_original_metrics,
-                )
-
-                if previous_rewritten_text is None:
-                    incremental_metrics = vs_original_metrics
+                if stdi_comparison_method == "cluster":
+                    scoring_contexts.append(
+                        (
+                            row_position,
+                            step_result,
+                            original_structure,
+                            previous_structure,
+                            rewritten_structure,
+                            original_vad,
+                            previous_vad,
+                            rewritten_vad,
+                        )
+                    )
                 else:
-                    incremental_metrics = calculate_stdi(
-                        previous_structure,
+                    vs_original_metrics = calculate_stdi(
+                        original_structure,
                         rewritten_structure,
-                        original_vad=previous_vad,
+                        original_vad=original_vad,
                         compared_vad=rewritten_vad,
                     )
-                _record_stdi_metrics(
-                    step_result,
-                    suffix="incremental",
-                    metrics=incremental_metrics,
-                )
-                cumulative_stdi += incremental_metrics["stdi"]
-                step_result.stdi_cumulative = round(cumulative_stdi, 6)
+                    _record_stdi_metrics(
+                        step_result, suffix="vs_original", metrics=vs_original_metrics
+                    )
+                    if previous_rewritten_text is None:
+                        incremental_metrics = vs_original_metrics
+                    else:
+                        incremental_metrics = calculate_stdi(
+                            previous_structure,
+                            rewritten_structure,
+                            original_vad=previous_vad,
+                            compared_vad=rewritten_vad,
+                        )
+                    _record_stdi_metrics(
+                        step_result, suffix="incremental", metrics=incremental_metrics
+                    )
+                    cumulative_stdi += incremental_metrics["stdi"]
+                    step_result.stdi_cumulative = round(cumulative_stdi, 6)
 
                 previous_text = rewritten_text
                 previous_rewritten_text = rewritten_text
@@ -459,9 +531,13 @@ def run_news_interaction_graph(
                     progress_callback,
                     (
                         f"[{row_position}/{total_rows}] Step {step_index}/{len(ordered_node_ids)} "
-                        f"node='{node_label}': success "
-                        f"(stdi_vs_original={step_result.stdi_vs_original}, "
-                        f"stdi_incremental={step_result.stdi_incremental})."
+                        f"node='{node_label}': success; "
+                        + (
+                            "STDI pending shared embedding comparison."
+                            if stdi_comparison_method == "cluster"
+                            else f"stdi_vs_original={step_result.stdi_vs_original}, "
+                            f"stdi_incremental={step_result.stdi_incremental}."
+                        )
                     ),
                 )
             except Exception as exc:
@@ -485,9 +561,67 @@ def run_news_interaction_graph(
 
             step_results.append(step_result)
 
-            if sleep_seconds > 0:
-                time.sleep(sleep_seconds)
+            if sleep_seconds > 0 and _wait_between_steps(sleep_seconds, cancel_check):
+                cancelled = True
+                break
 
+        if cancelled:
+            break
+
+    if _cancel_requested(cancel_check):
+        cancelled = True
+    if scoring_contexts:
+        _emit_progress(
+            progress_callback,
+            f"Fitting shared STDI embeddings from {len(scoring_contexts)} successful step(s).",
+        )
+        pairs = [
+            TopicStructurePair(f"{index}:original", original, rewritten)
+            for index, (_, _, original, _, rewritten, _, _, _) in enumerate(scoring_contexts)
+        ] + [
+            TopicStructurePair(f"{index}:incremental", previous, rewritten)
+            for index, (_, _, _, previous, rewritten, _, _, _) in enumerate(scoring_contexts)
+        ]
+        comparator = ClusterSTDIComparator(
+            embedder=stdi_embedder,
+            embedding_model=stdi_embedding_model,
+        ).fit(pairs)
+        last_row_position = 0
+        cumulative_stdi = 0.0
+        for (
+            row_position,
+            step,
+            original,
+            previous,
+            rewritten,
+            original_vad,
+            previous_vad,
+            rewritten_vad,
+        ) in scoring_contexts:
+            if row_position != last_row_position:
+                cumulative_stdi = 0.0
+                last_row_position = row_position
+            vs_original = calculate_stdi(
+                original,
+                rewritten,
+                original_vad=original_vad,
+                compared_vad=rewritten_vad,
+                component_overrides=comparator.compare(original, rewritten).component_drifts,
+            )
+            incremental = calculate_stdi(
+                previous,
+                rewritten,
+                original_vad=previous_vad,
+                compared_vad=rewritten_vad,
+                component_overrides=comparator.compare(previous, rewritten).component_drifts,
+            )
+            _record_stdi_metrics(step, suffix="vs_original", metrics=vs_original)
+            _record_stdi_metrics(step, suffix="incremental", metrics=incremental)
+            cumulative_stdi += incremental["stdi"]
+            step.stdi_cumulative = round(cumulative_stdi, 6)
+
+    if _cancel_requested(cancel_check):
+        cancelled = True
     success_count = sum(1 for step in step_results if step.rewrite_status == "success")
     error_count = sum(1 for step in step_results if step.rewrite_status == "error")
     vad_model_name = DEFAULT_VAD_MODEL_NAME
@@ -496,11 +630,22 @@ def run_news_interaction_graph(
     if vad_scorer is not None:
         vad_model_name = "custom_scorer"
     summary = {
-        "rows_processed": len(target_indexes),
+        "rows_processed": rows_started,
+        "cancelled": cancelled,
         "steps_total": len(step_results),
         "steps_success": success_count,
         "steps_error": error_count,
         "vad_model": vad_model_name,
+        "stdi_comparison_method": stdi_comparison_method,
+        "stdi_embedding_model": (
+            (
+                stdi_embedding_model
+                if stdi_embedder is None
+                else f"custom:{type(stdi_embedder).__name__}"
+            )
+            if stdi_comparison_method == "cluster"
+            else None
+        ),
         "graph": {
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from datetime import datetime
+from queue import Empty
 from typing import Any
 
 import pandas as pd
@@ -16,18 +17,14 @@ from misinformation_simulation.apps.interaction_graph_preview import render_grap
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
     move_graph,
-    output_prefix_for_graph,
 )
+from misinformation_simulation.apps.interaction_graph_run_job import start_graph_run_job
 from misinformation_simulation.apps.interaction_graph_sidebar import render_sidebar
 from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     build_linear_graph_payload,
-    build_news_summary_dataframe,
-    build_node_summary_dataframe,
-    build_simulation_nodes,
-    steps_to_dataframe,
     validate_node_forms,
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
@@ -116,6 +113,10 @@ def _render_execution_settings(
         help=(
             "When enabled, the simulation can use the title if the selected text column is empty."
         ),
+    )
+    st.caption(
+        "STDI compares topic structures with local MiniLM embeddings after all graph steps "
+        "are generated. The first run may download the model."
     )
 
     advanced_settings = _render_advanced_settings()
@@ -274,108 +275,81 @@ def _render_run_controls(
     df: pd.DataFrame | None,
     settings: dict[str, Any],
 ) -> None:
-    run_placeholder = st.empty()
-    log_placeholder = st.empty()
     queue = st.session_state.graph_queue
+    active_job = st.session_state.get("run_job")
     run_button = st.button(
         "Run graph queue" if queue else "Run simulation",
         type="primary",
         use_container_width=True,
+        disabled=active_job is not None,
     )
-
-    if not run_button:
-        return
-
-    graphs = (
-        deepcopy(queue)
-        if queue
-        else [{"name": "Current graph", "nodes": deepcopy(st.session_state.graph_nodes)}]
-    )
-    validation_errors = _validate_run_inputs(df, settings, graphs)
-    if validation_errors:
-        for error in validation_errors:
-            st.error(error)
-        return
-
-    progress_messages: list[str] = []
-
-    def progress_callback(message: str) -> None:
-        progress_messages.append(message)
-        run_placeholder.info(message)
-        log_placeholder.code("\n".join(progress_messages[-20:]), language="text")
-
-    st.session_state.run_bundles = []
-    st.session_state.run_bundle = None
-    for index, graph in enumerate(graphs, start=1):
-        name = graph["name"]
-        prefix = (
-            output_prefix_for_graph(settings["output_prefix"], index, name)
+    if run_button:
+        graphs = (
+            deepcopy(queue)
             if queue
-            else settings["output_prefix"]
+            else [{"name": "Current graph", "nodes": deepcopy(st.session_state.graph_nodes)}]
         )
-        progress_callback(f"Graph {index}/{len(graphs)}: {name} — starting")
-        try:
-            nodes = build_simulation_nodes(graph["nodes"])
-            result = run_news_interaction_graph(
-                df=df,
-                nodes=nodes,
-                start_node_id=nodes[0].node_id,
-                text_column=settings["text_column"],
-                title_column=settings["title_column"],
-                news_id_column=settings["news_id_column"] or None,
-                max_rows=int(settings["max_rows"]),
-                sleep_seconds=float(settings["sleep_seconds"]),
-                max_requests_per_minute=_normalize_rate_limit(
-                    int(settings["max_requests_per_minute"])
-                ),
-                retry_attempts=int(settings["retry_attempts"]),
-                allow_title_fallback=settings["allow_title_fallback"],
-                topic_drift_model=settings["topic_drift_model"],
-                topic_drift_provider=settings["topic_drift_provider"],
-                output_dir=settings["output_dir"],
-                output_prefix=prefix,
-                progress_callback=lambda message, graph_index=index, graph_name=name: (
-                    progress_callback(
-                        f"Graph {graph_index}/{len(graphs)} ({graph_name}): {message}"
-                    )
-                ),
-            )
-            steps_df = steps_to_dataframe(result.step_results)
-            bundle = {
-                "name": name,
-                "status": "completed",
-                "summary": result.summary,
-                "summary_path": str(result.summary_path)
-                if result.summary_path is not None
-                else None,
-                "steps_path": str(result.steps_path) if result.steps_path is not None else None,
-                "steps_df": steps_df,
-                "node_summary_df": build_node_summary_dataframe(steps_df),
-                "news_summary_df": build_news_summary_dataframe(steps_df),
-                "output_prefix": prefix,
-                "graph_payload": build_linear_graph_payload(graph["nodes"]),
-            }
-            st.session_state.run_bundle = bundle
-            st.session_state.run_bundles.append(bundle)
-            progress_callback(f"Graph {index}/{len(graphs)}: {name} — finished")
-        except Exception as exc:
-            st.session_state.run_bundles.append(
-                {
-                    "name": name,
-                    "status": "failed",
-                    "error": str(exc),
-                    "output_prefix": prefix,
-                }
-            )
-            progress_callback(f"Graph {index}/{len(graphs)}: {name} — failed: {exc}")
+        validation_errors = _validate_run_inputs(df, settings, graphs)
+        if validation_errors:
+            for error in validation_errors:
+                st.error(error)
+            return
+        st.session_state.run_bundles = []
+        st.session_state.run_bundle = None
+        st.session_state.run_messages = []
+        st.session_state.run_job = start_graph_run_job(
+            df=df,
+            graphs=graphs,
+            settings=settings,
+            runner=run_news_interaction_graph,
+            queue_mode=bool(queue),
+        )
 
-    completed = sum(bundle["status"] == "completed" for bundle in st.session_state.run_bundles)
-    failed = len(graphs) - completed
-    message = f"Queue finished: {completed} completed, {failed} failed. Open the Results tab."
-    if failed:
-        run_placeholder.warning(message)
-    else:
-        run_placeholder.success(message)
+    if st.session_state.get("run_job") is not None:
+        _render_run_monitor()
+    elif st.session_state.get("run_messages"):
+        st.info(st.session_state.run_messages[-1])
+        st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
+
+
+@st.fragment(run_every="1s")
+def _render_run_monitor() -> None:
+    job = st.session_state.run_job
+    finished = None
+    while True:
+        try:
+            kind, payload = job.events.get_nowait()
+        except Empty:
+            break
+        if kind == "progress":
+            st.session_state.run_messages.append(payload)
+        elif kind == "bundle":
+            st.session_state.run_bundles.append(payload)
+            if payload["status"] in {"completed", "cancelled"}:
+                st.session_state.run_bundle = payload
+        elif kind == "done":
+            finished = payload
+
+    if finished is not None:
+        if finished["cancelled"]:
+            message = "Simulation cancelled. Open Results for any completed steps."
+        else:
+            message = (
+                f"Queue finished: {finished['completed']} completed, "
+                f"{finished['failed']} failed. Open the Results tab."
+            )
+        st.session_state.run_messages.append(message)
+        st.session_state.run_job = None
+        st.rerun()
+
+    if job.cancel_event.is_set():
+        st.warning("Cancellation requested. Waiting for the current operation to finish.")
+    elif st.button("Cancel simulation", type="secondary", use_container_width=True):
+        job.cancel_event.set()
+        st.warning("Cancellation requested. Waiting for the current operation to finish.")
+    if st.session_state.run_messages:
+        st.info(st.session_state.run_messages[-1])
+        st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
 
 
 def _validate_run_inputs(
@@ -432,6 +406,8 @@ def render_results_tab() -> None:
         if selected["status"] == "failed":
             st.error(selected["error"])
         else:
+            if selected["status"] == "cancelled":
+                st.warning("Simulation cancelled; showing completed steps.")
             render_result_bundle(selected)
 
 
@@ -441,7 +417,3 @@ def _first_column(available_columns: list[str]) -> str:
 
 def _option_index(options: list[str], selected: str) -> int:
     return options.index(selected) if selected in options else 0
-
-
-def _normalize_rate_limit(value: int) -> int | None:
-    return None if value == 0 else value

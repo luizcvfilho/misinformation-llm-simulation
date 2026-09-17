@@ -112,6 +112,7 @@ class _ComponentClusterIndex:
         self._embeddings = np.empty((0, 0), dtype=float)
         self._cluster_ids = np.empty(0, dtype=int)
         self._value_to_index: dict[str, int] = {}
+        self._vector_cache: dict[str, np.ndarray] = {}
 
     def fit(self, values: Sequence[str]) -> None:
         self._values = list(dict.fromkeys(value for value in values if value.strip()))
@@ -119,6 +120,7 @@ class _ComponentClusterIndex:
         if not self._values:
             return
         self._embeddings = self._embedder.encode(self._values)
+        self._vector_cache = dict(zip(self._values, self._embeddings, strict=True))
         distinct_embedding_count = len(np.unique(self._embeddings, axis=0))
         cluster_count = min(
             _component_cluster_count(len(self._values), self._requested_cluster_count),
@@ -141,12 +143,19 @@ class _ComponentClusterIndex:
             return 0.0
         if _normalize(left) == _normalize(right):
             return 1.0
-        vectors = self._embedder.encode([left, right])
-        norms = np.linalg.norm(vectors, axis=1)
+        missing = [
+            value for value in dict.fromkeys((left, right)) if value not in self._vector_cache
+        ]
+        if missing:
+            vectors = self._embedder.encode(missing)
+            self._vector_cache.update(dict(zip(missing, vectors, strict=True)))
+        left_vector = self._vector_cache[left]
+        right_vector = self._vector_cache[right]
+        norms = np.linalg.norm([left_vector, right_vector], axis=1)
         cosine_similarity = float(
-            np.dot(vectors[0], vectors[1]) / np.clip(np.prod(norms), 1e-12, None)
+            np.dot(left_vector, right_vector) / np.clip(np.prod(norms), 1e-12, None)
         )
-        return max(0.0, cosine_similarity)
+        return min(1.0, max(0.0, cosine_similarity))
 
     def artifact_rows(self, component: str) -> list[dict[str, Any]]:
         return [

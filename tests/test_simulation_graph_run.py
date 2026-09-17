@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from threading import Event
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -23,6 +25,133 @@ def make_structure(topic: str) -> TopicStructure:
         central_relations=[TopicRelation("entity", "does", "thing")],
         narrative_frame="frame",
     )
+
+
+class KeywordEmbedder:
+    def encode(self, texts: list[str]) -> np.ndarray:
+        vectors = np.array(
+            [
+                [
+                    float("iran" in text.casefold()),
+                    float("proposal" in text.casefold()),
+                    float("health" in text.casefold()),
+                    1.0,
+                ]
+                for text in texts
+            ]
+        )
+        return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
+
+
+def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(
+        graph,
+        "extract_topic_structure",
+        lambda **_kwargs: make_structure("Iran rejects a proposal"),
+    )
+    rewritten_structures = iter(
+        [make_structure("Iran's rejection of a proposal"), make_structure("Health policy")]
+    )
+    monkeypatch.setattr(
+        graph, "_extract_compared_structure", lambda **_kwargs: next(rewritten_structures)
+    )
+    rewritten_texts = iter(["first version", "second version"])
+    monkeypatch.setattr(graph, "_generate_rewrite", lambda **_kwargs: next(rewritten_texts))
+
+    result = run_news_interaction_graph(
+        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        nodes=[
+            SimulationNode("first", "model", "chatgpt", "persona"),
+            SimulationNode("second", "model", "chatgpt", "persona"),
+        ],
+        stdi_embedder=KeywordEmbedder(),
+        vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
+        output_dir=tmp_path,
+    )
+
+    first, second = result.step_results
+    assert result.summary["stdi_comparison_method"] == "cluster"
+    assert result.summary["stdi_embedding_model"] == "custom:KeywordEmbedder"
+    assert first.theme_drift_vs_original == 0.0
+    assert first.stdi_vs_original == 0.0
+    assert first.stdi_incremental == 0.0
+    assert second.theme_drift_vs_original > 0.0
+    assert second.stdi_incremental == second.stdi_vs_original
+    assert second.stdi_cumulative == second.stdi_incremental
+    saved_steps = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
+    assert saved_steps[0]["stdi_vs_original"] == 0.0
+    assert saved_steps[1]["stdi_cumulative"] == second.stdi_incremental
+
+
+def test_graph_cancellation_saves_completed_steps(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **_kwargs: make_structure("topic"))
+    monkeypatch.setattr(
+        graph, "_extract_compared_structure", lambda **_kwargs: make_structure("topic")
+    )
+    rewrites = []
+
+    def rewrite(**_kwargs):
+        rewrites.append("rewrite")
+        return "rewritten text"
+
+    monkeypatch.setattr(graph, "_generate_rewrite", rewrite)
+    cancel_event = Event()
+
+    def on_progress(message: str) -> None:
+        if "STDI pending" in message:
+            cancel_event.set()
+
+    result = run_news_interaction_graph(
+        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        nodes=[
+            SimulationNode("first", "model", "chatgpt", "persona"),
+            SimulationNode("second", "model", "chatgpt", "persona"),
+        ],
+        stdi_embedder=KeywordEmbedder(),
+        vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
+        output_dir=tmp_path,
+        cancel_check=cancel_event.is_set,
+        progress_callback=on_progress,
+    )
+
+    assert result.summary["cancelled"] is True
+    assert result.summary["steps_total"] == 1
+    assert result.summary["steps_success"] == 1
+    assert len(rewrites) == 1
+    assert result.step_results[0].stdi_incremental == 0.0
+    assert json.loads(result.summary_path.read_text())["cancelled"] is True
+    assert len(result.steps_path.read_text().splitlines()) == 1
+
+
+def test_graph_cancellation_after_rewrite_skips_next_model_call(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **_kwargs: make_structure("topic"))
+    cancel_event = Event()
+
+    def rewrite(**_kwargs):
+        cancel_event.set()
+        return "rewritten text"
+
+    monkeypatch.setattr(graph, "_generate_rewrite", rewrite)
+    monkeypatch.setattr(
+        graph,
+        "_extract_compared_structure",
+        lambda **_kwargs: pytest.fail("Topic extraction must not start after cancellation."),
+    )
+
+    result = run_news_interaction_graph(
+        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        nodes=[SimulationNode("first", "model", "chatgpt", "persona")],
+        vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
+        output_dir=tmp_path,
+        cancel_check=cancel_event.is_set,
+    )
+
+    assert result.summary["cancelled"] is True
+    assert result.summary["steps_total"] == 0
+    assert result.steps_path.read_text().strip() == ""
 
 
 def test_simulation_step_result_flattens_metadata() -> None:
@@ -77,7 +206,8 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
     )
 
     result = run_news_interaction_graph(
-        df,
+        stdi_comparison_method="lexical",
+        df=df,
         nodes=[SimulationNode("node-1", "model", "gemini", "persona", label="Node 1")],
         news_id_column="article_id",
         output_dir=tmp_path,
@@ -115,7 +245,8 @@ def test_run_news_interaction_graph_blocks_steps_when_original_text_fails(monkey
     df = pd.DataFrame([{"title": "Title", "description": ""}])
 
     result = run_news_interaction_graph(
-        df,
+        stdi_comparison_method="lexical",
+        df=df,
         nodes=[SimulationNode("node-1", "model", "gemini", "persona")],
         allow_title_fallback=False,
         persist_results=False,
@@ -139,7 +270,8 @@ def test_run_news_interaction_graph_records_rewrite_error(monkeypatch) -> None:
     df = pd.DataFrame([{"title": "Title", "description": "Original text"}])
 
     result = run_news_interaction_graph(
-        df,
+        stdi_comparison_method="lexical",
+        df=df,
         nodes=[SimulationNode("node-1", "model", "chatgpt", "persona")],
         persist_results=False,
         vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
@@ -169,7 +301,8 @@ def test_graph_stdi_uses_vad_and_contradiction_against_both_references(monkeypat
     }
 
     result = run_news_interaction_graph(
-        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="lexical",
+        df=pd.DataFrame([{"title": "Title", "description": "Original text"}]),
         nodes=[
             SimulationNode("first", "model", "chatgpt", "persona"),
             SimulationNode("second", "model", "chatgpt", "persona"),
@@ -198,7 +331,8 @@ def test_graph_blocks_original_when_vad_is_incomplete(monkeypatch) -> None:
     monkeypatch.setattr(graph, "extract_topic_structure", lambda **_kwargs: make_structure("topic"))
 
     result = run_news_interaction_graph(
-        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="lexical",
+        df=pd.DataFrame([{"title": "Title", "description": "Original text"}]),
         nodes=[SimulationNode("node", "model", "chatgpt", "persona")],
         vad_scorer=lambda _text: VADScore(None, 3.0, 3.0),
         persist_results=False,
@@ -221,7 +355,8 @@ def test_graph_does_not_report_stdi_when_rewritten_vad_fails(monkeypatch) -> Non
     monkeypatch.setattr(graph, "_generate_rewrite", lambda **_kwargs: "rewritten text")
 
     result = run_news_interaction_graph(
-        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="lexical",
+        df=pd.DataFrame([{"title": "Title", "description": "Original text"}]),
         nodes=[SimulationNode("node", "model", "chatgpt", "persona")],
         vad_scorer=lambda text: (
             VADScore(3.0, 3.0, 3.0) if text == "Original text" else VADScore(None, 3.0, 3.0)
@@ -261,7 +396,8 @@ def test_graph_cumulative_stdi_skips_failed_steps(monkeypatch) -> None:
     }
 
     result = run_news_interaction_graph(
-        pd.DataFrame([{"title": "First", "description": "Original text"}]),
+        stdi_comparison_method="lexical",
+        df=pd.DataFrame([{"title": "First", "description": "Original text"}]),
         nodes=[
             SimulationNode("one", "model", "chatgpt", "persona"),
             SimulationNode("two", "model", "chatgpt", "persona"),
@@ -288,7 +424,8 @@ def test_graph_cumulative_stdi_resets_for_each_news_item(monkeypatch) -> None:
     monkeypatch.setattr(graph, "_generate_rewrite", lambda **_kwargs: "rewritten")
 
     result = run_news_interaction_graph(
-        pd.DataFrame(
+        stdi_comparison_method="lexical",
+        df=pd.DataFrame(
             [
                 {"title": "First", "description": "Original text"},
                 {"title": "Second", "description": "Original text"},

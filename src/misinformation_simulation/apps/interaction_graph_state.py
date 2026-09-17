@@ -38,6 +38,10 @@ def initialize_state() -> None:
         st.session_state.graph_queue = []
     if "run_bundles" not in st.session_state:
         st.session_state.run_bundles = []
+    if "run_job" not in st.session_state:
+        st.session_state.run_job = None
+    if "run_messages" not in st.session_state:
+        st.session_state.run_messages = []
 
 
 def load_initial_graph_nodes() -> list[dict[str, str]]:
