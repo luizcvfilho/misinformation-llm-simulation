@@ -29,7 +29,9 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
     def legacy_runner(df):
         return df
 
-    def updated_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+    def updated_runner(
+        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+    ):
         return df, stdi_comparison_method
 
     monkeypatch.setattr(interaction_graph_sections, "run_news_interaction_graph", legacy_runner)
@@ -47,10 +49,14 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
 
 
 def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
-    def current_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+    def current_runner(
+        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+    ):
         return df
 
-    def updated_runner(df, *, stdi_comparison_method="cluster", cancel_check=None):
+    def updated_runner(
+        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+    ):
         return df
 
     monkeypatch.setattr(interaction_graph_sections, "run_news_interaction_graph", current_runner)

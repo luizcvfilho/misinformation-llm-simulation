@@ -194,6 +194,7 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
         lambda **_kwargs: make_structure("rewritten"),
     )
     progress: list[str] = []
+    work_progress: list[tuple[int, int, int, int]] = []
     df = pd.DataFrame(
         [
             {
@@ -214,6 +215,7 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
         output_dir=tmp_path,
         output_prefix="run",
         progress_callback=progress.append,
+        work_progress_callback=lambda *counts: work_progress.append(counts),
         vad_scorer=lambda text: (
             VADScore(3.0, 3.0, 3.0) if text == "Original text" else VADScore(2.0, 4.0, 3.0)
         ),
@@ -240,16 +242,19 @@ def test_run_news_interaction_graph_records_success_and_persists_outputs(
     assert persisted_step["vad_drift_vs_original"] == pytest.approx(0.166667)
     assert persisted_step["stdi_cumulative"] == pytest.approx(0.275)
     assert any("Run finished" in message for message in progress)
+    assert work_progress == [(1, 1, 0, 1), (1, 1, 1, 1)]
 
 
 def test_run_news_interaction_graph_blocks_steps_when_original_text_fails(monkeypatch) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("gemini", object()))
     df = pd.DataFrame([{"title": "Title", "description": "", "category": "science"}])
 
+    work_progress = []
     result = run_news_interaction_graph(
         stdi_comparison_method="lexical",
         df=df,
         nodes=[SimulationNode("node-1", "model", "gemini", "persona")],
+        work_progress_callback=lambda *counts: work_progress.append(counts),
         allow_title_fallback=False,
         persist_results=False,
     )
@@ -258,6 +263,7 @@ def test_run_news_interaction_graph_blocks_steps_when_original_text_fails(monkey
     assert result.step_results[0].rewrite_status == "blocked"
     assert result.step_results[0].to_record()["metadata_category"] == "science"
     assert result.step_results[0].original_topic_structure_status == "error"
+    assert work_progress == [(1, 1, 1, 1)]
 
 
 def test_run_news_interaction_graph_records_rewrite_error(monkeypatch) -> None:

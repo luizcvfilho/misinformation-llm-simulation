@@ -57,6 +57,7 @@ from misinformation_simulation.topic_drift.models import TopicStructure
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
 DEFAULT_STDI_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 ProgressCallback = Callable[[str], None]
+WorkProgressCallback = Callable[[int, int, int, int], None]
 CancelCheck = Callable[[], bool]
 STDI_COMPONENTS = (
     "stdi",
@@ -216,6 +217,7 @@ def run_news_interaction_graph(
     output_prefix: str = "simulation",
     persist_results: bool = True,
     progress_callback: ProgressCallback | None = None,
+    work_progress_callback: WorkProgressCallback | None = None,
     cancel_check: CancelCheck | None = None,
 ) -> SimulationResult:
     if not isinstance(df, pd.DataFrame):
@@ -325,6 +327,8 @@ def run_news_interaction_graph(
                 progress_callback,
                 f"[{row_position}/{total_rows}] Original text ready for '{news_id}'.",
             )
+            if work_progress_callback is not None:
+                work_progress_callback(row_position, total_rows, 0, len(ordered_node_ids))
         except Exception as exc:
             if _cancel_requested(cancel_check):
                 cancelled = True
@@ -381,6 +385,10 @@ def run_news_interaction_graph(
                             ),
                         },
                     )
+                )
+            if work_progress_callback is not None:
+                work_progress_callback(
+                    row_position, total_rows, len(ordered_node_ids), len(ordered_node_ids)
                 )
             continue
 
@@ -568,6 +576,8 @@ def run_news_interaction_graph(
                 )
 
             step_results.append(step_result)
+            if work_progress_callback is not None:
+                work_progress_callback(row_position, total_rows, step_index, len(ordered_node_ids))
 
             if sleep_seconds > 0 and _wait_between_steps(sleep_seconds, cancel_check):
                 cancelled = True

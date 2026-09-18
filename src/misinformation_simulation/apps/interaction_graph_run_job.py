@@ -5,7 +5,8 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from queue import Queue
-from threading import Event, Thread
+from threading import Event, Lock, Thread
+from time import monotonic
 from typing import Any
 
 import pandas as pd
@@ -28,6 +29,9 @@ class GraphRunJob:
     cancel_event: Event = field(default_factory=Event)
     events: Queue[tuple[str, Any]] = field(default_factory=Queue)
     thread: Thread | None = None
+    started_at: float = field(default_factory=monotonic)
+    progress_lock: Lock = field(default_factory=Lock)
+    latest_progress: dict[str, int] | None = None
 
 
 def start_graph_run_job(
@@ -83,6 +87,29 @@ def _run_graph_queue(
     completed = 0
     failed = 0
     cancelled = False
+    rows_per_graph = min(len(df), max(0, int(settings["max_rows"])))
+    graph_units = [rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in graphs]
+    total_units = sum(graph_units)
+    finished_units = 0
+
+    def report_work(index: int, row: int, steps: int) -> None:
+        units_per_row = len(graphs[index - 1]["nodes"]) + 1
+        completed_units = finished_units + max(0, row - 1) * units_per_row
+        if row:
+            completed_units += 1 + steps
+        progress = {
+            "completed": completed_units,
+            "total": total_units,
+            "graph_index": index,
+            "graph_total": len(graphs),
+            "row": row,
+            "row_total": rows_per_graph,
+            "step": steps,
+            "step_total": units_per_row - 1,
+        }
+        with job.progress_lock:
+            job.latest_progress = progress
+
     try:
         for index, graph in enumerate(graphs, start=1):
             if job.cancel_event.is_set():
@@ -94,6 +121,7 @@ def _run_graph_queue(
             )
             label = f"Graph {index}/{len(graphs)}: {name}"
             job.events.put(("progress", f"{label} — starting"))
+            report_work(index, 0, 0)
             try:
                 run_dir, prefix = _reserve_output_directory(Path(settings["output_dir"]), prefix)
                 nodes = build_simulation_nodes(graph["nodes"])
@@ -116,6 +144,9 @@ def _run_graph_queue(
                     output_prefix=prefix,
                     progress_callback=lambda message, label=label: job.events.put(
                         ("progress", f"{label}: {message}")
+                    ),
+                    work_progress_callback=lambda row, _total, steps, _nodes, index=index: (
+                        report_work(index, row, steps)
                     ),
                     cancel_check=job.cancel_event.is_set,
                 )
@@ -141,6 +172,8 @@ def _run_graph_queue(
                     job.events.put(("progress", f"{label} — cancelled; partial results saved"))
                     break
                 completed += 1
+                finished_units += graph_units[index - 1]
+                report_work(index, 0, 0)
                 job.events.put(("progress", f"{label} — finished"))
                 if job.cancel_event.is_set():
                     cancelled = True
@@ -151,6 +184,8 @@ def _run_graph_queue(
                     job.events.put(("progress", f"{label} — cancelled: {exc}"))
                     break
                 failed += 1
+                finished_units += graph_units[index - 1]
+                report_work(index, 0, 0)
                 job.events.put(
                     (
                         "bundle",

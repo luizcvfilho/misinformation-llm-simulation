@@ -5,6 +5,7 @@ from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 from queue import Empty
+from time import monotonic
 from typing import Any
 
 import pandas as pd
@@ -42,7 +43,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 7
+GRAPH_OUTPUT_LAYOUT_VERSION = 9
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -350,6 +351,7 @@ def _render_run_controls(
         st.session_state.run_bundles = []
         st.session_state.run_bundle = None
         st.session_state.run_messages = []
+        st.session_state.run_progress = None
         st.session_state.run_job = start_graph_run_job(
             df=df,
             graphs=graphs,
@@ -361,11 +363,13 @@ def _render_run_controls(
     if st.session_state.get("run_job") is not None:
         _render_run_monitor()
     elif st.session_state.get("run_messages"):
+        if st.session_state.get("run_progress") is not None:
+            _render_run_progress(st.session_state.run_progress, active=False)
         st.info(st.session_state.run_messages[-1])
         st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
 
 
-@st.fragment(run_every="1s")
+@st.fragment(run_every="3s")
 def _render_run_monitor() -> None:
     job = st.session_state.run_job
     finished = None
@@ -376,12 +380,22 @@ def _render_run_monitor() -> None:
             break
         if kind == "progress":
             st.session_state.run_messages.append(payload)
+        elif kind == "work":
+            st.session_state.run_progress = payload
         elif kind == "bundle":
             st.session_state.run_bundles.append(payload)
             if payload["status"] in {"completed", "cancelled"}:
                 st.session_state.run_bundle = payload
         elif kind == "done":
             finished = payload
+
+    progress_lock = getattr(job, "progress_lock", None)
+    if progress_lock is not None:
+        with progress_lock:
+            if job.latest_progress is not None:
+                st.session_state.run_progress = job.latest_progress
+    if len(st.session_state.run_messages) > 20:
+        del st.session_state.run_messages[:-20]
 
     if finished is not None:
         if finished["cancelled"]:
@@ -395,6 +409,12 @@ def _render_run_monitor() -> None:
         st.session_state.run_job = None
         st.rerun()
 
+    progress = getattr(st.session_state, "run_progress", None)
+    if progress is not None:
+        _render_run_progress(
+            progress, elapsed=monotonic() - job.started_at, active=not job.cancel_event.is_set()
+        )
+
     if job.cancel_event.is_set():
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
     elif st.button("Cancel simulation", type="secondary", width="stretch"):
@@ -403,6 +423,38 @@ def _render_run_monitor() -> None:
     if st.session_state.run_messages:
         st.info(st.session_state.run_messages[-1])
         st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
+
+
+def _format_duration(seconds: float) -> str:
+    minutes, remaining_seconds = divmod(max(0, round(seconds)), 60)
+    hours, minutes = divmod(minutes, 60)
+    if hours:
+        return f"{hours}h {minutes:02d}m"
+    if minutes:
+        return f"{minutes}m {remaining_seconds:02d}s"
+    return f"{remaining_seconds}s"
+
+
+def _render_run_progress(
+    progress: dict[str, int], *, elapsed: float = 0, active: bool = True
+) -> None:
+    completed = progress["completed"]
+    total = progress["total"]
+    percent = completed / total if total else 1.0
+    graph = f"Graph {progress['graph_index']}/{progress['graph_total']}"
+    if progress["row"]:
+        detail = f" · news {progress['row']}/{progress['row_total']}"
+        if progress["step"]:
+            detail += f" · node {progress['step']}/{progress['step_total']}"
+    else:
+        detail = ""
+    st.progress(percent, text=f"{graph}{detail} · {percent:.0%} complete")
+    if active and completed < total:
+        if elapsed >= 2 and completed > 0:
+            estimate = elapsed * (total - completed) / completed
+            st.caption(f"Estimated time remaining: about {_format_duration(estimate)}")
+        else:
+            st.caption("Estimating time remaining after the first steps...")
 
 
 def _validate_run_inputs(

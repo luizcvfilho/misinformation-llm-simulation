@@ -45,6 +45,8 @@ def initialize_state() -> None:
         st.session_state.run_job = None
     if "run_messages" not in st.session_state:
         st.session_state.run_messages = []
+    if "run_progress" not in st.session_state:
+        st.session_state.run_progress = None
 
 
 def load_initial_graph_nodes() -> list[dict[str, str]]:
