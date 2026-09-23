@@ -1,0 +1,51 @@
+\chapter{INTRODUÇÃO}
+\label{ch:introducao}
+
+A circulação de notícias falsas em ambientes digitais constitui um problema sociotécnico que envolve plataformas, instituições, práticas de produção de conteúdo e decisões humanas. Além de dificultar o acesso a informações confiáveis, esse fenômeno desafia respostas baseadas exclusivamente na identificação de conteúdos falsos já produzidos \cite{lazer2018science}. Em uma análise de grande escala de cascatas no Twitter, \citeonline{vosoughi2018spread} observaram diferenças relevantes entre a difusão de notícias verdadeiras e falsas. Esse resultado caracteriza padrões de propagação, mas não descreve como o conteúdo de uma mensagem se transforma enquanto circula. A distinção é central para este trabalho: difusão e transformação textual são processos relacionados, porém não equivalentes.
+
+Modelos de linguagem de grande escala, ou \textit{Large Language Models} (LLMs), ampliam essa discussão porque podem gerar, resumir e parafrasear textos em diferentes estilos e enquadramentos. \citeonline{su2024adapting} mostram que a origem humana ou sintética do texto e o método empregado em sua geração afetam o desempenho de detectores de notícias falsas. Ataques de estilo produzidos com LLMs também evidenciam que mudanças de forma e de apresentação podem comprometer detectores que exploram esses sinais \cite{wu2024sheepdog}. Portanto, uma classificação binária não é, por si só, uma descrição suficiente das mudanças graduais que podem ocorrer entre duas versões de uma notícia.
+
+A possibilidade de modificação durante a circulação antecede o uso contemporâneo de LLMs. Modelos de evolução de rumores já tratavam a mensagem como um objeto sujeito a alterações ao longo da propagação \cite{zhang2013rumor}, e estudos posteriores investigaram empiricamente estágios de evolução entre notícias verdadeiras e falsas \cite{guo2021truth}. Com LLMs, esse processo pode ser reproduzido de forma controlada por meio de gerações sucessivas. \citeonline{mohamed2025broken} demonstram que a geração iterativa pode acumular distorções, enquanto \citeonline{liu2025stepwise} simulam a transformação gradual de notícias verdadeiras em falsas com agentes baseados em LLMs. Esses trabalhos motivam a análise da trajetória da informação, em vez da observação isolada de uma versão inicial ou final.
+
+Simulações com agentes LLM também permitem condicionar cada etapa da interação a papéis ou perspectivas distintas. Há estudos que empregam redes desses agentes para investigar dinâmicas de opinião \cite{chuang2024opinion} e mudanças de atitude diante de notícias falsas \cite{liu2024skepticism}. Contudo, atitudes atribuídas a agentes, decisões de compartilhamento e mudanças no próprio texto correspondem a unidades de análise diferentes. Além disso, a consistência de uma persona ao longo de interações não deve ser presumida: ela precisa ser avaliada, pois agentes podem variar tanto na expressão do papel recebido quanto no alinhamento linguístico com outros agentes \cite{frisch2024interaction}.
+
+Este trabalho concentra-se na transformação textual. Seu objeto é a deriva informacional e afetiva observada em cadeias nas quais uma notícia é reescrita sucessivamente por agentes baseados em LLMs, condicionados por diferentes perspectivas. Neste contexto, \emph{deriva} designa mudanças mensuráveis entre versões do texto. Ela não é empregada como sinônimo de falsidade, de contradição, de crença do agente, de exposição de uma pessoa à notícia ou de comportamento humano de compartilhamento. Determinar se uma afirmação corresponde ao mundo externo exigiria evidências e um procedimento de verificação factual que não fazem parte do índice proposto.
+
+\section{PROBLEMA E LACUNA DE PESQUISA}
+\label{sec:problema-lacuna}
+
+A comparação entre a notícia original e sua versão final permite detectar uma diferença global, mas pode ocultar quando e como essa diferença surgiu. De modo inverso, a comparação apenas entre versões consecutivas registra mudanças locais sem necessariamente representar o afastamento acumulado em relação ao texto de origem. Uma análise de cadeias precisa, portanto, distinguir a mudança incremental, a distância ao original e o acúmulo de mudanças ao longo das etapas.
+
+Também é necessário decompor a transformação. Duas versões podem preservar o tema geral e, ainda assim, selecionar subtópicos diferentes, omitir entidades, alterar relações, introduzir contradições internas ou modificar o enquadramento afetivo. A teoria do enquadramento descreve como seleção e saliência organizam a apresentação de uma realidade percebida \cite{entman1993framing}; ela ajuda a caracterizar mudanças de ênfase sem convertê-las automaticamente em juízos de verdade. Nesse sentido, a lacuna abordada por este TCC é a necessidade de observar, de maneira estruturada e interpretável, como diferentes dimensões textuais variam em cadeias de reescrita condicionadas por perspectivas e ordens distintas.
+
+Para enfrentar essa lacuna, o estudo propõe o \textit{Structured Topic Drift Index} (STDI). O índice operacionaliza a deriva por componentes relacionados a tema, subtópicos, entidades e relações, acompanhados de sinais complementares de contradição interna e de valência, ativação e dominância (VAD). O STDI não é apresentado como detector de notícias falsas nem como medida de verdade. Sua validade depende da correspondência entre os componentes calculados e julgamentos humanos sobre as mudanças observadas, além de análises de sensibilidade a decisões de modelagem.
+
+\section{QUESTÃO DE PESQUISA E OBJETIVOS}
+\label{sec:questao-objetivos}
+
+A pergunta que orienta o trabalho é: \emph{em que medida a ordem e o tipo de perspectiva atribuída a agentes LLM alteram o conteúdo e o enquadramento emocional de uma notícia ao longo de uma cadeia de reescritas?}
+
+O objetivo geral é desenvolver e avaliar um procedimento estruturado para medir a deriva informacional e afetiva em cadeias controladas de reescrita de notícias por agentes baseados em LLMs.
+
+Como objetivos específicos, pretende-se:
+
+\begin{alineas}
+  \item construir cadeias de reescrita nas quais as mesmas notícias sejam submetidas a diferentes sequências de perspectivas;
+  \item extrair de cada versão representações estruturadas de tema, subtópicos, entidades, relações e enquadramento;
+  \item mensurar tanto as mudanças entre etapas consecutivas quanto o afastamento em relação à notícia original;
+  \item incorporar sinais afetivos de VAD sem tratá-los como evidência de falsidade factual;
+  \item comparar os cenários de forma pareada por notícia, considerando a incerteza e possíveis variáveis de confusão;
+  \item avaliar o STDI em relação a julgamentos humanos e examinar sua sensibilidade a pesos, modelos, \textit{prompts} e repetições.
+\end{alineas}
+
+\section{ESCOPO E CONTRIBUIÇÕES}
+\label{sec:escopo-contribuicoes}
+
+O estudo utiliza agentes LLM como instrumentos de uma simulação computacional, não como substitutos de participantes humanos. As perspectivas fornecidas nos \textit{prompts} são condições experimentais e não garantem personalidades estáveis. Por esse motivo, eventuais diferenças entre cadeias serão descritas como associações com as condições observadas, salvo quando o desenho e a análise sustentarem uma interpretação causal mais forte. A documentação do modelo, da versão, dos parâmetros, dos \textit{prompts}, das datas de execução e das unidades de análise segue recomendações de avaliação de LLMs em pesquisa social \cite{abdurahman2025primer} e de avaliação de agentes de interpretação de papéis \cite{chen2025rpa}.
+
+As contribuições pretendidas são: um protocolo reprodutível para gerar e comparar cadeias de reescrita; uma decomposição interpretável da deriva textual por meio do STDI; a separação explícita entre mudança incremental e distância ao original; e uma avaliação empírica de como diferentes perspectivas e ordens se associam às trajetórias das notícias. A contribuição é instrumental e metodológica. Ela não inclui uma solução de checagem factual externa, uma estimativa de crença humana nem uma reprodução completa das interações de uma plataforma social.
+
+\section{ORGANIZAÇÃO DO TRABALHO}
+\label{sec:organizacao}
+
+Além desta Introdução, o Capítulo \ref{ch:fundamentacao} apresenta a fundamentação teórica e os trabalhos relacionados. O Capítulo \ref{ch:evolucao} reconstrói a evolução metodológica que levou da classificação binária ao STDI. O Capítulo \ref{ch:metodos} descreve dados, agentes, geração das cadeias, extração estrutural, cálculo das métricas e protocolo de validação. O Capítulo \ref{ch:resultados} reúne os resultados do estudo. O Capítulo \ref{ch:discussao} interpreta esses resultados à luz da literatura e das ameaças à validade. Por fim, o Capítulo \ref{ch:conclusao} responde à pergunta de pesquisa dentro dos limites do desenho adotado e apresenta possibilidades de trabalhos futuros.
