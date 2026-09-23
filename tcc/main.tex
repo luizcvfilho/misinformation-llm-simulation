@@ -1,0 +1,40 @@
+\documentclass[12pt, a4paper, english, brazil, oneside,
+  chapter=TITLE, section=TITLE]{abntex2}
+
+% A formatação institucional é mantida no arquivo original do template.
+\input{formatacao}
+
+\begin{document}
+\pretextual
+
+\setcounter{page}{1}
+\imprimircapa
+\imprimirfolhaderosto
+
+% Elementos obrigatórios da versão final ainda pendentes:
+% - ficha catalográfica;
+% - folha de aprovação;
+% - resumo em português;
+% - abstract em inglês.
+% Eles devem ser incluídos somente quando seus conteúdos estiverem consolidados.
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+\textual
+\pagestyle{simple}
+\aliaspagestyle{chapter}{simple}
+
+\input{elementos-textuais/capitulo-1.tex}
+\input{elementos-textuais/capitulo-2.tex}
+\input{elementos-textuais/capitulo-3.tex}
+\input{elementos-textuais/capitulo-4.tex}
+\input{elementos-textuais/capitulo-5.tex}
+\input{elementos-textuais/capitulo-6.tex}
+\input{elementos-textuais/capitulo-7.tex}
+
+\postextual
+\bibliography{elementos-postextuais/referencias.bib}
+
+\end{document}
