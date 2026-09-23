@@ -17,6 +17,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 from misinformation_simulation import simulation  # noqa: E402
 from misinformation_simulation.apps import (  # noqa: E402
+    interaction_graph_dataset_builder,
     interaction_graph_io,
     interaction_graph_queue,
     interaction_graph_run_job,
@@ -69,10 +70,13 @@ def main() -> None:
     )
 
     df, dataset_label = interaction_graph_sections.render_sidebar()
-    config_tab, results_tab = st.tabs(["Configuration", "Results"])
+    config_tab, dataset_tab, results_tab = st.tabs(["Configuration", "Dataset builder", "Results"])
 
     with config_tab:
         interaction_graph_sections.render_configuration_tab(df, dataset_label)
+
+    with dataset_tab:
+        interaction_graph_dataset_builder.render_dataset_builder_tab(df, dataset_label)
 
     with results_tab:
         interaction_graph_sections.render_results_tab()
