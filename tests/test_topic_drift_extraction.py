@@ -62,7 +62,7 @@ def test_build_topic_structure_trims_scalars_and_defaults_missing_values() -> No
     structure = _build_topic_structure(
         {
             "main_topic": " Economy ",
-            "topic_domain": " business_and_economy ",
+            "topic_domain": " economy_business_and_finance ",
             "subtopics": ["inflation", "Inflation"],
             "central_entities": ["Central Bank"],
             "central_relations": [
@@ -75,7 +75,7 @@ def test_build_topic_structure_trims_scalars_and_defaults_missing_values() -> No
     )
 
     assert structure.main_topic == "Economy"
-    assert structure.topic_domain == "business_and_economy"
+    assert structure.topic_domain == "economy_business_and_finance"
     assert structure.subtopics == ["inflation"]
     assert structure.narrative_frame == "Alert"
     assert structure.has_internal_contradiction

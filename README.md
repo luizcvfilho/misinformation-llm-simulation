@@ -60,7 +60,7 @@ The project now includes a topic-drift utility for comparing rewritten news agai
 The extraction step builds a structured representation for each text with:
 
 - `main_topic`
-- `topic_domain` using a controlled high-level category
+- `topic_domain` using the 17 top-level [IPTC Media Topics](https://iptc.org/standards/media-topics/) categories
 - `subtopics`
 - `central_entities`
 - `central_relations` in `(subject, action, object)` form

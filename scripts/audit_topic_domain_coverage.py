@@ -39,7 +39,7 @@ TOPIC_DOMAIN_ONLY_PROMPT_TEMPLATE = f"""
 Classify the following news item into exactly one primary domain from this closed list:
 {", ".join(TOPIC_DOMAINS)}.
 
-Use other only when none of the named domains applies. Do not return null.
+These are the top-level IPTC Media Topics categories. Do not return null.
 
 Title: {{title}}
 
@@ -269,12 +269,8 @@ def main() -> None:
         "sample_size": len(results),
         "successful_extractions": len(successful),
         "failed_extractions": int((results["status"] == "error").sum()),
-        "other_count": counts["other"],
-        "other_percentage": (
-            round(100 * counts["other"] / len(successful), 2) if len(successful) else None
-        ),
-        "null_count": counts["null"],
-        "null_percentage": (
+        "unclassified_count": counts["null"],
+        "unclassified_percentage": (
             round(100 * counts["null"] / len(successful), 2) if len(successful) else None
         ),
         "unexpected_domain_labels": unexpected,

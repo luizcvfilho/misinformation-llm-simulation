@@ -18,23 +18,28 @@ DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
 DEFAULT_TOPIC_DRIFT_PROVIDER = DEFAULT_LLM_PROVIDER
 DEFAULT_REWRITTEN_COLUMN = "rewritten_news"
 TOPIC_DOMAINS = (
-    "accidents_and_emergencies",
-    "business_and_economy",
-    "crime_and_justice",
-    "culture_and_entertainment",
+    "arts_culture_entertainment_and_media",
+    "conflict_war_and_peace",
+    "crime_law_and_justice",
+    "disaster_accident_and_emergency_incident",
+    "economy_business_and_finance",
     "education",
     "environment",
-    "government_and_public_policy",
     "health",
-    "international_affairs",
+    "human_interest",
+    "labour",
+    "lifestyle_and_leisure",
+    "politics",
+    "religion_and_belief",
     "science_and_technology",
-    "sports",
-    "other",
+    "society",
+    "sport",
+    "weather",
 )
 TOPIC_DOMAIN_VALUES = ", ".join(TOPIC_DOMAINS)
 TOPIC_DOMAIN_CLASSIFICATION_RULE = (
-    "Select the article's primary domain from this controlled vocabulary: "
-    f"{TOPIC_DOMAIN_VALUES}. Use other only when none of the named domains applies."
+    "Select the article's primary domain from the top-level IPTC Media Topics "
+    f"controlled vocabulary: {TOPIC_DOMAIN_VALUES}."
 )
 
 TOPIC_DRIFT_SYSTEM_INSTRUCTION = """

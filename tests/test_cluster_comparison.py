@@ -83,13 +83,13 @@ def test_cluster_comparison_gates_theme_when_domains_differ() -> None:
         "Calgary Flames season outlook",
         "Calgary Flames",
         "evaluate",
-        domain="sports",
+        domain="sport",
     )
     modified = _structure(
         "Calgary municipal budget process",
         "Calgary City Council",
         "evaluate",
-        domain="government_and_public_policy",
+        domain="politics",
     )
     comparator = ClusterSTDIComparator(embedder=KeywordEmbedder(), random_state=1).fit(
         [TopicStructurePair("pair_1", original, modified)]
@@ -107,13 +107,13 @@ def test_cluster_comparison_uses_direct_theme_similarity_when_domains_match() ->
         "economy policy",
         "Central Bank",
         "announces",
-        domain="business_and_economy",
+        domain="economy_business_and_finance",
     )
     modified = _structure(
         "health policy",
         "Health Minister",
         "cancels",
-        domain="business_and_economy",
+        domain="economy_business_and_finance",
     )
     comparator = ClusterSTDIComparator(embedder=KeywordEmbedder(), random_state=1).fit(
         [TopicStructurePair("pair_1", original, modified)]

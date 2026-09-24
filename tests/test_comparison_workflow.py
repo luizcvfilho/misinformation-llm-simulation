@@ -38,7 +38,7 @@ def _structure_columns(
     entity: str,
     action: str,
     *,
-    domain: str = "other",
+    domain: str = "society",
 ) -> dict[str, str]:
     return {
         f"{prefix}_main_topic": topic,
@@ -64,14 +64,14 @@ def _pairs() -> pd.DataFrame:
                     "economy policy",
                     "Central Bank",
                     "announces",
-                    domain="business_and_economy",
+                    domain="economy_business_and_finance",
                 ),
                 **_structure_columns(
                     "modified",
                     "economy policy",
                     "Central Bank",
                     "announces",
-                    domain="business_and_economy",
+                    domain="economy_business_and_finance",
                 ),
             },
             {
@@ -84,7 +84,7 @@ def _pairs() -> pd.DataFrame:
                     "economy policy",
                     "Central Bank",
                     "announces",
-                    domain="business_and_economy",
+                    domain="economy_business_and_finance",
                 ),
                 **_structure_columns(
                     "modified", "health policy", "Health Minister", "cancels", domain="health"
@@ -171,7 +171,7 @@ def test_refresh_structures_accepts_empty_numeric_structure_columns() -> None:
         [
             TopicStructure(
                 main_topic="economy policy",
-                topic_domain="business_and_economy",
+                topic_domain="economy_business_and_finance",
                 subtopics=["economy"],
                 central_entities=["Central Bank"],
                 central_relations=[],
