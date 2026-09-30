@@ -34,7 +34,23 @@ ANALYSIS_STEP_COLUMNS = {
     *METRIC_LABELS,
     "node_id",
     "node_label",
+    "source_node_id",
+    "source_node_label",
+    "personality",
+    "source_text",
+    "rewritten_text",
     "metadata_title",
+    "metadata_category",
+    "metadata_original_topic_domain",
+    "theme_drift_incremental",
+    "subtopic_drift_incremental",
+    "entity_drift_incremental",
+    "relation_drift_incremental",
+    "contradiction_drift_incremental",
+    "vad_drift_incremental",
+    "valence_drift_incremental",
+    "arousal_drift_incremental",
+    "dominance_drift_incremental",
 }
 
 

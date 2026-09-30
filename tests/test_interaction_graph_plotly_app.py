@@ -2,11 +2,20 @@ from __future__ import annotations
 
 import pandas as pd
 
+from misinformation_simulation.analysis.interaction_graph_personas import (
+    summarize_scenario_contrasts,
+)
 from misinformation_simulation.analysis.interaction_graph_plotly import (
+    build_case_component_figure,
     build_component_figure,
+    build_contrast_interval_figure,
     build_distribution_figure,
     build_evolution_figure,
     build_iteration_distribution_figure,
+    build_persona_boxplot,
+    build_persona_position_boxplot,
+    build_scenario_difference_boxplot,
+    build_transition_pair_figure,
 )
 
 
@@ -63,3 +72,47 @@ def test_plotly_figures_include_the_requested_views() -> None:
     assert {trace.name for trace in distribution.data} == {"01 · SSSS", "02 · CCCC"}
     assert {trace.name for trace in iteration_distribution.data} == {"1", "2"}
     assert "incremental" in iteration_distribution.layout.title.text
+
+
+def _paired_scenario_steps() -> pd.DataFrame:
+    steps = _steps().copy()
+    steps["news_id"] = "news-1"
+    steps["metadata_title"] = "Example news"
+    steps["source_text"] = "source"
+    steps["rewritten_text"] = "rewrite"
+    steps["run_id"] = steps["chain_label"]
+    first_chain = steps["chain_label"].eq("01 · SSSS")
+    steps.loc[first_chain, "chain_code"] = "CCPP"
+    steps.loc[~first_chain, "chain_code"] = "PPCC"
+    steps.loc[first_chain & steps["step_index"].eq(1), "node_label"] = "1. Conservative"
+    steps.loc[first_chain & steps["step_index"].eq(2), "node_label"] = "2. Progressive"
+    steps.loc[~first_chain & steps["step_index"].eq(1), "node_label"] = "1. Progressive"
+    steps.loc[~first_chain & steps["step_index"].eq(2), "node_label"] = "2. Conservative"
+    steps.loc[steps["step_index"].eq(1), "source_node_label"] = "description"
+    steps.loc[first_chain & steps["step_index"].eq(2), "source_node_label"] = "1. Conservative"
+    steps.loc[~first_chain & steps["step_index"].eq(2), "source_node_label"] = "1. Progressive"
+    return steps
+
+
+def test_persona_transition_and_contrast_figures() -> None:
+    steps = _paired_scenario_steps()
+    summary = summarize_scenario_contrasts(steps, bootstrap_iterations=20)
+
+    personas = build_persona_boxplot(steps, "stdi_incremental")
+    positions = build_persona_position_boxplot(steps, "stdi_incremental")
+    transitions = build_transition_pair_figure(
+        steps,
+        "stdi_incremental",
+        "Conservative -> Progressive",
+        "Progressive -> Conservative",
+    )
+    contrast_boxes = build_scenario_difference_boxplot(steps, "stdi_vs_original")
+    intervals = build_contrast_interval_figure(summary)
+    case_components = build_case_component_figure({"Theme": 0.1, "Entities": 0.2})
+
+    assert len(personas.data) == 2
+    assert len(positions.data) == 4
+    assert len(transitions.data) == 3
+    assert len(contrast_boxes.data) == 1
+    assert len(intervals.data) == 1
+    assert list(case_components.data[0].y) == [0.1, 0.2]
