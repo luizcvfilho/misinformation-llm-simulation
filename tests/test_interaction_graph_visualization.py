@@ -1,0 +1,89 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from misinformation_simulation.analysis.interaction_graph_visualization import (
+    create_static_figures,
+    discover_step_paths,
+    export_analysis_tables,
+    load_interaction_graph_runs,
+    summarize_components,
+    summarize_metric,
+)
+
+
+def _write_steps(path, *, stdi: float) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "news_id": "news-1",
+                "step_index": 1,
+                "rewrite_status": "success",
+                "stdi_vs_original": stdi,
+                "stdi_incremental": stdi,
+                "stdi_cumulative": stdi,
+                "theme_drift_vs_original": 0.1,
+                "subtopic_drift_vs_original": 0.2,
+                "entity_drift_vs_original": 0.3,
+                "relation_drift_vs_original": 0.4,
+                "contradiction_drift_vs_original": 0.0,
+                "vad_drift_vs_original": 0.05,
+                "valence_drift_vs_original": 0.04,
+                "arousal_drift_vs_original": 0.06,
+                "dominance_drift_vs_original": 0.05,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -> None:
+    current = tmp_path / "simulation_ui_20260918_000717_01_01_ssss"
+    archived = tmp_path / "OLD_RUNS"
+    _write_steps(current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl", stdi=0.2)
+    _write_steps(archived / "archived_steps.jsonl", stdi=0.9)
+
+    paths = discover_step_paths(tmp_path)
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert paths == [current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl"]
+    assert runs.steps["chain_label"].tolist() == ["01 · SSSS"]
+    assert runs.steps["graph_id"].tolist() == ["01"]
+
+
+def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
+    current = tmp_path / "simulation_ui_20260918_000717_01_01_ssss"
+    steps_path = current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl"
+    _write_steps(steps_path, stdi=0.2)
+    runs = load_interaction_graph_runs(tmp_path)
+
+    def write_pngs(_figures, paths, **_kwargs) -> None:
+        for path in paths:
+            Path(path).write_bytes(b"png")
+
+    monkeypatch.setattr(
+        "misinformation_simulation.analysis.interaction_graph_visualization"
+        "._is_kaleido_browser_available",
+        lambda: True,
+    )
+    monkeypatch.setattr("plotly.io.write_images", write_pngs)
+
+    metric_summary = summarize_metric(runs.steps, "stdi_vs_original")
+    component_summary = summarize_components(runs.steps)
+    output_dir = tmp_path / "analysis"
+    output_paths = {
+        **create_static_figures(runs, output_dir),
+        **export_analysis_tables(runs, output_dir),
+    }
+
+    assert metric_summary.loc[0, "mean"] == 0.2
+    assert len(component_summary) == 9
+    assert all(path.is_file() for path in output_paths.values())
+    assert output_paths["stdi_evolution_html"].suffix == ".html"
+    assert "plotly" in output_paths["stdi_evolution_html"].read_text(encoding="utf-8").lower()
+    assert output_paths["figure_export_status"].is_file()
+    assert output_paths["stdi_evolution_png"].suffix == ".png"
+    assert (output_dir / "final_stdi_by_chain.csv").is_file()

@@ -50,8 +50,37 @@ make fetch-news OUTPUT=data/raw/newsdata_news.csv LANGUAGE=pt MAX_RECORDS=200
 make interaction-graph
 make interaction-graph-verbose GRAPH_MAX_ROWS=5
 make interaction-graph-ui
+make interaction-graph-analysis
+make interaction-graph-analysis-ui
 make clean
 ```
+
+### Interaction-graph STDI analysis
+
+The persisted runs in `output/interaction_graph/app_runs/` can be analyzed without rerunning the
+LLM simulation. The analysis command recursively reads `*_steps.jsonl` files and always ignores
+directories named `OLD_RUNS` (case-insensitive):
+
+```powershell
+make interaction-graph-analysis
+```
+
+It writes self-contained interactive Plotly HTML figures, tidy successful step data, summaries by
+iteration and chain, and a reproducibility manifest to `output/interaction_graph/analysis/`. When
+Kaleido and Chrome or Chromium are available, PNG copies are generated as well; the
+`plotly_figure_export.json` file records whether this export succeeded. The figures use
+`stdi_vs_original`, because it measures each rewritten version against the same original news
+item. The dashboard also lets the user inspect `stdi_incremental` and `stdi_cumulative`.
+
+To interactively filter chains and metrics, inspect the component trajectories, and move the
+boxplot iteration selector, run:
+
+```powershell
+make interaction-graph-analysis-ui
+```
+
+The dashboard uses Plotly, including a visible mode bar for zoom, pan, box and lasso selection,
+scale reset, and figure export.
 
 ## Structured Topic Drift Index (STDI)
 
