@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news audit-topic-domain-coverage prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis interaction-graph-analysis-ui clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news audit-topic-domain-coverage prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis interaction-graph-analysis-ui interaction-graph-dashboards clean
 
 .DEFAULT_GOAL := help
 
@@ -64,6 +64,8 @@ GRAPH_OUTPUT_DIR ?= output/interaction_graph
 GRAPH_OUTPUT_PREFIX ?= simulation
 GRAPH_ANALYSIS_RUNS_DIR ?= output/interaction_graph/app_runs
 GRAPH_ANALYSIS_OUTPUT_DIR ?= output/interaction_graph/analysis
+GRAPH_UI_PORT ?= 8501
+GRAPH_ANALYSIS_UI_PORT ?= 8502
 
 FETCH_NEWS_OPTIONAL_ARGS := \
 	$(if $(strip $(OUTPUT)),--output $(OUTPUT),) \
@@ -128,6 +130,7 @@ help: ## List available targets
 	@echo "  interaction-graph-ui Open the Streamlit UI for the interaction graph workflow"
 	@echo "  interaction-graph-analysis Generate reproducible STDI figures and summary tables"
 	@echo "  interaction-graph-analysis-ui Open the Plotly STDI analysis dashboard"
+	@echo "  interaction-graph-dashboards Open both interaction-graph Streamlit dashboards"
 	@echo "  clean              Remove virtual environment"
 
 setup: ## Create .venv, generate lockfile, and sync dependencies (including dev)
@@ -214,13 +217,16 @@ interaction-graph-verbose:
 	uv run python scripts/run_interaction_graph.py --input $(GRAPH_INPUT) --graph-config $(GRAPH_CONFIG) --text-column $(GRAPH_TEXT_COLUMN) --title-column $(GRAPH_TITLE_COLUMN) --sleep-seconds $(GRAPH_SLEEP_SECONDS) --retry-attempts $(GRAPH_RETRY_ATTEMPTS) --output-dir $(GRAPH_OUTPUT_DIR) --output-prefix $(GRAPH_OUTPUT_PREFIX) --verbose $(INTERACTION_GRAPH_OPTIONAL_ARGS)
 
 interaction-graph-ui:
-	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_app.py
+	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_app.py --server.port $(GRAPH_UI_PORT)
 
 interaction-graph-analysis:
 	uv run python scripts/generate_interaction_graph_analysis.py --runs-dir $(GRAPH_ANALYSIS_RUNS_DIR) --output-dir $(GRAPH_ANALYSIS_OUTPUT_DIR)
 
 interaction-graph-analysis-ui:
-	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_analysis_plotly_app.py
+	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_analysis_plotly_app.py --server.port $(GRAPH_ANALYSIS_UI_PORT)
+
+interaction-graph-dashboards:
+	$(MAKE) -j2 interaction-graph-ui interaction-graph-analysis-ui
 
 clean: ## Remove virtual environment
 	@$(CLEAN_CMD)

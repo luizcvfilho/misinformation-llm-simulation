@@ -52,6 +52,7 @@ make interaction-graph-verbose GRAPH_MAX_ROWS=5
 make interaction-graph-ui
 make interaction-graph-analysis
 make interaction-graph-analysis-ui
+make interaction-graph-dashboards
 make clean
 ```
 
@@ -81,6 +82,32 @@ make interaction-graph-analysis-ui
 
 The dashboard uses Plotly, including a visible mode bar for zoom, pan, box and lasso selection,
 scale reset, and figure export.
+
+### Running both Streamlit dashboards
+
+The workflow UI and the analysis dashboard use distinct ports by default, so they can run at the
+same time. Start both from one terminal with:
+
+```powershell
+make interaction-graph-dashboards
+```
+
+Then open `http://localhost:8501` for the interaction graph workflow and
+`http://localhost:8502` for the analysis dashboard. Press `Ctrl+C` in that terminal to stop both
+processes.
+
+To start them from separate terminals instead, use:
+
+```powershell
+make interaction-graph-ui
+make interaction-graph-analysis-ui
+```
+
+Override the ports when either default is already in use:
+
+```powershell
+make interaction-graph-dashboards GRAPH_UI_PORT=8511 GRAPH_ANALYSIS_UI_PORT=8512
+```
 
 ## Structured Topic Drift Index (STDI)
 
@@ -487,6 +514,7 @@ Default Make targets:
 make interaction-graph
 make interaction-graph-verbose
 make interaction-graph-ui
+make interaction-graph-dashboards
 ```
 
 Useful overrides:
@@ -514,6 +542,8 @@ Main variables:
   is `chatgpt`)
 - `GRAPH_OUTPUT_DIR`: output directory (`output/interaction_graph` default)
 - `GRAPH_OUTPUT_PREFIX`: output file prefix (`simulation` default)
+- `GRAPH_UI_PORT`: Streamlit port for the interaction graph workflow (`8501` default)
+- `GRAPH_ANALYSIS_UI_PORT`: Streamlit port for the analysis dashboard (`8502` default)
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
