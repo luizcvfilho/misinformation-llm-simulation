@@ -21,6 +21,8 @@ def _write_steps(path, *, stdi: float) -> None:
                 "news_id": "news-1",
                 "step_index": 1,
                 "rewrite_status": "success",
+                "metadata_category": "business; top",
+                "metadata_original_topic_domain": "economy_business_and_finance",
                 "stdi_vs_original": stdi,
                 "stdi_incremental": stdi,
                 "stdi_cumulative": stdi,
@@ -54,6 +56,8 @@ def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -
     assert paths == [current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl"]
     assert runs.steps["chain_label"].tolist() == ["01 · SSSS"]
     assert runs.steps["graph_id"].tolist() == ["01"]
+    assert runs.steps["metadata_category"].tolist() == ["business; top"]
+    assert runs.steps["metadata_original_topic_domain"].tolist() == ["economy_business_and_finance"]
 
 
 def test_loads_single_and_multi_graph_run_layouts_together(tmp_path) -> None:
@@ -101,3 +105,6 @@ def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
     assert output_paths["figure_export_status"].is_file()
     assert output_paths["stdi_evolution_png"].suffix == ".png"
     assert (output_dir / "final_stdi_by_chain.csv").is_file()
+    exported = (output_dir / "successful_steps.csv").read_text(encoding="utf-8")
+    assert "metadata_category" in exported
+    assert "metadata_original_topic_domain" in exported

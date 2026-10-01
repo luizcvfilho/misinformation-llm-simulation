@@ -4,6 +4,9 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+from misinformation_simulation.analysis.interaction_graph_groups import (
+    PROXIMITY_MEASURE_LABELS,
+)
 from misinformation_simulation.analysis.interaction_graph_personas import (
     INCREMENTAL_COMPONENT_COLUMNS,
     PERSONA_CODE_LABELS,
@@ -32,6 +35,162 @@ PERSONA_COLORS = {
     "E": "#F58518",
     "M": "#72B7B2",
 }
+
+
+def build_group_composition_figure(summary: pd.DataFrame) -> go.Figure:
+    """Show the number of unique news items available in every selected grouping."""
+    ordered = summary.sort_values(["news_items", "group_label"], ascending=[False, True])
+    figure = go.Figure(
+        go.Bar(
+            x=ordered["group_label"],
+            y=ordered["news_items"],
+            marker={"color": "#4C78A8"},
+            customdata=ordered[["group_value"]],
+            hovertemplate=(
+                "Grupo: %{x}<br>Notícias: %{y}<br>Valor persistido: %{customdata[0]}<extra></extra>"
+            ),
+        )
+    )
+    figure.update_layout(
+        title="Composição das notícias por grupo",
+        xaxis_title="Grupo de notícias",
+        yaxis_title="Notícias",
+        height=500,
+        margin={"l": 60, "r": 30, "t": 70, "b": 130},
+    )
+    figure.update_xaxes(tickangle=-25)
+    return figure
+
+
+def build_group_proximity_interval_figure(summary: pd.DataFrame) -> go.Figure:
+    """Compare mean within-news chain ranges and their bootstrap intervals."""
+    ordered = summary.sort_values("mean_range", ascending=False).reset_index(drop=True)
+    figure = go.Figure(
+        go.Bar(
+            x=ordered["mean_range"],
+            y=ordered["group_label"],
+            orientation="h",
+            marker={"color": "#4C78A8"},
+            error_x={
+                "type": "data",
+                "symmetric": False,
+                "array": ordered["range_ci_high"] - ordered["mean_range"],
+                "arrayminus": ordered["mean_range"] - ordered["range_ci_low"],
+                "color": "#1F4E79",
+                "thickness": 1.7,
+            },
+            customdata=ordered[["news_items", "median_range", "mean_pairwise_abs_diff"]],
+            hovertemplate=(
+                "Grupo: %{y}<br>Amplitude média: %{x:.3f}"
+                "<br>Mediana: %{customdata[1]:.3f}"
+                "<br>Diferença média entre pares: %{customdata[2]:.3f}"
+                "<br>Notícias: %{customdata[0]}<extra></extra>"
+            ),
+        )
+    )
+    figure.update_layout(
+        title="Proximidade das cadeias por grupo — amplitude média e IC bootstrap de 95%",
+        xaxis_title="Amplitude do resultado final entre cadeias",
+        yaxis_title="Grupo de notícias",
+        xaxis={"rangemode": "tozero"},
+        height=max(430, 55 * len(ordered) + 180),
+        margin={"l": 180, "r": 40, "t": 80, "b": 60},
+    )
+    return figure
+
+
+def build_group_proximity_boxplot(
+    news_proximity: pd.DataFrame,
+    measure: str,
+) -> go.Figure:
+    """Show the news-level distribution of one chain-proximity measure by group."""
+    if measure not in PROXIMITY_MEASURE_LABELS:
+        raise ValueError(f"Unsupported proximity measure: {measure}")
+    figure = go.Figure()
+    order = (
+        news_proximity.groupby("group_label", dropna=False)[measure].median().sort_values().index
+    )
+    for label in order:
+        group = news_proximity.loc[news_proximity["group_label"].eq(label)]
+        titles = group["metadata_title"].fillna(group["news_id"])
+        figure.add_trace(
+            go.Box(
+                y=group[measure],
+                name=str(label),
+                boxpoints="all",
+                jitter=0.32,
+                pointpos=0,
+                marker={"size": 6, "opacity": 0.48},
+                line={"width": 1.5},
+                customdata=pd.DataFrame(
+                    {
+                        "title": titles,
+                        "chains": group["chains_observed"],
+                        "mean_metric": group["mean_metric"],
+                    }
+                ),
+                hovertemplate=(
+                    "Grupo: %{fullData.name}<br>Notícia: %{customdata[0]}"
+                    f"<br>{PROXIMITY_MEASURE_LABELS[measure]}: %{{y:.3f}}"
+                    "<br>Cadeias observadas: %{customdata[1]}"
+                    "<br>Média da notícia: %{customdata[2]:.3f}<extra></extra>"
+                ),
+            )
+        )
+    figure.update_layout(
+        title=f"{PROXIMITY_MEASURE_LABELS[measure]} por grupo de notícias",
+        xaxis_title="Grupo de notícias",
+        yaxis_title=PROXIMITY_MEASURE_LABELS[measure],
+        yaxis={"rangemode": "tozero"},
+        height=570,
+        showlegend=False,
+        hovermode="closest",
+        margin={"l": 60, "r": 30, "t": 70, "b": 130},
+    )
+    figure.update_xaxes(tickangle=-25)
+    return figure
+
+
+def build_chain_pair_heatmap(pair_summary: pd.DataFrame, group_value: str) -> go.Figure:
+    """Show mean absolute final-score differences for all chain pairs in one news group."""
+    data = pair_summary.loc[pair_summary["group_value"].eq(group_value)].copy()
+    if data.empty:
+        return go.Figure()
+    chains = sorted(set(data["chain_a"]) | set(data["chain_b"]))
+    matrix = pd.DataFrame(float("nan"), index=chains, columns=chains)
+    counts = pd.DataFrame(float("nan"), index=chains, columns=chains)
+    for chain in chains:
+        matrix.loc[chain, chain] = 0.0
+    for row in data.itertuples(index=False):
+        matrix.loc[row.chain_a, row.chain_b] = row.mean_absolute_difference
+        matrix.loc[row.chain_b, row.chain_a] = row.mean_absolute_difference
+        counts.loc[row.chain_a, row.chain_b] = row.paired_news
+        counts.loc[row.chain_b, row.chain_a] = row.paired_news
+    label = str(data["group_label"].iloc[0])
+    figure = go.Figure(
+        go.Heatmap(
+            z=matrix.to_numpy(),
+            x=matrix.columns,
+            y=matrix.index,
+            colorscale="Blues",
+            zmin=0,
+            customdata=counts.to_numpy(),
+            hovertemplate=(
+                "Cadeia A: %{y}<br>Cadeia B: %{x}"
+                "<br>Diferença absoluta média: %{z:.3f}"
+                "<br>Notícias pareadas: %{customdata:.0f}<extra></extra>"
+            ),
+            colorbar={"title": "Diferença<br>média"},
+        )
+    )
+    figure.update_layout(
+        title=f"Proximidade entre pares de cadeias — {label}",
+        xaxis_title="Cadeia",
+        yaxis_title="Cadeia",
+        height=650,
+        margin={"l": 90, "r": 50, "t": 80, "b": 90},
+    )
+    return figure
 
 
 def build_evolution_figure(steps: pd.DataFrame, metric: str) -> go.Figure:

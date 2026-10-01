@@ -5,6 +5,16 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.analysis.interaction_graph_groups import (
+    GROUPING_LABELS,
+    ORIGINAL_CATEGORY_GROUPING,
+    PROXIMITY_MEASURE_LABELS,
+    available_news_groupings,
+    news_chain_proximity,
+    summarize_chain_pairs_by_group,
+    summarize_group_proximity,
+    topic_domain_disagreements,
+)
 from misinformation_simulation.analysis.interaction_graph_personas import (
     INCREMENTAL_COMPONENT_COLUMNS,
     build_transition_matrix,
@@ -20,10 +30,14 @@ from misinformation_simulation.analysis.interaction_graph_personas import (
 from misinformation_simulation.analysis.interaction_graph_plotly import (
     PLOTLY_CONFIG,
     build_case_component_figure,
+    build_chain_pair_heatmap,
     build_component_figure,
     build_contrast_interval_figure,
     build_distribution_figure,
     build_evolution_figure,
+    build_group_composition_figure,
+    build_group_proximity_boxplot,
+    build_group_proximity_interval_figure,
     build_iteration_distribution_figure,
     build_persona_boxplot,
     build_persona_position_boxplot,
@@ -91,11 +105,20 @@ def main() -> None:
     second_column.metric("Notícias", selected_steps["news_id"].nunique())
     third_column.metric("Observações válidas", len(selected_steps))
 
-    overview_tab, personas_tab, transitions_tab, contrasts_tab, cases_tab = st.tabs(
-        ["Visão geral", "Personas", "Transições", "Contrastes pareados", "Casos"]
+    overview_tab, groups_tab, personas_tab, transitions_tab, contrasts_tab, cases_tab = st.tabs(
+        [
+            "Visão geral",
+            "Domínios e categorias",
+            "Personas",
+            "Transições",
+            "Contrastes pareados",
+            "Casos",
+        ]
     )
     with overview_tab:
         _render_overview(selected_steps, selected_metric, metrics)
+    with groups_tab:
+        _render_news_group_analysis(selected_steps, metrics)
     with personas_tab:
         _render_persona_analysis(selected_steps)
     with transitions_tab:
@@ -215,6 +238,290 @@ def _render_overview(
         config=PLOTLY_CONFIG,
     )
     st.dataframe(distribution_summary, width="stretch", hide_index=True)
+
+
+def _render_news_group_analysis(
+    selected_steps: pd.DataFrame,
+    metrics: dict[str, str],
+) -> None:
+    st.subheader("Resultados por domínio ou classificação da notícia")
+    st.info(
+        "Esta análise compara o resultado final das cadeias notícia a notícia. Valores menores "
+        "de amplitude, desvio-padrão ou diferença absoluta indicam cadeias mais próximas. "
+        "As diferenças descrevem este conjunto de notícias e não estabelecem efeito causal "
+        "do domínio."
+    )
+    groupings = available_news_groupings(selected_steps)
+    if not groupings:
+        st.warning(
+            "As execuções selecionadas não guardam classificação original nem topic domain. "
+            "Execute novamente com um dataset que tenha a coluna `category` ou com a extração "
+            "estrutural de tópico habilitada."
+        )
+        return
+
+    grouping = st.selectbox(
+        "Agrupamento das notícias",
+        list(groupings),
+        format_func=GROUPING_LABELS.__getitem__,
+        key="news_grouping",
+    )
+    if grouping == ORIGINAL_CATEGORY_GROUPING:
+        st.caption(
+            "As categorias vêm da coluna `category` do dataset original e são persistidas como "
+            "`metadata_category`. Uma notícia com categorias separadas por `;` participa de mais "
+            "de um grupo, por isso as contagens podem se sobrepor."
+        )
+    else:
+        if ORIGINAL_CATEGORY_GROUPING not in groupings:
+            st.info(
+                "A classificação original não está disponível nestas execuções; o visualizador "
+                "está usando `metadata_original_topic_domain`."
+            )
+        st.caption(
+            "O topic domain é extraído do texto original pelo pipeline. Ele é uma classificação "
+            "semântica do experimento, não a categoria editorial fornecida pela fonte. Quando "
+            "a extração varia entre execuções, usa-se o domínio modal da notícia."
+        )
+        disagreements = topic_domain_disagreements(selected_steps)
+        if not disagreements.empty:
+            st.warning(
+                f"O topic domain variou entre execuções para {len(disagreements)} notícia(s). "
+                "O agrupamento abaixo usa o valor mais frequente; empates são resolvidos de "
+                "forma determinística."
+            )
+            with st.expander("Notícias com topic domain inconsistente", expanded=False):
+                disagreement_display = disagreements.rename(
+                    columns={
+                        "metadata_title": "Notícia",
+                        "distinct_domains": "Domínios distintos",
+                        "observed_domains": "Domínios observados",
+                    }
+                )
+                st.dataframe(
+                    disagreement_display[["Notícia", "Domínios distintos", "Domínios observados"]],
+                    width="stretch",
+                    hide_index=True,
+                )
+
+    metric_options = [
+        metric
+        for metric in (
+            "stdi_vs_original",
+            "stdi_incremental",
+            "stdi_cumulative",
+            *STDI_COMPONENT_COLUMNS,
+        )
+        if metric in metrics
+    ]
+    metric = st.selectbox(
+        "Métrica final comparada entre cadeias",
+        metric_options,
+        format_func=_final_contrast_metric_label,
+        key="news_group_metric",
+    )
+    news_proximity = news_chain_proximity(selected_steps, metric, grouping)
+    if news_proximity.empty:
+        st.warning(
+            "Não há notícias com pelo menos duas cadeias e valores finais válidos para este "
+            "recorte."
+        )
+        return
+
+    summary = summarize_group_proximity(news_proximity)
+    group_options = summary["group_value"].tolist()
+    group_labels = summary.set_index("group_value")["group_label"].to_dict()
+    selected_groups = st.multiselect(
+        "Grupos exibidos",
+        group_options,
+        default=group_options,
+        format_func=lambda value: group_labels.get(value, value),
+        key="news_groups_displayed",
+    )
+    if not selected_groups:
+        st.warning("Selecione pelo menos um grupo de notícias.")
+        return
+    filtered_news = news_proximity.loc[news_proximity["group_value"].isin(selected_groups)].copy()
+    filtered_summary = summary.loc[summary["group_value"].isin(selected_groups)].copy()
+
+    first, second, third = st.columns(3)
+    first.metric("Grupos", len(filtered_summary))
+    second.metric("Notícias únicas", filtered_news["news_id"].nunique())
+    third.metric("Cadeias selecionadas", selected_steps["chain_label"].nunique())
+
+    small_groups = filtered_summary.loc[
+        filtered_summary["news_items"].lt(5), "group_label"
+    ].tolist()
+    if small_groups:
+        st.warning(
+            "Grupos com menos de cinco notícias devem ser interpretados apenas como casos "
+            "exploratórios: " + ", ".join(small_groups) + "."
+        )
+
+    st.subheader("Composição do recorte")
+    st.plotly_chart(
+        build_group_composition_figure(filtered_summary),
+        width="stretch",
+        config=PLOTLY_CONFIG,
+    )
+    if grouping == ORIGINAL_CATEGORY_GROUPING:
+        memberships = int(filtered_summary["news_items"].sum())
+        unique_news = int(filtered_news["news_id"].nunique())
+        if memberships > unique_news:
+            st.caption(
+                f"Há {memberships} associações categoria–notícia para {unique_news} notícias "
+                "únicas porque as categorias originais podem ser múltiplas."
+            )
+
+    st.subheader("Proximidade das cadeias dentro de cada notícia")
+    st.caption(
+        "A amplitude é calculada, para cada notícia, como o maior resultado final menos o menor "
+        "entre as cadeias selecionadas. O intervalo de 95% reamostra notícias dentro de cada grupo."
+    )
+    st.plotly_chart(
+        build_group_proximity_interval_figure(filtered_summary),
+        width="stretch",
+        config=PLOTLY_CONFIG,
+    )
+    proximity_measure = st.selectbox(
+        "Medida para a distribuição notícia a notícia",
+        list(PROXIMITY_MEASURE_LABELS),
+        format_func=PROXIMITY_MEASURE_LABELS.__getitem__,
+        key="news_group_proximity_measure",
+    )
+    st.plotly_chart(
+        build_group_proximity_boxplot(filtered_news, proximity_measure),
+        width="stretch",
+        config=PLOTLY_CONFIG,
+    )
+
+    summary_display = filtered_summary.rename(
+        columns={
+            "group_label": "Grupo",
+            "news_items": "Notícias",
+            "mean_news_metric": "Média da métrica por notícia",
+            "mean_range": "Amplitude média",
+            "median_range": "Amplitude mediana",
+            "range_ci_low": "IC 95% — inferior",
+            "range_ci_high": "IC 95% — superior",
+            "mean_sd": "Desvio-padrão médio",
+            "mean_pairwise_abs_diff": "Diferença média entre pares",
+            "minimum_chains": "Mínimo de cadeias",
+            "maximum_chains": "Máximo de cadeias",
+        }
+    )
+    summary_columns = [
+        "Grupo",
+        "Notícias",
+        "Média da métrica por notícia",
+        "Amplitude média",
+        "Amplitude mediana",
+        "IC 95% — inferior",
+        "IC 95% — superior",
+        "Desvio-padrão médio",
+        "Diferença média entre pares",
+        "Mínimo de cadeias",
+        "Máximo de cadeias",
+    ]
+    st.dataframe(
+        summary_display[summary_columns],
+        width="stretch",
+        hide_index=True,
+        column_config=_numeric_column_config(summary_display[summary_columns]),
+    )
+    first_download, second_download = st.columns(2)
+    first_download.download_button(
+        "Baixar resumo por grupo",
+        data=filtered_summary.to_csv(index=False).encode("utf-8"),
+        file_name=f"chain_proximity_by_{grouping}.csv",
+        mime="text/csv",
+        width="stretch",
+    )
+    second_download.download_button(
+        "Baixar resultados por notícia",
+        data=filtered_news.to_csv(index=False).encode("utf-8"),
+        file_name=f"news_chain_proximity_by_{grouping}.csv",
+        mime="text/csv",
+        width="stretch",
+    )
+
+    st.subheader("Pares de cadeias dentro de um grupo")
+    pair_summary = summarize_chain_pairs_by_group(selected_steps, metric, grouping)
+    pair_summary = pair_summary.loc[pair_summary["group_value"].isin(selected_groups)].copy()
+    if pair_summary.empty:
+        st.info("Não há pares de cadeias com notícias comparáveis neste recorte.")
+        return
+    selected_pair_group = st.selectbox(
+        "Grupo para a matriz de pares",
+        selected_groups,
+        format_func=lambda value: group_labels.get(value, value),
+        key="news_pair_group",
+    )
+    selected_pairs = pair_summary.loc[pair_summary["group_value"].eq(selected_pair_group)]
+    st.plotly_chart(
+        build_chain_pair_heatmap(pair_summary, selected_pair_group),
+        width="stretch",
+        config=PLOTLY_CONFIG,
+    )
+    closest_pairs = selected_pairs.nsmallest(10, "mean_absolute_difference").rename(
+        columns={
+            "chain_pair": "Par de cadeias",
+            "paired_news": "Notícias pareadas",
+            "mean_absolute_difference": "Diferença absoluta média",
+            "median_absolute_difference": "Diferença absoluta mediana",
+        }
+    )
+    st.dataframe(
+        closest_pairs[
+            [
+                "Par de cadeias",
+                "Notícias pareadas",
+                "Diferença absoluta média",
+                "Diferença absoluta mediana",
+            ]
+        ],
+        width="stretch",
+        hide_index=True,
+        column_config=_numeric_column_config(closest_pairs),
+    )
+
+    with st.expander("Notícias com cadeias mais próximas ou mais distantes", expanded=False):
+        direction = st.radio(
+            "Ordenação dos casos",
+            ("Cadeias mais próximas", "Cadeias mais distantes"),
+            horizontal=True,
+            key="news_group_case_order",
+        )
+        cases = filtered_news.sort_values(
+            proximity_measure,
+            ascending=direction == "Cadeias mais próximas",
+        ).rename(
+            columns={
+                "metadata_title": "Notícia",
+                "group_label": "Grupo",
+                "chains_observed": "Cadeias observadas",
+                "mean_metric": "Média da métrica",
+                "range_between_chains": "Amplitude",
+                "sd_between_chains": "Desvio-padrão",
+                "mean_pairwise_abs_diff": "Diferença média entre pares",
+            }
+        )
+        st.dataframe(
+            cases[
+                [
+                    "Notícia",
+                    "Grupo",
+                    "Cadeias observadas",
+                    "Média da métrica",
+                    "Amplitude",
+                    "Desvio-padrão",
+                    "Diferença média entre pares",
+                ]
+            ].head(25),
+            width="stretch",
+            hide_index=True,
+            column_config=_numeric_column_config(cases),
+        )
 
 
 def _render_persona_analysis(selected_steps: pd.DataFrame) -> None:

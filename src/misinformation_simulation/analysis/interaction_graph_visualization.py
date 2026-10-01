@@ -292,6 +292,8 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
         "node_id",
         "node_label",
         "metadata_title",
+        "metadata_category",
+        "metadata_original_topic_domain",
         "rewrite_status",
         *metric_columns,
     ]
