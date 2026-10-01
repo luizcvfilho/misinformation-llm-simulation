@@ -111,7 +111,9 @@ make interaction-graph-dashboards GRAPH_UI_PORT=8511 GRAPH_ANALYSIS_UI_PORT=8512
 
 ## Structured Topic Drift Index (STDI)
 
-The project now includes a topic-drift utility for comparing rewritten news against the original article.
+STDI compares a rewritten news item with a reference text using four content components,
+an internal-contradiction contribution, and an optional VAD contribution. It measures
+textual drift, not factual veracity, belief, exposure, or sharing behavior.
 
 The extraction step builds a structured representation for each text with:
 
@@ -124,15 +126,68 @@ The extraction step builds a structured representation for each text with:
 - `has_internal_contradiction` (boolean)
 - `internal_contradiction_score` from 0 to 1
 
-The final score follows:
+### Content comparison methods
+
+The four content components depend on the comparison method. **Interaction-graph
+simulations default to `cluster`**, which uses local embeddings. Calling
+`calculate_stdi(...)` without `component_overrides` uses the lexical method;
+`calculate_stdi_chain_metrics(...)`, `annotate_stdi_for_rewrites(...)`, and
+`annotate_stdi_for_version_chain(...)` also use lexical comparison. The manual
+evaluation workflow uses `llm_semantic` scores for these four components.
+
+For `cluster`, [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
+embeds the extracted labels and relations with
+`sentence-transformers/all-MiniLM-L6-v2`. Scalar similarity `S(a, b)` is cosine
+similarity clipped to `[0, 1]`; normalized equal non-empty labels have similarity 1,
+and a comparison involving an empty label has similarity 0.
+
+- **Theme:** `D_theme = 1 - S(main_topic_reference, main_topic_version)`, except that
+  two known, different `topic_domain` values force `D_theme = 1`. When that domain
+  gate does not apply, normalized equal main topics have drift 0, including two
+  missing main topics. A missing domain does not trigger the gate.
+- **Subtopics and entities:** compute all pairwise similarities, sort them in
+  descending order, and greedily select matches without reusing an item on either
+  side. Divide the sum of selected similarities by the larger list size, then
+  subtract from 1. Unmatched items therefore increase drift. Two empty lists have
+  drift 0; one empty list has drift 1.
+- **Relations:** use the same greedy matching, with the relation-pair similarity
+  defined below. `S_triple` compares the serialized
+  `subject: ... | action: ... | object: ...` texts; the other terms compare the
+  corresponding subject, action, and object labels.
+
+```text
+S_relation = 0.45*S_triple + 0.25*S_subject + 0.15*S_action + 0.15*S_object
+D_list = 1 - sum(selected_pair_similarities) / max(reference_count, version_count)
+```
+
+The comparator fits shared KMeans clusters over the run's collection, but cluster
+identifiers are diagnostic outputs: the scores use direct embedding similarities
+and greedy matching, not Jaccard over cluster IDs or a same-cluster test.
+
+For the **lexical** method, labels are lowercased and whitespace is normalized.
+Subtopics and entities are compared as sets; relations are sets of normalized
+`(subject, action, object)` triples:
 
 ```text
 D_theme = 0 if main_topic is equal, else 1
-D_subtopic = 1 - Jaccard(subtopics_original, subtopics_version)
-D_entities = 1 - Jaccard(entities_original, entities_version)
-D_relations = 1 - Jaccard(relations_original, relations_version)
-D_contradiction = internal contradiction severity/centrality score from 0 to 1
+D_subtopic = 1 - Jaccard(subtopics_reference, subtopics_version)
+D_entities = 1 - Jaccard(entities_reference, entities_version)
+D_relations = 1 - Jaccard(relations_reference, relations_version)
+```
 
+Two empty sets have drift 0; one empty set has drift 1. `topic_domain` does not
+gate the lexical theme score. For **`llm_semantic`**, an LLM evaluates both texts
+and their structures together, assigning each content component one of
+`0`, `0.25`, `0.5`, `0.75`, or `1`, with a rationale.
+
+### Shared aggregation, contradiction, and VAD
+
+All methods use the same aggregation in
+[calculate_stdi](src/misinformation_simulation/topic_drift/metrics.py). Embedding or
+LLM component scores replace the four lexical content values through
+`component_overrides`; their default weights remain equal:
+
+```text
 content_drift =
   0.25*D_theme +
   0.25*D_subtopic +
@@ -140,13 +195,22 @@ content_drift =
   0.25*D_relations
 ```
 
-When VAD scores are available for the original and rewritten texts, the project also
-computes a normalized emotional drift:
+`D_contradiction` is the **compared version's** `internal_contradiction_score`,
+clipped to `[0, 1]`. Despite the output name `contradiction_drift`, it is not the
+difference between the reference and version scores. The boolean
+`has_internal_contradiction` and `narrative_frame` are not separate numeric terms.
+This contribution assesses contradiction within the version, not disagreement
+with the reference or external facts. Consequently, STDI is not necessarily
+symmetric, and an identical text with a nonzero contradiction score can have
+nonzero STDI.
+
+For VAD, the default score range is 4, corresponding to scores on the project's
+1–5 scale. `score_range` can override this divisor:
 
 ```text
-D_valence = abs(valence_version - valence_original) / 4
-D_arousal = abs(arousal_version - arousal_original) / 4
-D_dominance = abs(dominance_version - dominance_original) / 4
+D_valence = min(abs(valence_version - valence_reference) / score_range, 1)
+D_arousal = min(abs(arousal_version - arousal_reference) / score_range, 1)
+D_dominance = min(abs(dominance_version - dominance_reference) / score_range, 1)
 D_vad = (D_valence + D_arousal + D_dominance) / 3
 
 contradiction_increment = (1 - content_drift) * 0.20 * D_contradiction
@@ -154,12 +218,23 @@ drift_with_contradiction = content_drift + contradiction_increment
 STDI = drift_with_contradiction + (1 - drift_with_contradiction) * 0.20 * D_vad
 ```
 
-Contradiction and VAD can only add a limited increment to the remaining distance;
-neither is required for a score of 1 when the content has already diverged completely.
+Contradiction and VAD each add at most 20% of the remaining distance, sequentially;
+they are not two additional terms in a six-component weighted average. For example,
+`content_drift = 0.4`, `D_contradiction = 0.5`, and `D_vad = 0.25` give
+`drift_with_contradiction = 0.46` and `STDI = 0.487`. Pair-level STDI stays in
+`[0, 1]`; complete content drift gives STDI 1 regardless of contradiction or VAD.
+Returned metrics are rounded to six decimal places; VAD dimensions are also
+rounded before their mean is computed.
+
+At the low-level metric API, a missing VAD object makes all VAD drifts 0; a missing
+dimension contributes 0 to the mean, which still divides by 3. This is a fallback
+in the implementation, not evidence of emotional neutrality. Graph simulations
+require all three VAD scores for each evaluated text.
 
 Available helpers in [src/misinformation_simulation/topic_drift](src/misinformation_simulation/topic_drift):
 
 - `extract_topic_structure(...)`
+- `ClusterSTDIComparator`
 - `calculate_stdi(...)`
 - `calculate_vad_drift(...)`
 - `calculate_stdi_chain_metrics(...)`
@@ -172,7 +247,8 @@ Available helpers in [src/misinformation_simulation/topic_drift](src/misinformat
 - `annotate_stdi_for_rewrites(...)`
 - `annotate_stdi_for_version_chain(...)`
 
-Example with the current original vs. rewritten flow:
+Example with the lexical annotation flow (this helper does not use the graph's
+default embedding comparator):
 
 ```python
 from misinformation_simulation.topic_drift import annotate_stdi_for_rewrites
@@ -186,11 +262,14 @@ rewritten_with_stdi = annotate_stdi_for_rewrites(
 )
 ```
 
-For future sequential rewrite chains, use:
+Sequential rewrite chains report:
 
 - `stdi_vs_original`: each version compared with the original article
-- `stdi_incremental`: each version compared with the immediately previous version
+- `stdi_incremental`: each version compared with the previous successfully evaluated version
 - `stdi_cumulative`: running sum of incremental STDI values along the chain
+
+The cumulative sum is not normalized and can exceed 1; it is not the distance
+from the original. Failed or skipped versions do not add to this sum.
 
 Generated columns include the extracted structures for the original and each version,
 their VAD scores, and the per-version STDI metrics.
@@ -241,6 +320,8 @@ make calibrate-stdi
 This creates `calibrated_stdi_weights.csv` and `calibration_metrics.json` in the same
 directory. Regression features are the calculated STDI components, while the target is
 the manually reviewed `manual_expected_stdi` value.
+Fitting exports regression coefficients and normalized weights for analysis; it
+does not automatically replace the constants used by `calculate_stdi(...)`.
 
 ### CSV Explorer
 
@@ -270,11 +351,15 @@ The project can compare the same LLM-extracted structures using two methods:
 - `llm_semantic`: an LLM judges theme, subtopic, entity, and relation drift.
 - `cluster`: all extracted labels and triples are embedded with
   `sentence-transformers/all-MiniLM-L6-v2`, clustered globally for the run, and compared
-  deterministically. The extraction step remains shared with `llm_semantic`.
+  using the direct similarities and greedy matching described above. The extraction
+  step remains shared with `llm_semantic`.
 
 Both methods read the same pair schema (`original_text`, `modified_text`, and optional
 `original_*` / `modified_*` extracted fields) and produce `comparison_results.csv` with the
 same base drift columns. A result folder can be re-used as input for the other method.
+This reusable comparison workflow calls `calculate_stdi(...)` without VAD objects,
+so its VAD drift columns are 0 and its STDI includes content and contradiction
+only. The manual evaluation and graph workflows supply VAD separately.
 
 ```powershell
 # First method. Missing structures are extracted once by the configured LLM.
@@ -285,11 +370,13 @@ make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topi
 ```
 
 The second command writes `method_comparison.csv`, joined by `pair_id`, and cluster assignments
-under `cluster_artifacts/`. Cluster identifiers are meaningful only inside the run that fitted
-them; fit one shared model over the complete collection of original and rewritten structures.
+under `cluster_artifacts/`. Cluster identifiers are diagnostic and meaningful only
+inside the run that fitted them; fit one shared comparator over the complete
+collection of original and rewritten structures.
 
-The cluster theme score is the direct embedding similarity between `main_topic` labels. When the
-shared extraction identifies different `topic_domain` values, the theme drift is set to `1.0`.
+The cluster theme drift is **1 minus** the direct embedding similarity between
+`main_topic` labels. When both extracted `topic_domain` values are known and
+different, the theme drift is set to `1.0`.
 Outputs generated before `topic_domain` was introduced can be reprocessed with fresh shared
 extraction:
 
@@ -590,8 +677,9 @@ Each graph in the queue is a single connected chain of nodes, as required by the
 Each graph step computes VAD (valence, arousal, and dominance) for the source article and
 the rewritten text using the project's default `RobroKools/vad-bert` model. The STDI
 uses the local `sentence-transformers/all-MiniLM-L6-v2` embedding comparator for theme,
-subtopic, entity, and relation drift. It fits shared clusters across the successful steps
-in each graph run, then calculates both original and incremental scores. The summary records
+subtopic, entity, and relation drift. It fits a shared comparator across the successful
+steps in each graph run, then calculates both original and incremental scores using
+direct similarities and greedy matching (see the STDI section above). The summary records
 `stdi_comparison_method` and `stdi_embedding_model`. The CLI accepts
 `--stdi-comparison-method lexical` to reproduce the earlier exact-label calculation.
 STDI includes both VAD drift and the existing internal-contradiction contribution. Step records
@@ -852,14 +940,14 @@ This section highlights the most important CSV columns in the pipeline, with emp
 | `original_internal_contradiction_score` | `annotate_stdi_for_rewrites` | Severity/centrality of internal contradiction in the original text |
 | `rewritten_news_main_topic` | `annotate_stdi_for_rewrites` | Extracted primary topic of the rewritten article |
 | `rewritten_news_stdi_vs_original` | `annotate_stdi_for_rewrites` | Final STDI score against the original article |
-| `rewritten_news_theme_drift_vs_original` | `annotate_stdi_for_rewrites` | Binary main-topic drift component |
+| `rewritten_news_theme_drift_vs_original` | `annotate_stdi_for_rewrites` | Binary lexical main-topic drift component (graph embedding scores can be continuous) |
 | `rewritten_news_subtopic_drift_vs_original` | `annotate_stdi_for_rewrites` | Subtopic drift component |
 | `rewritten_news_entity_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-entity drift component |
 | `rewritten_news_relation_drift_vs_original` | `annotate_stdi_for_rewrites` | Central-relation drift component |
 | `rewritten_news_has_internal_contradiction` | `annotate_stdi_for_rewrites` | Whether the rewritten text contains internal contradictions |
 | `rewritten_news_internal_contradiction_score` | `annotate_stdi_for_rewrites` | Severity/centrality of internal contradiction in the rewritten text |
-| `rewritten_news_contradiction_drift_vs_original` | `annotate_stdi_for_rewrites` | Internal-contradiction drift component |
-| `rewritten_news_contradiction_drift_incremental` | `annotate_stdi_for_rewrites` | Incremental internal-contradiction drift component |
+| `rewritten_news_contradiction_drift_vs_original` | `annotate_stdi_for_rewrites` | Rewritten text's internal-contradiction score, not a difference from the original |
+| `rewritten_news_contradiction_drift_incremental` | `annotate_stdi_for_rewrites` | Same rewritten text's internal-contradiction score, used in incremental STDI |
 | `high_topic_drift_flag` | STDI notebook | Whether STDI is above the configured threshold |
 
 ### 6) Summary CSV columns
