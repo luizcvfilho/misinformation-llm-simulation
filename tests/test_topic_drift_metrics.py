@@ -285,7 +285,13 @@ def test_annotate_stdi_for_rewrites_adds_contradiction_columns(
         ]
     )
 
-    result = annotate_stdi_for_rewrites(df, sleep_seconds=0.0)
+    result = annotate_stdi_for_rewrites(
+        df, sleep_seconds=0.0, model="gpt-5.6-luna", provider="chatgpt"
+    )
+    assert result.at[0, "original_extraction_model"] == "gpt-5.6-luna"
+    assert result.at[0, "rewritten_news_extraction_model"] == "gpt-5.6-luna"
+    assert result.at[0, "rewritten_news_extraction_provider"] == "chatgpt"
+    assert result.at[0, "original_vad_model"] == "RobroKools/vad-bert"
 
     assert "original_has_internal_contradiction" in result.columns
     assert "rewritten_news_has_internal_contradiction" in result.columns

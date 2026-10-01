@@ -136,12 +136,20 @@ def test_llm_workflow_and_output_reuse(tmp_path) -> None:
         )
 
     llm_workflow = run_comparison_workflow(
-        _pairs(), method="llm_semantic", llm_comparison_fn=semantic_comparator
+        _pairs(),
+        method="llm_semantic",
+        llm_comparison_fn=semantic_comparator,
+        llm_comparison_model="gpt-5.6-luna",
+        llm_comparison_provider="chatgpt",
     )
     output_directory = tmp_path / "llm"
     write_comparison_output(output_directory, llm_workflow)
     loaded = load_comparison_input(output_directory)
 
+    assert llm_workflow.manifest["llm_comparison"]["model"] == "gpt-5.6-luna"
+    assert loaded["comparison_model"].eq("gpt-5.6-luna").all()
+    assert loaded["comparison_provider"].eq("chatgpt").all()
+    assert "original_extraction_model" not in loaded
     assert loaded["pair_id"].tolist() == ["pair_a", "pair_b"]
     assert (output_directory / "manifest.json").exists()
     assert loaded["comparison_theme_drift_rationale"].eq("Test rationale.").all()

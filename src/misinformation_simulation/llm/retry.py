@@ -23,7 +23,7 @@ def _openai_chat_completion_kwargs(
             {"role": "user", "content": prompt},
         ],
     }
-    if not model.strip().lower().startswith("gpt-5"):
+    if not model.strip().lower().startswith(("gpt-5", "gpt-6")):
         kwargs["temperature"] = temperature
     return kwargs
 

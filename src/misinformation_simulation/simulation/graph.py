@@ -255,6 +255,10 @@ def run_news_interaction_graph(
         )
         limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
+    evaluation_metadata = {
+        "topic_drift_model": str(topic_drift_model),
+        "topic_drift_provider": normalize_provider(topic_drift_provider),
+    }
     step_results: list[SimulationStepResult] = []
     scoring_contexts: list[
         tuple[
@@ -376,6 +380,7 @@ def run_news_interaction_graph(
                             "Skipped because original preprocessing failed."
                         ),
                         metadata={
+                            **evaluation_metadata,
                             "title": title,
                             "category": category,
                             **(
@@ -440,6 +445,7 @@ def run_news_interaction_graph(
                 original_topic_structure_status="success",
                 original_vad_status="success",
                 metadata={
+                    **evaluation_metadata,
                     "title": title,
                     "category": category,
                     "source_text_column": source_column,
@@ -647,7 +653,27 @@ def run_news_interaction_graph(
         vad_model_name = vad_model_bundle.model_name
     if vad_scorer is not None:
         vad_model_name = "custom_scorer"
+    embedding_model_name = (
+        (
+            stdi_embedding_model
+            if stdi_embedder is None
+            else f"custom:{type(stdi_embedder).__name__}"
+        )
+        if stdi_comparison_method == "cluster"
+        else None
+    )
+    for step in step_results:
+        step.metadata.update(
+            {
+                "rewrite_model": step.model,
+                "rewrite_provider": step.provider,
+                "vad_model": vad_model_name,
+                "stdi_embedding_model": embedding_model_name,
+            }
+        )
     summary = {
+        "schema_version": 2,
+        **evaluation_metadata,
         "rows_processed": rows_started,
         "cancelled": cancelled,
         "steps_total": len(step_results),
@@ -655,15 +681,7 @@ def run_news_interaction_graph(
         "steps_error": error_count,
         "vad_model": vad_model_name,
         "stdi_comparison_method": stdi_comparison_method,
-        "stdi_embedding_model": (
-            (
-                stdi_embedding_model
-                if stdi_embedder is None
-                else f"custom:{type(stdi_embedder).__name__}"
-            )
-            if stdi_comparison_method == "cluster"
-            else None
-        ),
+        "stdi_embedding_model": embedding_model_name,
         "graph": {
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,

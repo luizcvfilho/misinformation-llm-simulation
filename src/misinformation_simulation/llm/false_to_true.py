@@ -106,8 +106,10 @@ def rewrite_false_news_as_true(
     _ensure_column(rewritten_df, prompt_column, pd.NA)
     _ensure_column(rewritten_df, status_column, "not_requested")
     _ensure_column(rewritten_df, error_column, pd.NA)
-    rewritten_df[provider_column] = provider_name
-    rewritten_df[model_column] = model
+    _ensure_column(rewritten_df, provider_column, pd.NA)
+    _ensure_column(rewritten_df, model_column, pd.NA)
+    rewritten_df[provider_column] = rewritten_df[provider_column].astype("object")
+    rewritten_df[model_column] = rewritten_df[model_column].astype("object")
     _save_checkpoint(rewritten_df, checkpoint_file)
 
     target_indexes = list(rewritten_df.index)
@@ -142,6 +144,8 @@ def rewrite_false_news_as_true(
         prompt = build_false_to_true_prompt(article_text, topic=topic, title=title)
         rewritten_df.at[row_index, prompt_column] = prompt
         rewritten_df.at[row_index, output_column] = pd.NA
+        rewritten_df.at[row_index, provider_column] = provider_name
+        rewritten_df.at[row_index, model_column] = model
         rewritten_df.at[row_index, status_column] = "running"
         rewritten_df.at[row_index, error_column] = pd.NA
 

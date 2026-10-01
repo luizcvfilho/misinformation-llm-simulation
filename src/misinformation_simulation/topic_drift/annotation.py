@@ -15,6 +15,7 @@ from misinformation_simulation.llm.rewrite import (
     DEFAULT_TEXT_COLUMN,
 )
 from misinformation_simulation.text_metrics.vad import (
+    DEFAULT_VAD_MODEL_NAME,
     VADModelBundle,
     VADScore,
     predict_text_vad,
@@ -77,6 +78,19 @@ def annotate_stdi_for_version_chain(
         version_tokens=list(version_tokens.values()),
     )
 
+    vad_model_name = (
+        "custom_scorer"
+        if vad_scorer is not None
+        else vad_model_bundle.model_name
+        if vad_model_bundle is not None
+        else DEFAULT_VAD_MODEL_NAME
+    )
+    for prefix in ("original", *version_tokens.values()):
+        for suffix in ("extraction_model", "extraction_provider", "vad_model"):
+            column = f"{prefix}_{suffix}"
+            if column not in result_df:
+                result_df[column] = pd.NA
+            result_df[column] = result_df[column].astype("object")
     target_indexes = list(result_df.index)
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
@@ -84,6 +98,9 @@ def annotate_stdi_for_version_chain(
     total_rows = len(target_indexes)
     for completed_rows, row_index in enumerate(target_indexes, start=1):
         row = result_df.loc[row_index]
+        for prefix in ("original", *version_tokens.values()):
+            for suffix in ("extraction_model", "extraction_provider", "vad_model"):
+                result_df.at[row_index, f"{prefix}_{suffix}"] = pd.NA
 
         _apply_topic_structure_defaults(result_df, row_index=row_index, prefix="original")
         _apply_vad_defaults(result_df, row_index=row_index, prefix="original")
@@ -117,6 +134,8 @@ def annotate_stdi_for_version_chain(
             title = str(result_df.at[row_index, title_column]).strip()
 
         try:
+            result_df.at[row_index, "original_extraction_model"] = str(model)
+            result_df.at[row_index, "original_extraction_provider"] = str(provider)
             original_structure = extract_topic_structure(
                 text=original_text,
                 title=title,
@@ -148,6 +167,7 @@ def annotate_stdi_for_version_chain(
 
         chain_structures = [original_structure]
         chain_labels = ["original"]
+        result_df.at[row_index, "original_vad_model"] = vad_model_name
         original_vad = predict_text_vad(
             original_text,
             model_bundle=vad_model_bundle,
@@ -181,6 +201,8 @@ def annotate_stdi_for_version_chain(
                 continue
 
             try:
+                result_df.at[row_index, f"{token}_extraction_model"] = str(model)
+                result_df.at[row_index, f"{token}_extraction_provider"] = str(provider)
                 version_structure = extract_topic_structure(
                     text=version_text,
                     title=title,
@@ -198,6 +220,7 @@ def annotate_stdi_for_version_chain(
                     prefix=token,
                 ).items():
                     result_df.at[row_index, column_name] = value
+                result_df.at[row_index, f"{token}_vad_model"] = vad_model_name
                 version_vad = predict_text_vad(
                     version_text,
                     model_bundle=vad_model_bundle,

@@ -181,7 +181,7 @@ rewritten_with_stdi = annotate_stdi_for_rewrites(
     df=rewritten_df,
     rewritten_column="rewritten_news",
     provider="chatgpt",
-    model="gpt-5.6-luna",
+    model="gpt-6-luna",
     vad_model_bundle=vad_model,
 )
 ```
@@ -209,7 +209,7 @@ Generate the review set, rewrites, and calculated STDI values with:
 make prepare-stdi-manual-evaluation STDI_MANUAL_GENERATE=1 STDI_MANUAL_SCORE=1
 ```
 
-The default model is `gpt-5.6-luna`, the provider is `chatgpt`, and the limit is 450
+The default model is `gpt-6-luna`, the provider is `chatgpt`, and the limit is 450
 requests per minute. This leaves headroom below the Tier 1 500 RPM limit for retries and
 other API traffic. Set `CHATGPT_API_KEY` or `OPENAI_API_KEY` in `.env` first.
 The source sampler excludes the promotional text `ONLY AVAILABLE IN PAID PLANS`, bodies with
@@ -379,7 +379,7 @@ rewritten = rewrite_false_news_as_true(
     topic_column="subject",
     title_column="title",
     provider="chatgpt",
-    model="gpt-5.6-luna",
+    model="gpt-6-luna",
     checkpoint_path="false_news_rewritten_as_true.csv",
 )
 ```
@@ -537,7 +537,7 @@ Main variables:
 - `GRAPH_RETRY_ATTEMPTS`: retry attempts (`5` default)
 - `GRAPH_ALLOW_TITLE_FALLBACK`: set to any non-empty value to add `--allow-title-fallback`
 - `GRAPH_TOPIC_DRIFT_MODEL`: optional topic drift model override (the application default is
-  `gpt-5.6-luna`)
+  `gpt-6-luna`)
 - `GRAPH_TOPIC_DRIFT_PROVIDER`: optional topic drift provider override (the application default
   is `chatgpt`)
 - `GRAPH_OUTPUT_DIR`: output directory (`output/interaction_graph` default)
@@ -825,3 +825,21 @@ If hooks modify files, stage again and re-run before commit.
 
 - High `contradiction` with low `entailment` increases factual distortion risk after rewriting.
 - Rows flagged as `potentially_false_after_rewrite` should be manually reviewed.
+
+### Model provenance
+
+New graph runs record `topic_drift_model` and `topic_drift_provider` in the summary.
+Each step retains its rewrite `model` and `provider`, and adds `metadata_rewrite_model`,
+`metadata_rewrite_provider`, `metadata_topic_drift_model`, `metadata_topic_drift_provider`,
+`metadata_vad_model`, and `metadata_stdi_embedding_model`. These identifiers describe
+configured request models; operation statuses indicate whether each operation ran or
+failed. They do not identify an API snapshot behind an alias. Lexical comparisons have
+no embedding model. Custom scorers and embedders are identified explicitly.
+
+Existing output files retain their historical model identifiers. Older runs lacking an
+evaluation model must not be assigned the current default retroactively: that model is
+unknown unless an original configuration or log establishes it. GPT-5.6 Luna remains
+available for explicit selection. Resuming false-to-true rewriting preserves the model
+and provider of reused successful rows, including missing provenance in older data.
+Comparison outputs record models for newly requested extraction and semantic evaluation;
+reused structures retain existing provenance instead of acquiring the current default.

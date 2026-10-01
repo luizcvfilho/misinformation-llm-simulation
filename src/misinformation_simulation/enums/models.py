@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class Models(StrEnum):
     GEMINI31FlashLite = "gemini-3.1-flash-lite-preview"
+    GPT6Luna = "gpt-6-luna"
     GPT56Luna = "gpt-5.6-luna"
     GPT5Mini = "gpt-5-mini"
     GPT5Nano = "gpt-5-nano"
@@ -13,4 +14,4 @@ class Models(StrEnum):
     GROK41FastNonReasoning = "grok-4-1-fast-non-reasoning"
 
 
-DEFAULT_LLM_MODEL = Models.GPT56Luna
+DEFAULT_LLM_MODEL = Models.GPT6Luna

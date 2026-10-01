@@ -92,6 +92,8 @@ def rewrite_news_with_personality(
     rewritten_df[output_column] = pd.NA
     rewritten_df["rewrite_status"] = "not_requested"
     rewritten_df["rewrite_error"] = pd.NA
+    rewritten_df["rewrite_model"] = pd.NA
+    rewritten_df["rewrite_provider"] = pd.NA
 
     target_indexes = list(rewritten_df.index)
     if max_rows is not None:
@@ -134,6 +136,8 @@ def rewrite_news_with_personality(
         )
 
         try:
+            rewritten_df.at[row_index, "rewrite_model"] = model
+            rewritten_df.at[row_index, "rewrite_provider"] = provider_normalized
             if provider_normalized == "gemini":
                 rewritten_text = generate_gemini_text_with_retry(
                     client,

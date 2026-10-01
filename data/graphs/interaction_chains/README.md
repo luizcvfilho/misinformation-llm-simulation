@@ -23,7 +23,7 @@ Every position is a separate node, including positions that share a personality.
 | `13_ddes.json`, `14_ddse.json` | Emotional amplifier before versus after the skeptic |
 | `15_cmpc.json`, `16_cpmc.json` | Conciliatory communicator between perspectives versus after their encounter |
 
-All files use `chatgpt` and `gpt-5.6-luna`, matching the current project defaults. The
+All files use `chatgpt` and `gpt-6-luna`, matching the current project defaults. The
 skeptical personality requests attention to evidence, but does not perform fact checking.
 These chains measure changes in rewritten text; they do not model belief, trust, sharing,
 or exposure from multiple neighbors.

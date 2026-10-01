@@ -20,8 +20,9 @@ from misinformation_simulation.topic_drift.extraction import (
 )
 
 
-def test_default_llm_model_is_gpt_56_luna() -> None:
-    assert DEFAULT_LLM_MODEL == Models.GPT56Luna
+def test_default_llm_model_is_gpt_6_luna() -> None:
+    assert DEFAULT_LLM_MODEL == Models.GPT6Luna
+    assert Models.GPT56Luna.value == "gpt-5.6-luna"
     assert DEFAULT_LLM_PROVIDER == Provider.CHATGPT
 
 

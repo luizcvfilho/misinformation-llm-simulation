@@ -103,13 +103,14 @@ def test_generate_openai_text_retries_and_strips_response(monkeypatch) -> None:
     assert completions.calls == 2
 
 
-def test_generate_openai_text_omits_temperature_for_gpt5_models() -> None:
+@pytest.mark.parametrize("model", ["gpt-5-mini", "gpt-5.6-luna", "gpt-6-luna"])
+def test_generate_openai_text_omits_temperature_for_reasoning_models(model: str) -> None:
     completions = RecordingOpenAICompletions([" extracted "])
     client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
 
     text = generate_openai_text_with_retry(
         client,
-        model="gpt-5-mini",
+        model=model,
         prompt="prompt",
         system_instruction="system",
         temperature=0.1,

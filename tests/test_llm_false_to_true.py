@@ -129,3 +129,32 @@ def test_rewrite_false_news_as_true_validates_inputs() -> None:
             pd.DataFrame([{"original_article_text": "article"}]),
             retry_attempts=0,
         )
+
+
+@pytest.mark.parametrize("old_model", ["gpt-5.6-luna", None])
+def test_resume_preserves_model_of_reused_rows(monkeypatch, old_model) -> None:
+    monkeypatch.setattr(false_to_true, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(false_to_true, "_generate_rewrite", lambda **_kwargs: "new rewrite")
+    frame = pd.DataFrame(
+        [
+            {
+                "original_article_text": "old",
+                "rewritten_article_text": "saved rewrite",
+                "rewrite_status": "success",
+                "rewrite_model": old_model,
+                "rewrite_provider": "chatgpt",
+            },
+            {"original_article_text": "new", "rewrite_status": "not_requested"},
+            {"original_article_text": "unprocessed", "rewrite_status": "not_requested"},
+        ]
+    )
+    result = rewrite_false_news_as_true(frame, model="gpt-6-luna", max_rows=2)
+    assert result.at[0, "rewritten_article_text"] == "saved rewrite"
+    if old_model is None:
+        assert pd.isna(result.at[0, "rewrite_model"])
+    else:
+        assert result.at[0, "rewrite_model"] == old_model
+    assert result.at[0, "rewrite_provider"] == "chatgpt"
+    assert result.at[1, "rewrite_model"] == "gpt-6-luna"
+    assert result.at[1, "rewrite_provider"] == "chatgpt"
+    assert pd.isna(result.at[2, "rewrite_model"])

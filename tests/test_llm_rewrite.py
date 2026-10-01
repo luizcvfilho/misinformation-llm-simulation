@@ -70,6 +70,8 @@ def test_rewrite_news_uses_gemini_generator_and_records_success(monkeypatch) -> 
     assert result.at[0, "source_text_column"] == "description"
     assert result.at[0, "target_language"] == "pt"
     assert result.at[0, "target_language_source"] == "row.language"
+    assert result.at[0, "rewrite_model"] == "gemini-test"
+    assert result.at[0, "rewrite_provider"] == "gemini"
     assert calls[0]["model"] == "gemini-test"
     assert calls[0]["max_attempts"] == 2
     assert "Original text" in calls[0]["prompt"]

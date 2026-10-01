@@ -451,3 +451,35 @@ def test_graph_cumulative_stdi_resets_for_each_news_item(monkeypatch) -> None:
         pytest.approx(0.033333),
         pytest.approx(0.033333),
     ]
+
+
+@pytest.mark.parametrize("rewrite_model", ["gpt-5.6-luna", "gpt-6-luna"])
+def test_graph_persists_separate_rewrite_and_evaluation_models(
+    monkeypatch, tmp_path, rewrite_model
+):
+    monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "_generate_rewrite", lambda **_kwargs: "rewritten text")
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **_kwargs: make_structure("topic"))
+    monkeypatch.setattr(
+        graph, "_extract_compared_structure", lambda **_kwargs: make_structure("topic")
+    )
+    result = run_news_interaction_graph(
+        pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        nodes=[SimulationNode("node", rewrite_model, "chatgpt", "persona")],
+        topic_drift_model="evaluation-model",
+        topic_drift_provider="gemini",
+        stdi_comparison_method="lexical",
+        vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
+        output_dir=tmp_path,
+    )
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    step = json.loads(result.steps_path.read_text(encoding="utf-8"))
+    assert summary["topic_drift_model"] == "evaluation-model"
+    assert summary["topic_drift_provider"] == "gemini"
+    assert summary["nodes"][0]["model"] == rewrite_model
+    assert step["model"] == step["metadata_rewrite_model"] == rewrite_model
+    assert step["metadata_rewrite_provider"] == "chatgpt"
+    assert step["metadata_topic_drift_model"] == "evaluation-model"
+    assert step["metadata_topic_drift_provider"] == "gemini"
+    assert step["metadata_vad_model"] == "custom_scorer"
+    assert step["metadata_stdi_embedding_model"] is None

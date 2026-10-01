@@ -159,6 +159,16 @@ def run_comparison_workflow(
         raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
 
     result = df.copy()
+    for column in (
+        "original_extraction_model",
+        "original_extraction_provider",
+        "modified_extraction_model",
+        "modified_extraction_provider",
+        "comparison_model",
+        "comparison_provider",
+    ):
+        if column in result:
+            result[column] = result[column].astype("object")
     pair_ids = _resolved_pair_ids(result, pair_id_column)
     result["pair_id"] = pair_ids
     prepared_pairs: list[TopicStructurePair] = []
@@ -188,6 +198,8 @@ def run_comparison_workflow(
                     progress_callback(
                         f"[{row_position}/{total_rows}] Extracting original structure."
                     )
+                result.at[row_index, "original_extraction_model"] = str(extraction_model)
+                result.at[row_index, "original_extraction_provider"] = str(extraction_provider)
                 original_structure = extraction_fn(
                     text=original_text,
                     title=title,
@@ -201,6 +213,8 @@ def run_comparison_workflow(
                     progress_callback(
                         f"[{row_position}/{total_rows}] Extracting modified structure."
                     )
+                result.at[row_index, "modified_extraction_model"] = str(extraction_model)
+                result.at[row_index, "modified_extraction_provider"] = str(extraction_provider)
                 modified_structure = extraction_fn(
                     text=modified_text,
                     title=title,
@@ -264,6 +278,12 @@ def run_comparison_workflow(
             details: dict[str, dict[str, float | int]] = {}
             rationales: dict[str, str] = {}
             if resolved_method == "llm_semantic":
+                result.at[row_index, "comparison_model"] = str(
+                    llm_comparison_model or extraction_model
+                )
+                result.at[row_index, "comparison_provider"] = str(
+                    llm_comparison_provider or extraction_provider
+                )
                 semantic_result = llm_comparison_fn(
                     original_text=str(row[original_text_column]),
                     modified_text=str(row[modified_text_column]),
@@ -333,6 +353,14 @@ def run_comparison_workflow(
             "provider": extraction_provider,
             "reused_existing_structures": reuse_structures,
         },
+        "llm_comparison": (
+            {
+                "model": llm_comparison_model or extraction_model,
+                "provider": llm_comparison_provider or extraction_provider,
+            }
+            if resolved_method == "llm_semantic"
+            else None
+        ),
         "cluster": (
             {
                 "embedding_model": embedding_model,

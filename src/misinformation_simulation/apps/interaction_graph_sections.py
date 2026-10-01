@@ -222,8 +222,7 @@ def _render_topic_drift_model_selector() -> str:
         if topic_drift_model_default in AVAILABLE_MODELS
         else CUSTOM_OPTION
     )
-    topic_drift_model_cols = st.columns([1, 1])
-    selected_topic_drift_model_option = topic_drift_model_cols[0].selectbox(
+    selected_topic_drift_model_option = st.selectbox(
         "Topic drift model preset",
         topic_drift_model_options,
         index=topic_drift_model_options.index(selected_topic_drift_model_option),
@@ -232,20 +231,13 @@ def _render_topic_drift_model_selector() -> str:
         help="Model used for topic structure extraction before calculating topic drift.",
     )
     if selected_topic_drift_model_option == CUSTOM_OPTION:
-        return topic_drift_model_cols[1].text_input(
+        return st.text_input(
             "Custom topic drift model",
             value=topic_drift_model_default,
             key="topic_drift_model_custom",
             help="Provider-specific model id for topic drift extraction.",
         )
 
-    topic_drift_model_cols[1].text_input(
-        "Resolved topic drift model",
-        value=selected_topic_drift_model_option,
-        key="topic_drift_model_resolved",
-        disabled=True,
-        help="Model id that will be passed to the topic drift extraction step.",
-    )
     return selected_topic_drift_model_option
 
 

@@ -15,6 +15,7 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from misinformation_simulation.enums import DEFAULT_LLM_MODEL  # noqa: E402
 from misinformation_simulation.topic_drift.stdi_logistic_regression import (  # noqa: E402
     run_stdi_logistic_regression_analysis,
 )
@@ -61,7 +62,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--title-column", default="title")
     parser.add_argument("--topic-column", default="subject")
     parser.add_argument("--provider", default="chatgpt")
-    parser.add_argument("--model", default="gpt-5.6-luna")
+    parser.add_argument("--model", default=str(DEFAULT_LLM_MODEL))
     parser.add_argument("--max-rows", type=int)
     parser.add_argument("--max-requests-per-minute", type=int, default=450)
     parser.add_argument("--tfidf-max-features", type=int, default=10_000)
