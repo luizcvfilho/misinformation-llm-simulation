@@ -642,6 +642,76 @@ It applies STDI to original vs. rewritten news pairs, exports per-dataset and co
 - `rewritten_news_relation_drift_vs_original`
 - `high_topic_drift_flag`
 
+### NRC VAD v2.1 Context Contrast Audit
+
+Run the lexical alternative on the same 40 English synthetic texts used by the
+historical context-contrast BERT audit:
+
+```bash
+uv run python scripts/audit_nrc_vad_context.py --download
+```
+
+The script downloads the official NRC v2.1 archive only when it is absent. Use
+`--lexicon PATH` for an existing official ZIP or full four-column v2.1 TSV.
+The resource is available for noncommercial research/education under the
+[author's terms](https://saifmohammad.com/WebPages/nrc-vad.html); its local
+`.cache/nrc_vad/` directory is ignored by Git and must not be redistributed.
+No new dependencies are required.
+
+`NRCVADLexicon` in `misinformation_simulation.text_metrics` is also a callable
+scorer accepted by `predict_text_vad` and `annotate_vad_scores`. It selects the
+longest non-overlapping expression at each position and averages matched term
+occurrences equally. Matching normalizes Unicode, case, and curly apostrophes;
+phrases cannot cross punctuation. Unknown terms are excluded. No matches produce
+missing values, not neutral scores. No lemmatization, negation handling, stopword
+filtering, or truncation is applied.
+
+Outputs are saved to `output/audit/NRCVADContextContrastAudit/`: document scores
+and token coverage, context/topic summaries, signed pair deltas, paired Wilcoxon
+summaries, model comparisons, a provenance manifest with SHA-256 hashes, and an
+English findings report. Native `nrc_native_*` scores range from -1 to 1;
+`vad_*` scores use `3 + 2 * native_score` to match the project's 1–5 amplitude.
+This conversion does not establish calibration or equivalence with BERT.
+
+The historical BERT predictions are reused only after checking that pair keys,
+texts, topics, and focal events match exactly. Use `--without-baseline` for a
+separate paired input; English is required for this resource. The audit does not
+change the default BERT scorer or STDI. More variation does not establish higher
+accuracy, and this experiment does not validate Portuguese.
+
+An interactive entry point is `notebooks/nrc_vad_context_contrast_workbench.ipynb`.
+
+### VAD Comparison on Saved Simulation Chains
+
+Open `notebooks/simulation_vad_model_comparison_workbench.ipynb` to compare the
+saved BERT predictions with NRC v2.1 at every simulation step. The initial scope
+is the first six chains: SSSS, CCCC, PPPP, DDDD, CCPP, and PPCC. Set `CHAIN_CODES`
+to another tuple, or to `None` for all chains. `RUNS_DIR` selects the saved batch.
+The lexicon must already exist in `.cache/nrc_vad/` (download it with the command
+above). No rewrites, LLM evaluations, or BERT inference are repeated.
+
+Both score scales are normalized to [0, 1] using theoretical bounds:
+`(bert_score - 1) / 4` and `(nrc_native_score + 1) / 2`. Drift is the mean absolute
+difference across V/A/D, measured against the original and against the actual
+input text of each step. Signed changes remain available separately. The notebook
+does not use sample min/max normalization or treat missing scores as neutral.
+
+The analysis reconstructs the original from step 1, checks text continuity, and
+validates the historical STDI formula and saved BERT drift before replacing only
+the VAD contribution. Failed steps remain visible. Hypothetical cumulative STDI
+sums successful incremental scores and can exceed 1. It is not original-relative
+drift. A common scale does not establish calibration between the methods.
+
+The reusable implementation is
+`misinformation_simulation.analysis.vad_model_comparison`. The notebook exports
+per-step CSV comparisons, paired chain/step summaries, a run inventory, input
+hashes, an English report, and an offline Plotly dashboard to
+`output/audit/SimulationVADModelComparison/`. Source files remain unchanged.
+Use `SELECTED_CHAIN_CODE`, `SELECTED_RUN_ID`, and `SELECTED_NEWS_ID` to inspect
+individual trajectories and their texts. The analysis is exploratory: repeated
+news across steps/chains are dependent, historical BERT truncation is not isolated,
+and higher variation does not establish higher validity.
+
 ### Fake vs True VAD Analysis
 
 Notebook:

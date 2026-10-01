@@ -130,8 +130,11 @@ Referências: `reimers2019sbert`, `wang2020minilm`, `entman1993framing`.
 - Definir valência, arousal e dominância.
 - Informar escala, normalização e forma de agregação.
 - Discutir a limitação de idioma observada no piloto.
+- Documentar a auditoria complementar NRC VAD v2.1 em `output/audit/NRCVADContextContrastAudit/`: mesmos 20 pares sintéticos em inglês da auditoria contextual, comparação com o CSV histórico do BERT após conferência exata dos textos, cobertura lexical e escalas nativa e convertida. O estimador principal permanece inalterado; essa auditoria não valida português nem demonstra superioridade sem julgamento humano.
+- A comparação nas simulações salvas está em `notebooks/simulation_vad_model_comparison_workbench.ipynb` e `output/audit/SimulationVADModelComparison/`. O recorte inicial usa as seis primeiras cadeias (SSSS, CCCC, PPPP, DDDD, CCPP e PPCC), com filtro configurável para as demais. Normalizar os escores BERT por `(valor - 1)/4` e NRC por `(valor_nativo + 1)/2`; comparar por etapa contra o original e contra a entrada efetiva. O STDI hipotético preserva os demais componentes e substitui somente VAD após conferir a fórmula histórica. Registrar falhas e dependência entre passos da mesma notícia; não tratar aumento de variação como validação nem atribuir os resultados às 16 cadeias quando apenas seis forem selecionadas.
 
 Referências: `buechel2017emobank`, `mohammad2018vad`.
+Referências da alternativa lexical: `mohammad2025vadv2`, `mohammad2025breaking`.
 
 #### Validação
 

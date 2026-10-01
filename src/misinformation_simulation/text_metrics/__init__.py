@@ -1,3 +1,4 @@
+from .nrc_vad import NRCVADAnalysis, NRCVADLexicon
 from .vad import (
     DEFAULT_VAD_MODEL_NAME,
     VAD_DIMENSIONS,
@@ -12,6 +13,8 @@ from .vad import (
 )
 
 __all__ = [
+    "NRCVADAnalysis",
+    "NRCVADLexicon",
     "VAD_DIMENSIONS",
     "DEFAULT_VAD_MODEL_NAME",
     "VADScore",
