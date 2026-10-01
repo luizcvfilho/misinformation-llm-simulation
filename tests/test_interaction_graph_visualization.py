@@ -41,7 +41,9 @@ def _write_steps(path, *, stdi: float) -> None:
 
 
 def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -> None:
-    current = tmp_path / "simulation_ui_20260918_000717_01_01_ssss"
+    current = (
+        tmp_path / "simulation_ui_20260918_000717" / "simulation_ui_20260918_000717_01_01_ssss"
+    )
     archived = tmp_path / "OLD_RUNS"
     _write_steps(current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl", stdi=0.2)
     _write_steps(archived / "archived_steps.jsonl", stdi=0.9)
@@ -52,6 +54,18 @@ def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -
     assert paths == [current / "simulation_ui_20260918_000717_01_01_ssss_steps.jsonl"]
     assert runs.steps["chain_label"].tolist() == ["01 · SSSS"]
     assert runs.steps["graph_id"].tolist() == ["01"]
+
+
+def test_loads_single_and_multi_graph_run_layouts_together(tmp_path) -> None:
+    single = tmp_path / "single_01_01_ssss" / "single_01_01_ssss_steps.jsonl"
+    queued = tmp_path / "batch" / "batch_01_02_cccc" / "batch_01_02_cccc_steps.jsonl"
+    _write_steps(single, stdi=0.2)
+    _write_steps(queued, stdi=0.3)
+
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert runs.source_paths == (queued, single)
+    assert set(runs.steps["chain_code"]) == {"SSSS", "CCCC"}
 
 
 def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:

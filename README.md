@@ -539,14 +539,17 @@ The UI lets you:
 
 To queue graphs, enter a name and choose **Add current graph**, or expand **Add graphs from a folder** and select a folder of graph JSON configs. Folder import adds valid files in filename order and reports errors for invalid files. You can then edit the graph or
 import another JSON config and add it too. **Run graph queue** processes each saved graph against
-the selected dataset using the execution settings shown in the UI. Each graph writes its
-summary and step records to a dedicated subfolder under the configured output directory. The
-folder and both filenames include the date/time prefix, queue position, and graph name (for
-example, `app_runs/simulation_ui_20260917_123456_01_investigative_skeptic/`). A single graph
-uses the editable **Current graph name**. Repeating a run with the same name and timestamp adds
-a numeric suffix so previous results are preserved. If one graph fails, the queue records the
-error and continues with the next graph. The Results tab lists every graph and lets you inspect
-its output. When the input has a `category` column, every step record saves its original
+the selected dataset using the execution settings shown in the UI. A queue writes one batch
+folder under the configured output directory, with a dedicated subfolder for every graph. The
+batch folder uses the date/time prefix; each graph folder and its files also include the queue
+position and graph name (for example,
+`app_runs/simulation_ui_20260917_123456/simulation_ui_20260917_123456_01_investigative_skeptic/`).
+A single graph remains directly inside its own folder under `app_runs` and uses the editable
+**Current graph name**. Repeating a run or batch with the same name and timestamp adds a numeric
+suffix so previous results are preserved. If one graph fails, the queue records the error and
+continues with the next graph. The Results tab and analysis app search `app_runs` recursively,
+so both layouts are loaded from the same default path. When the input has a `category` column,
+every step record saves its original
 category value as `metadata_category`; the News category comparison in Results separates
 semicolon-delimited labels such as `politics; top`. An article contributes to each of its
 labels, so category counts overlap. Saved runs can be imported for the same comparison;

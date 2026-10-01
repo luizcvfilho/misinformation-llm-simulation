@@ -86,8 +86,9 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
 
     assert calls == ["batch_01_first", "batch_02_second"]
     assert comparison_methods == ["cluster", "cluster"]
-    assert output_dirs == [tmp_path / name for name in calls]
+    assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
+    assert sorted(path.name for path in (tmp_path / "batch").iterdir()) == sorted(calls)
     assert [bundle["status"] for bundle in bundles] == ["failed", "completed"]
     assert bundles[1]["name"] == "Second"
     assert any("failed: provider unavailable" in message for message in messages)
@@ -194,6 +195,50 @@ def test_single_graph_run_creates_named_folder_and_avoids_overwrite(tmp_path) ->
     assert folders == [
         tmp_path / "simulation_ui_20260917_123456_01_investigative_skeptic",
         tmp_path / "simulation_ui_20260917_123456_01_investigative_skeptic_02",
+    ]
+
+
+def test_graph_queue_reserves_a_batch_folder_and_avoids_overwrite(tmp_path) -> None:
+    nodes = [create_default_node_form(1)]
+    graphs = [{"name": "First", "nodes": nodes}]
+    settings = {
+        "text_column": "description",
+        "title_column": "title",
+        "news_id_column": "",
+        "max_rows": 1,
+        "sleep_seconds": 0,
+        "max_requests_per_minute": 0,
+        "retry_attempts": 1,
+        "allow_title_fallback": True,
+        "topic_drift_model": "model",
+        "topic_drift_provider": "gemini",
+        "output_dir": str(tmp_path),
+        "output_prefix": "batch",
+    }
+    output_dirs = []
+
+    def fake_run(**kwargs):
+        output_dirs.append(kwargs["output_dir"])
+        return SimpleNamespace(
+            step_results=[],
+            summary={"rows_processed": 1, "steps_total": 0, "cancelled": False},
+            summary_path=None,
+            steps_path=None,
+        )
+
+    for _ in range(2):
+        run_job._run_graph_queue(
+            job=run_job.GraphRunJob(),
+            df=pd.DataFrame([{"title": "t", "description": "d"}]),
+            graphs=graphs,
+            settings=settings,
+            runner=fake_run,
+            queue_mode=True,
+        )
+
+    assert output_dirs == [
+        tmp_path / "batch" / "batch_01_first",
+        tmp_path / "batch_02" / "batch_01_first",
     ]
 
 

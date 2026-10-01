@@ -91,6 +91,8 @@ def _run_graph_queue(
     graph_units = [rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in graphs]
     total_units = sum(graph_units)
     finished_units = 0
+    runs_dir = Path(settings["output_dir"])
+    batch_dir = runs_dir
 
     def report_work(index: int, row: int, steps: int) -> None:
         units_per_row = len(graphs[index - 1]["nodes"]) + 1
@@ -111,6 +113,12 @@ def _run_graph_queue(
             job.latest_progress = progress
 
     try:
+        if queue_mode:
+            batch_prefix = Path(settings["output_prefix"].strip()).name
+            if not batch_prefix or batch_prefix in {".", ".."}:
+                raise ValueError("Enter an output prefix before running.")
+            batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
+
         for index, graph in enumerate(graphs, start=1):
             if job.cancel_event.is_set():
                 cancelled = True
@@ -123,7 +131,7 @@ def _run_graph_queue(
             job.events.put(("progress", f"{label} — starting"))
             report_work(index, 0, 0)
             try:
-                run_dir, prefix = _reserve_output_directory(Path(settings["output_dir"]), prefix)
+                run_dir, prefix = _reserve_output_directory(batch_dir, prefix)
                 nodes = build_simulation_nodes(graph["nodes"])
                 result = runner(
                     df=df,

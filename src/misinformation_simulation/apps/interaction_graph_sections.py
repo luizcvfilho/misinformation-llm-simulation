@@ -189,7 +189,10 @@ def _render_advanced_settings() -> dict[str, Any]:
         output_dir = st.text_input(
             "Output directory",
             value="output/interaction_graph/app_runs",
-            help="Parent directory for a named subfolder per graph run.",
+            help=(
+                "Parent directory for saved runs. A single graph gets its own folder; "
+                "a graph queue gets a batch folder containing one folder per graph."
+            ),
         )
         output_prefix = st.text_input(
             "Output prefix",

@@ -16,8 +16,8 @@ from misinformation_simulation.simulation.types import SimulationStepResult
 
 
 def test_import_saved_result_from_named_folder(tmp_path):
-    folder = tmp_path / "simulation_01_graph"
-    folder.mkdir()
+    folder = tmp_path / "batch" / "simulation_01_graph"
+    folder.mkdir(parents=True)
     summary_path = folder / "simulation_01_graph_summary.json"
     summary_path.write_text(
         json.dumps(
