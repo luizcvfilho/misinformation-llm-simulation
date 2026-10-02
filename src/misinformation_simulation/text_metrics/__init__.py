@@ -1,3 +1,4 @@
+from .memolon import MEmoLonAnalysis, MEmoLonLexicon
 from .nrc_vad import NRCVADAnalysis, NRCVADLexicon
 from .vad import (
     DEFAULT_VAD_MODEL_NAME,
@@ -13,6 +14,8 @@ from .vad import (
 )
 
 __all__ = [
+    "MEmoLonAnalysis",
+    "MEmoLonLexicon",
     "NRCVADAnalysis",
     "NRCVADLexicon",
     "VAD_DIMENSIONS",

@@ -1,0 +1,64 @@
+{
+  "created_at_utc": "2026-10-02T03:44:34.256352+00:00",
+  "models": {
+    "bert": "Current BERT",
+    "nrc": "NRC v2.1",
+    "memolon": "MEmoLon MTL_grouped"
+  },
+  "input_path": "C:/Users/lcvf1/OneDrive/Documentos/UFRJ/TCC/misinformation-llm-simulation/data/synthetic/vad_context_contrast_news.csv",
+  "input_sha256": "e64be7bf4e9ab10994c3a7a1bf739b161d3f8540b09b69cae101a972e7bb0202",
+  "bert_baseline": {
+    "model_id": "RobroKools/vad-bert",
+    "revision": "c4c659fd17dd5807572b3f0f577de8c408401ca7",
+    "max_length": 512,
+    "torch_version": "2.10.0",
+    "transformers_version": "4.52.4",
+    "device": "cpu",
+    "batch_size": 8,
+    "torch_threads": 4,
+    "rerun": true,
+    "unique_texts": 40,
+    "newly_scored_texts": 0,
+    "cache_path": "C:/Users/lcvf1/OneDrive/Documentos/UFRJ/TCC/misinformation-llm-simulation/.cache/vad_lexicon_comparison/current_bert_saved_tests.json",
+    "cache_sha256": "d289a083457ae425a2fc0b46965051ac3f9c8db3fe122020f818fe5c741c2420",
+    "truncated_texts": 0,
+    "inference": "Existing project inference functions; raw 1-5 logits; no clipping."
+  },
+  "documents_per_model": 40,
+  "pairs": 20.0,
+  "joint_valid_pairs": 20,
+  "normalization": "BERT: (score-1)/4; NRC v2.1: (native+1)/2; MEmoLon: (native-1)/8. Common nominal 0-1 amplitude; no sample min/max scaling or calibration.",
+  "coverage": {
+    "bert": null,
+    "nrc": 0.6930817610062893,
+    "memolon": 1.0
+  },
+  "lexicon_sha256": {
+    "nrc": "8bcd04831ffda149f683f8d3091c76a3aee138ee3aa1924b67b50b9416d37df0",
+    "memolon": "cb2056c68172b8a6d756c45aafc2be87a002cb631ad25f82fb0d7a8af9824bbb"
+  },
+  "lexicons": {
+    "nrc": {
+      "path": "C:/Users/lcvf1/OneDrive/Documentos/UFRJ/TCC/misinformation-llm-simulation/.cache/nrc_vad/NRC-VAD-Lexicon-v2.1.zip",
+      "sha256": "8bcd04831ffda149f683f8d3091c76a3aee138ee3aa1924b67b50b9416d37df0",
+      "source": "https://saifmohammad.com/WebDocs/Lexicons/NRC-VAD-Lexicon-v2.1.zip",
+      "entries": 54801,
+      "multiword_entries": 10073
+    },
+    "memolon": {
+      "path": "C:/Users/lcvf1/OneDrive/Documentos/UFRJ/TCC/misinformation-llm-simulation/.cache/vad_lexicon_comparison/memolon_en.tsv",
+      "sha256": "cb2056c68172b8a6d756c45aafc2be87a002cb631ad25f82fb0d7a8af9824bbb",
+      "source": "https://zenodo.org/records/3756607",
+      "entries": 355,
+      "multiword_entries": 0,
+      "source_rows": 2000004,
+      "retained_duplicate_rows": 839,
+      "out_of_range_rows": 82
+    }
+  },
+  "historical_baseline_path": "C:/Users/lcvf1/OneDrive/Documentos/UFRJ/TCC/misinformation-llm-simulation/output/audit/VADContextContrastAudit/vad_context_contrast_scored.csv",
+  "historical_baseline_sha256": "858ee441834d8cb1ceeb22668b0a52cf084b3e76e6c918e1dce48c7b6c94c549",
+  "summary_policy": "Same pairs with complete VAD for all three estimators; individual and missing pair results retained in model_pair_deltas.csv.",
+  "language": "en",
+  "rewrites_regenerated": false
+}

@@ -2,6 +2,8 @@
 
 **Última verificação dos metadados:** 22/09/2026
 
+**Verificação adicional das fontes VAD:** 01/10/2026, para MEmoLon, NRC v1 e recursos associados. As demais referências não foram verificadas novamente nesta atualização.
+
 **Arquivo de citações:** [`references.bib`](../references.bib)
 
 **Plano de uso na escrita:** [`plano_escrita_tcc.md`](plano_escrita_tcc.md)
@@ -41,7 +43,7 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | `reimers2019sbert` | Reimers e Gurevych (2019), Sentence-BERT | Fundamenta embeddings de sentenças e comparação por similaridade cosseno. | Método do STDI | Núcleo |
 | `wang2020minilm` | Wang et al. (2020), MiniLM | Fundamenta a família do encoder usada por `all-MiniLM-L6-v2`. O artigo não descreve sozinho o ajuste específico do sentence-transformer; citar também SBERT e documentar o identificador do modelo. | Método do STDI | Núcleo |
 | `buechel2017emobank` | Buechel e Hahn (2017), EmoBank | Fundamenta a representação dimensional de emoção em valência, arousal e dominância em texto. | Fundamentação e método VAD | Núcleo |
-| `mohammad2018vad` | Mohammad (2018), NRC VAD Lexicon | Referência metodológica para VAD e confiabilidade de anotações humanas. | Fundamentação e limitações do VAD | Núcleo |
+| `mohammad2018vad` | Mohammad (2018), NRC VAD Lexicon v1 | Fundamenta as normas VAD humanas para termos em inglês, obtidas por Best-Worst Scaling. É a fonte científica do NRC v1; as traduções posteriores precisam da referência do recurso. | Fundamentação e limitações do VAD | Núcleo |
 
 ## 3. Trabalhos complementares
 
@@ -49,8 +51,11 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | --- | --- | --- |
 | `liu2025mosaic` | Comparar simulação com grafo dirigido, personas, disseminação e moderação. | O foco inclui ações como curtir, compartilhar e sinalizar; o TCC mede transformação textual, não comportamento real de plataforma. |
 | `wang2025echo` | Discutir polarização, estruturas de rede e comparação com modelos clássicos de opinião. | Não usar para afirmar que as cadeias atuais reproduzem câmaras de eco; o desenho do TCC não implementa a mesma dinâmica. |
-| `mohammad2025vadv2` | Fundamentar o NRC VAD v2 como alternativa lexical na auditoria de contraste contextual. Metadados e método conferidos em 01/10/2026 no artigo e recurso oficial. | Avaliações humanas de termos em inglês; a confiabilidade lexical não valida a agregação por notícia nem o uso em português. Não é um modelo neural de texto completo. |
-| `mohammad2025breaking` | Fundamentar as expressões compostas incluídas no NRC VAD v2. Metadados e descrição do recurso conferidos em 01/10/2026 na ACL Anthology. | O casamento por expressão mais longa e a média por ocorrência são decisões desta implementação, não métodos de avaliação textual validados pelo artigo. |
+| `buechel2020memolon` | Buechel, Rücker e Hahn (ACL 2020), *Learning and Evaluating Emotion Lexicons for 91 Languages*. Fundamenta a construção multilíngue de léxicos afetivos por transferência e aprendizado multitarefa. Fonte do candidato MEmoLon, disponível em português e inglês. | As predições são lexicais; o método não infere contexto ou negação de documentos completos. A avaliação lexical do artigo não valida os nossos escores agregados por notícia. |
+| `buechel2020memolondata` | Referenciar o conjunto oficial MEmoLon v1.0 no Zenodo, publicado em 12/05/2020, DOI `10.5281/zenodo.3756607`. O projeto recomenda a variante `MTL_grouped`, usada nesta comparação. | Distinguir artigo, código e conjunto de dados. O recurso tem licença CC BY 4.0. Registrar variante, idioma e hash do TSV; a agregação e o tratamento de duplicatas pertencem à implementação deste estudo. |
+| `mohammad2018vadresource` | Documentar a distribuição oficial do NRC v1 e as traduções automáticas atualizadas em agosto de 2022, incluindo português. Complementa o artigo `mohammad2018vad`, sem duplicá-lo. | As palavras foram traduzidas por Google Translate; os valores afetivos das entradas em inglês foram preservados. Não são novas anotações VAD humanas em português. Polissemia, entradas traduzidas duplicadas e adequação cultural precisam ser avaliadas. |
+| `mohammad2025vadv2` | Fundamentar o NRC VAD v2, incluído novamente na comparação exploratória com BERT e MEmoLon em 02/10/2026. Preservar também o histórico da avaliação inicial. Metadados e método conferidos no artigo e recurso oficial. | Avaliações humanas de termos em inglês; a confiabilidade lexical não valida a agregação por notícia nem o uso em português. Não é um modelo neural de texto completo. |
+| `mohammad2025breaking` | Fundamentar as expressões compostas incluídas no NRC VAD v2, presente na comparação atual dos três estimadores. Metadados e descrição do recurso conferidos em 01/10/2026 na ACL Anthology. | O casamento por expressão mais longa e a média por ocorrência são decisões desta implementação, não métodos de avaliação textual validados pelo artigo. |
 | `wu2024sheepdog` | Sustentar a vulnerabilidade de detectores baseados em estilo a reenquadramentos produzidos por LLMs. | O problema é robustez de detecção, não mensuração de deriva. |
 | `whitehouse2022knowledge` | Explicar que conhecimento externo pode melhorar detecção quando a base é pertinente e atualizada. | Reforça a distinção entre STDI e checagem factual; não é um método adotado atualmente. |
 | `grootendorst2022bertopic` | Fundamentar uma análise exploratória de temas no corpus ou nas trajetórias de reescrita. | BERTopic não deve substituir os componentes pareados do STDI sem novo experimento e validação. |
@@ -65,6 +70,20 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | `hu2024multimodal` | **Remover do referencial central.** O corpus e o STDI atuais são textuais. | Se imagens, vídeos ou detecção precoce multimodal forem incorporados. |
 
 Não é necessário apagar esses registros do `.bib`: mantê-los documentados evita refazer a triagem caso o escopo mude.
+
+### Decisão sobre os recursos VAD em 01/10/2026
+
+A comparação ativa nos dois notebooks passou de BERT versus NRC v2.1 para **BERT atual versus MEmoLon MTL_grouped**, reutilizando os textos dos testes anteriores e recalculando os dois estimadores. Os resultados anteriores do candidato NRC foram substituídos nos diretórios de auditoria; o commit `d09cd838edbd827750933181775efe315c55763f` preserva aquele estágio. As fontes NRC v2 continuam na bibliografia como histórico, sem status de candidato ativo. O NRC v1 traduzido fica documentado para possível comparação futura.
+
+### Atualização da comparação em 02/10/2026
+
+Por decisão do pesquisador, BERT atual, NRC v2.1 e MEmoLon MTL_grouped passaram a integrar novamente a mesma comparação. O notebook principal `notebooks/simulation_vad_model_comparison_workbench.ipynb` reúne os 20 pares contextuais e as seis cadeias salvas. A comparação usa a mesma revisão do BERT atual para ambos os léxicos; o BERT é comparador, sem status de referência humana de verdade.
+
+Após a consolidação, por decisão do pesquisador, somente o notebook unificado e os resultados conjuntos atuais são mantidos neste fluxo: `output/audit/VADThreeModelContextContrastAudit/` e `output/audit/SimulationVADModelComparison/`. Os notebooks de comparação anteriores, cópias de resultados e exportações duplicadas por candidato foram removidos. Por solicitação posterior do pesquisador, o piloto inicial bilíngue de cobertura foi recuperado e mantido separadamente em `output/audit/PortugueseVADLexiconComparison/`, com fontes, controles diagnósticos e resultados de NRC v1, MEmoLon, NRC v2.1 e BERT. Esse piloto não constitui validação humana dos escores em português; a cobertura lexical não se aplica ao BERT. A comparação NRC original continua disponível no commit `d09cd838edbd827750933181775efe315c55763f`. Os manifestos atuais registram hashes, recursos e revisão do BERT; a inclusão do NRC não implica adoção no cálculo principal ou superioridade demonstrada.
+
+O MEmoLon usa aprendizado multitarefa em nível lexical para expandir recursos em 91 idiomas; disponibilidade em português não prova validade em notícias portuguesas. Neste estudo, entradas duplicadas após normalização são promediadas, e cada ocorrência do termo mais longo reconhecido contribui igualmente para a média do documento. A escala nativa VAD 1–9 é transformada por `(valor + 1)/2` para 1–5, ou por `(valor - 1)/8` para 0–1. A conversão iguala amplitudes teóricas, sem calibrar estimadores. Os testes refeitos são em inglês e não têm referência humana independente; cobertura lexical e maior variação não demonstram superioridade.
+
+Fontes primárias conferidas: [artigo MEmoLon](https://aclanthology.org/2020.acl-main.112/), [conjunto oficial](https://zenodo.org/records/3756607), [documentação do projeto](https://github.com/JULIELab/MEmoLon), [artigo NRC v1](https://aclanthology.org/P18-1017/) e [distribuição e traduções NRC](https://saifmohammad.com/WebPages/nrc-vad.html).
 
 ## 5. Mapa de leitura por tema
 
@@ -100,6 +119,9 @@ Não é necessário apagar esses registros do `.bib`: mantê-los documentados ev
 3. `wang2020minilm`
 4. `buechel2017emobank`
 5. `mohammad2018vad`
+6. `mohammad2018vadresource`
+7. `buechel2020memolon`
+8. `buechel2020memolondata`
 
 ### Validação científica
 

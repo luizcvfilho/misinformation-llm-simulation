@@ -11,14 +11,15 @@ from misinformation_simulation.analysis.vad_model_comparison import (
     run_vad_model_comparison,
     summarize_vad_model_comparison,
 )
-from misinformation_simulation.text_metrics.nrc_vad import NRCVADLexicon
+from misinformation_simulation.text_metrics.memolon import MEmoLonLexicon
+from misinformation_simulation.text_metrics.vad import VADScore
 
 
 @pytest.fixture
 def lexicon_path(tmp_path):
     path = tmp_path / "lexicon.tsv"
     path.write_text(
-        "term\tvalence\tarousal\tdominance\ngood\t0.5\t0.5\t0.5\nbad\t-0.5\t-0.5\t-0.5\n",
+        "word\tvalence\tarousal\tdominance\ngood\t7\t7\t7\nbad\t3\t3\t3\n",
         encoding="utf-8",
     )
     return path
@@ -65,31 +66,48 @@ def steps():
 
 
 def test_normalization_and_references_use_original_and_actual_source(steps, lexicon_path):
-    result = compare_saved_vad_steps(steps, NRCVADLexicon(lexicon_path))
-    assert result.iloc[0].nrc_original_valence_normalized == 0.75
+    result = compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path))
+    assert result.iloc[0].memolon_original_valence_normalized == 0.75
     assert result.iloc[0].bert_original_valence_normalized == 0.5
-    assert result.iloc[1].nrc_vad_drift_vs_original == 0
-    assert result.iloc[1].nrc_vad_drift_incremental == 0.5
-    assert result.iloc[0].nrc_valence_delta_vs_original == -0.5
-    assert result.iloc[0].nrc_stdi_vs_original == pytest.approx(0.2944)
-    assert result.iloc[1].nrc_stdi_vs_original == pytest.approx(0.216)
-    assert result.iloc[1].nrc_stdi_cumulative == pytest.approx(0.5888)
+    assert result.iloc[1].memolon_vad_drift_vs_original == 0
+    assert result.iloc[1].memolon_vad_drift_incremental == 0.5
+    assert result.iloc[0].memolon_valence_delta_vs_original == -0.5
+    assert result.iloc[0].memolon_stdi_vs_original == pytest.approx(0.2944)
+    assert result.iloc[1].memolon_stdi_vs_original == pytest.approx(0.216)
+    assert result.iloc[1].memolon_stdi_cumulative == pytest.approx(0.5888)
 
 
 def test_historical_formula_mismatch_blocks_counterfactual_stdi(steps, lexicon_path):
     steps.loc[0, "stdi_vs_original"] = 0.9
-    result = compare_saved_vad_steps(steps, NRCVADLexicon(lexicon_path))
+    result = compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path))
     assert result.iloc[0].formula_check_vs_original == "missing_or_inconsistent"
-    assert pd.isna(result.iloc[0].nrc_stdi_vs_original)
-    assert pd.notna(result.iloc[0].nrc_vad_drift_vs_original)
+    assert pd.isna(result.iloc[0].memolon_stdi_vs_original)
+    assert pd.notna(result.iloc[0].memolon_vad_drift_vs_original)
+
+
+def test_fresh_bert_replaces_vad_but_formula_validation_uses_saved_scores(steps, lexicon_path):
+    fresh = {
+        "good": VADScore(4, 4, 4),
+        "bad": VADScore(2, 2, 2),
+        "good good": VADScore(4, 4, 4),
+    }
+    result = compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path), bert_scores=fresh)
+    assert (result.formula_check_vs_original == "passed").all()
+    assert result.iloc[0].bert_vad_drift_vs_original == 0.5
+    assert result.iloc[0].bert_stdi_vs_original == pytest.approx(0.2944)
+    assert result.iloc[0].saved_bert_stdi_vs_original == steps.iloc[0].stdi_vs_original
+    assert result.iloc[0].bert_stdi_vs_original != result.iloc[0].saved_bert_stdi_vs_original
+    assert result.iloc[1].bert_vad_drift_vs_original == 0
+    assert result.iloc[1].bert_vad_drift_incremental == 0.5
+    assert result.iloc[1].bert_stdi_cumulative == pytest.approx(0.5888)
 
 
 def test_no_lexical_matches_do_not_become_zero_drift(steps, lexicon_path):
     steps = steps.iloc[:1].copy()
     steps.loc[0, "rewritten_text"] = "unknown"
-    result = compare_saved_vad_steps(steps, NRCVADLexicon(lexicon_path))
-    assert result.iloc[0].nrc_rewritten_token_coverage == 0
-    assert pd.isna(result.iloc[0].nrc_vad_drift_vs_original)
+    result = compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path))
+    assert result.iloc[0].memolon_rewritten_token_coverage == 0
+    assert pd.isna(result.iloc[0].memolon_vad_drift_vs_original)
     summary = summarize_vad_model_comparison(result)
     assert (summary.paired_steps == 0).all()
 
@@ -99,26 +117,26 @@ def test_failed_step_does_not_change_source_for_later_step(steps, lexicon_path):
     failed["rewrite_status"] = "error"
     third = make_record(3, "bad", "good good", 3.2, 4.0)
     result = compare_saved_vad_steps(
-        pd.DataFrame([steps.iloc[0].to_dict(), failed, third]), NRCVADLexicon(lexicon_path)
+        pd.DataFrame([steps.iloc[0].to_dict(), failed, third]), MEmoLonLexicon(lexicon_path)
     )
-    assert pd.isna(result.iloc[1].nrc_vad_drift_incremental)
-    assert result.iloc[2].nrc_vad_drift_incremental == 0.5
-    assert result.iloc[2].nrc_stdi_cumulative == pytest.approx(0.5888)
+    assert pd.isna(result.iloc[1].memolon_vad_drift_incremental)
+    assert result.iloc[2].memolon_vad_drift_incremental == 0.5
+    assert result.iloc[2].memolon_stdi_cumulative == pytest.approx(0.5888)
 
 
 def test_invalid_language_is_excluded_without_neutral_imputation(steps, lexicon_path):
     steps.loc[0, "target_language"] = "pt"
-    result = compare_saved_vad_steps(steps, NRCVADLexicon(lexicon_path))
+    result = compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path))
     assert result.iloc[0].comparison_status == "excluded_status_or_language"
-    assert pd.isna(result.iloc[0].nrc_vad_drift_vs_original)
+    assert pd.isna(result.iloc[0].memolon_vad_drift_vs_original)
 
 
 def test_broken_text_continuity_and_missing_original_are_rejected(steps, lexicon_path):
     steps.loc[1, "source_text"] = "different text"
     with pytest.raises(ValueError, match="previous successful"):
-        compare_saved_vad_steps(steps, NRCVADLexicon(lexicon_path))
+        compare_saved_vad_steps(steps, MEmoLonLexicon(lexicon_path))
     with pytest.raises(ValueError, match="step 1"):
-        compare_saved_vad_steps(steps.iloc[1:], NRCVADLexicon(lexicon_path))
+        compare_saved_vad_steps(steps.iloc[1:], MEmoLonLexicon(lexicon_path))
 
 
 def test_loader_filters_chains_and_rejects_duplicate_steps(tmp_path, steps):

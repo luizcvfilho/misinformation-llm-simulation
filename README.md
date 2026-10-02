@@ -754,75 +754,101 @@ It applies STDI to original vs. rewritten news pairs, exports per-dataset and co
 - `rewritten_news_relation_drift_vs_original`
 - `high_topic_drift_flag`
 
-### NRC VAD v2.1 Context Contrast Audit
+### Three-Model VAD Comparison
 
-Run the lexical alternative on the same 40 English synthetic texts used by the
-historical context-contrast BERT audit:
+Open `notebooks/simulation_vad_model_comparison_workbench.ipynb` for one workflow
+comparing **current BERT, NRC VAD v2.1, and MEmoLon MTL_grouped** on both earlier
+test sets: 20 synthetic English context pairs and 50 saved news items across
+SSSS, CCCC, PPPP, DDDD, CCPP, and PPCC (1,200 steps). No rewrites or LLM
+evaluations are regenerated. The production VAD scorer and STDI formula remain
+unchanged.
+
+Cache MEmoLon and NRC resources before the first execution:
 
 ```bash
-uv run python scripts/audit_nrc_vad_context.py --download
+uv run python scripts/download_vad_comparison_resources.py
 ```
 
-The script downloads the official NRC v2.1 archive only when it is absent. Use
-`--lexicon PATH` for an existing official ZIP or full four-column v2.1 TSV.
-The resource is available for noncommercial research/education under the
-[author's terms](https://saifmohammad.com/WebPages/nrc-vad.html); its local
-`.cache/nrc_vad/` directory is ignored by Git and must not be redistributed.
-No new dependencies are required.
+The MEmoLon English resource is cached as
+`.cache/vad_lexicon_comparison/memolon_en.tsv`. NRC v2.1 is cached in `.cache/nrc_vad/`.
+Resource files are ignored by Git. MEmoLon uses CC BY 4.0; NRC remains subject
+to the [author's terms](https://saifmohammad.com/WebPages/nrc-vad.html).
 
-`NRCVADLexicon` in `misinformation_simulation.text_metrics` is also a callable
-scorer accepted by `predict_text_vad` and `annotate_vad_scores`. It selects the
-longest non-overlapping expression at each position and averages matched term
-occurrences equally. Matching normalizes Unicode, case, and curly apostrophes;
-phrases cannot cross punctuation. Unknown terms are excluded. No matches produce
-missing values, not neutral scores. No lemmatization, negation handling, stopword
-filtering, or truncation is applied.
+Current `RobroKools/vad-bert` weights must already be cached locally. Both
+lexical comparisons share the same current BERT revision and text-score cache.
+The manifests record resource/input hashes, model revision, runtime, and
+truncated-text counts. BERT uses the production 512-WordPiece limit; both
+lexicons process full texts. No new dependencies are required.
 
-Outputs are saved to `output/audit/NRCVADContextContrastAudit/`: document scores
-and token coverage, context/topic summaries, signed pair deltas, paired Wilcoxon
-summaries, model comparisons, a provenance manifest with SHA-256 hashes, and an
-English findings report. Native `nrc_native_*` scores range from -1 to 1;
-`vad_*` scores use `3 + 2 * native_score` to match the project's 1–5 amplitude.
-This conversion does not establish calibration or equivalence with BERT.
+Each lexicon averages the longest non-overlapping recognized term occurrences.
+Unknown terms are excluded; no matches yield missing scores. MEmoLon averages
+duplicate normalized entries. There is no negation handling or stopword
+filtering. Normalize to the common nominal 0-1 scale with `(bert_score - 1)/4`,
+`(nrc_native + 1)/2`, and `(memolon_native - 1)/8`. Native and common 1-5 scores
+are also retained. Shared theoretical bounds do not calibrate the estimators.
 
-The historical BERT predictions are reused only after checking that pair keys,
-texts, topics, and focal events match exactly. Use `--without-baseline` for a
-separate paired input; English is required for this resource. The audit does not
-change the default BERT scorer or STDI. More variation does not establish higher
-accuracy, and this experiment does not validate Portuguese.
+The reusable orchestration is
+`misinformation_simulation.analysis.three_model_vad_comparison`; it reuses the
+existing lexical scorers and pairwise audit/formula checks. All joint summaries
+use the same observations available for all three estimators. Individual scores
+and missing values remain in the joint tables. Pairwise intermediate exports
+are temporary and removed automatically after consolidation.
 
-An interactive entry point is `notebooks/nrc_vad_context_contrast_workbench.ipynb`.
+Current exports:
 
-### VAD Comparison on Saved Simulation Chains
+- `output/audit/VADThreeModelContextContrastAudit/`: all text scores, individual
+  pair deltas, a three-model dimension summary, manifest, and report.
+- `output/audit/SimulationVADModelComparison/`: side-by-side scores/drift/STDI,
+  three-model chain/step summaries, inventory, manifest, report, and
+  `comparison_dashboard.html`. The final notebook cell exports all interactive
+  charts for both test sets into this self-contained HTML, with Plotly included
+  for offline viewing. Keep the HTML in Git so visual results remain available
+  when notebook outputs are cleared before committing.
 
-Open `notebooks/simulation_vad_model_comparison_workbench.ipynb` to compare the
-saved BERT predictions with NRC v2.1 at every simulation step. The initial scope
-is the first six chains: SSSS, CCCC, PPPP, DDDD, CCPP, and PPCC. Set `CHAIN_CODES`
-to another tuple, or to `None` for all chains. `RUNS_DIR` selects the saved batch.
-The lexicon must already exist in `.cache/nrc_vad/` (download it with the command
-above). No rewrites, LLM evaluations, or BERT inference are repeated.
+Only the unified comparison notebook and its current results are retained for
+this workflow. Earlier comparison notebooks, duplicate exports, and historical output
+copies have been removed. The initial bilingual coverage pilot is retained
+separately, as documented below. The original NRC comparison remains accessible in Git
+at commit `d09cd838edbd827750933181775efe315c55763f`; that run used historical
+BERT scores, while the unified comparison uses the current BERT revision.
 
-Both score scales are normalized to [0, 1] using theoretical bounds:
-`(bert_score - 1) / 4` and `(nrc_native_score + 1) / 2`. Drift is the mean absolute
-difference across V/A/D, measured against the original and against the actual
-input text of each step. Signed changes remain available separately. The notebook
-does not use sample min/max normalization or treat missing scores as neutral.
+Set `CHAIN_CODES`, `SELECTED_CHAIN_CODE`, `SELECTED_NEWS_ID`, and
+`SELECTED_PAIR_ID` in the unified notebook to adjust scope and inspect examples.
+Hypothetical STDI replaces only VAD after validating the historical formula
+and saved BERT drift, preserving non-VAD contributions. Repeated news/steps are
+dependent; cumulative STDI can exceed one. These English-only comparisons lack
+independent human VAD ratings. Coverage, variation, or proximity to BERT do not
+establish accuracy, and the results do not validate Portuguese.
 
-The analysis reconstructs the original from step 1, checks text continuity, and
-validates the historical STDI formula and saved BERT drift before replacing only
-the VAD contribution. Failed steps remain visible. Hypothetical cumulative STDI
-sums successful incremental scores and can exceed 1. It is not original-relative
-drift. A common scale does not establish calibration between the methods.
+### Initial Portuguese and English VAD Pilot
 
-The reusable implementation is
-`misinformation_simulation.analysis.vad_model_comparison`. The notebook exports
-per-step CSV comparisons, paired chain/step summaries, a run inventory, input
-hashes, an English report, and an offline Plotly dashboard to
-`output/audit/SimulationVADModelComparison/`. Source files remain unchanged.
-Use `SELECTED_CHAIN_CODE`, `SELECTED_RUN_ID`, and `SELECTED_NEWS_ID` to inspect
-individual trajectories and their texts. The analysis is exploratory: repeated
-news across steps/chains are dependent, historical BERT truncation is not isolated,
-and higher variation does not establish higher validity.
+The initial bilingual diagnostic is retained in
+`output/audit/PortugueseVADLexiconComparison/`, separately from the unified
+English simulation/context comparison. It compares NRC v1, MEmoLon MTL_grouped,
+NRC v2.1, and the current BERT on 35 fixed samples: three Portuguese local-news
+captions, their manual English translations, one coverage-only TSE headline,
+and affect-word/negation controls. NRC v2.1 and BERT Portuguese results are
+unsupported-language probes; lexical token coverage is not applicable to BERT.
+
+The report is `findings.md`; `scores.csv`, `matched_terms.csv`,
+`news_coverage.csv`, `model_deltas.csv`, `control_deltas.csv`,
+`control_summary.csv`, and `translation_deltas.csv` retain the detailed results.
+`manifest.json` records the full samples, source URLs, resource/model hashes,
+runtime, and scoring method. `recovery_manifest.json` records restoration from
+the retained cache and comparison against the previous results. These collected
+captions and manual translations are diagnostic inputs, without independent
+human document VAD labels or verification of their factual claims.
+
+```bash
+uv run python scripts/download_vad_comparison_resources.py --include-portuguese-pilot
+uv run python scripts/compare_portuguese_vad_lexicons.py
+```
+
+The optional download flag caches NRC v1 and Portuguese MEmoLon alongside
+the resources used by the unified notebook. Pilot download metadata is stored
+separately, so preparing the English comparison does not overwrite it. The
+scoring script runs offline once the resources, BERT snapshot, and original
+`output/elections_2026/simulation_candidates.csv` are cached.
 
 ### Fake vs True VAD Analysis
 
