@@ -56,6 +56,30 @@ make interaction-graph-dashboards
 make clean
 ```
 
+### Brazilian elections corpus exploration
+
+Open the local exploratory notebook with:
+
+```powershell
+uv sync --locked
+uv run jupyter lab notebooks/elections_2026_eda.ipynb
+```
+
+It reads `data/Eleições 2026/`, including the three post Parquets, the nested Meta Ad Library CSV,
+and the BRPOL aggregate ZIP. It audits schemas, missingness, duplicate IDs and captions, publication
+dates, source groups, candidate metadata, account concentration, observed engagement, lexical
+patterns, ad range endpoints, and TSE collection coverage. Organic posts, ads, and overlapping
+aggregates are analyzed separately. Caption topic exploration uses a bounded local sample and
+does not call an LLM or download models.
+
+The configuration cell controls ad start-date filters and reproducible simulation candidate
+sampling. Local outputs in `output/elections_2026/` include CSV summaries, interactive HTML charts,
+`simulation_candidates.csv`, and a manifest with input hashes and parameters. Candidates require
+manual review for election relevance and sufficient standalone context. The candidate CSV supports
+the interaction-graph workflow with `description` as the text column; `category` denotes the source
+group. Review the source package README's use conditions before sharing data or executed outputs.
+The notebook does not run simulations.
+
 ### Interaction-graph STDI analysis
 
 The persisted runs in `output/interaction_graph/app_runs/` can be analyzed without rerunning the
