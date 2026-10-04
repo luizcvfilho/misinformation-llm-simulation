@@ -19,9 +19,9 @@ from misinformation_simulation.topic_drift.metrics import (
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "output/interaction_graph/app_runs/simulation_ui_20261003_202828"
-DESTINATION = Path(__file__).resolve().parent
+DESTINATION = ROOT / "output/audit/TopicDomainGateAudit_20261003"
 MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 
