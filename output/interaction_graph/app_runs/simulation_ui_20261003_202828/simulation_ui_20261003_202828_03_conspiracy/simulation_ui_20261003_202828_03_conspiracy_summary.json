@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "topic_drift_model": "gpt-6-luna",
+  "topic_drift_provider": "chatgpt",
+  "rows_processed": 5,
+  "cancelled": false,
+  "steps_total": 10,
+  "steps_success": 10,
+  "steps_error": 0,
+  "vad_model": "RobroKools/vad-bert",
+  "stdi_comparison_method": "cluster",
+  "stdi_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "graph": {
+    "start_node_id": "p2",
+    "ordered_node_ids": [
+      "p2",
+      "p1"
+    ],
+    "edges": [
+      {
+        "source": "p2",
+        "target": "p1"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "node_id": "p2",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a conspiratorial, denialist persona that rejects official explanations. Interpret events as coordinated manipulation by hidden elites and institutions. Prioritize suspicion, hidden motives, and narrative inversion when interpreting and rewriting the news.",
+      "label": "Conspiracy",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "p1",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a conspiratorial, denialist persona that rejects official explanations. Interpret events as coordinated manipulation by hidden elites and institutions. Prioritize suspicion, hidden motives, and narrative inversion when interpreting and rewriting the news.",
+      "label": "Conspiracy",
+      "api_key": null,
+      "base_url": null
+    }
+  ]
+}

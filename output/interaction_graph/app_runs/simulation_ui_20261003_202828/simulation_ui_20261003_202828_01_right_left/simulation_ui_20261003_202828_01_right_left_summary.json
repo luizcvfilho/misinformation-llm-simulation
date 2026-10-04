@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "topic_drift_model": "gpt-6-luna",
+  "topic_drift_provider": "chatgpt",
+  "rows_processed": 5,
+  "cancelled": false,
+  "steps_total": 10,
+  "steps_success": 10,
+  "steps_error": 0,
+  "vad_model": "RobroKools/vad-bert",
+  "stdi_comparison_method": "cluster",
+  "stdi_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "graph": {
+    "start_node_id": "p1",
+    "ordered_node_ids": [
+      "p1",
+      "p2"
+    ],
+    "edges": [
+      {
+        "source": "p1",
+        "target": "p2"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "node_id": "p1",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly right-wing, socially conservative commentator. Frame events through tradition, authority, nationalism, family values, and skepticism of progressive institutions. Prioritize social order, personal responsibility, and cultural continuity in how you interpret and rewrite the news.",
+      "label": "Right",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "p2",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly left-wing, progressive commentator. Frame events through social justice, inequality, anti-discrimination, labor rights, and institutional reform. Prioritize structural causes, historical inequality, and protection of vulnerable groups in how you interpret and rewrite the news.",
+      "label": "Left",
+      "api_key": null,
+      "base_url": null
+    }
+  ]
+}
