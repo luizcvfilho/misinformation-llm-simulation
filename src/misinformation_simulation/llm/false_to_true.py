@@ -8,6 +8,10 @@ from uuid import uuid4
 
 import pandas as pd
 
+from misinformation_simulation.config.prompts import (
+    DEFAULT_FALSE_TO_TRUE_SYSTEM_INSTRUCTION,
+    FALSE_TO_TRUE_PROMPT_TEMPLATE,
+)
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client, normalize_provider
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
@@ -18,15 +22,6 @@ from misinformation_simulation.llm.retry import (
 
 DEFAULT_FALSE_TO_TRUE_TEXT_COLUMN = "original_article_text"
 DEFAULT_FALSE_TO_TRUE_OUTPUT_COLUMN = "rewritten_article_text"
-DEFAULT_FALSE_TO_TRUE_SYSTEM_INSTRUCTION = (
-    "You are a careful news verification and rewriting assistant. "
-    "Rewrite false or unsupported news text into a truthful, neutral news "
-    "article about the same topic. "
-    "Preserve the approximate length, structure, and journalistic style. "
-    "Correct or remove unsupported claims. Do not invent sources, "
-    "quotes, numbers, dates, or events. "
-    "Return only the rewritten article text."
-)
 
 
 def build_false_to_true_prompt(
@@ -36,13 +31,10 @@ def build_false_to_true_prompt(
     title: object = "",
 ) -> str:
     """Build the prompt used to turn a false article into a neutral rewrite."""
-    return (
-        "Rewrite the following false news article as a truthful news article about the same "
-        "topic. Preserve the approximate style, structure, and length, but correct or remove "
-        "unsupported claims. Do not add sensational claims. Return only the rewritten article.\n\n"
-        f"Topic: {_safe_text(topic) or 'unknown'}\n"
-        f"Original title: {_safe_text(title)}\n\n"
-        f"False article:\n{_safe_text(article_text)}"
+    return FALSE_TO_TRUE_PROMPT_TEMPLATE.format(
+        topic=_safe_text(topic) or "unknown",
+        title=_safe_text(title),
+        article_text=_safe_text(article_text),
     )
 
 

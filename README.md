@@ -658,6 +658,13 @@ Main variables:
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
+### Prompt definitions
+
+All application prompt definitions live in `src/misinformation_simulation/config/prompts.py`:
+personality presets, news rewriting, topic extraction and classification, controlled rewrites,
+semantic comparison, and false-to-true rewriting. Other modules import these definitions;
+graph JSON files can still supply custom personality text for a particular execution.
+
 ### Interaction Graph UI
 
 The project also includes a Streamlit interface for the interaction graph workflow:

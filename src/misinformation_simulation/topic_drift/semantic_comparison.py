@@ -5,14 +5,16 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from misinformation_simulation.config.prompts import (
+    SEMANTIC_COMPARISON_PROMPT_TEMPLATE,
+    SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
+)
 from misinformation_simulation.llm.clients import create_llm_client
 from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
 from misinformation_simulation.topic_drift.manual_evaluation_definitions import (
-    SEMANTIC_COMPARISON_PROMPT_TEMPLATE,
-    SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
     SEMANTIC_COMPONENT_COLUMNS,
     SEMANTIC_DRIFT_LEVELS,
 )

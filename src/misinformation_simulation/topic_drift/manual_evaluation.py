@@ -12,6 +12,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
+from misinformation_simulation.config.prompts import (
+    MANUAL_REWRITE_PROMPT_TEMPLATE,
+    MANUAL_REWRITE_SYSTEM_INSTRUCTION,
+    METRIC_REWRITE_PROMPTS,
+    MetricRewritePrompt,
+)
 from misinformation_simulation.datasets.selection import (
     choose_news_text_column,
     resolve_row_text,
@@ -29,15 +35,11 @@ from misinformation_simulation.topic_drift.manual_evaluation_definitions import 
     CALCULATED_STDI_COLUMN,
     EXCLUDED_SOURCE_TEXT_MARKERS,
     MANUAL_EXPECTED_STDI_COLUMN,
-    MANUAL_REWRITE_PROMPT_TEMPLATE,
-    MANUAL_REWRITE_SYSTEM_INSTRUCTION,
-    METRIC_REWRITE_PROMPTS,
     MINIMUM_SOURCE_WORD_COUNT,
     REWRITE_MAXIMUM_WORD_RATIO,
     REWRITE_MINIMUM_WORD_RATIO,
     TRUNCATED_SOURCE_ENDINGS,
     TRUNCATED_SOURCE_TEXT_MARKERS,
-    MetricRewritePrompt,
 )
 from misinformation_simulation.topic_drift.metrics import calculate_stdi
 from misinformation_simulation.topic_drift.models import TopicStructure, flatten_topic_structure

@@ -18,6 +18,11 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from misinformation_simulation.config.prompts import (  # noqa: E402
+    TOPIC_DOMAIN_ONLY_PROMPT_TEMPLATE,
+    TOPIC_DOMAIN_ONLY_SYSTEM_INSTRUCTION,
+    TOPIC_DOMAINS,
+)
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER  # noqa: E402
 from misinformation_simulation.llm.clients import create_llm_client  # noqa: E402
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter  # noqa: E402
@@ -25,27 +30,9 @@ from misinformation_simulation.llm.retry import (  # noqa: E402
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
-from misinformation_simulation.topic_drift.extraction import (  # noqa: E402
-    TOPIC_DOMAINS,
-)
 
 GENERIC_CATEGORIES = {"top", "breaking", "other"}
 TEXT_COLUMN_CANDIDATES = ("content", "description", "full_description", "text")
-TOPIC_DOMAIN_ONLY_SYSTEM_INSTRUCTION = """
-You classify the primary domain of a news report.
-Return only one domain label, with no JSON, punctuation, explanation, or markdown.
-""".strip()
-TOPIC_DOMAIN_ONLY_PROMPT_TEMPLATE = f"""
-Classify the following news item into exactly one primary domain from this closed list:
-{", ".join(TOPIC_DOMAINS)}.
-
-These are the top-level IPTC Media Topics categories. Do not return null.
-
-Title: {{title}}
-
-Text:
-{{text}}
-""".strip()
 
 
 def parse_args() -> argparse.Namespace:
