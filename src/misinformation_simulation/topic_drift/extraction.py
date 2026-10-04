@@ -184,7 +184,10 @@ def extract_topic_structure(
         api_key=api_key,
         base_url=base_url,
     )
-    prompt = TOPIC_DRIFT_PROMPT_TEMPLATE.format(title=title or "Untitled", text=text.strip())
+    prompt_template = TOPIC_DRIFT_PROMPT_TEMPLATE
+    if not title or not title.strip():
+        prompt_template = prompt_template.replace("Title: {title}\n\n", "")
+    prompt = prompt_template.format(title=title, text=text.strip())
     limiter = MinuteRateLimiter(max_requests_per_minute)
     request_hook = before_request_hook or limiter.acquire
 

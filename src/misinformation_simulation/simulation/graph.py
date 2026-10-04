@@ -115,7 +115,7 @@ def _generate_rewrite(
 def _extract_compared_structure(
     *,
     compared_text: str,
-    title: str,
+    title: str | None,
     topic_drift_model: str,
     topic_drift_provider: Provider | str,
     topic_drift_api_key: str | None,
@@ -278,6 +278,7 @@ def run_news_interaction_graph(
     evaluation_metadata = {
         "topic_drift_model": str(topic_drift_model),
         "topic_drift_provider": normalize_provider(topic_drift_provider),
+        "topic_extraction_original_title_context": rewrite_prompt.original_title_context,
         **rewrite_metadata,
     }
     step_results: list[SimulationStepResult] = []
@@ -318,6 +319,7 @@ def run_news_interaction_graph(
             f"[{row_position}/{total_rows}] Preparing news '{news_id}' ({title or 'Untitled'}).",
         )
 
+        extraction_title = (title or "Untitled") if rewrite_prompt.original_title_context else None
         original_structure_ready = False
         try:
             source_column, original_text = resolve_row_text(
@@ -331,7 +333,7 @@ def run_news_interaction_graph(
             )
             original_structure = extract_topic_structure(
                 text=original_text,
-                title=title or "Untitled",
+                title=extraction_title,
                 model=topic_drift_model,
                 provider=topic_drift_provider,
                 api_key=topic_drift_api_key,
@@ -506,7 +508,7 @@ def run_news_interaction_graph(
 
                 rewritten_structure = _extract_compared_structure(
                     compared_text=rewritten_text,
-                    title=title or "Untitled",
+                    title=extraction_title,
                     topic_drift_model=topic_drift_model,
                     topic_drift_provider=topic_drift_provider,
                     topic_drift_api_key=topic_drift_api_key,

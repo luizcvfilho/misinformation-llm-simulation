@@ -140,3 +140,27 @@ def test_extract_topic_structure_uses_openai_generator(monkeypatch) -> None:
     structure = extract_topic_structure(text="Article text", provider="chatgpt")
 
     assert structure.main_topic == "science"
+
+
+@pytest.mark.parametrize("provider", ["chatgpt", "gemini"])
+@pytest.mark.parametrize("title", [None, "", " "])
+def test_extract_topic_structure_omits_title_context_when_not_supplied(
+    monkeypatch, provider, title
+) -> None:
+    calls = []
+    monkeypatch.setattr(extraction, "create_llm_client", lambda **_kwargs: (provider, object()))
+
+    def generate(_client, **kwargs):
+        calls.append(kwargs)
+        return '{"main_topic": "science"}'
+
+    monkeypatch.setattr(extraction, "generate_openai_text_with_retry", generate)
+    monkeypatch.setattr(extraction, "generate_gemini_text_with_retry", generate)
+    text = "A title embedded in the received message.\nThe agency reported a finding."
+
+    extract_topic_structure(text=text, title=title, provider=provider)
+
+    prompt = calls[0]["prompt"]
+    assert "Title:" not in prompt
+    assert "Untitled" not in prompt
+    assert prompt.endswith(f"Text:\n{text}")

@@ -59,13 +59,14 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
 ) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
     extraction_titles = []
+    extraction_texts = []
 
     def extract(**kwargs):
         extraction_titles.append(kwargs["title"])
+        extraction_texts.append(kwargs["text"])
         return make_structure("political policy")
 
     monkeypatch.setattr(graph, "extract_topic_structure", extract)
-    monkeypatch.setattr(graph, "_extract_compared_structure", extract)
     calls = []
     outputs = iter(["First person's interpretation", "Second person's interpretation"])
 
@@ -93,18 +94,29 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     assert "First person's interpretation" in calls[1]["prompt"]
     assert original not in calls[1]["prompt"]
     assert all(call["system_instruction"] == prompt_config.system_instruction for call in calls)
-    assert extraction_titles == [title, title, title]
+    assert extraction_titles == ([title] * 3 if mode == "faithful" else [None] * 3)
+    assert extraction_texts == [
+        original,
+        "First person's interpretation",
+        "Second person's interpretation",
+    ]
     assert result.step_results[1].source_text == "First person's interpretation"
     assert result.summary["rewrite_mode"] == mode
     assert result.summary["rewrite_prompt_version"] == prompt_config.version
     assert result.summary["rewrite_original_title_context"] == (mode == "faithful")
+    assert result.summary["topic_extraction_original_title_context"] == (mode == "faithful")
     assert result.summary["rewrite_temperature_requested"] == 0.8
     assert result.summary["rewrite_prompt_template"] == prompt_config.template
     assert result.summary["rewrite_system_instruction"] == prompt_config.system_instruction
     persisted = json.loads(result.summary_path.read_text(encoding="utf-8"))
     assert persisted["rewrite_mode"] == mode
+    assert persisted["topic_extraction_original_title_context"] == (mode == "faithful")
     saved_steps = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
     assert all(step["metadata_rewrite_mode"] == mode for step in saved_steps)
+    assert all(
+        step["metadata_topic_extraction_original_title_context"] == (mode == "faithful")
+        for step in saved_steps
+    )
     assert all(len(step["metadata_rewrite_prompt_sha256"]) == 64 for step in saved_steps)
     for index, step in enumerate(saved_steps):
         reconstructed_prompt = prompt_config.template.format(

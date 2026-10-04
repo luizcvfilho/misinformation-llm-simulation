@@ -728,9 +728,15 @@ Older files without this metadata are labelled **Legacy (mode not recorded)**.
 Both modes request temperature `0.8` and use the same STDI/VAD evaluation. The existing OpenAI
 request builder omits temperature for `gpt-5` and `gpt-6` model names, leaving the provider default;
 the saved `rewrite_temperature_requested` is the configured value, not proof of an applied value.
-Topic extraction still receives the original title; only generation title context changes in the
-interpretive condition. Summaries
-save the mode, prompt version, system instruction, template, temperature, and title-context policy.
+Topic extraction follows the generation title-context policy: in interpretive mode, both the
+original and rewritten structures are extracted from their respective texts alone, without the
+separate original title. In faithful mode, extraction retains the title supplied to the rewriters.
+Titles already included in a received message remain part of that text. Summaries and steps record
+`topic_extraction_original_title_context` (prefixed with `metadata_` in step records) to distinguish
+this policy from historical interpretive runs that also supplied the original title to extraction.
+This change applies to new runs; existing structures and scores are not recalculated automatically.
+Summaries also save the mode, prompt version, system instruction, template, temperature, and
+title-context policy.
 Each step records the mode, version, and a hash of its formatted prompt, along with its actual input
 and output. Those records make the generation condition identifiable without changing saved older
 runs or the standalone article rewriting workflow.
