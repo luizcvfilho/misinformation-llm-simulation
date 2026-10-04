@@ -16,12 +16,14 @@ def test_topic_comparison_displays_extracted_values_and_category_scores(monkeypa
         subtopics=["Polls"],
         central_entities=["Candidate A"],
         central_relations=[TopicRelation("Candidate A", "leads", "Polls")],
+        topic_domain="politics",
     )
     rewritten = TopicStructure(
         main_topic="Election",
         subtopics=["Campaign"],
         central_entities=["Candidate B"],
         central_relations=[TopicRelation("Candidate B", "disputes", "Polls")],
+        topic_domain="economy_business_and_finance",
     )
     row = pd.Series(
         {
@@ -72,6 +74,8 @@ def test_topic_comparison_displays_extracted_values_and_category_scores(monkeypa
     components.render_topic_comparison(row)
 
     assert "Election" in shown_text
+    assert "politics" in shown_text
+    assert "economy_business_and_finance" in shown_text
     assert "• Polls" in shown_text
     assert "• Campaign" in shown_text
     assert "• Candidate A — leads — Polls" in shown_text
@@ -83,3 +87,7 @@ def test_topic_comparison_displays_extracted_values_and_category_scores(monkeypa
 def test_topic_comparison_handles_missing_structures() -> None:
     assert components.topic_structure_from_step(pd.Series(dtype=object), "original") is None
     assert components.format_topic_items(None, "main_topic") == "Unavailable"
+    assert components.format_topic_items({}, "topic_domain") == "—"
+    flattened_row = pd.Series({"metadata_original_topic_domain": "politics"})
+    structure = components.topic_structure_from_step(flattened_row, "original")
+    assert components.format_topic_items(structure, "topic_domain") == "politics"
