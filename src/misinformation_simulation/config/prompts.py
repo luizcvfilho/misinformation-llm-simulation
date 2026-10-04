@@ -185,33 +185,6 @@ def resolve_graph_personality_prompt(personality: str, *, rewrite_mode: str) -> 
     return personality
 
 
-TOPIC_DOMAINS = (
-    "arts_culture_entertainment_and_media",
-    "conflict_war_and_peace",
-    "crime_law_and_justice",
-    "disaster_accident_and_emergency_incident",
-    "economy_business_and_finance",
-    "education",
-    "environment",
-    "health",
-    "human_interest",
-    "labour",
-    "lifestyle_and_leisure",
-    "politics",
-    "religion_and_belief",
-    "science_and_technology",
-    "society",
-    "sport",
-    "weather",
-)
-
-TOPIC_DOMAIN_VALUES = ", ".join(TOPIC_DOMAINS)
-
-TOPIC_DOMAIN_CLASSIFICATION_RULE = (
-    "Select the article's primary domain from the top-level IPTC Media Topics "
-    f"controlled vocabulary: {TOPIC_DOMAIN_VALUES}."
-)
-
 TOPIC_DRIFT_SYSTEM_INSTRUCTION = """
 You extract the semantic structure of a news report for topic-drift analysis.
 Return only valid JSON.
@@ -222,10 +195,9 @@ Do not expand acronyms, translate names, or replace them with official names or 
 If a field is unavailable, use null or an empty array.
 """.strip()
 
-TOPIC_DRIFT_PROMPT_TEMPLATE = f"""
+TOPIC_DRIFT_PROMPT_TEMPLATE = """
 Analyze the following news item and return a JSON object with exactly these keys:
 - main_topic: string or null
-- topic_domain: string or null
 - subtopics: array of strings
 - central_entities: array of strings
 - central_relations: array of objects with keys subject, action, object
@@ -235,9 +207,6 @@ Analyze the following news item and return a JSON object with exactly these keys
 
 Extraction rules:
 - main_topic must capture the primary subject of the article.
-- topic_domain must be exactly one of the controlled vocabulary values.
-  {TOPIC_DOMAIN_CLASSIFICATION_RULE}
-  Use null only when no domain can be determined.
 - subtopics must list secondary themes or angles.
 - central_entities must include the most important people, organizations, places, or groups.
   Copy each entity name verbatim from the text. Do not expand acronyms, abbreviate full names,
@@ -255,27 +224,10 @@ Extraction rules:
 - Keep descriptive outputs short and normalized, but never normalize entity names.
 - Do not invent facts beyond the text.
 
-Title: {{title}}
+Title: {title}
 
 Text:
-{{text}}
-""".strip()
-
-TOPIC_DOMAIN_ONLY_SYSTEM_INSTRUCTION = """
-You classify the primary domain of a news report.
-Return only one domain label, with no JSON, punctuation, explanation, or markdown.
-""".strip()
-
-TOPIC_DOMAIN_ONLY_PROMPT_TEMPLATE = f"""
-Classify the following news item into exactly one primary domain from this closed list:
-{", ".join(TOPIC_DOMAINS)}.
-
-These are the top-level IPTC Media Topics categories. Do not return null.
-
-Title: {{title}}
-
-Text:
-{{text}}
+{text}
 """.strip()
 
 MANUAL_REWRITE_SYSTEM_INSTRUCTION = """

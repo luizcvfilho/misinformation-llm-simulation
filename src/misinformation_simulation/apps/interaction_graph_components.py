@@ -216,13 +216,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
             steps_df[steps_df["news_id"] == selected_news_id].copy().sort_values("step_index")
         )
         if not selected_steps.empty:
-            for prefix in ("original", "rewritten"):
-                selected_steps[f"{prefix}_topic_domain"] = selected_steps.apply(
-                    lambda row, prefix=prefix: format_topic_items(
-                        topic_structure_from_step(row, prefix), "topic_domain"
-                    ),
-                    axis=1,
-                )
             st.line_chart(
                 selected_steps.set_index("step_index")[["stdi_vs_original", "stdi_incremental"]]
             )
@@ -232,8 +225,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         "step_index",
                         "node_label",
                         "rewrite_status",
-                        "original_topic_domain",
-                        "rewritten_topic_domain",
                         "stdi_vs_original",
                         "stdi_incremental",
                         "stdi_cumulative",
@@ -305,19 +296,6 @@ def render_topic_comparison(row: pd.Series) -> None:
         st.info("Topic extraction is unavailable for this step.")
         return
 
-    with st.container(border=True):
-        st.markdown("**Topic domain**")
-        columns = st.columns([1, 1])
-        columns[0].caption("Original article")
-        columns[0].text(format_topic_items(original, "topic_domain"))
-        columns[1].caption("Rewritten text")
-        columns[1].text(format_topic_items(rewritten, "topic_domain"))
-        st.caption(
-            "In cluster comparison, different known topic domains set main topic drift to 1. "
-            "Matching domains still allow the main topics to differ. "
-            "Topic domain is not a separate STDI component."
-        )
-
     categories = (
         ("Main topic", "main_topic", "theme_drift"),
         ("Subtopics", "subtopics", "subtopic_drift"),
@@ -355,13 +333,13 @@ def topic_structure_from_step(row: pd.Series, prefix: str) -> dict[str, Any] | N
         except json.JSONDecodeError:
             pass
 
-    fields = ("main_topic", "topic_domain", "subtopics", "central_entities", "central_relations")
+    fields = ("main_topic", "subtopics", "central_entities", "central_relations")
     structure = {}
     for field in fields:
         value = row.get(f"metadata_{prefix}_{field}")
         if value is None or value is pd.NA or (isinstance(value, float) and pd.isna(value)):
             continue
-        if isinstance(value, str) and field not in {"main_topic", "topic_domain"}:
+        if isinstance(value, str) and field != "main_topic":
             try:
                 value = json.loads(value)
             except json.JSONDecodeError:
@@ -376,7 +354,7 @@ def format_topic_items(structure: dict[str, Any] | None, field: str) -> str:
     value = structure.get(field)
     if not value:
         return "—"
-    if field in {"main_topic", "topic_domain"}:
+    if field == "main_topic":
         return str(value)
     if not isinstance(value, list):
         return str(value)

@@ -42,7 +42,7 @@ ANALYSIS_STEP_COLUMNS = {
     "metadata_title",
     "metadata_category",
     "metadata_rewrite_mode",
-    "metadata_original_topic_domain",
+    "metadata_stdi_comparison_version",
     "theme_drift_incremental",
     "subtopic_drift_incremental",
     "entity_drift_incremental",
@@ -93,6 +93,11 @@ def load_interaction_graph_runs(runs_dir: Path) -> InteractionGraphRuns:
             raise ValueError(f"'{path}' is missing required columns: {missing_text}")
 
         frame = frame.copy()
+        version_column = "metadata_stdi_comparison_version"
+        if version_column not in frame.columns:
+            frame[version_column] = "legacy"
+        else:
+            frame[version_column] = frame[version_column].fillna("legacy")
         if "metadata_rewrite_mode" not in frame.columns:
             frame["metadata_rewrite_mode"] = "legacy"
         else:
@@ -299,7 +304,7 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
         "metadata_title",
         "metadata_category",
         "metadata_rewrite_mode",
-        "metadata_original_topic_domain",
+        "metadata_stdi_comparison_version",
         "rewrite_status",
         *metric_columns,
     ]

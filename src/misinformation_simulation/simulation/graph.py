@@ -53,6 +53,7 @@ from misinformation_simulation.topic_drift import (
     flatten_topic_structure,
 )
 from misinformation_simulation.topic_drift.cluster_comparison import (
+    CLUSTER_STDI_COMPARISON_VERSION,
     ClusterSTDIComparator,
     TextEmbedder,
     TopicStructurePair,
@@ -686,6 +687,9 @@ def run_news_interaction_graph(
         if stdi_comparison_method == "cluster"
         else None
     )
+    comparison_version = (
+        CLUSTER_STDI_COMPARISON_VERSION if stdi_comparison_method == "cluster" else "lexical_v1"
+    )
     for step in step_results:
         step.metadata.update(
             {
@@ -693,6 +697,7 @@ def run_news_interaction_graph(
                 "rewrite_provider": step.provider,
                 "vad_model": vad_model_name,
                 "stdi_embedding_model": embedding_model_name,
+                "stdi_comparison_version": comparison_version,
             }
         )
     summary = {
@@ -707,6 +712,7 @@ def run_news_interaction_graph(
         "steps_error": error_count,
         "vad_model": vad_model_name,
         "stdi_comparison_method": stdi_comparison_method,
+        "stdi_comparison_version": comparison_version,
         "stdi_embedding_model": embedding_model_name,
         "graph": {
             "start_node_id": resolved_start_node,

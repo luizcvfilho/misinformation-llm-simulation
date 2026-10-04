@@ -58,7 +58,8 @@ def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -
     assert runs.steps["graph_id"].tolist() == ["01"]
     assert runs.steps["metadata_category"].tolist() == ["business; top"]
     assert runs.steps["metadata_rewrite_mode"].tolist() == ["legacy"]
-    assert runs.steps["metadata_original_topic_domain"].tolist() == ["economy_business_and_finance"]
+    assert "metadata_original_topic_domain" not in runs.steps
+    assert runs.steps["metadata_stdi_comparison_version"].tolist() == ["legacy"]
 
 
 def test_loads_single_and_multi_graph_run_layouts_together(tmp_path) -> None:
@@ -124,4 +125,4 @@ def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
     assert (output_dir / "final_stdi_by_chain.csv").is_file()
     exported = (output_dir / "successful_steps.csv").read_text(encoding="utf-8")
     assert "metadata_category" in exported
-    assert "metadata_original_topic_domain" in exported
+    assert "metadata_original_topic_domain" not in exported

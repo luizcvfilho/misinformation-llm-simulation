@@ -11,6 +11,7 @@ import pandas as pd
 
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.topic_drift.cluster_comparison import (
+    CLUSTER_STDI_COMPARISON_VERSION,
     ClusterSTDIComparator,
     TextEmbedder,
     TopicStructurePair,
@@ -104,7 +105,6 @@ def topic_structure_from_row(row: pd.Series, *, prefix: str) -> TopicStructure |
         subtopics=_decode_list(subtopics_value),
         central_entities=_decode_list(entities_value),
         central_relations=_decode_relations(relations_value),
-        topic_domain=_as_non_empty_text(row.get(f"{prefix}_topic_domain")) or None,
     )
 
 
@@ -158,7 +158,15 @@ def run_comparison_workflow(
     if missing_columns:
         raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
 
-    result = df.copy()
+    result = df.drop(
+        columns=[
+            "original_topic_domain",
+            "modified_topic_domain",
+            "cluster_theme_domain_match",
+            "cluster_theme_domain_gate_applied",
+        ],
+        errors="ignore",
+    ).copy()
     for column in (
         "original_extraction_model",
         "original_extraction_provider",
@@ -363,6 +371,7 @@ def run_comparison_workflow(
         ),
         "cluster": (
             {
+                "comparison_version": CLUSTER_STDI_COMPARISON_VERSION,
                 "embedding_model": embedding_model,
                 "n_clusters": n_clusters,
                 "random_state": random_state,

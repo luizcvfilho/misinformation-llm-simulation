@@ -116,6 +116,11 @@ def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> No
     assert workflow.results["comparison_status"].eq("success").all()
     assert workflow.results.loc[0, "theme_drift"] == 0.0
     assert workflow.results.loc[1, "theme_drift"] > 0.0
+    assert workflow.results.loc[1, "theme_drift"] == 0.5
+    assert workflow.manifest["cluster"]["comparison_version"] == "cluster_v2"
+    assert "original_topic_domain" not in workflow.results
+    assert "modified_topic_domain" not in workflow.results
+    assert "topic_domain" not in json.loads(workflow.results.loc[0, "original_json"])
     assert workflow.cluster_artifacts is not None
     assert any("Shared structures ready" in message for message in progress_messages)
     assert any("Fitting shared clusters" in message for message in progress_messages)
@@ -179,7 +184,6 @@ def test_refresh_structures_accepts_empty_numeric_structure_columns() -> None:
         [
             TopicStructure(
                 main_topic="economy policy",
-                topic_domain="economy_business_and_finance",
                 subtopics=["economy"],
                 central_entities=["Central Bank"],
                 central_relations=[],

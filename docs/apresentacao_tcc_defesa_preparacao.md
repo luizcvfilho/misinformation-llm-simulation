@@ -5,6 +5,8 @@
 
 Esta versão preserva os ajustes manuais realizados no PPTX v4 em 25/09/2026 e foi exportada diretamente pelo PowerPoint. As versões intermediárias da mesma apresentação foram removidas.
 
+**Pendência metodológica registrada em 03/10/2026:** o comparador atual `cluster_v2` removeu `topic_domain` da extração e a regra que impunha deriva temática máxima entre domínios diferentes. A descrição abaixo registra a apresentação anterior a essa decisão. Os slides 10–12 precisam ser revisados para apresentar a comparação contínua dos temas por embeddings, e os resultados devem identificar a versão da medida utilizada. O PPTX e o PDF não foram alterados nesta atualização do código.
+
 ## Estrutura
 
 A apresentação contém **29 slides principais** e **5 slides de apoio**. A meta é concluir os slides principais em 25–30 minutos. Os slides de apoio devem ser usados somente durante a arguição.

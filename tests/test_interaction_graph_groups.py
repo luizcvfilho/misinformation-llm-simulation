@@ -5,12 +5,10 @@ import pytest
 
 from misinformation_simulation.analysis.interaction_graph_groups import (
     ORIGINAL_CATEGORY_GROUPING,
-    TOPIC_DOMAIN_GROUPING,
     available_news_groupings,
     news_chain_proximity,
     summarize_chain_pairs_by_group,
     summarize_group_proximity,
-    topic_domain_disagreements,
 )
 from misinformation_simulation.analysis.interaction_graph_plotly import (
     build_chain_pair_heatmap,
@@ -64,27 +62,21 @@ def _steps() -> pd.DataFrame:
 def test_available_groupings_prefer_persisted_original_categories() -> None:
     groupings = available_news_groupings(_steps())
 
-    assert list(groupings) == [ORIGINAL_CATEGORY_GROUPING, TOPIC_DOMAIN_GROUPING]
+    assert list(groupings) == [ORIGINAL_CATEGORY_GROUPING]
 
 
-def test_news_proximity_splits_categories_and_uses_modal_topic_domain() -> None:
+def test_news_proximity_splits_original_categories() -> None:
     steps = _steps()
 
     categories = news_chain_proximity(steps, "stdi_vs_original", ORIGINAL_CATEGORY_GROUPING)
-    domains = news_chain_proximity(steps, "stdi_vs_original", TOPIC_DOMAIN_GROUPING)
 
     business = categories.loc[categories["group_value"].eq("business")]
     top = categories.loc[categories["group_value"].eq("top")]
-    politics = domains.loc[domains["group_value"].eq("politics")]
     assert set(business["news_id"]) == {"news-1", "news-2"}
     assert set(top["news_id"]) == {"news-1", "news-3"}
-    assert set(politics["news_id"]) == {"news-1", "news-3"}
     assert business.loc[business["news_id"].eq("news-1"), "range_between_chains"].item() == (
         pytest.approx(0.2)
     )
-    disagreements = topic_domain_disagreements(steps)
-    assert disagreements["news_id"].tolist() == ["news-1"]
-    assert disagreements.loc[0, "distinct_domains"] == 2
 
 
 def test_group_and_chain_pair_summaries_keep_news_as_the_unit() -> None:

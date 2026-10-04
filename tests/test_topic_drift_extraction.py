@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from misinformation_simulation.config.prompts import TOPIC_DRIFT_PROMPT_TEMPLATE
 from misinformation_simulation.topic_drift import extraction
 from misinformation_simulation.topic_drift.extraction import (
     _build_topic_structure,
@@ -12,6 +13,10 @@ from misinformation_simulation.topic_drift.extraction import (
     _deduplicate_preserve_order,
     _extract_json_object,
     extract_topic_structure,
+)
+from misinformation_simulation.topic_drift.models import (
+    flatten_topic_structure,
+    topic_structure_to_dict,
 )
 
 
@@ -75,11 +80,22 @@ def test_build_topic_structure_trims_scalars_and_defaults_missing_values() -> No
     )
 
     assert structure.main_topic == "Economy"
-    assert structure.topic_domain == "economy_business_and_finance"
+    assert not hasattr(structure, "topic_domain")
+    assert "topic_domain" not in topic_structure_to_dict(structure)
+    assert "original_topic_domain" not in flatten_topic_structure(structure, prefix="original")
     assert structure.subtopics == ["inflation"]
     assert structure.narrative_frame == "Alert"
     assert structure.has_internal_contradiction
     assert structure.internal_contradiction_score == 0.5
+
+
+def test_extraction_prompt_no_longer_requests_topic_domain() -> None:
+    prompt = TOPIC_DRIFT_PROMPT_TEMPLATE.format(title="Title", text="Article text")
+
+    assert "topic_domain" not in prompt
+    assert "IPTC" not in prompt
+    assert "Title: Title" in prompt
+    assert "Text:\nArticle text" in prompt
 
 
 def test_extract_topic_structure_validates_inputs() -> None:

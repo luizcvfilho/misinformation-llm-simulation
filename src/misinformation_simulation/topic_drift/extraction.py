@@ -6,15 +6,6 @@ from collections.abc import Callable
 from typing import Any
 
 from misinformation_simulation.config.prompts import (
-    TOPIC_DOMAIN_CLASSIFICATION_RULE as TOPIC_DOMAIN_CLASSIFICATION_RULE,
-)
-from misinformation_simulation.config.prompts import (
-    TOPIC_DOMAIN_VALUES as TOPIC_DOMAIN_VALUES,
-)
-from misinformation_simulation.config.prompts import (
-    TOPIC_DOMAINS as TOPIC_DOMAINS,
-)
-from misinformation_simulation.config.prompts import (
     TOPIC_DRIFT_PROMPT_TEMPLATE as TOPIC_DRIFT_PROMPT_TEMPLATE,
 )
 from misinformation_simulation.config.prompts import (
@@ -152,7 +143,6 @@ def _coerce_unit_score(value: Any, *, default: float = 0.0) -> float:
 
 def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
     main_topic = payload.get("main_topic")
-    topic_domain = payload.get("topic_domain")
     narrative_frame = payload.get("narrative_frame")
     has_internal_contradiction = _coerce_bool(payload.get("has_internal_contradiction"))
     internal_contradiction_score = _coerce_unit_score(
@@ -165,7 +155,6 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         subtopics=_coerce_string_list(payload.get("subtopics")),
         central_entities=_coerce_string_list(payload.get("central_entities")),
         central_relations=_coerce_relations(payload.get("central_relations")),
-        topic_domain=str(topic_domain).strip() if topic_domain else None,
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
         has_internal_contradiction=has_internal_contradiction or internal_contradiction_score > 0.0,
         internal_contradiction_score=internal_contradiction_score,

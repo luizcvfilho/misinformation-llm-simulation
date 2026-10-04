@@ -13,7 +13,6 @@ from misinformation_simulation.analysis.interaction_graph_groups import (
     news_chain_proximity,
     summarize_chain_pairs_by_group,
     summarize_group_proximity,
-    topic_domain_disagreements,
 )
 from misinformation_simulation.analysis.interaction_graph_personas import (
     INCREMENTAL_COMPONENT_COLUMNS,
@@ -56,7 +55,7 @@ from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 3
+ANALYSIS_CACHE_SCHEMA_VERSION = 4
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -253,19 +252,18 @@ def _render_news_group_analysis(
     selected_steps: pd.DataFrame,
     metrics: dict[str, str],
 ) -> None:
-    st.subheader("Resultados por domínio ou classificação da notícia")
+    st.subheader("Resultados por classificação da notícia")
     st.info(
         "Esta análise compara o resultado final das cadeias notícia a notícia. Valores menores "
         "de amplitude, desvio-padrão ou diferença absoluta indicam cadeias mais próximas. "
         "As diferenças descrevem este conjunto de notícias e não estabelecem efeito causal "
-        "do domínio."
+        "da categoria."
     )
     groupings = available_news_groupings(selected_steps)
     if not groupings:
         st.warning(
-            "As execuções selecionadas não guardam classificação original nem topic domain. "
-            "Execute novamente com um dataset que tenha a coluna `category` ou com a extração "
-            "estrutural de tópico habilitada."
+            "As execuções selecionadas não guardam a classificação original. "
+            "Execute novamente com um dataset que tenha a coluna `category`."
         )
         return
 
@@ -281,38 +279,6 @@ def _render_news_group_analysis(
             "`metadata_category`. Uma notícia com categorias separadas por `;` participa de mais "
             "de um grupo, por isso as contagens podem se sobrepor."
         )
-    else:
-        if ORIGINAL_CATEGORY_GROUPING not in groupings:
-            st.info(
-                "A classificação original não está disponível nestas execuções; o visualizador "
-                "está usando `metadata_original_topic_domain`."
-            )
-        st.caption(
-            "O topic domain é extraído do texto original pelo pipeline. Ele é uma classificação "
-            "semântica do experimento, não a categoria editorial fornecida pela fonte. Quando "
-            "a extração varia entre execuções, usa-se o domínio modal da notícia."
-        )
-        disagreements = topic_domain_disagreements(selected_steps)
-        if not disagreements.empty:
-            st.warning(
-                f"O topic domain variou entre execuções para {len(disagreements)} notícia(s). "
-                "O agrupamento abaixo usa o valor mais frequente; empates são resolvidos de "
-                "forma determinística."
-            )
-            with st.expander("Notícias com topic domain inconsistente", expanded=False):
-                disagreement_display = disagreements.rename(
-                    columns={
-                        "metadata_title": "Notícia",
-                        "distinct_domains": "Domínios distintos",
-                        "observed_domains": "Domínios observados",
-                    }
-                )
-                st.dataframe(
-                    disagreement_display[["Notícia", "Domínios distintos", "Domínios observados"]],
-                    width="stretch",
-                    hide_index=True,
-                )
-
     metric_options = [
         metric
         for metric in (

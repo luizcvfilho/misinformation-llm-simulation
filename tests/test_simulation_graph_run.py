@@ -232,6 +232,7 @@ def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path
 
     first, second = result.step_results
     assert result.summary["stdi_comparison_method"] == "cluster"
+    assert result.summary["stdi_comparison_version"] == "cluster_v2"
     assert result.summary["stdi_embedding_model"] == "custom:KeywordEmbedder"
     assert first.theme_drift_vs_original == 0.0
     assert first.stdi_vs_original == 0.0
@@ -241,6 +242,9 @@ def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path
     assert second.stdi_cumulative == second.stdi_incremental
     saved_steps = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
     assert saved_steps[0]["stdi_vs_original"] == 0.0
+    assert saved_steps[0]["metadata_stdi_comparison_version"] == "cluster_v2"
+    assert "metadata_original_topic_domain" not in saved_steps[0]
+    assert "topic_domain" not in json.loads(saved_steps[0]["metadata_original_json"])
     assert saved_steps[1]["stdi_cumulative"] == second.stdi_incremental
 
 

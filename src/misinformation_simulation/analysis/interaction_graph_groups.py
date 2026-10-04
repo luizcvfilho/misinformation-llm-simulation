@@ -9,38 +9,13 @@ import pandas as pd
 from misinformation_simulation.analysis.interaction_graph_visualization import available_metrics
 
 ORIGINAL_CATEGORY_GROUPING = "original_category"
-TOPIC_DOMAIN_GROUPING = "topic_domain"
 GROUPING_LABELS = {
     ORIGINAL_CATEGORY_GROUPING: "Classificação original da notícia",
-    TOPIC_DOMAIN_GROUPING: "Topic domain extraído",
 }
 PROXIMITY_MEASURE_LABELS = {
     "range_between_chains": "Amplitude entre cadeias",
     "sd_between_chains": "Desvio-padrão entre cadeias",
     "mean_pairwise_abs_diff": "Diferença absoluta média entre pares",
-}
-TOPIC_DOMAIN_LABELS = {
-    "arts_culture_entertainment_and_media": "Artes, cultura, entretenimento e mídia",
-    "business_and_economy": "Negócios e economia",
-    "conflict_war_and_peace": "Conflito, guerra e paz",
-    "crime_and_justice": "Crime e justiça",
-    "crime_law_and_justice": "Crime, lei e justiça",
-    "culture_and_entertainment": "Cultura e entretenimento",
-    "disaster_accident_and_emergency_incident": "Desastres, acidentes e emergências",
-    "economy_business_and_finance": "Economia, negócios e finanças",
-    "education": "Educação",
-    "environment": "Meio ambiente",
-    "government_and_public_policy": "Governo e políticas públicas",
-    "health": "Saúde",
-    "human_interest": "Interesse humano",
-    "labour": "Trabalho",
-    "lifestyle_and_leisure": "Estilo de vida e lazer",
-    "politics": "Política",
-    "religion_and_belief": "Religião e crença",
-    "science_and_technology": "Ciência e tecnologia",
-    "society": "Sociedade",
-    "sport": "Esporte",
-    "weather": "Clima",
 }
 
 
@@ -49,45 +24,7 @@ def available_news_groupings(steps: pd.DataFrame) -> dict[str, str]:
     available: dict[str, str] = {}
     if _has_text_values(steps, "metadata_category"):
         available[ORIGINAL_CATEGORY_GROUPING] = GROUPING_LABELS[ORIGINAL_CATEGORY_GROUPING]
-    if _has_text_values(steps, "metadata_original_topic_domain"):
-        available[TOPIC_DOMAIN_GROUPING] = GROUPING_LABELS[TOPIC_DOMAIN_GROUPING]
     return available
-
-
-def topic_domain_disagreements(steps: pd.DataFrame) -> pd.DataFrame:
-    """List news items assigned to more than one original topic domain across runs."""
-    column = "metadata_original_topic_domain"
-    if not _has_text_values(steps, column):
-        return pd.DataFrame(
-            columns=["news_id", "metadata_title", "distinct_domains", "observed_domains"]
-        )
-    data = steps.copy()
-    run_column = "run_id" if "run_id" in data.columns else "chain_label"
-    final_step = data.groupby(run_column, dropna=False)["step_index"].transform("max")
-    final = data.loc[data["step_index"].eq(final_step)].copy()
-    final["normalized_domain"] = final[column].map(_normalize_text)
-    final = final.dropna(subset=["normalized_domain"])
-    titles = (
-        final.groupby("news_id", dropna=False)["metadata_title"].first()
-        if "metadata_title" in final.columns
-        else pd.Series(dtype=object)
-    )
-    summary = (
-        final.groupby("news_id", dropna=False)["normalized_domain"]
-        .agg(
-            distinct_domains="nunique",
-            observed_domains=lambda values: "; ".join(
-                _topic_domain_label(value) for value in sorted(values.unique())
-            ),
-        )
-        .reset_index()
-    )
-    summary["metadata_title"] = summary["news_id"].map(titles)
-    return (
-        summary.loc[summary["distinct_domains"].gt(1)]
-        .sort_values(["distinct_domains", "news_id"], ascending=[False, True])
-        .reset_index(drop=True)
-    )
 
 
 def news_chain_proximity(
@@ -142,7 +79,7 @@ def summarize_group_proximity(
     bootstrap_iterations: int = 4_000,
     random_seed: int = 20260930,
 ) -> pd.DataFrame:
-    """Summarize news-level chain proximity by category or topic domain."""
+    """Summarize news-level chain proximity by original news category."""
     if news_proximity.empty:
         return _empty_group_summary()
 
@@ -246,17 +183,6 @@ def _group_memberships(final: pd.DataFrame, grouping: str) -> pd.DataFrame:
         membership["group_value"] = membership[column].map(_split_categories)
         membership = membership.explode("group_value").dropna(subset=["group_value"])
         membership["group_label"] = membership["group_value"].map(_humanize_value)
-    elif grouping == TOPIC_DOMAIN_GROUPING:
-        column = "metadata_original_topic_domain"
-        if column not in final.columns:
-            return pd.DataFrame(columns=["news_id", "group_value", "group_label"])
-        membership = final[["news_id", column]].copy()
-        membership["group_value"] = membership[column].map(_normalize_text)
-        membership = membership.dropna(subset=["group_value"])
-        membership = membership.groupby("news_id", as_index=False)["group_value"].agg(
-            _most_frequent_value
-        )
-        membership["group_label"] = membership["group_value"].map(_topic_domain_label)
     else:
         raise ValueError(f"Unsupported news grouping: {grouping}")
     return membership[["news_id", "group_value", "group_label"]].drop_duplicates()
@@ -309,15 +235,6 @@ def _normalize_text(value: Any) -> str | None:
         return None
     normalized = str(value).strip().casefold()
     return normalized or None
-
-
-def _topic_domain_label(value: str) -> str:
-    return TOPIC_DOMAIN_LABELS.get(value, _humanize_value(value))
-
-
-def _most_frequent_value(values: pd.Series) -> str:
-    counts = values.value_counts()
-    return str(sorted(counts.loc[counts.eq(counts.max())].index)[0])
 
 
 def _humanize_value(value: str) -> str:

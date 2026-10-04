@@ -9,6 +9,8 @@ from sklearn.cluster import KMeans
 
 from misinformation_simulation.topic_drift.models import TopicRelation, TopicStructure
 
+CLUSTER_STDI_COMPARISON_VERSION = "cluster_v2"
+
 
 class TextEmbedder(Protocol):
     """Encodes text into normalized dense vectors."""
@@ -277,15 +279,7 @@ class ClusterSTDIComparator:
         topic_embedding_similarity = self._topic_index.similarity(
             original_structure.main_topic or "", modified_structure.main_topic or ""
         )
-        original_domain = _normalize(original_structure.topic_domain)
-        modified_domain = _normalize(modified_structure.topic_domain)
-        domain_known = bool(original_domain and modified_domain)
-        domain_match = domain_known and original_domain == modified_domain
-        domain_gate_applied = domain_known and not domain_match
-
-        if domain_gate_applied:
-            theme_similarity = 0.0
-        elif _normalize(original_structure.main_topic) == _normalize(modified_structure.main_topic):
+        if _normalize(original_structure.main_topic) == _normalize(modified_structure.main_topic):
             theme_similarity = 1.0
         else:
             theme_similarity = topic_embedding_similarity
@@ -316,8 +310,6 @@ class ClusterSTDIComparator:
                 "embedding_similarity": round(topic_embedding_similarity, 6),
                 "original_cluster": self._resolved_cluster_id(original_structure.main_topic or ""),
                 "modified_cluster": self._resolved_cluster_id(modified_structure.main_topic or ""),
-                "domain_match": -1 if not domain_known else int(domain_match),
-                "domain_gate_applied": int(domain_gate_applied),
             },
             "subtopic": {
                 "similarity": round(subtopic_similarity, 6),

@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--refresh-structures",
         action="store_true",
-        help="Re-extract every structure, including topic_domain, instead of reusing CSV fields.",
+        help="Re-extract every structure instead of reusing CSV fields.",
     )
     parser.add_argument(
         "--compare-with",

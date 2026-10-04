@@ -80,6 +80,7 @@ Este documento concentra a pergunta de pesquisa, o escopo, o histórico metodol�
 | Agosto de 2026 | Cinquenta pares controlados e comparação entre avaliação semântica por LLM e embeddings/agrupamento. | Os dois métodos foram executados sobre os mesmos pares. As colunas de avaliação humana ainda não foram preenchidas; não apresentar pesos ou limiares como validados por julgamento humano. |
 | Agosto de 2026 | Auditoria de domínio e regressões com atributos STDI e TF-IDF. | Usar como diagnóstico de sinais e possíveis atalhos, não como demonstração de detecção factual. |
 | Setembro de 2026 | Fórmula vigente e 16 cadeias de quatro posições aplicadas às mesmas 50 notícias. | Foram produzidos 3.199/3.200 passos e 799/800 versões finais com STDI válido. Comparar cenários de forma pareada por notícia e inspecionar exemplos antes de atribuir efeitos às perspectivas. |
+| 03/10/2026 | Remoção de `topic_domain` da extração e da regra de deriva temática no comparador `cluster_v2`. | Na execução `simulation_ui_20261003_202828`, 6 dos 30 passos tiveram deriva temática máxima imposta pela diferença de domínio, todos na mesma notícia sobre ICE/DHS. A auditoria em `output/audit/TopicDomainGateAudit_20261003/` preserva os escores históricos e compara a alternativa por similaridade dos temas, mantendo os demais componentes. É análise de sensibilidade, sem validação humana. Novas execuções registram a versão do comparador; os resultados anteriores não foram recalculados automaticamente. |
 
 #### Regras para narrar a evolução
 

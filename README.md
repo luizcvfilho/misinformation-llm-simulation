@@ -142,7 +142,6 @@ textual drift, not factual veracity, belief, exposure, or sharing behavior.
 The extraction step builds a structured representation for each text with:
 
 - `main_topic`
-- `topic_domain` using the 17 top-level [IPTC Media Topics](https://iptc.org/standards/media-topics/) categories
 - `subtopics`
 - `central_entities`
 - `central_relations` in `(subject, action, object)` form
@@ -165,10 +164,8 @@ embeds the extracted labels and relations with
 similarity clipped to `[0, 1]`; normalized equal non-empty labels have similarity 1,
 and a comparison involving an empty label has similarity 0.
 
-- **Theme:** `D_theme = 1 - S(main_topic_reference, main_topic_version)`, except that
-  two known, different `topic_domain` values force `D_theme = 1`. When that domain
-  gate does not apply, normalized equal main topics have drift 0, including two
-  missing main topics. A missing domain does not trigger the gate.
+- **Theme:** `D_theme = 1 - S(main_topic_reference, main_topic_version)`.
+  Normalized equal main topics have drift 0, including two missing main topics.
 - **Subtopics and entities:** compute all pairwise similarities, sort them in
   descending order, and greedily select matches without reusing an item on either
   side. Divide the sum of selected similarities by the larger list size, then
@@ -199,8 +196,8 @@ D_entities = 1 - Jaccard(entities_reference, entities_version)
 D_relations = 1 - Jaccard(relations_reference, relations_version)
 ```
 
-Two empty sets have drift 0; one empty set has drift 1. `topic_domain` does not
-gate the lexical theme score. For **`llm_semantic`**, an LLM evaluates both texts
+Two empty sets have drift 0; one empty set has drift 1.
+For **`llm_semantic`**, an LLM evaluates both texts
 and their structures together, assigning each content component one of
 `0`, `0.25`, `0.5`, `0.75`, or `1`, with a rationale.
 
@@ -399,10 +396,19 @@ inside the run that fitted them; fit one shared comparator over the complete
 collection of original and rewritten structures.
 
 The cluster theme drift is **1 minus** the direct embedding similarity between
-`main_topic` labels. When both extracted `topic_domain` values are known and
-different, the theme drift is set to `1.0`.
-Outputs generated before `topic_domain` was introduced can be reprocessed with fresh shared
-extraction:
+`main_topic` labels. The current comparator is recorded as `cluster_v2` in graph
+step metadata, graph summaries, and comparison manifests. It no longer extracts
+`topic_domain` or forces maximum theme drift based on different domain labels.
+The domain-coverage audit command and domain-based dashboard grouping have been
+retired; news grouping uses the original dataset's `category` field.
+
+Historical files retain their original scores. Reusing saved structures recomputes
+cluster scores with the current comparator and ignores legacy domain fields;
+it does not require new extraction requests. The analysis loader marks runs without
+a comparison version as `legacy`. Treat historical scores and `cluster_v2` scores
+as different measurement versions when comparing experiments.
+
+To regenerate the extracted structures as well, use:
 
 ```powershell
 make topic-drift-comparison TOPIC_DRIFT_COMPARISON_ARGS="--input-dir output/topic_drift/previous_run --output-dir output/topic_drift/refreshed_cluster --method cluster --refresh-structures"
