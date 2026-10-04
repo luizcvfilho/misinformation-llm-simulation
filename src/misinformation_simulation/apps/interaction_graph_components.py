@@ -128,6 +128,8 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     node_summary_df = run_bundle["node_summary_df"]
     news_summary_df = run_bundle["news_summary_df"]
 
+    st.caption(f"Transmission mode: {summary.get('rewrite_mode', 'legacy (mode not recorded)')}")
+
     metric_cols = st.columns(4)
     metric_cols[0].metric("Rows processed", summary["rows_processed"])
     metric_cols[1].metric("Total steps", summary["steps_total"])

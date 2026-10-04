@@ -647,6 +647,7 @@ Main variables:
 - `GRAPH_MAX_REQUESTS_PER_MINUTE`: optional rate limit
 - `GRAPH_RETRY_ATTEMPTS`: retry attempts (`5` default)
 - `GRAPH_ALLOW_TITLE_FALLBACK`: set to any non-empty value to add `--allow-title-fallback`
+- `GRAPH_REWRITE_MODE`: `faithful` (default) or `interpretive` (experimental)
 - `GRAPH_TOPIC_DRIFT_MODEL`: optional topic drift model override (the application default is
   `gpt-6-luna`)
 - `GRAPH_TOPIC_DRIFT_PROVIDER`: optional topic drift provider override (the application default
@@ -658,12 +659,68 @@ Main variables:
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
-### Prompt definitions
+### Transmission modes
 
 All application prompt definitions live in `src/misinformation_simulation/config/prompts.py`:
-personality presets, news rewriting, topic extraction and classification, controlled rewrites,
-semantic comparison, and false-to-true rewriting. Other modules import these definitions;
-graph JSON files can still supply custom personality text for a particular execution.
+the faithful and interpretive modes, personality presets, topic extraction and classification,
+controlled rewrites, semantic comparison, and false-to-true rewriting. Other modules import these
+definitions; graph JSON files can still supply custom personality text for a particular execution.
+
+The graph keeps **Faithful rewrite (preserve facts)** as its default and control condition.
+Its original system instruction, prompt, title context, and generation settings are preserved.
+This condition explicitly instructs the model to preserve facts while changing framing and tone.
+
+Select **Interpretive relay (experimental)** under **Execution settings → Transmission mode**
+to simulate interpreting a received message and passing it onward. Every node receives only the
+preceding message, without a separate copy of the original title. The prompt allows selective
+omission, changes in the central issue, and unsupported interpretations of motives, responsibility,
+and causality when consistent with the assigned personality. A conspiratorial persona may infer
+hidden coordination or invert an official explanation; an evidence-focused skeptic is instead
+asked to question weak claims and preserve uncertainty. Existing personality instructions still
+apply, including any explicit fact-preservation constraints in custom personas.
+
+The shared interpretive template contains only the transmission rules.
+`INTERPRETIVE_PERSONALITY_EXTENSIONS` in `config/prompts.py` supplies the extra behavior for
+`ConspiracyDenialist` and `InvestigativeSkeptic`, attaching only the matching extension in the
+interpretive mode. Full preset texts and their legacy opening-sentence forms are recognized;
+other personality text is used as supplied. The faithful mode keeps the original personality
+text. Each step saves `metadata_rewrite_effective_personality` for prompt reconstruction.
+
+The interpretive prompt requires retained names, numbers, dates, and quotations to remain accurate
+and prohibits fabricated concrete evidence or specific new events. These are model instructions,
+not an automatic factual validation step. The mode applies to all nodes and queued graphs in the
+execution; graph JSON files continue to describe the topology and personalities.
+
+For a command-line run:
+
+```powershell
+uv run python scripts/run_interaction_graph.py --input data/graphs/graph_politics_news.csv --graph-config data/graphs/graph_config.json --news-id-column article_id --max-rows 5 --rewrite-mode interpretive --output-dir output/interaction_graph/interpretive_pilot --output-prefix interpretive_pilot --verbose
+```
+
+The Make workflow also accepts `GRAPH_REWRITE_MODE=interpretive`. Start with the same small news
+sample in both modes, using the same models, personas, chain lengths, and evaluation settings.
+Compare homogeneous chains with reversed mixed chains, and repeat runs to inspect variation rather
+than selecting only extreme outputs. Keep command-line analysis runs for each mode in separate
+directories; the Plotly analysis app has a **Transmission mode** filter to select one condition.
+Older files without this metadata are labelled **Legacy (mode not recorded)**.
+
+Both modes request temperature `0.8` and use the same STDI/VAD evaluation. The existing OpenAI
+request builder omits temperature for `gpt-5` and `gpt-6` model names, leaving the provider default;
+the saved `rewrite_temperature_requested` is the configured value, not proof of an applied value.
+Topic extraction still receives the original title; only generation title context changes in the
+interpretive condition. Summaries
+save the mode, prompt version, system instruction, template, temperature, and title-context policy.
+Each step records the mode, version, and a hash of its formatted prompt, along with its actual input
+and output. Those records make the generation condition identifiable without changing saved older
+runs or the standalone article rewriting workflow.
+
+Higher STDI indicates informational drift under the configured metric. It does not by itself
+establish external factual falsity, simulated belief or sharing probability, or human realism.
+Inspect retained claims, omitted context, invented causal interpretations, and internal
+contradictions separately. This mode is an experimental hypothesis about transmission behavior;
+its effect on drift and its correspondence to human transmission still require empirical validation.
+The curated political dataset mostly supplies titles and descriptions rather than complete article
+bodies, which also limits the amount of context available for interpretation.
 
 ### Interaction Graph UI
 

@@ -41,6 +41,7 @@ ANALYSIS_STEP_COLUMNS = {
     "rewritten_text",
     "metadata_title",
     "metadata_category",
+    "metadata_rewrite_mode",
     "metadata_original_topic_domain",
     "theme_drift_incremental",
     "subtopic_drift_incremental",
@@ -92,6 +93,10 @@ def load_interaction_graph_runs(runs_dir: Path) -> InteractionGraphRuns:
             raise ValueError(f"'{path}' is missing required columns: {missing_text}")
 
         frame = frame.copy()
+        if "metadata_rewrite_mode" not in frame.columns:
+            frame["metadata_rewrite_mode"] = "legacy"
+        else:
+            frame["metadata_rewrite_mode"] = frame["metadata_rewrite_mode"].fillna("legacy")
         frame["step_index"] = pd.to_numeric(frame["step_index"], errors="coerce")
         if frame["step_index"].isna().any():
             raise ValueError(f"'{path}' contains non-numeric step indexes.")
@@ -293,6 +298,7 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
         "node_label",
         "metadata_title",
         "metadata_category",
+        "metadata_rewrite_mode",
         "metadata_original_topic_domain",
         "rewrite_status",
         *metric_columns,

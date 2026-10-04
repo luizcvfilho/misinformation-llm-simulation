@@ -40,10 +40,14 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_linear_graph_payload,
     validate_node_forms,
 )
+from misinformation_simulation.config.prompts import (
+    GRAPH_REWRITE_MODE_LABELS,
+    GRAPH_REWRITE_MODES,
+)
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 9
+GRAPH_OUTPUT_LAYOUT_VERSION = 10
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -110,7 +114,10 @@ def _render_execution_settings(
         "Title column",
         available_columns or [""],
         index=_option_index(available_columns, default_title_column),
-        help="Column used as the article title in prompts and topic drift extraction.",
+        help=(
+            "Article title used in topic drift extraction and faithful rewrite prompts. "
+            "Interpretive relay does not supply the original title to the rewriting nodes."
+        ),
     )
     news_id_options = [""] + available_columns if available_columns else [""]
     news_id_column = st.selectbox(
@@ -134,6 +141,23 @@ def _render_execution_settings(
             "When enabled, the simulation can use the title if the selected text column is empty."
         ),
     )
+    rewrite_mode = st.selectbox(
+        "Transmission mode",
+        GRAPH_REWRITE_MODES,
+        format_func=GRAPH_REWRITE_MODE_LABELS.__getitem__,
+        key="graph_rewrite_mode",
+        help=(
+            "Applies to every node and every queued graph in this execution. "
+            "Faithful preserves factual content. Interpretive permits omissions and "
+            "unsupported causal interpretations according to each personality."
+        ),
+    )
+    if rewrite_mode == "interpretive":
+        st.caption(
+            "Experimental: each person receives only the previous message. Interpretations "
+            "may change, while retained names, numbers, dates, and quotes must remain accurate. "
+            "Greater STDI measures drift; it does not establish realism or factual falsity."
+        )
     st.caption(
         "STDI compares topic structures with local MiniLM embeddings after all graph steps "
         "are generated. The first run may download the model."
@@ -147,6 +171,7 @@ def _render_execution_settings(
         "news_id_column": news_id_column,
         "max_rows": max_rows,
         "allow_title_fallback": allow_title_fallback,
+        "rewrite_mode": rewrite_mode,
         **advanced_settings,
     }
 

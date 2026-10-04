@@ -3,6 +3,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
+from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation import simulation
 from misinformation_simulation.apps import interaction_graph_app, interaction_graph_sections
@@ -30,7 +31,12 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
         return df
 
     def updated_runner(
-        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+        df,
+        *,
+        stdi_comparison_method="cluster",
+        work_progress_callback=None,
+        cancel_check=None,
+        rewrite_mode="faithful",
     ):
         return df, stdi_comparison_method
 
@@ -50,12 +56,22 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
 
 def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
     def current_runner(
-        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+        df,
+        *,
+        stdi_comparison_method="cluster",
+        work_progress_callback=None,
+        cancel_check=None,
+        rewrite_mode="faithful",
     ):
         return df
 
     def updated_runner(
-        df, *, stdi_comparison_method="cluster", work_progress_callback=None, cancel_check=None
+        df,
+        *,
+        stdi_comparison_method="cluster",
+        work_progress_callback=None,
+        cancel_check=None,
+        rewrite_mode="faithful",
     ):
         return df
 
@@ -71,6 +87,27 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
 
     assert interaction_graph_sections.run_news_interaction_graph is updated_runner
     assert simulation.run_news_interaction_graph is updated_runner
+
+
+def test_execution_settings_offer_interpretive_transmission_mode() -> None:
+    app = AppTest.from_string(
+        """
+import pandas as pd
+import streamlit as st
+from misinformation_simulation.apps.interaction_graph_sections import _render_execution_settings
+
+df = pd.DataFrame([{'title': 'Title', 'description': 'News text'}])
+st.session_state.test_settings = _render_execution_settings(df, df.columns.tolist())
+"""
+    ).run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["rewrite_mode"] == "faithful"
+    mode_control = next(
+        control for control in app.selectbox if control.label == "Transmission mode"
+    )
+    mode_control.set_value("interpretive").run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
 
 
 def test_build_simulation_nodes_resolves_preset_personality() -> None:

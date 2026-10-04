@@ -3,12 +3,17 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from dataclasses import asdict
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from misinformation_simulation.config.prompts import PROMPT_TEMPLATE, REWRITE_SYSTEM_INSTRUCTION
+from misinformation_simulation.config.prompts import (
+    REWRITE_SYSTEM_INSTRUCTION,
+    resolve_graph_personality_prompt,
+    resolve_graph_rewrite_prompt,
+)
 from misinformation_simulation.datasets.selection import (
     choose_news_text_column,
     resolve_output_language,
@@ -56,6 +61,7 @@ from misinformation_simulation.topic_drift.models import TopicStructure
 
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
 DEFAULT_STDI_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+GRAPH_REWRITE_TEMPERATURE = 0.8
 ProgressCallback = Callable[[str], None]
 WorkProgressCallback = Callable[[int, int, int, int], None]
 CancelCheck = Callable[[], bool]
@@ -82,14 +88,15 @@ def _generate_rewrite(
     prompt: str,
     retry_attempts: int,
     limiter: MinuteRateLimiter,
+    system_instruction: str = REWRITE_SYSTEM_INSTRUCTION,
 ) -> str:
     if provider_normalized == "gemini":
         return generate_gemini_text_with_retry(
             client,
             model=model,
             prompt=prompt,
-            system_instruction=REWRITE_SYSTEM_INSTRUCTION,
-            temperature=0.8,
+            system_instruction=system_instruction,
+            temperature=GRAPH_REWRITE_TEMPERATURE,
             max_attempts=retry_attempts,
             before_request_hook=limiter.acquire,
         )
@@ -97,8 +104,8 @@ def _generate_rewrite(
         client,
         model=model,
         prompt=prompt,
-        system_instruction=REWRITE_SYSTEM_INSTRUCTION,
-        temperature=0.8,
+        system_instruction=system_instruction,
+        temperature=GRAPH_REWRITE_TEMPERATURE,
         max_attempts=retry_attempts,
         before_request_hook=limiter.acquire,
     )
@@ -204,6 +211,7 @@ def run_news_interaction_graph(
     max_requests_per_minute: int | None = None,
     retry_attempts: int = 5,
     allow_title_fallback: bool = True,
+    rewrite_mode: str = "faithful",
     topic_drift_model: str = DEFAULT_LLM_MODEL,
     topic_drift_provider: Provider | str = DEFAULT_LLM_PROVIDER,
     topic_drift_api_key: str | None = None,
@@ -228,8 +236,19 @@ def run_news_interaction_graph(
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
     if stdi_comparison_method not in {"cluster", "lexical"}:
         raise ValueError("'stdi_comparison_method' must be 'cluster' or 'lexical'.")
+    rewrite_prompt = resolve_graph_rewrite_prompt(rewrite_mode)
+    rewrite_metadata = {
+        "rewrite_mode": rewrite_prompt.mode,
+        "rewrite_prompt_version": rewrite_prompt.version,
+        "rewrite_temperature_requested": GRAPH_REWRITE_TEMPERATURE,
+        "rewrite_original_title_context": rewrite_prompt.original_title_context,
+    }
 
     nodes_by_id = _normalize_nodes(nodes)
+    effective_personalities = {
+        node_id: resolve_graph_personality_prompt(node.personality, rewrite_mode=rewrite_mode)
+        for node_id, node in nodes_by_id.items()
+    }
     normalized_edges = _normalize_edges(nodes_by_id, edges)
     resolved_start_node = _resolve_start_node(nodes_by_id, normalized_edges, start_node_id)
     ordered_node_ids = _topological_path(nodes_by_id, normalized_edges, resolved_start_node)
@@ -258,6 +277,7 @@ def run_news_interaction_graph(
     evaluation_metadata = {
         "topic_drift_model": str(topic_drift_model),
         "topic_drift_provider": normalize_provider(topic_drift_provider),
+        **rewrite_metadata,
     }
     step_results: list[SimulationStepResult] = []
     scoring_contexts: list[
@@ -381,6 +401,7 @@ def run_news_interaction_graph(
                         ),
                         metadata={
                             **evaluation_metadata,
+                            "rewrite_effective_personality": effective_personalities[node_id],
                             "title": title,
                             "category": category,
                             **(
@@ -418,8 +439,8 @@ def run_news_interaction_graph(
                 f"node='{node_label}' provider='{provider_normalized}' "
                 f"model='{node.model}': rewriting.",
             )
-            prompt = PROMPT_TEMPLATE.format(
-                personality=node.personality,
+            prompt = rewrite_prompt.template.format(
+                personality=effective_personalities[node_id],
                 target_language_name=resolve_output_language_name(target_language_code),
                 target_language_code=target_language_code,
                 title=title or "Untitled",
@@ -446,6 +467,8 @@ def run_news_interaction_graph(
                 original_vad_status="success",
                 metadata={
                     **evaluation_metadata,
+                    "rewrite_effective_personality": effective_personalities[node_id],
+                    "rewrite_prompt_sha256": sha256(prompt.encode("utf-8")).hexdigest(),
                     "title": title,
                     "category": category,
                     "source_text_column": source_column,
@@ -463,6 +486,7 @@ def run_news_interaction_graph(
                     client=client,
                     model=node.model,
                     prompt=prompt,
+                    system_instruction=rewrite_prompt.system_instruction,
                     retry_attempts=retry_attempts,
                     limiter=limiters_by_node_id[node.node_id],
                 )
@@ -674,6 +698,8 @@ def run_news_interaction_graph(
     summary = {
         "schema_version": 2,
         **evaluation_metadata,
+        "rewrite_system_instruction": rewrite_prompt.system_instruction,
+        "rewrite_prompt_template": rewrite_prompt.template,
         "rows_processed": rows_started,
         "cancelled": cancelled,
         "steps_total": len(step_results),

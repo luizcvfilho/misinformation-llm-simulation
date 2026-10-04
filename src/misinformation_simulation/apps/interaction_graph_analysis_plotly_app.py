@@ -52,10 +52,11 @@ from misinformation_simulation.analysis.interaction_graph_visualization import (
     successful_steps,
     summarize_metric,
 )
+from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 2
+ANALYSIS_CACHE_SCHEMA_VERSION = 3
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -89,6 +90,14 @@ def main() -> None:
         st.error(str(error))
         st.stop()
 
+    rewrite_modes = sorted(steps["metadata_rewrite_mode"].unique())
+    mode_labels = {**GRAPH_REWRITE_MODE_LABELS, "legacy": "Legacy (mode not recorded)"}
+    selected_mode = st.sidebar.selectbox(
+        "Transmission mode",
+        rewrite_modes,
+        format_func=lambda mode: mode_labels.get(mode, mode),
+    )
+    steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
     metrics = available_metrics(steps)
     selected_metric = st.sidebar.selectbox(
         "Métrica dos gráficos gerais", options=list(metrics), format_func=metrics.__getitem__

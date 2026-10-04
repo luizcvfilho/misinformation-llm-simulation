@@ -41,11 +41,13 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     queue.add_graph(graphs, "Second", deepcopy(nodes))
     calls = []
     comparison_methods = []
+    rewrite_modes = []
     output_dirs = []
 
     def fake_run(**kwargs):
         calls.append(kwargs["output_prefix"])
         comparison_methods.append(kwargs["stdi_comparison_method"])
+        rewrite_modes.append(kwargs["rewrite_mode"])
         output_dirs.append(kwargs["output_dir"])
         if len(calls) == 1:
             raise RuntimeError("provider unavailable")
@@ -65,6 +67,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
         "max_requests_per_minute": 0,
         "retry_attempts": 1,
         "allow_title_fallback": True,
+        "rewrite_mode": "interpretive",
         "topic_drift_model": "model",
         "topic_drift_provider": "gemini",
         "output_dir": str(tmp_path),
@@ -86,6 +89,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
 
     assert calls == ["batch_01_first", "batch_02_second"]
     assert comparison_methods == ["cluster", "cluster"]
+    assert rewrite_modes == ["interpretive", "interpretive"]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
     assert sorted(path.name for path in (tmp_path / "batch").iterdir()) == sorted(calls)

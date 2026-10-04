@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODES  # noqa: E402
 from misinformation_simulation.enums import (  # noqa: E402
     DEFAULT_LLM_MODEL,
     DEFAULT_LLM_PROVIDER,
@@ -43,6 +44,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--max-requests-per-minute", type=int)
     parser.add_argument("--retry-attempts", type=int, default=5)
     parser.add_argument("--allow-title-fallback", action="store_true")
+    parser.add_argument(
+        "--rewrite-mode",
+        choices=GRAPH_REWRITE_MODES,
+        default="faithful",
+        help="Use faithful rewriting or experimental personality-driven interpretive relay.",
+    )
     parser.add_argument("--topic-drift-model", default=DEFAULT_LLM_MODEL.value)
     parser.add_argument("--topic-drift-provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument(
@@ -85,6 +92,7 @@ def main() -> None:
         max_requests_per_minute=args.max_requests_per_minute,
         retry_attempts=args.retry_attempts,
         allow_title_fallback=args.allow_title_fallback,
+        rewrite_mode=args.rewrite_mode,
         topic_drift_model=args.topic_drift_model,
         topic_drift_provider=args.topic_drift_provider,
         stdi_comparison_method=args.stdi_comparison_method,

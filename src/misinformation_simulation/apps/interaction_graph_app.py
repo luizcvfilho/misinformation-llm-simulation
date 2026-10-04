@@ -30,7 +30,12 @@ from misinformation_simulation.simulation import graph as simulation_graph  # no
 
 def _refresh_graph_backend_if_stale() -> None:
     current_runner = interaction_graph_sections.run_news_interaction_graph
-    required_parameters = {"stdi_comparison_method", "work_progress_callback", "cancel_check"}
+    required_parameters = {
+        "stdi_comparison_method",
+        "work_progress_callback",
+        "cancel_check",
+        "rewrite_mode",
+    }
     backend_module = simulation_graph
     if getattr(
         simulation_graph, "GRAPH_STEP_SCHEMA_VERSION", 0
@@ -40,7 +45,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 9:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 10:
         importlib.reload(interaction_graph_io)
         importlib.reload(interaction_graph_state)
         importlib.reload(interaction_graph_queue)

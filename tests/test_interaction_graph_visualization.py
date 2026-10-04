@@ -57,6 +57,7 @@ def test_loads_current_runs_and_excludes_old_runs_case_insensitively(tmp_path) -
     assert runs.steps["chain_label"].tolist() == ["01 · SSSS"]
     assert runs.steps["graph_id"].tolist() == ["01"]
     assert runs.steps["metadata_category"].tolist() == ["business; top"]
+    assert runs.steps["metadata_rewrite_mode"].tolist() == ["legacy"]
     assert runs.steps["metadata_original_topic_domain"].tolist() == ["economy_business_and_finance"]
 
 
@@ -70,6 +71,22 @@ def test_loads_single_and_multi_graph_run_layouts_together(tmp_path) -> None:
 
     assert runs.source_paths == (queued, single)
     assert set(runs.steps["chain_code"]) == {"SSSS", "CCCC"}
+
+
+def test_loader_retains_transmission_mode_alongside_legacy_runs(tmp_path) -> None:
+    legacy_path = tmp_path / "legacy_steps.jsonl"
+    interpretive_path = tmp_path / "interpretive_steps.jsonl"
+    _write_steps(legacy_path, stdi=0.1)
+    _write_steps(interpretive_path, stdi=0.4)
+    record = json.loads(interpretive_path.read_text(encoding="utf-8"))
+    record["metadata_rewrite_mode"] = "interpretive"
+    interpretive_path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert set(runs.steps["metadata_rewrite_mode"]) == {"legacy", "interpretive"}
+    interpretive = runs.steps.loc[runs.steps["metadata_rewrite_mode"].eq("interpretive")]
+    assert interpretive["stdi_vs_original"].tolist() == [0.4]
 
 
 def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:

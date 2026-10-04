@@ -145,6 +145,7 @@ def _run_graph_queue(
                     max_requests_per_minute=(int(settings["max_requests_per_minute"]) or None),
                     retry_attempts=int(settings["retry_attempts"]),
                     allow_title_fallback=settings["allow_title_fallback"],
+                    rewrite_mode=settings.get("rewrite_mode", "faithful"),
                     topic_drift_model=settings["topic_drift_model"],
                     topic_drift_provider=settings["topic_drift_provider"],
                     stdi_comparison_method="cluster",

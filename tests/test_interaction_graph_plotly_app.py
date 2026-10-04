@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.analysis.interaction_graph_personas import (
     summarize_scenario_contrasts,
@@ -17,6 +18,7 @@ from misinformation_simulation.analysis.interaction_graph_plotly import (
     build_scenario_difference_boxplot,
     build_transition_pair_figure,
 )
+from misinformation_simulation.apps import interaction_graph_analysis_plotly_app as analysis_app
 
 
 def _steps() -> pd.DataFrame:
@@ -92,6 +94,43 @@ def _paired_scenario_steps() -> pd.DataFrame:
     steps.loc[first_chain & steps["step_index"].eq(2), "source_node_label"] = "1. Conservative"
     steps.loc[~first_chain & steps["step_index"].eq(2), "source_node_label"] = "1. Progressive"
     return steps
+
+
+def test_analysis_filters_transmission_modes_before_rendering(monkeypatch) -> None:
+    legacy = _paired_scenario_steps().assign(metadata_rewrite_mode="legacy")
+    interpretive = _paired_scenario_steps().assign(metadata_rewrite_mode="interpretive")
+    interpretive["stdi_vs_original"] = 0.8
+    steps = pd.concat([legacy, interpretive], ignore_index=True)
+    monkeypatch.setattr(analysis_app, "load_steps", lambda *_args: (steps, 4))
+    rendered = []
+
+    def capture(frame, *_args):
+        rendered.append(frame.copy())
+
+    for render_name in (
+        "_render_overview",
+        "_render_news_group_analysis",
+        "_render_persona_analysis",
+        "_render_transition_analysis",
+        "_render_scenario_contrasts",
+        "_render_case_explorer",
+    ):
+        monkeypatch.setattr(analysis_app, render_name, capture)
+
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
+        "main()"
+    ).run(timeout=30)
+    assert not app.exception
+    assert len(rendered) == 6
+    assert all(set(frame["metadata_rewrite_mode"]) == {"interpretive"} for frame in rendered)
+
+    rendered.clear()
+    control = next(control for control in app.selectbox if control.label == "Transmission mode")
+    control.set_value("legacy").run(timeout=30)
+    assert not app.exception
+    assert len(rendered) == 6
+    assert all(set(frame["metadata_rewrite_mode"]) == {"legacy"} for frame in rendered)
 
 
 def test_persona_transition_and_contrast_figures() -> None:

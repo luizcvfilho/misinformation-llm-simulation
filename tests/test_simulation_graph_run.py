@@ -1,12 +1,22 @@
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 from threading import Event
 
 import numpy as np
 import pandas as pd
 import pytest
 
+from misinformation_simulation.config.prompts import (
+    INTERPRETIVE_PERSONALITY_EXTENSIONS,
+    PROMPT_TEMPLATE,
+    REWRITE_SYSTEM_INSTRUCTION,
+    resolve_graph_personality_prompt,
+    resolve_graph_rewrite_prompt,
+)
+from misinformation_simulation.enums import DefaultPersonality
+from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.simulation import graph
 from misinformation_simulation.simulation.graph import (
     SimulationNode,
@@ -41,6 +51,156 @@ class KeywordEmbedder:
             ]
         )
         return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
+
+
+@pytest.mark.parametrize("mode", ["faithful", "interpretive"])
+def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_provenance(
+    mode, monkeypatch, tmp_path
+) -> None:
+    monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
+    extraction_titles = []
+
+    def extract(**kwargs):
+        extraction_titles.append(kwargs["title"])
+        return make_structure("political policy")
+
+    monkeypatch.setattr(graph, "extract_topic_structure", extract)
+    monkeypatch.setattr(graph, "_extract_compared_structure", extract)
+    calls = []
+    outputs = iter(["First person's interpretation", "Second person's interpretation"])
+
+    def rewrite(**kwargs):
+        calls.append(kwargs)
+        return next(outputs)
+
+    monkeypatch.setattr(graph, "_generate_rewrite", rewrite)
+    nodes = [
+        SimulationNode("first", "model", "chatgpt", DefaultPersonality.ConspiracyDenialist),
+        SimulationNode("second", "model", "chatgpt", DefaultPersonality.InvestigativeSkeptic),
+    ]
+    title = "Distinct original headline"
+    original = "The government proposed a policy after an open debate."
+    result = run_news_interaction_graph(
+        pd.DataFrame([{"title": title, "description": original, "language": "en"}]),
+        nodes=nodes,
+        **({"rewrite_mode": mode} if mode != "faithful" else {}),
+        stdi_embedder=KeywordEmbedder(),
+        vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
+        output_dir=tmp_path,
+    )
+    prompt_config = resolve_graph_rewrite_prompt(mode)
+    assert original in calls[0]["prompt"]
+    assert "First person's interpretation" in calls[1]["prompt"]
+    assert original not in calls[1]["prompt"]
+    assert all(call["system_instruction"] == prompt_config.system_instruction for call in calls)
+    assert extraction_titles == [title, title, title]
+    assert result.step_results[1].source_text == "First person's interpretation"
+    assert result.summary["rewrite_mode"] == mode
+    assert result.summary["rewrite_prompt_version"] == prompt_config.version
+    assert result.summary["rewrite_original_title_context"] == (mode == "faithful")
+    assert result.summary["rewrite_temperature_requested"] == 0.8
+    assert result.summary["rewrite_prompt_template"] == prompt_config.template
+    assert result.summary["rewrite_system_instruction"] == prompt_config.system_instruction
+    persisted = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert persisted["rewrite_mode"] == mode
+    saved_steps = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
+    assert all(step["metadata_rewrite_mode"] == mode for step in saved_steps)
+    assert all(len(step["metadata_rewrite_prompt_sha256"]) == 64 for step in saved_steps)
+    for index, step in enumerate(saved_steps):
+        reconstructed_prompt = prompt_config.template.format(
+            personality=step["metadata_rewrite_effective_personality"],
+            target_language_name="English",
+            target_language_code=step["target_language"],
+            title=title,
+            original_text=step["source_text"],
+        )
+        assert reconstructed_prompt == calls[index]["prompt"]
+        assert (
+            sha256(reconstructed_prompt.encode("utf-8")).hexdigest()
+            == (step["metadata_rewrite_prompt_sha256"])
+        )
+    if mode == "faithful":
+        assert calls[0]["prompt"] == PROMPT_TEMPLATE.format(
+            personality=nodes[0].personality,
+            target_language_name="English",
+            target_language_code="en",
+            title=title,
+            original_text=original,
+        )
+        assert calls[0]["system_instruction"] == REWRITE_SYSTEM_INSTRUCTION
+    else:
+        assert all(title not in call["prompt"] for call in calls)
+        assert "Keep factual content unchanged" not in calls[0]["prompt"]
+        conspiracy_extension = INTERPRETIVE_PERSONALITY_EXTENSIONS["ConspiracyDenialist"]
+        skeptic_extension = INTERPRETIVE_PERSONALITY_EXTENSIONS["InvestigativeSkeptic"]
+        assert conspiracy_extension in calls[0]["prompt"]
+        assert skeptic_extension not in calls[0]["prompt"]
+        assert skeptic_extension in calls[1]["prompt"]
+        assert conspiracy_extension not in calls[1]["prompt"]
+        assert "conspir" not in prompt_config.template.casefold()
+        assert "skept" not in prompt_config.template.casefold()
+        assert result.summary["rewrite_prompt_version"] == "interpretive_v2"
+
+
+@pytest.mark.parametrize(
+    "preset", [DefaultPersonality.ConspiracyDenialist, DefaultPersonality.InvestigativeSkeptic]
+)
+@pytest.mark.parametrize("opening_sentence_only", [False, True])
+def test_personality_extensions_support_full_and_legacy_presets(preset, opening_sentence_only):
+    personality = preset.value.split(".", 1)[0] + "." if opening_sentence_only else preset.value
+    extended = resolve_graph_personality_prompt(personality, rewrite_mode="interpretive")
+    assert extended.startswith(personality)
+    assert INTERPRETIVE_PERSONALITY_EXTENSIONS[preset.name] in extended
+    assert resolve_graph_personality_prompt(personality, rewrite_mode="faithful") == personality
+
+
+@pytest.mark.parametrize(
+    "personality",
+    [
+        DefaultPersonality.ConservativeRight.value,
+        "A skeptical reader with a custom perspective.",
+        DefaultPersonality.InvestigativeSkeptic.value + " Use only my custom transmission rules.",
+    ],
+)
+def test_interpretive_extensions_leave_other_and_custom_personalities_unchanged(personality):
+    assert resolve_graph_personality_prompt(personality, rewrite_mode="interpretive") == personality
+
+
+def test_invalid_transmission_mode_fails_before_creating_clients(monkeypatch) -> None:
+    monkeypatch.setattr(
+        graph, "create_llm_client", lambda **_kwargs: pytest.fail("Unexpected model client.")
+    )
+    with pytest.raises(ValueError, match="rewrite_mode"):
+        run_news_interaction_graph(
+            pd.DataFrame([{"description": "Original"}]),
+            nodes=[SimulationNode("node", "model", "chatgpt", "persona")],
+            rewrite_mode="unknown",
+        )
+
+
+@pytest.mark.parametrize("provider", ["chatgpt", "gemini"])
+def test_rewrite_provider_receives_selected_system_instruction(provider, monkeypatch) -> None:
+    calls = []
+
+    def generate(_client, **kwargs):
+        calls.append(kwargs)
+        return "retold message"
+
+    monkeypatch.setattr(graph, "generate_gemini_text_with_retry", generate)
+    monkeypatch.setattr(graph, "generate_openai_text_with_retry", generate)
+    instruction = resolve_graph_rewrite_prompt("interpretive").system_instruction
+    result = graph._generate_rewrite(
+        provider_normalized=provider,
+        client=object(),
+        model="model",
+        prompt="received message",
+        system_instruction=instruction,
+        retry_attempts=2,
+        limiter=MinuteRateLimiter(None),
+    )
+    assert result == "retold message"
+    assert calls[0]["system_instruction"] == instruction
+    assert calls[0]["temperature"] == 0.8
 
 
 def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path) -> None:
