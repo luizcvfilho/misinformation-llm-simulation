@@ -5,6 +5,7 @@ import pytest
 
 from misinformation_simulation.analysis.interaction_graph_personas import (
     build_transition_matrix,
+    normalize_persona_label,
     persona_news_values,
     prepare_persona_steps,
     scenario_contrast_cases,
@@ -130,6 +131,61 @@ def test_summarizes_personas_components_and_transitions() -> None:
     )
     assert matrix.loc["C", "P"] == pytest.approx(0.4)
     assert matrix.loc["P", "C"] == pytest.approx(0.15)
+
+
+@pytest.mark.parametrize(
+    ("label", "expected"),
+    [
+        ("Right", "Conservative"),
+        ("2. LEFT", "Progressive"),
+        ("Conspiracy", "Conspiratorial"),
+        ("Skeptic", "Investigative skeptic"),
+        ("ConservativeRight", "Conservative"),
+        ("1. Custom commentator", "Custom commentator"),
+    ],
+)
+def test_normalizes_known_aliases_and_preserves_custom_labels(label: str, expected: str) -> None:
+    assert normalize_persona_label(label) == expected
+
+
+def test_alias_runs_share_canonical_transitions_without_reweighting_news() -> None:
+    canonical = _steps()
+    aliases = canonical.copy()
+    aliases["run_id"] = "alias-" + aliases["run_id"]
+    for column in ("node_label", "source_node_label"):
+        aliases[column] = (
+            aliases[column].str.replace("Conservative", "Right").str.replace("Progressive", "Left")
+        )
+    aliases.loc[aliases["node_label"].str.contains("Left"), "stdi_incremental"] = 0.8
+    summary = summarize_transitions(
+        pd.concat([canonical, aliases], ignore_index=True), bootstrap_iterations=20
+    )
+    matrix = build_transition_matrix(summary)
+
+    cp = summary.loc[summary["transition_code"].eq("C -> P")].iloc[0]
+    assert len(summary) == 2
+    assert cp["observations"] == 4
+    assert cp["news_items"] == 2
+    assert matrix.loc["C", "P"] == pytest.approx(0.6)
+    assert matrix.loc["P", "C"] == pytest.approx(0.15)
+
+
+def test_transition_matrix_retains_distinct_custom_personas() -> None:
+    steps = _steps().copy()
+    for column in ("node_label", "source_node_label"):
+        steps[column] = (
+            steps[column]
+            .str.replace("Conservative", "Custom A")
+            .str.replace("Progressive", "Custom B")
+        )
+    summary = summarize_transitions(steps, bootstrap_iterations=20)
+    before = summary.copy(deep=True)
+    matrix = build_transition_matrix(summary)
+
+    assert matrix.loc["? · Custom A", "? · Custom B"] == pytest.approx(0.4)
+    assert matrix.loc["? · Custom B", "? · Custom A"] == pytest.approx(0.15)
+    assert pd.isna(matrix.loc["C", "P"])
+    pd.testing.assert_frame_equal(summary, before)
 
 
 def test_summarizes_directional_asymmetry_with_paired_news() -> None:

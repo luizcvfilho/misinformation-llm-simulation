@@ -54,6 +54,21 @@ SCENARIO_CONTRASTS = (
 
 _NODE_NUMBER_PREFIX = re.compile(r"^\d+\.\s*")
 _LABEL_TO_CODE = {label.casefold(): code for code, label in PERSONA_CODE_LABELS.items()}
+_PERSONA_LABEL_ALIASES = {
+    "right": "C",
+    "conservative right": "C",
+    "conservativeright": "C",
+    "left": "P",
+    "progressive left": "P",
+    "progressiveleft": "P",
+    "conspiracy": "D",
+    "conspiracy denialist": "D",
+    "conspiracydenialist": "D",
+    "skeptic": "S",
+    "investigativeskeptic": "S",
+    "emotionalamplifier": "E",
+    "conciliatorycommunicator": "M",
+}
 
 
 def persona_legend() -> pd.DataFrame:
@@ -71,10 +86,13 @@ def persona_legend() -> pd.DataFrame:
 
 
 def normalize_persona_label(value: object) -> str:
-    """Remove the ordinal prefix used in persisted graph node labels."""
+    """Remove node ordinals and resolve known aliases to canonical persona labels."""
     if value is None or pd.isna(value):
         return "Unknown"
     label = _NODE_NUMBER_PREFIX.sub("", str(value).strip())
+    code = _LABEL_TO_CODE.get(label.casefold()) or _PERSONA_LABEL_ALIASES.get(label.casefold())
+    if code is not None:
+        return PERSONA_CODE_LABELS[code]
     return label or "Unknown"
 
 
@@ -301,14 +319,25 @@ def summarize_transitions(
 
 
 def build_transition_matrix(transition_summary: pd.DataFrame) -> pd.DataFrame:
-    """Pivot transition means into a previous-persona by current-persona matrix."""
+    """Pivot means by persona identity, keeping unknown persona labels distinct."""
     if transition_summary.empty:
         return pd.DataFrame()
-    return transition_summary.pivot(
+    data = transition_summary.copy()
+    for code_column, label_column in (
+        ("previous_persona_code", "previous_persona_label"),
+        ("persona_code", "persona_label"),
+    ):
+        if label_column in data.columns:
+            unknown = data[code_column].eq("?")
+            data.loc[unknown, code_column] = "? · " + data.loc[unknown, label_column].astype(str)
+    matrix = data.pivot(
         index="previous_persona_code",
         columns="persona_code",
         values="mean",
-    ).reindex(index=PERSONA_CODE_LABELS, columns=PERSONA_CODE_LABELS)
+    )
+    previous_order = [*PERSONA_CODE_LABELS, *sorted(set(matrix.index) - set(PERSONA_CODE_LABELS))]
+    current_order = [*PERSONA_CODE_LABELS, *sorted(set(matrix.columns) - set(PERSONA_CODE_LABELS))]
+    return matrix.reindex(index=previous_order, columns=current_order)
 
 
 def summarize_transition_asymmetry(
