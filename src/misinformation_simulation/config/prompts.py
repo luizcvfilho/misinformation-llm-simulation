@@ -217,6 +217,8 @@ You extract the semantic structure of a news report for topic-drift analysis.
 Return only valid JSON.
 Do not add markdown fences, explanations, or extra keys.
 Use concise, factual phrases grounded in the provided text.
+Preserve entity names exactly as written in the text, including spelling and capitalization.
+Do not expand acronyms, translate names, or replace them with official names or inferred aliases.
 If a field is unavailable, use null or an empty array.
 """.strip()
 
@@ -238,13 +240,19 @@ Extraction rules:
   Use null only when no domain can be determined.
 - subtopics must list secondary themes or angles.
 - central_entities must include the most important people, organizations, places, or groups.
+  Copy each entity name verbatim from the text. Do not expand acronyms, abbreviate full names,
+  translate names, correct their spelling, or replace them with official names or inferred aliases.
+  For example, if the text says "DHS", return "DHS", not "U.S. Department of Homeland Security".
+  If multiple names for the same entity appear, use a name present in the text consistently;
+  do not invent or combine names.
 - central_relations must describe core factual relations in (subject, action, object) form.
+  Preserve entity names in subject and object using the same verbatim names as central_entities.
 - narrative_frame is optional and should summarize the dominant framing if present.
 - has_internal_contradiction must be true only when the text contradicts itself internally.
 - internal_contradiction_score must grade the severity/centrality of internal contradiction:
   0 means none, 0.25 means slight or peripheral tension, 0.5 means partial contradiction,
   0.75 means strong contradiction in an important claim, and 1 means a central contradiction.
-- Keep outputs short and normalized.
+- Keep descriptive outputs short and normalized, but never normalize entity names.
 - Do not invent facts beyond the text.
 
 Title: {{title}}
