@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -23,6 +24,7 @@ from misinformation_simulation.apps.interaction_graph_preview import render_grap
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
     add_graphs_from_directory,
+    build_graph_queue_archive,
     move_graph,
 )
 from misinformation_simulation.apps.interaction_graph_results import (
@@ -61,15 +63,20 @@ def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> Non
     with execution_col:
         settings = _render_execution_settings(df, available_columns)
 
-    st.subheader("Graph editor")
+    editor_header_cols = st.columns([3, 1], vertical_alignment="center")
+    editor_header_cols[0].subheader("Graph editor")
+    export_placeholder = editor_header_cols[1].empty()
     for index, node_form in enumerate(st.session_state.graph_nodes):
         render_node_editor(index, node_form)
 
+    graph_payload = build_linear_graph_payload(st.session_state.graph_nodes)
+    with export_placeholder.container():
+        _render_graph_export(graph_payload)
+
     st.subheader("Graph preview")
     render_graph_preview(st.session_state.graph_nodes)
+    st.caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
 
-    graph_payload = build_linear_graph_payload(st.session_state.graph_nodes)
-    _render_graph_export(graph_payload)
     _render_graph_queue()
     _render_run_controls(df, settings)
 
@@ -267,20 +274,28 @@ def _render_topic_drift_model_selector() -> str:
 
 
 def _render_graph_export(graph_payload: dict[str, Any]) -> None:
-    export_cols = st.columns([1, 1, 2])
-    export_cols[0].download_button(
-        "Download graph JSON",
+    graph_name = st.session_state.get("current_graph_name", "")
+    file_stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', "_", graph_name).strip(" .") or "graph_config"
+    file_name = file_stem if file_stem.lower().endswith(".json") else f"{file_stem}.json"
+    st.download_button(
+        "Export graph JSON",
         data=json.dumps(graph_payload, ensure_ascii=False, indent=2).encode("utf-8"),
-        file_name="graph_config_ui.json",
+        file_name=file_name,
         mime="application/json",
         key="download_editor_graph_json",
+        type="primary",
         width="stretch",
+        help=(
+            "Download the current nodes, personalities, models, connections, and start node. "
+            "Import this JSON from the sidebar to reuse the graph without running a simulation."
+        ),
     )
-    export_cols[1].caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
 
 
 def _render_graph_queue() -> None:
-    st.subheader("Graph queue")
+    queue_header_cols = st.columns([3, 1], vertical_alignment="center")
+    queue_header_cols[0].subheader("Graph queue")
+    export_placeholder = queue_header_cols[1].empty()
     st.caption(
         "Add a copy of the current graph, then edit or import another graph and add it. "
         "The queued graphs run in the order shown below."
@@ -338,6 +353,21 @@ def _render_graph_queue() -> None:
         if cols[3].button("Remove", key=f"queue_remove_{graph['id']}"):
             st.session_state.graph_queue.pop(index)
             st.rerun()
+
+    with export_placeholder.container():
+        st.download_button(
+            "Export graph queue ZIP",
+            data=build_graph_queue_archive(st.session_state.graph_queue),
+            file_name="graph_queue.zip",
+            mime="application/zip",
+            key="download_graph_queue_zip",
+            disabled=not st.session_state.graph_queue,
+            width="stretch",
+            help=(
+                "Download every queued graph as a separate JSON file, numbered in queue order. "
+                "Extract the ZIP and use Add graphs from a folder to reuse the queue."
+            ),
+        )
 
 
 def _render_run_controls(

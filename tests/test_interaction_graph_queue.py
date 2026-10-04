@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
+from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
+from zipfile import ZipFile
 
 import pandas as pd
 import pytest
@@ -11,7 +14,10 @@ from misinformation_simulation.apps import interaction_graph_queue as queue
 from misinformation_simulation.apps import interaction_graph_run_job as run_job
 from misinformation_simulation.apps import interaction_graph_sections as sections
 from misinformation_simulation.apps.interaction_graph_results import load_saved_result
-from misinformation_simulation.apps.interaction_graph_ui import create_default_node_form
+from misinformation_simulation.apps.interaction_graph_ui import (
+    build_linear_graph_payload,
+    create_default_node_form,
+)
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.types import SimulationResult
 
@@ -48,6 +54,52 @@ def test_compact_prefix_bounds_long_names_and_keeps_queue_positions_distinct() -
 def test_queue_rejects_invalid_graph() -> None:
     with pytest.raises(ValueError, match="model"):
         queue.add_graph([], "Bad", [{**create_default_node_form(1), "model": ""}])
+
+
+def test_queue_archive_preserves_snapshots_and_can_be_imported_from_folder(tmp_path) -> None:
+    nodes = [create_default_node_form(1), create_default_node_form(2)]
+    nodes[0].update(
+        label="Nó de análise",
+        model="custom-model",
+        personality_mode="custom",
+        personality_custom="Use precise explanations in Portuguese.",
+    )
+    graphs = []
+    queue.add_graph(graphs, "Análise / graph", nodes)
+    nodes.reverse()
+    queue.add_graph(graphs, "Análise / graph", nodes)
+    queue.move_graph(graphs, 1, -1)
+    original = deepcopy(graphs)
+
+    with ZipFile(BytesIO(queue.build_graph_queue_archive(graphs))) as archive:
+        assert archive.namelist() == ["01_análise_graph.json", "02_análise_graph.json"]
+        for graph, file_name in zip(graphs, archive.namelist(), strict=True):
+            payload = json.loads(archive.read(file_name).decode("utf-8"))
+            assert payload == build_linear_graph_payload(graph["nodes"])
+            (tmp_path / file_name).write_bytes(archive.read(file_name))
+
+    restored = []
+    added, errors = queue.add_graphs_from_directory(restored, tmp_path)
+
+    assert len(added) == 2
+    assert errors == []
+    assert [build_linear_graph_payload(graph["nodes"]) for graph in restored] == [
+        build_linear_graph_payload(graph["nodes"]) for graph in graphs
+    ]
+    assert graphs == original
+
+
+def test_queue_archive_preserves_folder_import_order_with_over_99_graphs() -> None:
+    nodes = [create_default_node_form(1)]
+    graphs = [{"name": "Same name", "nodes": nodes} for _ in range(101)]
+
+    with ZipFile(BytesIO(queue.build_graph_queue_archive(graphs))) as archive:
+        names = archive.namelist()
+
+    assert names == sorted(names)
+    assert names[0] == "001_same_name.json"
+    assert names[-1] == "101_same_name.json"
+    assert len(set(names)) == 101
 
 
 def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:

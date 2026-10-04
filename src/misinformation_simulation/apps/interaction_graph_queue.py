@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
-from misinformation_simulation.apps.interaction_graph_ui import validate_node_forms
+from misinformation_simulation.apps.interaction_graph_ui import (
+    build_linear_graph_payload,
+    validate_node_forms,
+)
 from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
 
 
@@ -68,3 +73,19 @@ def add_graphs_from_directory(
         else:
             added.append(path.name)
     return added, errors
+
+
+def build_graph_queue_archive(queue: list[dict[str, Any]]) -> bytes:
+    buffer = BytesIO()
+    position_width = max(2, len(str(len(queue))))
+    with ZipFile(buffer, "w", compression=ZIP_DEFLATED) as archive:
+        for index, graph in enumerate(queue, start=1):
+            slug = output_prefix_for_graph("queue", index, graph["name"], include_base=False).split(
+                "_", 1
+            )[1]
+            file_name = f"{index:0{position_width}d}_{slug}.json"
+            payload = build_linear_graph_payload(graph["nodes"])
+            archive.writestr(
+                file_name, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+            )
+    return buffer.getvalue()

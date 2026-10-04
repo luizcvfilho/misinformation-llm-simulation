@@ -756,12 +756,24 @@ The UI lets you:
 - load a dataset from the project or upload a CSV/JSON/JSONL file
 - import an existing graph JSON or define the graph directly in the browser
 - add, remove, and reorder nodes in the chain
+- export the current graph as JSON without running a simulation
+- export the entire graph queue as a ZIP containing one JSON per graph
 - add snapshots of multiple graphs to a queue, reorder them, and run them sequentially without further input
 - select predefined personalities or write custom personality prompts
 - inspect each graph's status, summary, per-node metrics, and per-news outputs
 - compare success rates and drift metrics by NewsData `category` across queued graphs and download the comparison as CSV
 - compare extracted main topics, subtopics, entities, and relations for the original and rewritten
   text at each node, alongside the drift score for each category
+
+Choose **Export graph JSON** next to **Graph editor** to download the configuration using
+**Current graph name** as the filename. The JSON preserves node order, labels, providers,
+models, personality prompts, connections, and the start node. Load it later through
+**Import graph** in the sidebar. Dataset and execution settings are configured separately.
+
+Choose **Export graph queue ZIP** next to **Graph queue** to download all queued snapshots
+as `graph_queue.zip`. Each JSON filename starts with its queue position, preserving the
+order even when graph names repeat. Extract the ZIP into a folder and use **Add graphs
+from a folder** to load those configurations again. The button is disabled for an empty queue.
 
 To queue graphs, enter a name and choose **Add current graph**, or expand **Add graphs from a folder** and select a folder of graph JSON configs. Folder import adds valid files in filename order and reports errors for invalid files. You can then edit the graph or
 import another JSON config and add it too. **Run graph queue** processes each saved graph against
