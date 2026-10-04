@@ -60,7 +60,8 @@ def load_saved_result(summary_path: Path) -> dict[str, Any]:
             raise ValueError(f"The steps file is missing columns: {', '.join(sorted(missing))}")
         steps_df = steps_df.sort_values(["news_id", "step_index"]).reset_index(drop=True)
     return {
-        "name": prefix,
+        "name": summary.get("graph_name") or prefix,
+        "execution_name": summary.get("execution_name") or summary_path.parent.parent.name,
         "source": "imported",
         "status": "cancelled" if summary.get("cancelled") else "completed",
         "summary": summary,

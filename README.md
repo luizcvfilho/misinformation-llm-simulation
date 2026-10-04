@@ -767,11 +767,15 @@ To queue graphs, enter a name and choose **Add current graph**, or expand **Add 
 import another JSON config and add it too. **Run graph queue** processes each saved graph against
 the selected dataset using the execution settings shown in the UI. A queue writes one batch
 folder under the configured output directory, with a dedicated subfolder for every graph. The
-batch folder uses the date/time prefix; each graph folder and its files also include the queue
-position and graph name (for example,
-`app_runs/simulation_ui_20260917_123456/simulation_ui_20260917_123456_01_investigative_skeptic/`).
-A single graph remains directly inside its own folder under `app_runs` and uses the editable
-**Current graph name**. Repeating a run or batch with the same name and timestamp adds a numeric
+batch folder uses the date/time prefix; each graph folder and its files use only the queue
+position and a graph-name slug limited to 32 characters (for example,
+`app_runs/simulation_ui_20260917_123456/01_investigative_skeptic/01_investigative_skeptic_steps.jsonl`).
+The execution prefix is not repeated in graph subfolders or filenames, reducing path lengths
+on Windows. The complete graph name is saved as `graph_name` in the summary JSON.
+A single graph uses the same layout: an execution folder under `app_runs` containing one
+graph subfolder, named from the editable **Current graph name**. Results show the complete
+graph name alongside its execution name, so repeated short prefixes remain distinguishable.
+Repeating a run or batch with the same name and timestamp adds a numeric
 suffix so previous results are preserved. If one graph fails, the queue records the error and
 continues with the next graph. The Results tab and analysis app search `app_runs` recursively,
 so both layouts are loaded from the same default path. When the input has a `category` column,

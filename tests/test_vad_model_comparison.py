@@ -139,8 +139,9 @@ def test_broken_text_continuity_and_missing_original_are_rejected(steps, lexicon
         compare_saved_vad_steps(steps.iloc[1:], MEmoLonLexicon(lexicon_path))
 
 
-def test_loader_filters_chains_and_rejects_duplicate_steps(tmp_path, steps):
-    path = tmp_path / "simulation_01_01_ssss_steps.jsonl"
+@pytest.mark.parametrize("prefix", ["simulation_01_01_ssss", "01_01_ssss", "01_ssss"])
+def test_loader_filters_chains_and_rejects_duplicate_steps(tmp_path, steps, prefix):
+    path = tmp_path / f"{prefix}_steps.jsonl"
     path.write_text(
         "\n".join(json.dumps(row) for row in steps.to_dict("records")), encoding="utf-8"
     )

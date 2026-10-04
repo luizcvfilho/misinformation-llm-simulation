@@ -143,6 +143,9 @@ def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
         ("batch_04_My chain.name", "04", "My chain.name"),
         ("simulation_ui_20261003_223837_04_meme", "04", "meme"),
         ("simulation_ui_20261003_223837_01_01_ssss", "01", "SSSS"),
+        ("01_progressive_conservative", "01", "progressive_conservative"),
+        ("02_02_custom_chain", "02", "custom_chain"),
+        ("01_01_ssss", "01", "SSSS"),
         ("free chain name", "free chain name", "free chain name"),
     ],
 )
@@ -170,3 +173,32 @@ def test_multiple_folders_keep_executions_distinct_and_deduplicate_overlaps(tmp_
         "a": 0.2,
         "b": 0.8,
     }
+
+
+def test_compact_layouts_keep_executions_distinct(tmp_path) -> None:
+    run_id = "01_progressive_conservative"
+    batch = tmp_path / "simulation_ui_20261003_223837"
+    single = tmp_path / f"simulation_ui_20261004_000000_{run_id}"
+    _write_steps(batch / run_id / f"{run_id}_steps.jsonl", stdi=0.2)
+    _write_steps(single / f"{run_id}_steps.jsonl", stdi=0.8)
+
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert set(runs.steps["execution_id"]) == {str(batch), str(single)}
+    assert runs.steps["graph_id"].tolist() == ["01", "01"]
+    assert set(runs.steps["chain_code"]) == {"progressive_conservative"}
+
+
+def test_analysis_retains_full_graph_names_from_compact_summaries(tmp_path) -> None:
+    graph_name = "A descriptive graph name that exceeds the filename limit"
+    run_id = "01_a_descriptive_graph_name_that_exc"
+    graph_dir = tmp_path / "simulation_ui_20261004_000000" / run_id
+    _write_steps(graph_dir / f"{run_id}_steps.jsonl", stdi=0.2)
+    (graph_dir / f"{run_id}_summary.json").write_text(
+        json.dumps({"graph_name": graph_name}), encoding="utf-8"
+    )
+
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert runs.steps["chain_label"].tolist() == [f"01 · {graph_name}"]
+    assert runs.steps["execution_label"].tolist() == ["simulation_ui_20261004_000000"]

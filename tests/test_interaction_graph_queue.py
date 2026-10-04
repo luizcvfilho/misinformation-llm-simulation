@@ -10,6 +10,7 @@ import pytest
 from misinformation_simulation.apps import interaction_graph_queue as queue
 from misinformation_simulation.apps import interaction_graph_run_job as run_job
 from misinformation_simulation.apps import interaction_graph_sections as sections
+from misinformation_simulation.apps.interaction_graph_results import load_saved_result
 from misinformation_simulation.apps.interaction_graph_ui import create_default_node_form
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.types import SimulationResult
@@ -27,6 +28,21 @@ def test_queue_keeps_independent_snapshots_and_order() -> None:
     assert graphs[1]["nodes"][0]["label"] == "Node 1"
     assert queue.output_prefix_for_graph("batch", 1, "A/B") == "batch_01_a_b"
     assert queue.output_prefix_for_graph("batch", 2, "A/B") == "batch_02_a_b"
+
+
+def test_compact_prefix_bounds_long_names_and_keeps_queue_positions_distinct() -> None:
+    name = "A descriptive graph name " * 20
+    first = queue.output_prefix_for_graph(
+        "simulation_ui_20261003_223837", 1, name, include_base=False
+    )
+    second = queue.output_prefix_for_graph(
+        "simulation_ui_20261003_223837", 2, name, include_base=False
+    )
+
+    assert len(first) <= 35
+    assert first.startswith("01_a_descriptive_graph_name")
+    assert second.startswith("02_")
+    assert first != second
 
 
 def test_queue_rejects_invalid_graph() -> None:
@@ -87,7 +103,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     bundles = [payload for kind, payload in events if kind == "bundle"]
     messages = [payload for kind, payload in events if kind == "progress"]
 
-    assert calls == ["batch_01_first", "batch_02_second"]
+    assert calls == ["01_first", "02_second"]
     assert comparison_methods == ["cluster", "cluster"]
     assert rewrite_modes == ["interpretive", "interpretive"]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
@@ -141,12 +157,13 @@ def test_cancelled_run_skips_remaining_graphs(tmp_path) -> None:
     )
     events = list(job.events.queue)
 
-    assert calls == ["batch_01_first"]
+    assert calls == ["01_first"]
     assert [payload["status"] for kind, payload in events if kind == "bundle"] == ["cancelled"]
     assert events[-1] == ("done", {"completed": 0, "failed": 0, "cancelled": True})
 
 
-def test_single_graph_run_creates_named_folder_and_avoids_overwrite(tmp_path) -> None:
+@pytest.mark.parametrize("queue_mode", [False, True])
+def test_one_graph_uses_execution_folder_and_avoids_overwrite(tmp_path, queue_mode) -> None:
     nodes = [create_default_node_form(1)]
     graphs = [{"name": "Investigative skeptic", "nodes": nodes}]
     settings = {
@@ -185,7 +202,7 @@ def test_single_graph_run_creates_named_folder_and_avoids_overwrite(tmp_path) ->
             graphs=graphs,
             settings=settings,
             runner=fake_run,
-            queue_mode=False,
+            queue_mode=queue_mode,
         )
         bundle = next(payload for kind, payload in job.events.queue if kind == "bundle")
         summary_path = Path(bundle["summary_path"])
@@ -193,12 +210,16 @@ def test_single_graph_run_creates_named_folder_and_avoids_overwrite(tmp_path) ->
         folders.append(summary_path.parent)
         assert summary_path.is_file()
         assert steps_path.is_file()
-        assert summary_path.name == f"{summary_path.parent.name}_summary.json"
-        assert steps_path.name == f"{steps_path.parent.name}_steps.jsonl"
+        assert summary_path.name == "01_investigative_skeptic_summary.json"
+        assert steps_path.name == "01_investigative_skeptic_steps.jsonl"
+        assert bundle["summary"]["graph_name"] == "Investigative skeptic"
+        assert load_saved_result(summary_path)["name"] == "Investigative skeptic"
+        assert bundle["execution_name"] == summary_path.parent.parent.name
+        assert load_saved_result(summary_path)["execution_name"] == bundle["execution_name"]
 
     assert folders == [
-        tmp_path / "simulation_ui_20260917_123456_01_investigative_skeptic",
-        tmp_path / "simulation_ui_20260917_123456_01_investigative_skeptic_02",
+        tmp_path / "simulation_ui_20260917_123456" / "01_investigative_skeptic",
+        tmp_path / "simulation_ui_20260917_123456_02" / "01_investigative_skeptic",
     ]
 
 
@@ -241,8 +262,8 @@ def test_graph_queue_reserves_a_batch_folder_and_avoids_overwrite(tmp_path) -> N
         )
 
     assert output_dirs == [
-        tmp_path / "batch" / "batch_01_first",
-        tmp_path / "batch_02" / "batch_01_first",
+        tmp_path / "batch" / "01_first",
+        tmp_path / "batch_02" / "01_first",
     ]
 
 

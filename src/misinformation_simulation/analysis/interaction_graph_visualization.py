@@ -11,9 +11,12 @@ from shutil import which
 
 import pandas as pd
 
-# Preserve the legacy pattern used by historical VAD analysis.
-RUN_ID_PATTERN = re.compile(r"_(?P<batch_id>\d+)_(?P<graph_id>\d+)_(?P<chain_code>[A-Za-z0-9-]+)$")
+# Accept compact prefixes and historical run names used by VAD analysis.
+RUN_ID_PATTERN = re.compile(
+    r"(?:^|_)(?:(?P<batch_id>\d+)_)?(?P<graph_id>\d+)_(?P<chain_code>[A-Za-z0-9-]+)$"
+)
 RUN_ID_PATTERNS = (
+    re.compile(r"^(?:(?P<batch_id>\d+)_)?(?P<graph_id>\d+)_(?P<chain_code>.+)$"),
     re.compile(
         r"^simulation_ui_\d{8}_\d{6}_(?:(?P<batch_id>\d+)_)?"
         r"(?P<graph_id>\d+)_(?P<chain_code>.+)$"
@@ -376,6 +379,12 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
 
 def _run_metadata(path: Path) -> dict[str, str]:
     run_id = path.stem.removesuffix("_steps")
+    summary_path = path.with_name(f"{run_id}_summary.json")
+    graph_name = None
+    if summary_path.is_file():
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        if isinstance(summary, dict):
+            graph_name = summary.get("graph_name")
     execution_dir = path.parent
     if execution_dir.name == run_id:
         execution_dir = execution_dir.parent
@@ -406,7 +415,7 @@ def _run_metadata(path: Path) -> dict[str, str]:
         "batch_id": metadata.get("batch_id") or "unknown",
         "graph_id": graph_id,
         "chain_code": chain_code,
-        "chain_label": f"{graph_id} · {chain_code}",
+        "chain_label": f"{graph_id} · {graph_name or chain_code}",
     }
 
 

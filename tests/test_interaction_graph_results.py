@@ -1,6 +1,8 @@
 import json
+from pathlib import Path
 
 import pytest
+from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.apps import interaction_graph_sections
 from misinformation_simulation.apps.interaction_graph_categories import (
@@ -102,3 +104,55 @@ def test_remove_and_clear_only_imported_results() -> None:
     assert bundles == [current, second]
     assert clear_imported_results(bundles) == 1
     assert bundles == [current]
+
+
+def test_results_ui_imports_compact_runs_and_distinguishes_executions(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    graph_name = "A descriptive graph name that exceeds the filename limit"
+    prefix = "01_a_descriptive_graph_name_that_exc"
+    executions = ["simulation_ui_20261003_223837", "simulation_ui_20261004_000000"]
+    paths = []
+    for execution in executions:
+        folder = Path("output/interaction_graph/app_runs") / execution / prefix
+        folder.mkdir(parents=True)
+        path = folder / f"{prefix}_summary.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "rows_processed": 0,
+                    "steps_total": 0,
+                    "steps_success": 0,
+                    "steps_error": 0,
+                    "graph_name": graph_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (folder / f"{prefix}_steps.jsonl").write_text("", encoding="utf-8")
+        paths.append(path)
+
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_sections "
+        "import render_results_tab\n"
+        "if 'run_bundles' not in st.session_state:\n"
+        "    st.session_state.run_bundles = []\n"
+        "render_results_tab()\n"
+    ).run(timeout=30)
+    assert not app.exception
+    for path in paths:
+        app.text_input(key="saved_result_path").set_value(str(path)).run(timeout=30)
+        next(button for button in app.button if button.label == "Import result").click().run(
+            timeout=30
+        )
+        assert not app.exception
+
+    control = next(control for control in app.selectbox if control.label == "Inspect graph result")
+    assert control.options == [
+        f"{index}. {graph_name} — {execution}"
+        for index, execution in enumerate(executions, start=1)
+    ]
+    assert app.dataframe[0].value["execution"].tolist() == executions
+    control.set_value(1).run(timeout=30)
+    assert not app.exception
+    assert any(executions[1] in caption.value for caption in app.caption)

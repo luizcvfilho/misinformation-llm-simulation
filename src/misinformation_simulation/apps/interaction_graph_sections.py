@@ -215,16 +215,16 @@ def _render_advanced_settings() -> dict[str, Any]:
             "Output directory",
             value="output/interaction_graph/app_runs",
             help=(
-                "Parent directory for saved runs. A single graph gets its own folder; "
-                "a graph queue gets a batch folder containing one folder per graph."
+                "Each execution gets a folder containing one subfolder per graph, "
+                "including executions with a single graph."
             ),
         )
         output_prefix = st.text_input(
             "Output prefix",
             value=advanced_label,
             help=(
-                "Date and time prefix for the run folder and files; "
-                "the graph name is added automatically."
+                "Date and time prefix for the execution folder. Graph folders and files "
+                "use the queue position and up to 32 characters of the graph name."
             ),
         )
 
@@ -539,7 +539,7 @@ def render_results_tab() -> None:
                     or item.get("summary_path") != bundle["summary_path"]
                 ]
                 existing.append(bundle)
-                st.success(f"Imported {bundle['output_prefix']}.")
+                st.success(f"Imported {bundle['name']} from {bundle['execution_name']}.")
     bundles = st.session_state.run_bundles
     if not bundles:
         st.info("Run a simulation or import a saved result to populate this dashboard.")
@@ -552,6 +552,7 @@ def render_results_tab() -> None:
                 {
                     "order": index,
                     "graph": bundle["name"],
+                    "execution": bundle.get("execution_name", ""),
                     "status": bundle["status"],
                     "source": bundle.get("source", "current run"),
                     "rows": summary.get("rows_processed"),
@@ -566,7 +567,14 @@ def render_results_tab() -> None:
         selected_index = st.selectbox(
             "Inspect graph result",
             range(len(bundles)),
-            format_func=lambda index: f"{index + 1}. {bundles[index]['name']}",
+            format_func=lambda index: (
+                f"{index + 1}. {bundles[index]['name']}"
+                + (
+                    f" — {bundles[index]['execution_name']}"
+                    if bundles[index].get("execution_name")
+                    else ""
+                )
+            ),
         )
         selected = bundles[selected_index]
         action_cols = st.columns(2)

@@ -27,13 +27,16 @@ def move_graph(queue: list[dict[str, Any]], index: int, direction: int) -> None:
         queue[index], queue[target] = queue[target], queue[index]
 
 
-def output_prefix_for_graph(base_prefix: str, index: int, name: str) -> str:
+def output_prefix_for_graph(
+    base_prefix: str, index: int, name: str, *, include_base: bool = True
+) -> str:
     base = Path(base_prefix.strip()).name
     if not base or base in {".", ".."}:
         raise ValueError("Enter an output prefix before running.")
     slug = "".join(char.lower() if char.isalnum() else "_" for char in name)
-    slug = "_".join(part for part in slug.split("_") if part) or "graph"
-    return f"{base}_{index:02d}_{slug}"
+    slug = "_".join(part for part in slug.split("_") if part)[:32].rstrip("_") or "graph"
+    graph_prefix = f"{index:02d}_{slug}"
+    return f"{base}_{graph_prefix}" if include_base else graph_prefix
 
 
 def add_graphs_from_directory(

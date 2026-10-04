@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -113,11 +114,10 @@ def _run_graph_queue(
             job.latest_progress = progress
 
     try:
-        if queue_mode:
-            batch_prefix = Path(settings["output_prefix"].strip()).name
-            if not batch_prefix or batch_prefix in {".", ".."}:
-                raise ValueError("Enter an output prefix before running.")
-            batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
+        batch_prefix = Path(settings["output_prefix"].strip()).name
+        if not batch_prefix or batch_prefix in {".", ".."}:
+            raise ValueError("Enter an output prefix before running.")
+        batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
 
         for index, graph in enumerate(graphs, start=1):
             if job.cancel_event.is_set():
@@ -125,13 +125,13 @@ def _run_graph_queue(
                 break
             name = graph["name"]
             prefix = output_prefix_for_graph(
-                settings["output_prefix"], index if queue_mode else 1, name
+                settings["output_prefix"], index if queue_mode else 1, name, include_base=False
             )
             label = f"Graph {index}/{len(graphs)}: {name}"
             job.events.put(("progress", f"{label} — starting"))
             report_work(index, 0, 0)
             try:
-                run_dir, prefix = _reserve_output_directory(batch_dir, prefix)
+                run_dir, _ = _reserve_output_directory(batch_dir, prefix)
                 nodes = build_simulation_nodes(graph["nodes"])
                 result = runner(
                     df=df,
@@ -159,10 +159,17 @@ def _run_graph_queue(
                     ),
                     cancel_check=job.cancel_event.is_set,
                 )
+                result.summary["graph_name"] = name
+                result.summary["execution_name"] = batch_dir.name
+                if result.summary_path is not None:
+                    result.summary_path.write_text(
+                        json.dumps(result.summary, ensure_ascii=False, indent=2), encoding="utf-8"
+                    )
                 status = "cancelled" if result.summary.get("cancelled") else "completed"
                 steps_df = steps_to_dataframe(result.step_results)
                 bundle = {
                     "name": name,
+                    "execution_name": batch_dir.name,
                     "status": status,
                     "summary": result.summary,
                     "summary_path": str(result.summary_path)
@@ -200,6 +207,7 @@ def _run_graph_queue(
                         "bundle",
                         {
                             "name": name,
+                            "execution_name": batch_dir.name,
                             "status": "failed",
                             "error": str(exc),
                             "output_prefix": prefix,
