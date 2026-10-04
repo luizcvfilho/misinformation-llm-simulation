@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -10,6 +12,7 @@ from misinformation_simulation.analysis.interaction_graph_groups import (
 from misinformation_simulation.analysis.interaction_graph_personas import (
     INCREMENTAL_COMPONENT_COLUMNS,
     PERSONA_CODE_LABELS,
+    SCENARIO_CONTRASTS,
     persona_news_values,
     scenario_contrast_values,
     transition_pair_values,
@@ -515,10 +518,17 @@ def build_transition_pair_figure(
     return figure
 
 
-def build_scenario_difference_boxplot(steps: pd.DataFrame, metric: str) -> go.Figure:
+def build_scenario_difference_boxplot(
+    steps: pd.DataFrame,
+    metric: str,
+    *,
+    contrasts: Sequence[tuple[str, str, str]] = SCENARIO_CONTRASTS,
+) -> go.Figure:
     """Show the news-paired difference distribution for every scenario contrast."""
-    data = scenario_contrast_values(steps, metric)
+    data = scenario_contrast_values(steps, metric, contrasts=contrasts)
     figure = go.Figure()
+    if data.empty:
+        return figure
     for contrast, group in data.groupby("contrast", sort=False):
         figure.add_trace(
             go.Box(

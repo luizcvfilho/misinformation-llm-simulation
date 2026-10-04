@@ -107,6 +107,21 @@ make interaction-graph-analysis-ui
 The dashboard uses Plotly, including a visible mode bar for zoom, pan, box and lasso selection,
 scale reset, and figure export.
 
+Enter one or more paths in **Run folders (one per line)**. Paths may point to individual execution
+folders or parent folders; overlapping paths load each step file only once. Select the executions
+to inspect in **Executions**, then switch between them with **Active execution**. Executions are
+listed newest first, and the most recent selected execution is the default. Recency uses the
+timestamp in standard `simulation_ui_YYYYMMDD_HHMMSS` folder names, falling back to the folder's
+modification time for custom names. Every chart,
+summary, paired comparison, and case uses only that execution, so repeated news IDs and chain
+names in different executions are kept separate.
+
+Chain names are read from persisted filenames, including custom names with underscores, spaces,
+or Unicode characters. The original persona-code names remain compatible. In **Chain comparisons**,
+choose **Custom pairs**, select **Chain A**, and choose one or more chains B to compare final scores
+for shared news items. Custom pairs also work in the qualitative contrast case explorer. Preset
+contrasts remain available when their chains are present.
+
 ### Running both Streamlit dashboards
 
 The workflow UI and the analysis dashboard use distinct ports by default, so they can run at the

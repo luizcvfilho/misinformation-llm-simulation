@@ -246,3 +246,9 @@ def test_returns_news_level_values_for_boxplots() -> None:
     assert len(personas) == 8
     assert transitions["difference"].tolist() == pytest.approx([0.3, 0.2])
     assert contrasts["difference"].tolist() == pytest.approx([0.1, 0.2])
+
+
+def test_transition_asymmetry_is_empty_without_a_reverse_direction() -> None:
+    steps = _steps().loc[lambda frame: frame["chain_code"].eq("CP")]
+
+    assert summarize_transition_asymmetry(steps, bootstrap_iterations=20).empty

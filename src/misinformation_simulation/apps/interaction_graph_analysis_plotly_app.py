@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -16,6 +17,7 @@ from misinformation_simulation.analysis.interaction_graph_groups import (
 )
 from misinformation_simulation.analysis.interaction_graph_personas import (
     INCREMENTAL_COMPONENT_COLUMNS,
+    SCENARIO_CONTRASTS,
     build_transition_matrix,
     persona_legend,
     scenario_contrast_cases,
@@ -55,7 +57,7 @@ from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 4
+ANALYSIS_CACHE_SCHEMA_VERSION = 5
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -63,14 +65,37 @@ PERSONA_METRIC_LABELS = {
 
 
 @st.cache_data(show_spinner=False)
-def load_steps(runs_dir: str, cache_schema_version: int) -> tuple[pd.DataFrame, int]:
+def load_steps(runs_dirs: tuple[str, ...], cache_schema_version: int) -> tuple[pd.DataFrame, int]:
     del cache_schema_version
-    runs = load_interaction_graph_runs(Path(runs_dir))
+    runs = load_interaction_graph_runs([Path(directory) for directory in runs_dirs])
     return successful_steps(runs.steps), len(runs.source_paths)
 
 
 def filter_chains(steps: pd.DataFrame, selected_chains: list[str]) -> pd.DataFrame:
     return steps.loc[steps["chain_label"].isin(selected_chains)].copy()
+
+
+def _execution_recency(execution_id: str) -> float:
+    folder = Path(execution_id)
+    try:
+        return datetime.strptime(folder.name, "simulation_ui_%Y%m%d_%H%M%S").timestamp()
+    except ValueError:
+        try:
+            return folder.stat().st_mtime
+        except OSError:
+            return 0.0
+
+
+def _render_run_folder_input() -> tuple[str, ...]:
+    state_key = "analysis_runs_folders"
+    if state_key not in st.session_state:
+        st.session_state[state_key] = str(DEFAULT_RUNS_DIR)
+    folder_input = st.sidebar.text_area(
+        "Run folders (one per line)",
+        key=state_key,
+        help="Enter execution folders or parent folders containing several executions.",
+    )
+    return tuple(dict.fromkeys(line.strip() for line in folder_input.splitlines() if line.strip()))
 
 
 def main() -> None:
@@ -82,12 +107,44 @@ def main() -> None:
     )
     _render_persona_legend()
 
-    runs_dir = st.sidebar.text_input("Pasta das execuções", value=str(DEFAULT_RUNS_DIR))
+    runs_dirs = _render_run_folder_input()
+    if not runs_dirs:
+        st.warning("Enter at least one run folder.")
+        st.stop()
     try:
-        steps, run_count = load_steps(runs_dir, ANALYSIS_CACHE_SCHEMA_VERSION)
-    except (FileNotFoundError, ValueError) as error:
+        steps, _ = load_steps(runs_dirs, ANALYSIS_CACHE_SCHEMA_VERSION)
+    except (OSError, ValueError) as error:
         st.error(str(error))
         st.stop()
+
+    if steps.empty:
+        st.warning("The selected folders contain no successful steps.")
+        st.stop()
+    executions = steps[["execution_id", "execution_label"]].drop_duplicates()
+    execution_labels = executions.set_index("execution_id")["execution_label"].to_dict()
+    execution_options = sorted(
+        execution_labels,
+        key=lambda execution_id: (_execution_recency(execution_id), execution_id),
+        reverse=True,
+    )
+    selected_executions = st.sidebar.multiselect(
+        "Executions",
+        execution_options,
+        default=execution_options,
+        format_func=lambda value: f"{execution_labels[value]} — {value}",
+    )
+    if not selected_executions:
+        st.warning("Select at least one execution.")
+        st.stop()
+    active_execution = st.sidebar.selectbox(
+        "Active execution",
+        [execution_id for execution_id in execution_options if execution_id in selected_executions],
+        format_func=lambda value: f"{execution_labels[value]} — {value}",
+        help="Defaults to the most recent execution. You can select an older execution manually.",
+    )
+    steps = steps.loc[steps["execution_id"].eq(active_execution)].copy()
+    st.caption(f"Analyzing execution: {active_execution}")
+    st.sidebar.caption("All charts, summaries and cases use only the active execution.")
 
     rewrite_modes = sorted(steps["metadata_rewrite_mode"].unique())
     mode_labels = {**GRAPH_REWRITE_MODE_LABELS, "legacy": "Legacy (mode not recorded)"}
@@ -98,6 +155,9 @@ def main() -> None:
     )
     steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
     metrics = available_metrics(steps)
+    if not metrics:
+        st.warning("No numeric STDI metrics are available for this selection.")
+        st.stop()
     selected_metric = st.sidebar.selectbox(
         "Métrica dos gráficos gerais", options=list(metrics), format_func=metrics.__getitem__
     )
@@ -109,7 +169,7 @@ def main() -> None:
     selected_steps = filter_chains(steps, selected_chains)
 
     first_column, second_column, third_column = st.columns(3)
-    first_column.metric("Execuções carregadas", run_count)
+    first_column.metric("Chain step files", selected_steps["source_path"].nunique())
     second_column.metric("Notícias", selected_steps["news_id"].nunique())
     third_column.metric("Observações válidas", len(selected_steps))
 
@@ -216,13 +276,17 @@ def _render_overview(
     )
     if distribution_view == "Por cadeia em uma iteração":
         iterations = sorted(int(value) for value in selected_steps["step_index"].unique())
-        selected_iteration = st.slider(
-            "Iteração para o boxplot",
-            min_value=min(iterations),
-            max_value=max(iterations),
-            value=max(iterations),
-            step=1,
-        )
+        if len(iterations) == 1:
+            selected_iteration = iterations[0]
+            st.caption(f"Iteration: {selected_iteration}")
+        else:
+            selected_iteration = st.slider(
+                "Iteração para o boxplot",
+                min_value=min(iterations),
+                max_value=max(iterations),
+                value=max(iterations),
+                step=1,
+            )
         distribution_figure = build_distribution_figure(
             selected_steps,
             distribution_metric,
@@ -731,21 +795,19 @@ def _render_scenario_contrasts(
     if metric == "stdi_incremental":
         st.caption(
             "STDI incremental no contraste = mudança introduzida somente pelo último passo "
-            "(o quarto nestes cenários). Não é a média dos incrementos da cadeia. Para a soma "
+            "da cadeia. Não é a média dos incrementos da cadeia. Para a soma "
             "dos incrementos, selecione STDI cumulativo."
         )
-    summary = summarize_scenario_contrasts(selected_steps, metric)
+    contrasts = _select_scenario_contrasts(selected_steps, key_prefix="contrast")
+    summary = summarize_scenario_contrasts(selected_steps, metric, contrasts=contrasts)
     if summary.empty:
-        st.warning(
-            "Selecione as duas cadeias de pelo menos um contraste predefinido "
-            "para exibir esta análise."
-        )
+        st.warning("Select two chains with valid final scores for the same news items.")
         return
     display = _format_contrast_table(summary)
     display.insert(1, "Comparação", summary["description"])
     st.subheader("Distribuição das diferenças pareadas")
     st.plotly_chart(
-        build_scenario_difference_boxplot(selected_steps, metric),
+        build_scenario_difference_boxplot(selected_steps, metric, contrasts=contrasts),
         width="stretch",
         config=PLOTLY_CONFIG,
     )
@@ -765,6 +827,38 @@ def _render_scenario_contrasts(
         "Intervalos que incluem zero não sustentam uma diferença estável "
         "neste conjunto de notícias."
     )
+
+
+def _select_scenario_contrasts(
+    steps: pd.DataFrame, *, key_prefix: str
+) -> tuple[tuple[str, str, str], ...]:
+    chains = sorted(steps["chain_code"].unique())
+    if len(chains) < 2:
+        st.info("Select at least two chains to compare their final outputs.")
+        return ()
+    presets = tuple(
+        contrast
+        for contrast in SCENARIO_CONTRASTS
+        if contrast[0] in chains and contrast[1] in chains
+    )
+    comparison_mode = st.radio(
+        "Chain comparisons",
+        ("Custom pairs", "Preset contrasts") if presets else ("Custom pairs",),
+        index=1 if presets else 0,
+        horizontal=True,
+        key=f"{key_prefix}_comparison_mode",
+    )
+    if comparison_mode == "Preset contrasts":
+        return presets
+    chain_a = st.selectbox("Chain A", chains, key=f"{key_prefix}_chain_a")
+    other_chains = [chain for chain in chains if chain != chain_a]
+    chains_b = st.multiselect(
+        "Compare A with chains B",
+        other_chains,
+        default=other_chains,
+        key=f"{key_prefix}_chains_b",
+    )
+    return tuple((chain_a, chain_b, "Custom chain comparison") for chain_b in chains_b)
 
 
 def _render_case_explorer(
@@ -859,7 +953,8 @@ def _render_contrast_cases(selected_steps: pd.DataFrame, metrics: dict[str, str]
         format_func=METRIC_LABELS.__getitem__,
         key="case_contrast_metric",
     )
-    contrasts = summarize_scenario_contrasts(selected_steps, metric)
+    selected_pairs = _select_scenario_contrasts(selected_steps, key_prefix="case_contrast")
+    contrasts = summarize_scenario_contrasts(selected_steps, metric, contrasts=selected_pairs)
     if contrasts.empty:
         st.warning("Nenhum contraste completo está disponível nas cadeias selecionadas.")
         return

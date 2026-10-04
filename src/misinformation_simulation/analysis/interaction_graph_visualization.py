@@ -4,13 +4,23 @@ import json
 import re
 import sys
 import warnings
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from shutil import which
 
 import pandas as pd
 
+# Preserve the legacy pattern used by historical VAD analysis.
 RUN_ID_PATTERN = re.compile(r"_(?P<batch_id>\d+)_(?P<graph_id>\d+)_(?P<chain_code>[A-Za-z0-9-]+)$")
+RUN_ID_PATTERNS = (
+    re.compile(
+        r"^simulation_ui_\d{8}_\d{6}_(?:(?P<batch_id>\d+)_)?"
+        r"(?P<graph_id>\d+)_(?P<chain_code>.+)$"
+    ),
+    re.compile(r"^.+?_(?P<batch_id>\d+)_(?P<graph_id>\d+)_(?P<chain_code>.+)$"),
+    re.compile(r"^.+?_(?P<graph_id>\d+)_(?P<chain_code>.+)$"),
+)
 REQUIRED_STEP_COLUMNS = {"news_id", "step_index", "rewrite_status", "stdi_vs_original"}
 STDI_COMPONENT_COLUMNS = {
     "theme_drift_vs_original": "Tema",
@@ -76,11 +86,18 @@ def discover_step_paths(runs_dir: Path) -> list[Path]:
     )
 
 
-def load_interaction_graph_runs(runs_dir: Path) -> InteractionGraphRuns:
+def load_interaction_graph_runs(runs_dir: Path | Sequence[Path]) -> InteractionGraphRuns:
     """Load all valid interaction-graph runs into one labelled dataframe."""
-    source_paths = discover_step_paths(runs_dir)
-    if not source_paths:
-        raise ValueError(f"No '*_steps.jsonl' files were found in: {runs_dir}")
+    directories = [runs_dir] if isinstance(runs_dir, Path) else list(runs_dir)
+    if not directories:
+        raise ValueError("Select at least one runs directory.")
+    discovered: set[Path] = set()
+    for directory in directories:
+        paths = discover_step_paths(directory)
+        if not paths:
+            raise ValueError(f"No '*_steps.jsonl' files were found in: {directory}")
+        discovered.update(paths)
+    source_paths = sorted(discovered)
 
     frames: list[pd.DataFrame] = []
     for path in source_paths:
@@ -293,6 +310,9 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
     metric_columns = [column for column in METRIC_LABELS if column in successful.columns]
     retained_columns = [
         "run_id",
+        "execution_id",
+        "execution_label",
+        "source_path",
         "batch_id",
         "graph_id",
         "chain_code",
@@ -356,9 +376,18 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
 
 def _run_metadata(path: Path) -> dict[str, str]:
     run_id = path.stem.removesuffix("_steps")
-    match = RUN_ID_PATTERN.search(run_id)
+    execution_dir = path.parent
+    if execution_dir.name == run_id:
+        execution_dir = execution_dir.parent
+    execution_metadata = {
+        "execution_id": str(execution_dir),
+        "execution_label": execution_dir.name,
+        "source_path": str(path),
+    }
+    match = next((match for pattern in RUN_ID_PATTERNS if (match := pattern.match(run_id))), None)
     if match is None:
         return {
+            **execution_metadata,
             "run_id": run_id,
             "batch_id": "unknown",
             "graph_id": run_id,
@@ -368,10 +397,13 @@ def _run_metadata(path: Path) -> dict[str, str]:
 
     metadata = match.groupdict()
     graph_id = metadata["graph_id"].zfill(2)
-    chain_code = metadata["chain_code"].upper()
+    chain_code = metadata["chain_code"]
+    if metadata.get("batch_id") and re.fullmatch(r"[CPDSEMcpdsem]+", chain_code):
+        chain_code = chain_code.upper()
     return {
+        **execution_metadata,
         "run_id": run_id,
-        "batch_id": metadata["batch_id"],
+        "batch_id": metadata.get("batch_id") or "unknown",
         "graph_id": graph_id,
         "chain_code": chain_code,
         "chain_label": f"{graph_id} · {chain_code}",

@@ -399,6 +399,8 @@ def summarize_transition_asymmetry(
                 ci_high=ci_high,
             )
         )
+    if not rows:
+        return _empty_contrast_summary()
     return pd.DataFrame(rows).sort_values("difference", ascending=False).reset_index(drop=True)
 
 

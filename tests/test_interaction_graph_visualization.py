@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from misinformation_simulation.analysis.interaction_graph_visualization import (
     create_static_figures,
     discover_step_paths,
@@ -126,3 +128,45 @@ def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
     exported = (output_dir / "successful_steps.csv").read_text(encoding="utf-8")
     assert "metadata_category" in exported
     assert "metadata_original_topic_domain" not in exported
+
+
+@pytest.mark.parametrize(
+    ("run_id", "graph_id", "chain_code"),
+    [
+        (
+            "simulation_ui_20261003_223837_01_progressive_conservative",
+            "01",
+            "progressive_conservative",
+        ),
+        ("simulation_ui_20261003_223837_02_02_custom_chain", "02", "custom_chain"),
+        ("batch_01_03_cadeia_ação", "03", "cadeia_ação"),
+        ("batch_04_My chain.name", "04", "My chain.name"),
+        ("simulation_ui_20261003_223837_04_meme", "04", "meme"),
+        ("simulation_ui_20261003_223837_01_01_ssss", "01", "SSSS"),
+        ("free chain name", "free chain name", "free chain name"),
+    ],
+)
+def test_loads_arbitrary_chain_names(tmp_path, run_id, graph_id, chain_code) -> None:
+    _write_steps(tmp_path / f"{run_id}_steps.jsonl", stdi=0.2)
+
+    runs = load_interaction_graph_runs(tmp_path)
+
+    assert runs.steps["chain_code"].tolist() == [chain_code]
+    assert runs.steps["graph_id"].tolist() == [graph_id]
+
+
+def test_multiple_folders_keep_executions_distinct_and_deduplicate_overlaps(tmp_path) -> None:
+    run_id = "batch_01_01_custom_chain"
+    paths = [tmp_path / execution / run_id / f"{run_id}_steps.jsonl" for execution in ("a", "b")]
+    _write_steps(paths[0], stdi=0.2)
+    _write_steps(paths[1], stdi=0.8)
+
+    runs = load_interaction_graph_runs([tmp_path, tmp_path / "a", tmp_path / "b" / run_id])
+
+    assert runs.source_paths == tuple(paths)
+    assert len(runs.steps) == 2
+    assert runs.steps["execution_id"].nunique() == 2
+    assert runs.steps.groupby("execution_label")["stdi_vs_original"].first().to_dict() == {
+        "a": 0.2,
+        "b": 0.8,
+    }
