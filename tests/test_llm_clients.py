@@ -8,8 +8,9 @@ from misinformation_simulation.llm.clients import create_llm_client, normalize_p
 
 
 class FakeGeminiClient:
-    def __init__(self, *, api_key: str) -> None:
+    def __init__(self, *, api_key: str, http_options=None) -> None:
         self.api_key = api_key
+        self.http_options = http_options
 
 
 class FakeOpenAIClient:
@@ -70,3 +71,20 @@ def test_create_llm_client_uses_openai_fallback_for_chatgpt(monkeypatch) -> None
         "api_key": "openai-key",
         "base_url": "https://api.openai.com/v1",
     }
+
+
+@pytest.mark.parametrize("provider", ["chatgpt", "openrouter", "deepseek", "grok", "local"])
+def test_create_llm_client_can_disable_openai_sdk_retries(monkeypatch, provider) -> None:
+    monkeypatch.setattr(clients, "OpenAI", FakeOpenAIClient)
+
+    _, client = create_llm_client(provider=provider, api_key="secret", max_retries=0)
+
+    assert client.kwargs["max_retries"] == 0
+
+
+def test_create_llm_client_can_disable_gemini_sdk_retries(monkeypatch) -> None:
+    monkeypatch.setattr(clients.genai, "Client", FakeGeminiClient)
+
+    _, client = create_llm_client(provider="gemini", api_key="secret", max_retries=0)
+
+    assert client.http_options.retry_options.attempts == 1

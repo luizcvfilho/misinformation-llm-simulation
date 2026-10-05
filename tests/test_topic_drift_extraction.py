@@ -125,7 +125,7 @@ def test_extract_topic_structure_uses_gemini_generator(monkeypatch) -> None:
 
     assert structure.main_topic == "economy"
     assert calls[0]["model"] == "gemini-test"
-    assert calls[0]["max_attempts"] == 2
+    assert calls[0]["max_attempts"] == 1
     assert "Title: Title" in calls[0]["prompt"]
 
 

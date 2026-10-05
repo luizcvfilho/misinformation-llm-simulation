@@ -192,6 +192,14 @@ Legacy component columns describe the embedding branch in dual mode; full judge 
 qualifier details and raw responses appear in the step details and JSONL export. See
 [dual STDI usage and validation](docs/dual_stdi.md).
 
+Topic extraction and LLM semantic evaluation retry API errors, empty responses, malformed JSON,
+and blocking validation failures with exponential backoff. Each operation has one shared budget:
+the initial request plus at most three retries (four calls total). `retry_attempts` can reduce
+the total number of attempts; larger values are capped at four for these operations. Provider SDK
+retries are disabled for these calls to avoid multiplying this budget. Optional annotation warnings
+do not trigger retries. After exhaustion, existing failure/partial-result handling remains in place,
+including error details and the last raw response when structured parsing fails.
+
 The cluster semantic core in [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
 embeds the extracted labels and relations with
 `sentence-transformers/all-MiniLM-L6-v2`. Scalar similarity `S(a, b)` is cosine

@@ -20,6 +20,8 @@ from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVI
 from misinformation_simulation.llm.clients import create_llm_client
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.llm.retry import (
+    MAX_EVALUATION_ATTEMPTS,
+    generate_and_parse_with_retry,
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
@@ -274,7 +276,7 @@ def extract_topic_structure(
     api_key: str | None = None,
     base_url: str | None = None,
     max_requests_per_minute: int | None = None,
-    retry_attempts: int = 5,
+    retry_attempts: int = MAX_EVALUATION_ATTEMPTS,
     before_request_hook: Callable[[], None] | None = None,
     structured: bool = False,
 ) -> TopicStructure:
@@ -283,11 +285,14 @@ def extract_topic_structure(
 
     if max_requests_per_minute is not None and max_requests_per_minute <= 0:
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+    if retry_attempts <= 0:
+        raise ValueError("'retry_attempts' must be greater than zero.")
 
     provider_normalized, client = create_llm_client(
         provider=provider,
         api_key=api_key,
         base_url=base_url,
+        max_retries=0,
     )
     prompt_template = (
         STRUCTURED_TOPIC_PROMPT_TEMPLATE if structured else TOPIC_DRIFT_PROMPT_TEMPLATE
@@ -298,43 +303,52 @@ def extract_topic_structure(
     limiter = MinuteRateLimiter(max_requests_per_minute)
     request_hook = before_request_hook or limiter.acquire
 
-    if provider_normalized == "gemini":
-        raw_response = generate_gemini_text_with_retry(
-            client,
-            model=model,
-            prompt=prompt,
-            system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
-            temperature=0.1,
-            max_attempts=retry_attempts,
-            before_request_hook=request_hook,
-        )
-    else:
-        raw_response = generate_openai_text_with_retry(
-            client,
-            model=model,
-            prompt=prompt,
-            system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
-            temperature=0.1,
-            max_attempts=retry_attempts,
-            before_request_hook=request_hook,
-        )
-
-    if not structured:
-        return _build_topic_structure(_extract_json_object(raw_response))
-    from misinformation_simulation.topic_drift.provenance import request_provenance
-
-    provenance = request_provenance(
-        model=model,
-        provider=provider_normalized,
-        base_url=base_url,
-        version=STRUCTURED_EXTRACTION_VERSION,
-        prompt=prompt,
-        raw_response=raw_response,
-        inputs={"text": text, "title": title},
+    generate = (
+        generate_gemini_text_with_retry
+        if provider_normalized == "gemini"
+        else generate_openai_text_with_retry
     )
-    try:
-        structure = _build_topic_structure(_extract_json_object(raw_response))
-    except (ValueError, TypeError) as exc:
-        raise ExtractionValidationError(str(exc), provenance) from exc
-    structure.provenance = provenance
-    return structure
+
+    def request() -> str:
+        return generate(
+            client,
+            model=model,
+            prompt=prompt,
+            system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
+            temperature=0.1,
+            max_attempts=1,
+            before_request_hook=request_hook,
+        )
+
+    def parse(raw_response: str) -> TopicStructure:
+        if not structured:
+            return _build_topic_structure(_extract_json_object(raw_response))
+        from misinformation_simulation.topic_drift.provenance import request_provenance
+
+        provenance = request_provenance(
+            model=model,
+            provider=provider_normalized,
+            base_url=base_url,
+            version=STRUCTURED_EXTRACTION_VERSION,
+            prompt=prompt,
+            raw_response=raw_response,
+            inputs={"text": text, "title": title},
+        )
+        try:
+            structure = _build_topic_structure(_extract_json_object(raw_response))
+        except (ValueError, TypeError) as exc:
+            raise ExtractionValidationError(str(exc), provenance) from exc
+        structure.provenance = provenance
+        return structure
+
+    def should_retry(structure: TopicStructure) -> bool:
+        from misinformation_simulation.topic_drift.structured_comparison import structure_issues
+
+        return bool(structure_issues(structure))
+
+    return generate_and_parse_with_retry(
+        request,
+        parse,
+        max_attempts=retry_attempts,
+        should_retry=should_retry if structured else None,
+    )

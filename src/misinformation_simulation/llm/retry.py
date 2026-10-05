@@ -8,6 +8,32 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+MAX_EVALUATION_ATTEMPTS = 4
+
+
+def generate_and_parse_with_retry[T](
+    generate: Callable[[], str],
+    parse: Callable[[str], T],
+    *,
+    max_attempts: int = MAX_EVALUATION_ATTEMPTS,
+    should_retry: Callable[[T], bool] | None = None,
+    base_delay: float = 2.0,
+) -> T:
+    """Share one budget across API and validation failures: initial call plus three retries."""
+    if max_attempts <= 0:
+        raise ValueError("'retry_attempts' must be greater than zero.")
+    max_attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS)
+    for attempt in range(1, max_attempts + 1):
+        try:
+            result = parse(generate())
+            if should_retry is None or not should_retry(result) or attempt == max_attempts:
+                return result
+        except Exception:
+            if attempt == max_attempts:
+                raise
+        time.sleep(base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1))
+    raise AssertionError("The evaluation retry budget was exhausted without a result.")
+
 
 def _openai_chat_completion_kwargs(
     *,

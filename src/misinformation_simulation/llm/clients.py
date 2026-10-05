@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from google import genai
+from google.genai import types
 from openai import OpenAI
 
 from misinformation_simulation.enums import Provider
@@ -24,8 +25,10 @@ def create_llm_client(
     provider: Provider | str,
     api_key: str | None = None,
     base_url: str | None = None,
+    max_retries: int | None = None,
 ) -> tuple[str, genai.Client | OpenAI]:
     provider_normalized = normalize_provider(provider)
+    retry_kwargs = {} if max_retries is None else {"max_retries": max_retries}
 
     env_key_name = None
     if provider_normalized == "gemini":
@@ -44,7 +47,9 @@ def create_llm_client(
         resolved_base_url = (
             base_url or os.getenv("LOCAL_OPENAI_BASE_URL") or "http://127.0.0.1:11434/v1"
         )
-        return provider_normalized, OpenAI(api_key=resolved_api_key, base_url=resolved_base_url)
+        return provider_normalized, OpenAI(
+            api_key=resolved_api_key, base_url=resolved_base_url, **retry_kwargs
+        )
 
     if provider_normalized == "chatgpt":
         resolved_api_key = api_key or os.getenv("CHATGPT_API_KEY") or os.getenv("OPENAI_API_KEY")
@@ -66,11 +71,19 @@ def create_llm_client(
         raise ValueError(f"Set {env_key_name} in the environment or pass the key in 'api_key'.")
 
     if provider_normalized == "gemini":
-        return provider_normalized, genai.Client(api_key=resolved_api_key)
+        if max_retries is None:
+            return provider_normalized, genai.Client(api_key=resolved_api_key)
+        return provider_normalized, genai.Client(
+            api_key=resolved_api_key,
+            http_options=types.HttpOptions(
+                retry_options=types.HttpRetryOptions(attempts=max_retries + 1)
+            ),
+        )
     if provider_normalized == "chatgpt":
         return provider_normalized, OpenAI(
             api_key=resolved_api_key,
             base_url=base_url or "https://api.openai.com/v1",
+            **retry_kwargs,
         )
     if provider_normalized == "openrouter":
         return provider_normalized, OpenAI(
@@ -80,13 +93,16 @@ def create_llm_client(
                 "HTTP-Referer": os.getenv("OPENROUTER_HTTP_REFERER", ""),
                 "X-Title": os.getenv("OPENROUTER_X_TITLE", "misinformation-llm-simulation"),
             },
+            **retry_kwargs,
         )
     if provider_normalized == "deepseek":
         return provider_normalized, OpenAI(
             api_key=resolved_api_key,
             base_url="https://api.deepseek.com",
+            **retry_kwargs,
         )
     return provider_normalized, OpenAI(
         api_key=resolved_api_key,
         base_url=base_url or "https://api.x.ai/v1",
+        **retry_kwargs,
     )

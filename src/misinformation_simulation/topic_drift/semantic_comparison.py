@@ -13,6 +13,8 @@ from misinformation_simulation.config.prompts import (
 )
 from misinformation_simulation.llm.clients import create_llm_client
 from misinformation_simulation.llm.retry import (
+    MAX_EVALUATION_ATTEMPTS,
+    generate_and_parse_with_retry,
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
@@ -116,20 +118,23 @@ def compare_stdi_components_semantically(
     provider: str,
     api_key: str | None = None,
     base_url: str | None = None,
-    retry_attempts: int = 5,
+    retry_attempts: int = MAX_EVALUATION_ATTEMPTS,
     before_request_hook: Callable[[], None] | None = None,
     structured: bool = False,
 ) -> SemanticSTDIComparison:
-    """Judge semantic drift in a pair once, keeping component judgments consistent."""
+    """Judge semantic drift, retrying API and response validation failures together."""
     if not original_text or not original_text.strip():
         raise ValueError("Provide non-empty original text for semantic comparison.")
     if not modified_text or not modified_text.strip():
         raise ValueError("Provide non-empty modified text for semantic comparison.")
+    if retry_attempts <= 0:
+        raise ValueError("'retry_attempts' must be greater than zero.")
 
     provider_normalized, client = create_llm_client(
         provider=provider,
         api_key=api_key,
         base_url=base_url,
+        max_retries=0,
     )
     template = (
         STRUCTURED_JUDGE_PROMPT_TEMPLATE if structured else SEMANTIC_COMPARISON_PROMPT_TEMPLATE
@@ -145,43 +150,40 @@ def compare_stdi_components_semantically(
             topic_structure_to_dict(modified_structure), ensure_ascii=False
         ),
     )
-    if provider_normalized == "gemini":
-        raw_response = generate_gemini_text_with_retry(
-            client,
-            model=model,
-            prompt=prompt,
-            system_instruction=SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
-            temperature=0.1,
-            max_attempts=retry_attempts,
-            before_request_hook=before_request_hook,
-        )
-    else:
-        raw_response = generate_openai_text_with_retry(
-            client,
-            model=model,
-            prompt=prompt,
-            system_instruction=SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
-            temperature=0.1,
-            max_attempts=retry_attempts,
-            before_request_hook=before_request_hook,
-        )
-    if not structured:
-        return _parse_semantic_comparison(raw_response)
-    from misinformation_simulation.topic_drift.provenance import request_provenance
-
-    provenance = request_provenance(
-        model=model,
-        provider=provider_normalized,
-        base_url=base_url,
-        version=STRUCTURED_JUDGE_VERSION,
-        prompt=prompt,
-        raw_response=raw_response,
-        inputs={"original_text": original_text, "modified_text": modified_text, "title": title},
+    generate = (
+        generate_gemini_text_with_retry
+        if provider_normalized == "gemini"
+        else generate_openai_text_with_retry
     )
-    try:
-        return parse_structured_semantic_comparison(
-            raw_response,
-            provenance=provenance,
+
+    def request() -> str:
+        return generate(
+            client,
+            model=model,
+            prompt=prompt,
+            system_instruction=SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
+            temperature=0.1,
+            max_attempts=1,
+            before_request_hook=before_request_hook,
         )
-    except (ValueError, TypeError, KeyError) as exc:
-        raise JudgeValidationError(str(exc), provenance) from exc
+
+    def parse(raw_response: str) -> SemanticSTDIComparison:
+        if not structured:
+            return _parse_semantic_comparison(raw_response)
+        from misinformation_simulation.topic_drift.provenance import request_provenance
+
+        provenance = request_provenance(
+            model=model,
+            provider=provider_normalized,
+            base_url=base_url,
+            version=STRUCTURED_JUDGE_VERSION,
+            prompt=prompt,
+            raw_response=raw_response,
+            inputs={"original_text": original_text, "modified_text": modified_text, "title": title},
+        )
+        try:
+            return parse_structured_semantic_comparison(raw_response, provenance=provenance)
+        except (ValueError, TypeError, KeyError) as exc:
+            raise JudgeValidationError(str(exc), provenance) from exc
+
+    return generate_and_parse_with_retry(request, parse, max_attempts=retry_attempts)
