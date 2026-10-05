@@ -22,6 +22,15 @@ def _persist_results(
         json.dumps(result.summary, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    steps_df = pd.DataFrame([step.to_record() for step in result.step_results])
-    steps_df.to_json(steps_path, orient="records", lines=True, force_ascii=False)
+    if result.summary.get("stdi_comparison_method") == "dual":
+        steps_path.write_text(
+            "".join(
+                json.dumps(step.to_record(), ensure_ascii=False, allow_nan=False) + "\n"
+                for step in result.step_results
+            ),
+            encoding="utf-8",
+        )
+    else:
+        steps_df = pd.DataFrame([step.to_record() for step in result.step_results])
+        steps_df.to_json(steps_path, orient="records", lines=True, force_ascii=False)
     return summary_path, steps_path

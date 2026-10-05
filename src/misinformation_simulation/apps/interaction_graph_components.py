@@ -247,6 +247,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     info_cols[2].metric("Provider", str(row["provider"]))
                     info_cols[3].metric("Model", str(row["model"]))
                     st.metric("Cumulative STDI", format_metric(row["stdi_cumulative"]))
+                    render_dual_stdi(row)
                     component_cols = st.columns(4)
                     component_cols[0].metric(
                         "VAD vs original", format_metric(row["vad_drift_vs_original"])
@@ -281,6 +282,40 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
 
     st.subheader("All step records")
     st.dataframe(steps_df, width="stretch")
+
+
+def render_dual_stdi(row: pd.Series) -> None:
+    for suffix, label in (
+        ("vs_original", "Original comparison"),
+        ("incremental", "Input comparison"),
+    ):
+        value = row.get(f"metadata_dual_stdi_{suffix}")
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError:
+                continue
+        if not isinstance(value, dict):
+            continue
+        st.markdown(f"**Dual STDI — {label} ({value.get('status', 'unavailable')})**")
+        columns = st.columns(3)
+        for column, branch, title in (
+            (columns[0], "embedding", "Embedding STDI"),
+            (columns[1], "llm_judge", "LLM judge STDI"),
+        ):
+            metrics = value.get(branch, {}).get("metrics") or {}
+            column.metric(title, format_metric(metrics.get("stdi")))
+        columns[2].metric("Method disagreement", format_metric(value.get("method_gap")))
+        st.caption(
+            "The final STDI is the mean of both complete scores. "
+            "Category scores below describe the embedding branch. "
+            "Disagreement is not calibrated confidence."
+        )
+        with st.expander(f"Components, qualifier evidence and judge rationale — {label}"):
+            st.json(value)
+    complete = row.get("stdi_chain_complete")
+    if complete is not None and pd.notna(complete) and not complete:
+        st.warning("Incomplete STDI chain: cumulative drift sums only valid incremental pairs.")
 
 
 def render_topic_comparison(row: pd.Series) -> None:

@@ -148,7 +148,8 @@ def _run_graph_queue(
                     rewrite_mode=settings.get("rewrite_mode", "faithful"),
                     topic_drift_model=settings["topic_drift_model"],
                     topic_drift_provider=settings["topic_drift_provider"],
-                    stdi_comparison_method="cluster",
+                    stdi_comparison_method=settings.get("stdi_comparison_method", "dual"),
+                    stdi_cache_dir=batch_dir / "evaluation_cache",
                     output_dir=run_dir,
                     output_prefix=prefix,
                     progress_callback=lambda message, label=label: job.events.put(

@@ -54,8 +54,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--topic-drift-provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument(
         "--stdi-comparison-method",
-        choices=("cluster", "lexical"),
-        default="cluster",
+        choices=("dual", "cluster", "lexical"),
+        default="dual",
     )
     parser.add_argument(
         "--stdi-embedding-model",

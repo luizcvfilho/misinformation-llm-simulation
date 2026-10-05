@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from collections.abc import Callable
 from typing import Any
 
+from misinformation_simulation.config.prompts import (
+    STRUCTURED_EXTRACTION_VERSION,
+    STRUCTURED_TOPIC_PROMPT_TEMPLATE,
+)
 from misinformation_simulation.config.prompts import (
     TOPIC_DRIFT_PROMPT_TEMPLATE as TOPIC_DRIFT_PROMPT_TEMPLATE,
 )
@@ -23,6 +28,12 @@ from misinformation_simulation.topic_drift.models import TopicRelation, TopicStr
 DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
 DEFAULT_TOPIC_DRIFT_PROVIDER = DEFAULT_LLM_PROVIDER
 DEFAULT_REWRITTEN_COLUMN = "rewritten_news"
+
+
+class ExtractionValidationError(ValueError):
+    def __init__(self, message: str, provenance: dict[str, Any]) -> None:
+        super().__init__(message)
+        self.provenance = provenance
 
 
 def _deduplicate_preserve_order(values: list[str]) -> list[str]:
@@ -92,12 +103,12 @@ def _coerce_string_list(value: Any) -> list[str]:
     return _deduplicate_preserve_order(items)
 
 
-def _coerce_relations(value: Any) -> list[TopicRelation]:
+def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRelation]:
     if not isinstance(value, list):
         return []
 
     relations: list[TopicRelation] = []
-    seen: set[tuple[str, str, str]] = set()
+    seen: set[Any] = set()
 
     for item in value:
         if not isinstance(item, dict):
@@ -106,13 +117,46 @@ def _coerce_relations(value: Any) -> list[TopicRelation]:
         subject = str(item.get("subject", "") or "").strip()
         action = str(item.get("action", "") or "").strip()
         obj = str(item.get("object", "") or "").strip()
-        normalized = _normalize_relation(subject, action, obj)
+        normalized = (
+            json.dumps(item, sort_keys=True, ensure_ascii=False)
+            if structured
+            else _normalize_relation(subject, action, obj)
+        )
 
-        if not all(normalized) or normalized in seen:
+        if (not structured and not all(normalized)) or normalized in seen:
             continue
 
         seen.add(normalized)
-        relations.append(TopicRelation(subject=subject, action=action, object=obj))
+        qualifiers = {}
+        if structured:
+            for key in (
+                "predicate",
+                "negation_scope",
+                "signed_action",
+                "base_action",
+                "duration_unit",
+                "duration_expression",
+                "evidence",
+                "assertion_type",
+            ):
+                qualifiers[key] = str(item[key]).strip() if item.get(key) else None
+            qualifiers["polarity"] = (
+                item.get("polarity") if item.get("polarity") in {"affirmed", "negated"} else None
+            )
+            qualifiers["duration_status"] = (
+                item.get("duration_status")
+                if item.get("duration_status") in {"exact", "absent", "ambiguous"}
+                else "unknown"
+            )
+            value = item.get("duration_value")
+            try:
+                numeric = float(value) if not isinstance(value, bool) else float("nan")
+                qualifiers["duration_value"] = (
+                    numeric if math.isfinite(numeric) and numeric >= 0 else None
+                )
+            except (TypeError, ValueError):
+                qualifiers["duration_value"] = None
+        relations.append(TopicRelation(subject=subject, action=action, object=obj, **qualifiers))
 
     return relations
 
@@ -138,6 +182,8 @@ def _coerce_unit_score(value: Any, *, default: float = 0.0) -> float:
         numeric_value = float(value)
     except (TypeError, ValueError):
         return default
+    if not math.isfinite(numeric_value):
+        return default
     return min(max(numeric_value, 0.0), 1.0)
 
 
@@ -150,14 +196,53 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         default=1.0 if has_internal_contradiction else 0.0,
     )
 
+    structured = payload.get("schema_version") == 2
+    issues = list(payload.get("extraction_issues", []))
+    if structured:
+        if not isinstance(payload.get("has_internal_contradiction"), bool):
+            issues.append("Invalid contradiction flag")
+        required = (
+            "main_topic",
+            "subtopics",
+            "central_entities",
+            "central_relations",
+            "has_internal_contradiction",
+            "internal_contradiction_score",
+            "opinions",
+        )
+        issues.extend(f"Missing required field: {key}" for key in required if key not in payload)
+        for key in ("subtopics", "central_entities", "central_relations", "opinions"):
+            if not isinstance(payload.get(key), list):
+                issues.append(f"Invalid list: {key}")
+        if isinstance(payload.get("central_relations"), list) and any(
+            not isinstance(item, dict) for item in payload["central_relations"]
+        ):
+            issues.append("Invalid relation record")
+        try:
+            score = float(payload.get("internal_contradiction_score"))
+            if (
+                isinstance(payload.get("internal_contradiction_score"), bool)
+                or not math.isfinite(score)
+                or not 0 <= score <= 1
+            ):
+                issues.append("Invalid contradiction score")
+        except (TypeError, ValueError):
+            issues.append("Invalid contradiction score")
     return TopicStructure(
         main_topic=str(main_topic).strip() if main_topic else None,
         subtopics=_coerce_string_list(payload.get("subtopics")),
         central_entities=_coerce_string_list(payload.get("central_entities")),
-        central_relations=_coerce_relations(payload.get("central_relations")),
+        central_relations=_coerce_relations(
+            payload.get("central_relations"), structured=structured
+        ),
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
         has_internal_contradiction=has_internal_contradiction or internal_contradiction_score > 0.0,
         internal_contradiction_score=internal_contradiction_score,
+        schema_version=2 if structured else 1,
+        extraction_status=("partial" if issues else "valid") if structured else "unavailable",
+        extraction_issues=issues,
+        opinions=_coerce_string_list(payload.get("opinions")),
+        provenance=payload.get("provenance", {}),
     )
 
 
@@ -172,6 +257,7 @@ def extract_topic_structure(
     max_requests_per_minute: int | None = None,
     retry_attempts: int = 5,
     before_request_hook: Callable[[], None] | None = None,
+    structured: bool = False,
 ) -> TopicStructure:
     if not text or not str(text).strip():
         raise ValueError("Provide a non-empty text to extract the topic structure.")
@@ -184,7 +270,9 @@ def extract_topic_structure(
         api_key=api_key,
         base_url=base_url,
     )
-    prompt_template = TOPIC_DRIFT_PROMPT_TEMPLATE
+    prompt_template = (
+        STRUCTURED_TOPIC_PROMPT_TEMPLATE if structured else TOPIC_DRIFT_PROMPT_TEMPLATE
+    )
     if not title or not title.strip():
         prompt_template = prompt_template.replace("Title: {title}\n\n", "")
     prompt = prompt_template.format(title=title, text=text.strip())
@@ -212,5 +300,27 @@ def extract_topic_structure(
             before_request_hook=request_hook,
         )
 
-    payload = _extract_json_object(raw_response)
-    return _build_topic_structure(payload)
+    if not structured:
+        return _build_topic_structure(_extract_json_object(raw_response))
+    from misinformation_simulation.topic_drift.provenance import request_provenance
+
+    provenance = request_provenance(
+        model=model,
+        provider=provider_normalized,
+        base_url=base_url,
+        version=STRUCTURED_EXTRACTION_VERSION,
+        prompt=prompt,
+        raw_response=raw_response,
+        inputs={"text": text, "title": title},
+    )
+    try:
+        structure = _build_topic_structure(_extract_json_object(raw_response))
+    except (ValueError, TypeError) as exc:
+        raise ExtractionValidationError(str(exc), provenance) from exc
+    structure.provenance = provenance
+    for index, relation in enumerate(structure.central_relations):
+        if not relation.evidence or relation.evidence not in text:
+            structure.extraction_issues.append(f"Relation {index} has unsupported evidence")
+    if structure.extraction_issues:
+        structure.extraction_status = "partial"
+    return structure

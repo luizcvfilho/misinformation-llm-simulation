@@ -44,6 +44,7 @@ from .stdi_regression_features import (
     fit_stdi_logistic_regression,
     fit_stdi_tfidf_comparison,
 )
+from .structured_comparison import StructuredEmbeddingComparator, compare_dual_stdi
 
 __all__ = [
     "TopicRelation",
@@ -68,6 +69,8 @@ __all__ = [
     "fit_manual_stdi_regression",
     "SemanticSTDIComparison",
     "compare_stdi_components_semantically",
+    "StructuredEmbeddingComparator",
+    "compare_dual_stdi",
     "ClusterSTDIComparator",
     "ClusterSTDIComparison",
     "TransformerTextEmbedder",

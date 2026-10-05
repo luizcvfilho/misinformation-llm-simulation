@@ -108,6 +108,14 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     mode_control.set_value("interpretive").run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
+    dual_control = next(control for control in app.checkbox if control.key == "evaluate_dual_stdi")
+    assert dual_control.value is True
+    assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
+    dual_control.uncheck().run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
+    dual_control.check().run(timeout=30)
+    assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
 
 
 def test_build_simulation_nodes_resolves_preset_personality() -> None:

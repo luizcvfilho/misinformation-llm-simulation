@@ -49,7 +49,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 10
+GRAPH_OUTPUT_LAYOUT_VERSION = 11
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -170,6 +170,15 @@ def _render_execution_settings(
         "are generated. The first run may download the model."
     )
 
+    evaluate_dual_stdi = st.checkbox(
+        "Dual STDI (embeddings + LLM judge)",
+        value=True,
+        key="evaluate_dual_stdi",
+        help=(
+            "Calculate both complete STDI scores and their 50/50 mean. "
+            "Requires additional LLM judgments. Disable to use the existing embedding evaluation."
+        ),
+    )
     advanced_settings = _render_advanced_settings()
     return {
         "graph_name": graph_name,
@@ -179,6 +188,7 @@ def _render_execution_settings(
         "max_rows": max_rows,
         "allow_title_fallback": allow_title_fallback,
         "rewrite_mode": rewrite_mode,
+        "stdi_comparison_method": "dual" if evaluate_dual_stdi else "cluster",
         **advanced_settings,
     }
 
@@ -215,7 +225,7 @@ def _render_advanced_settings() -> dict[str, Any]:
                 if DEFAULT_LLM_PROVIDER.value in AVAILABLE_PROVIDERS
                 else 0
             ),
-            help="Provider used to extract topic structures for STDI/topic drift metrics.",
+            help="Provider used for topic extraction and the dual STDI judge.",
         )
         topic_drift_model = _render_topic_drift_model_selector()
         output_dir = st.text_input(

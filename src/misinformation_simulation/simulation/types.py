@@ -64,6 +64,16 @@ class SimulationStepResult:
     vad_drift_incremental: float | None = None
     content_drift_incremental: float | None = None
     stdi_cumulative: float | None = None
+    stdi_embedding_vs_original: float | None = None
+    stdi_llm_judge_vs_original: float | None = None
+    stdi_method_gap_vs_original: float | None = None
+    stdi_status_vs_original: str = "not_requested"
+    stdi_embedding_incremental: float | None = None
+    stdi_llm_judge_incremental: float | None = None
+    stdi_method_gap_incremental: float | None = None
+    stdi_status_incremental: str = "not_requested"
+    stdi_cumulative_valid_steps: int = 0
+    stdi_chain_complete: bool | None = None
     original_topic_structure_status: str = "not_requested"
     original_topic_structure_error: str | None = None
     original_vad_status: str = "not_requested"

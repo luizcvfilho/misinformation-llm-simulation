@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 
@@ -10,6 +10,17 @@ class TopicRelation:
     subject: str
     action: str
     object: str
+    polarity: str | None = None
+    predicate: str | None = None
+    negation_scope: str | None = None
+    signed_action: str | None = None
+    base_action: str | None = None
+    duration_status: str = "unknown"
+    duration_value: float | None = None
+    duration_unit: str | None = None
+    duration_expression: str | None = None
+    evidence: str | None = None
+    assertion_type: str | None = None
 
 
 @dataclass(slots=True)
@@ -21,6 +32,11 @@ class TopicStructure:
     narrative_frame: str | None = None
     has_internal_contradiction: bool = False
     internal_contradiction_score: float = 0.0
+    schema_version: int = 1
+    extraction_status: str = "unavailable"
+    extraction_issues: list[str] = field(default_factory=list)
+    opinions: list[str] = field(default_factory=list)
+    provenance: dict[str, Any] = field(default_factory=dict)
 
 
 def empty_topic_structure() -> TopicStructure:
@@ -48,6 +64,11 @@ def topic_structure_to_dict(structure: TopicStructure) -> dict[str, Any]:
         "narrative_frame": structure.narrative_frame,
         "has_internal_contradiction": structure.has_internal_contradiction,
         "internal_contradiction_score": structure.internal_contradiction_score,
+        "schema_version": structure.schema_version,
+        "extraction_status": structure.extraction_status,
+        "extraction_issues": list(structure.extraction_issues),
+        "opinions": list(structure.opinions),
+        "provenance": dict(structure.provenance),
     }
 
 

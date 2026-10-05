@@ -83,6 +83,7 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     original = "The government proposed a policy after an open debate."
     result = run_news_interaction_graph(
         pd.DataFrame([{"title": title, "description": original, "language": "en"}]),
+        stdi_comparison_method="cluster",
         nodes=nodes,
         **({"rewrite_mode": mode} if mode != "faithful" else {}),
         stdi_embedder=KeywordEmbedder(),
@@ -185,6 +186,7 @@ def test_invalid_transmission_mode_fails_before_creating_clients(monkeypatch) ->
     with pytest.raises(ValueError, match="rewrite_mode"):
         run_news_interaction_graph(
             pd.DataFrame([{"description": "Original"}]),
+            stdi_comparison_method="cluster",
             nodes=[SimulationNode("node", "model", "chatgpt", "persona")],
             rewrite_mode="unknown",
         )
@@ -215,7 +217,7 @@ def test_rewrite_provider_receives_selected_system_instruction(provider, monkeyp
     assert calls[0]["temperature"] == 0.8
 
 
-def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path) -> None:
+def test_graph_retains_shared_embedding_comparison_when_selected(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
     monkeypatch.setattr(
         graph,
@@ -233,6 +235,7 @@ def test_graph_uses_shared_embedding_comparison_by_default(monkeypatch, tmp_path
 
     result = run_news_interaction_graph(
         pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="cluster",
         nodes=[
             SimulationNode("first", "model", "chatgpt", "persona"),
             SimulationNode("second", "model", "chatgpt", "persona"),
@@ -281,6 +284,7 @@ def test_graph_cancellation_saves_completed_steps(monkeypatch, tmp_path) -> None
 
     result = run_news_interaction_graph(
         pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="cluster",
         nodes=[
             SimulationNode("first", "model", "chatgpt", "persona"),
             SimulationNode("second", "model", "chatgpt", "persona"),
@@ -319,6 +323,7 @@ def test_graph_cancellation_after_rewrite_skips_next_model_call(monkeypatch, tmp
 
     result = run_news_interaction_graph(
         pd.DataFrame([{"title": "Title", "description": "Original text"}]),
+        stdi_comparison_method="cluster",
         nodes=[SimulationNode("first", "model", "chatgpt", "persona")],
         vad_scorer=lambda _text: VADScore(3.0, 3.0, 3.0),
         output_dir=tmp_path,

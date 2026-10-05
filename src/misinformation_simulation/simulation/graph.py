@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import time
 from collections.abc import Callable
 from dataclasses import asdict
@@ -11,6 +12,7 @@ import pandas as pd
 
 from misinformation_simulation.config.prompts import (
     REWRITE_SYSTEM_INSTRUCTION,
+    STRUCTURED_EXTRACTION_VERSION,
     resolve_graph_personality_prompt,
     resolve_graph_rewrite_prompt,
 )
@@ -58,7 +60,18 @@ from misinformation_simulation.topic_drift.cluster_comparison import (
     TextEmbedder,
     TopicStructurePair,
 )
-from misinformation_simulation.topic_drift.models import TopicStructure
+from misinformation_simulation.topic_drift.extraction import _build_topic_structure
+from misinformation_simulation.topic_drift.models import (
+    TopicStructure,
+    empty_topic_structure,
+    topic_structure_to_dict,
+)
+from misinformation_simulation.topic_drift.provenance import EvaluationCache
+from misinformation_simulation.topic_drift.structured_comparison import (
+    DUAL_STDI_VERSION,
+    StructuredEmbeddingComparator,
+    compare_dual_stdi,
+)
 
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
 DEFAULT_STDI_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
@@ -177,6 +190,11 @@ def _score_vad(
     score = predict_text_vad(text, model_bundle=model_bundle, scorer=scorer)
     if any(getattr(score, dimension) is None for dimension in ("valence", "arousal", "dominance")):
         raise ValueError("VAD scoring must return valence, arousal, and dominance.")
+    if not all(
+        math.isfinite(getattr(score, dimension))
+        for dimension in ("valence", "arousal", "dominance")
+    ):
+        raise ValueError("VAD scoring must return finite scores.")
     return score
 
 
@@ -195,7 +213,23 @@ def _record_stdi_metrics(
         setattr(step, f"{component}_{suffix}", metrics[component])
 
 
-GRAPH_STEP_SCHEMA_VERSION = 2
+GRAPH_STEP_SCHEMA_VERSION = 3
+
+
+def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[str, Any]) -> None:
+    step.metadata[f"dual_stdi_{suffix}"] = result
+    setattr(step, f"stdi_{suffix}", result["stdi"])
+    setattr(step, f"stdi_status_{suffix}", result["status"])
+    setattr(step, f"stdi_method_gap_{suffix}", result["method_gap"])
+    for branch in ("embedding", "llm_judge"):
+        metrics = result[branch].get("metrics")
+        setattr(step, f"stdi_{branch}_{suffix}", metrics["stdi"] if metrics else None)
+    # Legacy component columns explicitly describe the embedding branch in dual mode.
+    embedding = result["embedding"].get("metrics")
+    if embedding:
+        for component in STDI_COMPONENTS:
+            if component != "stdi":
+                setattr(step, f"{component}_{suffix}", embedding[component])
 
 
 def run_news_interaction_graph(
@@ -217,9 +251,11 @@ def run_news_interaction_graph(
     topic_drift_provider: Provider | str = DEFAULT_LLM_PROVIDER,
     topic_drift_api_key: str | None = None,
     topic_drift_base_url: str | None = None,
-    stdi_comparison_method: str = "cluster",
+    stdi_comparison_method: str = "dual",
     stdi_embedding_model: str = DEFAULT_STDI_EMBEDDING_MODEL,
     stdi_embedder: TextEmbedder | None = None,
+    stdi_cache_dir: Path | str | None = None,
+    stdi_judge_fn: Callable[..., Any] | None = None,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
     output_dir: Path | str | None = None,
@@ -235,8 +271,55 @@ def run_news_interaction_graph(
         raise ValueError("The DataFrame is empty.")
     if max_requests_per_minute is not None and max_requests_per_minute <= 0:
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
-    if stdi_comparison_method not in {"cluster", "lexical"}:
-        raise ValueError("'stdi_comparison_method' must be 'cluster' or 'lexical'.")
+    if stdi_comparison_method not in {"dual", "cluster", "lexical"}:
+        raise ValueError("'stdi_comparison_method' must be 'dual', 'cluster' or 'lexical'.")
+    cache_directory = stdi_cache_dir
+    if cache_directory is None and persist_results and stdi_comparison_method == "dual":
+        cache_directory = Path(output_dir or DEFAULT_SIMULATION_OUTPUT_DIR) / "evaluation_cache"
+    evaluation_cache = EvaluationCache(cache_directory)
+    vad_cache: dict[str, VADScore] = {}
+    vad_errors: dict[str, str] = {}
+    judge_limiter = MinuteRateLimiter(max_requests_per_minute)
+
+    def extract_structure(**kwargs: Any) -> TopicStructure:
+        if stdi_comparison_method != "dual":
+            return extract_topic_structure(**kwargs)
+        inputs = {
+            key: str(value) if key in {"model", "provider"} else value
+            for key, value in kwargs.items()
+            if key in {"text", "title", "model", "provider", "base_url"}
+        }
+        inputs["version"] = STRUCTURED_EXTRACTION_VERSION
+        saved = evaluation_cache.get("extraction", inputs)
+        if saved is not None:
+            return _build_topic_structure(saved)
+        try:
+            structure = extract_topic_structure(
+                **kwargs,
+                structured=True,
+                before_request_hook=judge_limiter.acquire,
+            )
+        except Exception as exc:
+            structure = empty_topic_structure()
+            structure.schema_version = 2
+            structure.extraction_status = "failed"
+            structure.extraction_issues = [str(exc)]
+            structure.provenance = getattr(exc, "provenance", {})
+            return structure
+        evaluation_cache.put("extraction", inputs, topic_structure_to_dict(structure))
+        return structure
+
+    def score_vad(text: str) -> VADScore:
+        if stdi_comparison_method != "dual" or text not in vad_cache:
+            try:
+                vad_cache[text] = _score_vad(text, model_bundle=vad_model_bundle, scorer=vad_scorer)
+            except Exception as exc:
+                if stdi_comparison_method != "dual":
+                    raise
+                vad_cache[text] = VADScore(None, None, None)
+                vad_errors[text] = str(exc)
+        return vad_cache[text]
+
     rewrite_prompt = resolve_graph_rewrite_prompt(rewrite_mode)
     rewrite_metadata = {
         "rewrite_mode": rewrite_prompt.mode,
@@ -331,7 +414,7 @@ def run_news_interaction_graph(
                 row=row,
                 original_text=original_text,
             )
-            original_structure = extract_topic_structure(
+            original_structure = extract_structure(
                 text=original_text,
                 title=extraction_title,
                 model=topic_drift_model,
@@ -345,11 +428,7 @@ def run_news_interaction_graph(
             if _cancel_requested(cancel_check):
                 cancelled = True
                 break
-            original_vad = _score_vad(
-                original_text,
-                model_bundle=vad_model_bundle,
-                scorer=vad_scorer,
-            )
+            original_vad = score_vad(original_text)
             _emit_progress(
                 progress_callback,
                 f"[{row_position}/{total_rows}] Original text ready for '{news_id}'.",
@@ -466,8 +545,17 @@ def run_news_interaction_graph(
                 target_language_source=target_language_source,
                 rewrite_status="not_requested",
                 rewrite_error=None,
-                original_topic_structure_status="success",
-                original_vad_status="success",
+                original_topic_structure_status=(
+                    "success"
+                    if stdi_comparison_method != "dual"
+                    or original_structure.extraction_status == "valid"
+                    else "error"
+                ),
+                original_topic_structure_error=(
+                    "; ".join(original_structure.extraction_issues) or None
+                ),
+                original_vad_status="success" if original_vad.valence is not None else "error",
+                original_vad_error=(vad_errors.get(original_text)),
                 metadata={
                     **evaluation_metadata,
                     "rewrite_effective_personality": effective_personalities[node_id],
@@ -475,6 +563,11 @@ def run_news_interaction_graph(
                     "title": title,
                     "category": category,
                     "source_text_column": source_column,
+                    **(
+                        {"original_text": original_text, "extraction_title": extraction_title}
+                        if stdi_comparison_method == "dual"
+                        else {}
+                    ),
                     **flatten_topic_structure(original_structure, prefix="original"),
                 },
             )
@@ -506,33 +599,53 @@ def run_news_interaction_graph(
                     ),
                 )
 
-                rewritten_structure = _extract_compared_structure(
-                    compared_text=rewritten_text,
-                    title=extraction_title,
-                    topic_drift_model=topic_drift_model,
-                    topic_drift_provider=topic_drift_provider,
-                    topic_drift_api_key=topic_drift_api_key,
-                    topic_drift_base_url=topic_drift_base_url,
-                    max_requests_per_minute=max_requests_per_minute,
-                    retry_attempts=retry_attempts,
+                rewritten_structure = (
+                    extract_structure(
+                        text=rewritten_text,
+                        title=extraction_title,
+                        model=topic_drift_model,
+                        provider=topic_drift_provider,
+                        api_key=topic_drift_api_key,
+                        base_url=topic_drift_base_url,
+                        max_requests_per_minute=max_requests_per_minute,
+                        retry_attempts=retry_attempts,
+                    )
+                    if stdi_comparison_method == "dual"
+                    else _extract_compared_structure(
+                        compared_text=rewritten_text,
+                        title=extraction_title,
+                        topic_drift_model=topic_drift_model,
+                        topic_drift_provider=topic_drift_provider,
+                        topic_drift_api_key=topic_drift_api_key,
+                        topic_drift_base_url=topic_drift_base_url,
+                        max_requests_per_minute=max_requests_per_minute,
+                        retry_attempts=retry_attempts,
+                    )
                 )
                 rewritten_structure_ready = True
                 if _cancel_requested(cancel_check):
                     cancelled = True
                     break
-                step_result.rewritten_topic_structure_status = "success"
+                step_result.rewritten_topic_structure_status = (
+                    "success"
+                    if stdi_comparison_method != "dual"
+                    or rewritten_structure.extraction_status == "valid"
+                    else "error"
+                )
+                step_result.rewritten_topic_structure_error = (
+                    "; ".join(rewritten_structure.extraction_issues) or None
+                )
                 step_result.metadata.update(
                     flatten_topic_structure(rewritten_structure, prefix="rewritten")
                 )
-                rewritten_vad = _score_vad(
-                    rewritten_text,
-                    model_bundle=vad_model_bundle,
-                    scorer=vad_scorer,
-                )
+                rewritten_vad = score_vad(rewritten_text)
                 rewritten_vad_ready = True
-                step_result.rewritten_vad_status = "success"
+                step_result.rewritten_vad_status = (
+                    "success" if rewritten_vad.valence is not None else "error"
+                )
+                step_result.rewritten_vad_error = vad_errors.get(rewritten_text)
                 _record_vad(step_result, "rewritten", rewritten_vad)
-                if stdi_comparison_method == "cluster":
+                if stdi_comparison_method in {"cluster", "dual"}:
                     scoring_contexts.append(
                         (
                             row_position,
@@ -583,7 +696,7 @@ def run_news_interaction_graph(
                         f"node='{node_label}': success; "
                         + (
                             "STDI pending shared embedding comparison."
-                            if stdi_comparison_method == "cluster"
+                            if stdi_comparison_method in {"cluster", "dual"}
                             else f"stdi_vs_original={step_result.stdi_vs_original}, "
                             f"stdi_incremental={step_result.stdi_incremental}."
                         )
@@ -633,12 +746,23 @@ def run_news_interaction_graph(
             TopicStructurePair(f"{index}:incremental", previous, rewritten)
             for index, (_, _, _, previous, rewritten, _, _, _) in enumerate(scoring_contexts)
         ]
-        comparator = ClusterSTDIComparator(
+        comparator_class = (
+            StructuredEmbeddingComparator
+            if stdi_comparison_method == "dual"
+            else ClusterSTDIComparator
+        )
+        comparator = comparator_class(
             embedder=stdi_embedder,
             embedding_model=stdi_embedding_model,
-        ).fit(pairs)
+        )
+        try:
+            comparator.fit(pairs)
+        except Exception:
+            if stdi_comparison_method != "dual":
+                raise
         last_row_position = 0
         cumulative_stdi = 0.0
+        valid_steps = 0
         for (
             row_position,
             step,
@@ -649,9 +773,58 @@ def run_news_interaction_graph(
             previous_vad,
             rewritten_vad,
         ) in scoring_contexts:
+            if stdi_comparison_method == "dual" and _cancel_requested(cancel_check):
+                cancelled = True
+                break
             if row_position != last_row_position:
                 cumulative_stdi = 0.0
+                valid_steps = 0
                 last_row_position = row_position
+            if stdi_comparison_method == "dual":
+                _emit_progress(
+                    progress_callback,
+                    f"Evaluating dual STDI for '{step.news_id}' step {step.step_index}.",
+                )
+                common = {
+                    "modified_text": step.rewritten_text,
+                    "modified_structure": rewritten,
+                    "modified_vad": rewritten_vad,
+                    "title": step.metadata.get("extraction_title"),
+                    "comparator": comparator,
+                    "model": topic_drift_model,
+                    "provider": normalize_provider(topic_drift_provider),
+                    "api_key": topic_drift_api_key,
+                    "base_url": topic_drift_base_url,
+                    "retry_attempts": retry_attempts,
+                    "before_request_hook": judge_limiter.acquire,
+                    "cache": evaluation_cache,
+                    **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
+                }
+                vs_original_dual = compare_dual_stdi(
+                    original_text=step.metadata["original_text"],
+                    original_structure=original,
+                    original_vad=original_vad,
+                    **common,
+                )
+                if _cancel_requested(cancel_check):
+                    cancelled = True
+                    _record_dual_metrics(step, "vs_original", vs_original_dual)
+                    break
+                incremental_dual = compare_dual_stdi(
+                    original_text=step.source_text,
+                    original_structure=previous,
+                    original_vad=previous_vad,
+                    **common,
+                )
+                _record_dual_metrics(step, "vs_original", vs_original_dual)
+                _record_dual_metrics(step, "incremental", incremental_dual)
+                if incremental_dual["stdi"] is not None:
+                    cumulative_stdi += incremental_dual["stdi"]
+                    valid_steps += 1
+                step.stdi_cumulative = cumulative_stdi
+                step.stdi_cumulative_valid_steps = valid_steps
+                step.stdi_chain_complete = valid_steps == step.step_index
+                continue
             vs_original = calculate_stdi(
                 original,
                 rewritten,
@@ -686,11 +859,15 @@ def run_news_interaction_graph(
             if stdi_embedder is None
             else f"custom:{type(stdi_embedder).__name__}"
         )
-        if stdi_comparison_method == "cluster"
+        if stdi_comparison_method in {"cluster", "dual"}
         else None
     )
     comparison_version = (
-        CLUSTER_STDI_COMPARISON_VERSION if stdi_comparison_method == "cluster" else "lexical_v1"
+        DUAL_STDI_VERSION
+        if stdi_comparison_method == "dual"
+        else CLUSTER_STDI_COMPARISON_VERSION
+        if stdi_comparison_method == "cluster"
+        else "lexical_v1"
     )
     for step in step_results:
         step.metadata.update(
@@ -703,7 +880,7 @@ def run_news_interaction_graph(
             }
         )
     summary = {
-        "schema_version": 2,
+        "schema_version": GRAPH_STEP_SCHEMA_VERSION,
         **evaluation_metadata,
         "rewrite_system_instruction": rewrite_prompt.system_instruction,
         "rewrite_prompt_template": rewrite_prompt.template,
@@ -716,6 +893,12 @@ def run_news_interaction_graph(
         "stdi_comparison_method": stdi_comparison_method,
         "stdi_comparison_version": comparison_version,
         "stdi_embedding_model": embedding_model_name,
+        "stdi_complete_incremental_pairs": sum(
+            step.stdi_status_incremental == "valid" for step in step_results
+        )
+        if stdi_comparison_method == "dual"
+        else None,
+        "stdi_components_branch": "embedding" if stdi_comparison_method == "dual" else None,
         "graph": {
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,

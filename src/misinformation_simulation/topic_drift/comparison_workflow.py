@@ -28,8 +28,8 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 
-ComparisonMethod = Literal["llm_semantic", "cluster"]
-SUPPORTED_COMPARISON_METHODS: tuple[ComparisonMethod, ...] = ("llm_semantic", "cluster")
+ComparisonMethod = Literal["llm_semantic", "cluster", "dual"]
+SUPPORTED_COMPARISON_METHODS: tuple[ComparisonMethod, ...] = ("llm_semantic", "cluster", "dual")
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,6 +92,12 @@ def _write_structure(
 
 
 def topic_structure_from_row(row: pd.Series, *, prefix: str) -> TopicStructure | None:
+    from misinformation_simulation.topic_drift.extraction import _build_topic_structure
+
+    saved = row.get(f"{prefix}_json")
+    if isinstance(saved, str) and saved.strip():
+        payload = json.loads(saved)
+        return _build_topic_structure(payload)
     main_topic_value = row.get(f"{prefix}_main_topic")
     subtopics_value = row.get(f"{prefix}_subtopics")
     entities_value = row.get(f"{prefix}_central_entities")
@@ -150,9 +156,39 @@ def run_comparison_workflow(
     random_state: int = 42,
     reuse_structures: bool = True,
     progress_callback: Callable[[str], None] | None = None,
+    cache_dir: Path | str | None = None,
+    vad_scorer: Callable[..., Any] | None = None,
+    uncached_judge: bool = False,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
     resolved_method = _validate_method(str(method))
+    if resolved_method == "dual":
+        from misinformation_simulation.topic_drift.dual_workflow import run_dual_workflow
+
+        return run_dual_workflow(
+            df,
+            original_text_column=original_text_column,
+            modified_text_column=modified_text_column,
+            title_column=title_column,
+            pair_id_column=pair_id_column,
+            extraction_model=extraction_model,
+            extraction_provider=extraction_provider,
+            api_key=extraction_api_key,
+            base_url=extraction_base_url,
+            extraction_fn=extraction_fn,
+            judge_model=llm_comparison_model or extraction_model,
+            judge_provider=llm_comparison_provider or extraction_provider,
+            judge_fn=llm_comparison_fn,
+            embedder=embedder,
+            embedding_model=embedding_model,
+            n_clusters=n_clusters,
+            random_state=random_state,
+            reuse_structures=reuse_structures,
+            progress_callback=progress_callback,
+            cache_dir=cache_dir,
+            vad_scorer=vad_scorer,
+            uncached_judge=uncached_judge,
+        )
     required_columns = {original_text_column, modified_text_column}
     missing_columns = sorted(required_columns - set(df.columns))
     if missing_columns:

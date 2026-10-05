@@ -167,11 +167,25 @@ The extraction step builds a structured representation for each text with:
 ### Content comparison methods
 
 The four content components depend on the comparison method. **Interaction-graph
-simulations default to `cluster`**, which uses local embeddings. Calling
+simulations default to `dual`**, the mean of two complete evaluations. The UI checkbox
+"Dual STDI (embeddings + LLM judge)" is enabled by default; disabling it selects the
+existing `cluster` embedding comparison. The CLI accepts `--stdi-comparison-method
+dual|cluster|lexical`. Calling
 `calculate_stdi(...)` without `component_overrides` uses the lexical method;
 `calculate_stdi_chain_metrics(...)`, `annotate_stdi_for_rewrites(...)`, and
 `annotate_stdi_for_version_chain(...)` also use lexical comparison. The manual
 evaluation workflow uses `llm_semantic` scores for these four components.
+
+The `dual` method extends the existing relation comparison with direct binary polarity
+and exact duration adjustments (both fixed at 0.20), and independently obtains five
+contextual component judgments from an LLM. Both branches reuse one VAD calculation;
+the final value averages complete STDI scores after contradiction and VAD contributions.
+Missing qualifiers or VAD do not imply zero drift. If either complete branch is unavailable,
+the final mean is unavailable and the available branch remains visible. Identical text and
+context reuse the reference extraction and receive zero comparison drift without a judge call.
+Legacy component columns describe the embedding branch in dual mode; full judge components,
+evidence and raw responses appear in the step details and JSONL export. See
+[dual STDI usage and validation](docs/dual_stdi.md).
 
 For `cluster`, [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
 embeds the extracted labels and relations with
@@ -237,8 +251,8 @@ difference between the reference and version scores. The boolean
 `has_internal_contradiction` and `narrative_frame` are not separate numeric terms.
 This contribution assesses contradiction within the version, not disagreement
 with the reference or external facts. Consequently, STDI is not necessarily
-symmetric, and an identical text with a nonzero contradiction score can have
-nonzero STDI.
+symmetric. In legacy modes, an identical text with a nonzero contradiction score can have
+nonzero STDI; dual mode applies the explicit identity shortcut described above.
 
 For VAD, the default score range is 4, corresponding to scores on the project's
 1–5 scale. `score_range` can override this divisor:

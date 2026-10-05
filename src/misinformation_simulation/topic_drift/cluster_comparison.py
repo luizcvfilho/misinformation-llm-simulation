@@ -273,6 +273,8 @@ class ClusterSTDIComparator:
         self,
         original_structure: TopicStructure,
         modified_structure: TopicStructure,
+        *,
+        round_scores: bool = True,
     ) -> ClusterSTDIComparison:
         if not self._fitted:
             raise RuntimeError("Fit ClusterSTDIComparator before comparing structures.")
@@ -328,7 +330,10 @@ class ClusterSTDIComparator:
             },
         }
         return ClusterSTDIComparison(
-            component_drifts={key: round(1.0 - value, 6) for key, value in similarities.items()},
+            component_drifts={
+                key: round(1.0 - value, 6) if round_scores else 1.0 - value
+                for key, value in similarities.items()
+            },
             details=details,
         )
 

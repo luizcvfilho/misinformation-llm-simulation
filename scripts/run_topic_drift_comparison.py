@@ -26,7 +26,7 @@ from misinformation_simulation.topic_drift.comparison_workflow import (  # noqa:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Compare shared LLM-extracted topic structures with LLM or clustering."
+        description="Compare extracted structures with embeddings, LLM judgments, or dual STDI."
     )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--input", type=Path, help="CSV containing comparison pairs.")
@@ -52,6 +52,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--embedding-model", default="sentence-transformers/all-MiniLM-L6-v2")
     parser.add_argument("--n-clusters", type=int, default=None)
     parser.add_argument("--random-state", type=int, default=42)
+    parser.add_argument("--cache-dir", type=Path, default=None)
+    parser.add_argument(
+        "--uncached-judge",
+        action="store_true",
+        help="Bypass canonical judgments to measure judge variability.",
+    )
     parser.add_argument(
         "--refresh-structures",
         action="store_true",
@@ -92,6 +98,8 @@ def main() -> None:
         n_clusters=args.n_clusters,
         random_state=args.random_state,
         reuse_structures=not args.refresh_structures,
+        cache_dir=args.cache_dir or args.output_dir / "evaluation_cache",
+        uncached_judge=args.uncached_judge,
         progress_callback=print,
     )
     write_comparison_output(args.output_dir, workflow)

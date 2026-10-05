@@ -156,7 +156,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     messages = [payload for kind, payload in events if kind == "progress"]
 
     assert calls == ["01_first", "02_second"]
-    assert comparison_methods == ["cluster", "cluster"]
+    assert comparison_methods == ["dual", "dual"]
     assert rewrite_modes == ["interpretive", "interpretive"]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
