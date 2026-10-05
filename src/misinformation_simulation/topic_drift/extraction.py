@@ -24,6 +24,7 @@ from misinformation_simulation.llm.retry import (
     generate_openai_text_with_retry,
 )
 from misinformation_simulation.topic_drift.models import TopicRelation, TopicStructure
+from misinformation_simulation.topic_drift.qualifiers import resolve_polarity
 
 DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
 DEFAULT_TOPIC_DRIFT_PROVIDER = DEFAULT_LLM_PROVIDER
@@ -163,7 +164,10 @@ def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRela
                 )
             except (TypeError, ValueError):
                 qualifiers["duration_value"] = None
-        relations.append(TopicRelation(subject=subject, action=action, object=obj, **qualifiers))
+        relation = TopicRelation(subject=subject, action=action, object=obj, **qualifiers)
+        if structured:
+            relation.polarity = resolve_polarity(relation)
+        relations.append(relation)
 
     return relations
 
@@ -235,18 +239,26 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
                 issues.append("Invalid contradiction score")
         except (TypeError, ValueError):
             issues.append("Invalid contradiction score")
+    relations = _coerce_relations(payload.get("central_relations"), structured=structured)
+    if structured and isinstance(payload.get("central_relations"), list):
+        for index, item in enumerate(payload["central_relations"]):
+            if isinstance(item, dict) and item.get("polarity") not in {"affirmed", "negated"}:
+                issues.append(f"Relation {index} polarity normalized from the signed action")
+    blocking = [
+        issue
+        for issue in issues
+        if not issue.endswith("polarity normalized from the signed action")
+    ]
     return TopicStructure(
         main_topic=str(main_topic).strip() if main_topic else None,
         subtopics=_coerce_string_list(payload.get("subtopics")),
         central_entities=_coerce_string_list(payload.get("central_entities")),
-        central_relations=_coerce_relations(
-            payload.get("central_relations"), structured=structured
-        ),
+        central_relations=relations,
         narrative_frame=str(narrative_frame).strip() if narrative_frame else None,
         has_internal_contradiction=has_internal_contradiction or internal_contradiction_score > 0.0,
         internal_contradiction_score=internal_contradiction_score,
         schema_version=2 if structured else 1,
-        extraction_status=("partial" if issues else "valid") if structured else "unavailable",
+        extraction_status=("partial" if blocking else "valid") if structured else "unavailable",
         extraction_issues=issues,
         opinions=_coerce_string_list(payload.get("opinions")),
         provenance=payload.get("provenance", {}),

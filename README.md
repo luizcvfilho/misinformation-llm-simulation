@@ -169,26 +169,30 @@ The extraction step builds a structured representation for each text with:
 The four content components depend on the comparison method. **Interaction-graph
 simulations default to `dual`**, the mean of two complete evaluations. The UI checkbox
 "Dual STDI (embeddings + LLM judge)" is enabled by default; disabling it selects the
-existing `cluster` embedding comparison. The CLI accepts `--stdi-comparison-method
+`cluster` embedding branch with the same polarity/duration adjustments. The CLI accepts `--stdi-comparison-method
 dual|cluster|lexical`. Calling
 `calculate_stdi(...)` without `component_overrides` uses the lexical method;
 `calculate_stdi_chain_metrics(...)`, `annotate_stdi_for_rewrites(...)`, and
 `annotate_stdi_for_version_chain(...)` also use lexical comparison. The manual
 evaluation workflow uses `llm_semantic` scores for these four components.
 
-The `dual` method extends the existing relation comparison with direct binary polarity
-and exact duration adjustments (both fixed at 0.20), and independently obtains five
+New `cluster` and `dual` runs extend the existing relation comparison with direct binary polarity
+and exact duration adjustments (both fixed at 0.20). `dual` independently obtains five
 contextual component judgments from an LLM. Both branches reuse one VAD calculation;
 the final value averages complete STDI scores after contradiction and VAD contributions.
-Missing qualifiers or VAD do not imply zero drift. If either complete branch is unavailable,
+Polarity is always `affirmed` or `negated` in schema-2 extraction; uncertainty is separate.
+No `evidence` field is requested or exported by extraction or the judge.
+Optional metadata produces diagnostics rather than blocking scores.
+Unsupported duration skips that adjustment while preserving the semantic/polarity score.
+Failed extraction, invalid numeric judgments and unavailable VAD do not imply zero drift.
+If either complete branch is unavailable,
 the final mean is unavailable and the available branch remains visible. Identical text and
 context reuse the reference extraction and receive zero comparison drift without a judge call.
 Legacy component columns describe the embedding branch in dual mode; full judge components,
 qualifier details and raw responses appear in the step details and JSONL export. See
 [dual STDI usage and validation](docs/dual_stdi.md).
-The extraction and judge no longer request or export an `evidence` field.
 
-For `cluster`, [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
+The cluster semantic core in [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
 embeds the extracted labels and relations with
 `sentence-transformers/all-MiniLM-L6-v2`. Scalar similarity `S(a, b)` is cosine
 similarity clipped to `[0, 1]`; normalized equal non-empty labels have similarity 1,
@@ -210,6 +214,12 @@ and a comparison involving an empty label has similarity 0.
 S_relation = 0.45*S_triple + 0.25*S_subject + 0.15*S_action + 0.15*S_object
 D_list = 1 - sum(selected_pair_similarities) / max(reference_count, version_count)
 ```
+
+For schema-2 relations, `StructuredEmbeddingComparator` compares base actions and adjusts each
+aligned semantic distance with binary polarity and exact duration before list aggregation.
+The formula, units and zero policy are documented in [dual STDI](docs/dual_stdi.md).
+Intransitive actions may omit an object; two empty objects are neutral in that component.
+Reused version-1 structures retain legacy comparison without invented qualifier metadata.
 
 The comparator fits shared KMeans clusters over the run's collection, but cluster
 identifiers are diagnostic outputs: the scores use direct embedding similarities
@@ -403,7 +413,8 @@ The project can compare the same LLM-extracted structures using two methods:
 - `cluster`: all extracted labels and triples are embedded with
   `sentence-transformers/all-MiniLM-L6-v2`, clustered globally for the run, and compared
   using the direct similarities and greedy matching described above. The extraction
-  step remains shared with `llm_semantic`.
+  schema-2 structures also receive binary polarity and exact duration adjustments.
+  Saved structures can be shared with `llm_semantic`; new cluster extraction uses schema 2.
 
 Both methods read the same pair schema (`original_text`, `modified_text`, and optional
 `original_*` / `modified_*` extracted fields) and produce `comparison_results.csv` with the
@@ -426,7 +437,8 @@ inside the run that fitted them; fit one shared comparator over the complete
 collection of original and rewritten structures.
 
 The cluster theme drift is **1 minus** the direct embedding similarity between
-`main_topic` labels. The current comparator is recorded as `cluster_v2` in graph
+`main_topic` labels. New schema-2 cluster comparisons are recorded as `cluster_v3`; reused
+version-1 comparisons retain `cluster_v2`. These versions appear in graph
 step metadata, graph summaries, and comparison manifests. It no longer extracts
 `topic_domain` or forces maximum theme drift based on different domain labels.
 The domain-coverage audit command and domain-based dashboard grouping have been

@@ -4,9 +4,19 @@ Status: final architecture selected by the user on 2026-10-05; software implemen
 
 ## 1. Objective and selected architecture
 
-The user removed the `evidence` field from extraction and judge output on 2026-10-05.
-No supporting-passage validation is part of the current method. Preserve the existing
-polarity/duration calculations and other STDI weights.
+### Current policy amendment — 2026-10-05
+
+The user's latest instruction removes the `evidence` field entirely from extraction and judge
+output, including supporting-passage checks. Keep cluster comparison close to the prior
+embedding method, with binary polarity and the established quantity/duration adjustment as
+the principal changes. Empty intransitive objects and optional annotation fields must not
+invalidate a usable comparison. Record diagnostics instead. Schema-2 polarity is
+always `affirmed` or `negated`; uncertainty belongs in assertion type. Invalid/missing polarity
+is normalized from explicit signed-action negation, with a recorded fallback. Exact comparable
+durations retain the same formula, units, zero policy and 0.20 strength. Unsupported duration
+skips that adjustment with a diagnostic, retaining the semantic/polarity score rather than
+blocking the entire branch. Invalid numeric judgments and actual extraction/provider failures
+remain unavailable. See `docs/dual_stdi.md` for current versions and behavior.
 
 Measure information and affective drift between a reference news text and its rewrite. Produce two complete STDI values and define the final value as their unweighted arithmetic mean:
 
@@ -33,7 +43,7 @@ Retain the existing main topic, subtopics, central entities, subject/action/obje
 
 Adjust the prompt to preserve actors, actions, quantities, purposes, attribution, and uncertainty. Do not infer a speaker or event not supported by the text. Keep hypothesis, recommendation, and asserted action distinguishable without requiring a complete new proposition schema in the first release. Record pure opinion/recommendation separately from claims about what happened.
 
-A source-event assertion and an added purpose must not be counted twice. Use the existing relation representation where possible; preserve purpose and attribution in action/object and retain them in the base action.
+A source-event assertion and an added purpose must not be counted twice. Preserve purpose and attribution in action/object and retain them in the base action; do not add a separate supporting-passage field.
 
 Extract each unique text/context once and reuse the saved structure across methods and chain comparisons. Both methods use the same text versions, title context, and saved structures. The judge also reads the full texts as primary evidence; its input is richer than an embedding comparison of extracted fields. Document this difference.
 

@@ -25,6 +25,10 @@ from dotenv import load_dotenv  # noqa: E402
 from misinformation_simulation.config.prompts import (  # noqa: E402
     SEMANTIC_COMPARISON_PROMPT_TEMPLATE,
     SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
+    STRUCTURED_EXTRACTION_VERSION,
+    STRUCTURED_JUDGE_PROMPT_TEMPLATE,
+    STRUCTURED_JUDGE_VERSION,
+    STRUCTURED_TOPIC_PROMPT_TEMPLATE,
     TOPIC_DRIFT_PROMPT_TEMPLATE,
     TOPIC_DRIFT_SYSTEM_INSTRUCTION,
 )
@@ -57,6 +61,13 @@ from misinformation_simulation.topic_drift.models import (  # noqa: E402
 )
 from misinformation_simulation.topic_drift.semantic_comparison import (  # noqa: E402
     compare_stdi_components_semantically,
+)
+from misinformation_simulation.topic_drift.structured_comparison import (  # noqa: E402
+    DUAL_STDI_VERSION,
+    StructuredEmbeddingComparator,
+    complete_stdi,
+    shared_vad_drift,
+    structure_issues,
 )
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
@@ -144,6 +155,7 @@ def extract_jobs(jobs: list[dict], args: argparse.Namespace, config_hash: str) -
                 provider=args.provider,
                 retry_attempts=1,
                 max_requests_per_minute=None,
+                structured=args.structured,
             )
         except Exception as error:
             write_json(
@@ -153,6 +165,7 @@ def extract_jobs(jobs: list[dict], args: argparse.Namespace, config_hash: str) -
                     "exception_type": type(error).__name__,
                     "time_utc": datetime.now(UTC).isoformat(),
                     "completed_extractions": len(list(cache_dir.glob("*.json"))),
+                    "provenance": getattr(error, "provenance", {}),
                 },
             )
             raise RuntimeError(
@@ -221,6 +234,7 @@ def score_pairs(
     pairs: list[dict], jobs: list[dict], args: argparse.Namespace, config_hash: str
 ) -> None:
     saved = {}
+    validation = []
     for job in jobs:
         record = json.loads(
             (args.output_dir / "extractions" / f"{job['job_id']}.json").read_text(encoding="utf-8")
@@ -228,6 +242,19 @@ def score_pairs(
         if record["configuration_sha256"] != config_hash:
             raise ValueError("Extraction configuration mismatch.")
         saved[job["job_id"]] = _build_topic_structure(record["structure"])
+        if args.structured:
+            issues = structure_issues(saved[job["job_id"]])
+            validation.append(
+                {
+                    "job_id": job["job_id"],
+                    "replicate": job["replicate"],
+                    "text": job["text"],
+                    "status": "partial" if issues else "valid",
+                    "issues_json": json.dumps(issues),
+                }
+            )
+    if validation:
+        write_csv(args.output_dir / "extraction_validation.csv", validation)
     work = [
         {
             **pair,
@@ -278,6 +305,11 @@ def score_pairs(
     embedder = TransformerTextEmbedder(EMBEDDING_MODEL)
     comparator = ClusterSTDIComparator(embedder=embedder, embedding_model=EMBEDDING_MODEL)
     comparator.fit(shared + probes)
+    structured_comparator = None
+    if args.structured:
+        structured_comparator = StructuredEmbeddingComparator(
+            embedder=embedder, embedding_model=EMBEDDING_MODEL
+        ).fit(shared)
     texts = list(
         dict.fromkeys(
             text for item in work for text in (item["original_text"], item["modified_text"])
@@ -298,13 +330,41 @@ def score_pairs(
             compared_vad=vad_scores[item["modified_text"]],
             component_overrides=comparison.component_drifts,
         )
+        historical = full
+        details = comparison.details
+        status = "valid"
+        issues = []
+        if structured_comparator is not None:
+            details = structured_comparator.compare_structured(pair.original, pair.modified)
+            status, issues = details["status"], details["issues"]
+            vad = shared_vad_drift(
+                vad_scores[item["original_text"]], vad_scores[item["modified_text"]]
+            )
+            if vad["status"] != "valid":
+                status = "partial"
+                issues.append("Incomplete VAD")
+            if status == "valid":
+                full = complete_stdi(details["components"], vad)
+                without_vad = complete_stdi(
+                    details["components"], {"status": "valid", "vad_drift": 0.0}
+                )
+            else:
+                full = dict.fromkeys(historical)
+                without_vad = {"stdi": None}
         record = {
             **item,
             **full,
             "stdi_without_vad": without_vad["stdi"],
-            "vad_stdi_increment": round(full["stdi"] - without_vad["stdi"], 6),
-            "relation_weighted_contribution": round(0.25 * full["relation_drift"], 6),
-            "comparison_details_json": json.dumps(comparison.details, ensure_ascii=False),
+            "vad_stdi_increment": (
+                full["stdi"] - without_vad["stdi"] if full["stdi"] is not None else None
+            ),
+            "relation_weighted_contribution": (
+                0.25 * full["relation_drift"] if full["stdi"] is not None else None
+            ),
+            "comparison_status": status,
+            "comparison_issues_json": json.dumps(issues),
+            "historical_cluster_on_shared_extraction_stdi": historical["stdi"],
+            "comparison_details_json": json.dumps(details, ensure_ascii=False),
             "original_structure_json": json.dumps(
                 topic_structure_to_dict(pair.original), ensure_ascii=False
             ),
@@ -313,7 +373,7 @@ def score_pairs(
             ),
         }
         if item["comparison_kind"] == "original_vs_rewrite" and item["change_type"] == "identity":
-            if full["stdi"] != 0:
+            if full["stdi"] is not None and full["stdi"] != 0:
                 raise ValueError("Identical-text control did not produce zero STDI.")
         results.append(record)
     write_csv(args.output_dir / "scored_pairs.csv", results)
@@ -353,6 +413,14 @@ def score_pairs(
             "comparison_rows": len(results),
             "comparator_only_probes": len(probe_results),
             "comparison_version": CLUSTER_STDI_COMPARISON_VERSION,
+            "structured_comparison_version": DUAL_STDI_VERSION if args.structured else None,
+            "extraction_version": STRUCTURED_EXTRACTION_VERSION if args.structured else "legacy",
+            "schema_version": 2 if args.structured else 1,
+            "polarity_weight": 0.2 if args.structured else None,
+            "duration_weight": 0.2 if args.structured else None,
+            "complete_cluster_rows": sum(row["stdi"] is not None for row in results),
+            "valid_structured_extractions": sum(row["status"] == "valid" for row in validation),
+            "comparator_probes_method": "Legacy cluster_v2; manual version-1 relations",
             "embedding_model": EMBEDDING_MODEL,
             "vad_model": DEFAULT_VAD_MODEL_NAME,
             "embedding_revision": getattr(embedder._model.config, "_commit_hash", None),
@@ -418,10 +486,16 @@ def score_semantic_comparisons(args: argparse.Namespace) -> None:
         "model": args.model,
         "provider": args.provider,
         "title": None,
-        "prompt_template": SEMANTIC_COMPARISON_PROMPT_TEMPLATE,
+        "prompt_template": (
+            STRUCTURED_JUDGE_PROMPT_TEMPLATE
+            if args.structured
+            else SEMANTIC_COMPARISON_PROMPT_TEMPLATE
+        ),
         "system_instruction": SEMANTIC_COMPARISON_SYSTEM_INSTRUCTION,
-        "description": "Existing optional comparator sees shared structures AND complete texts.",
+        "description": "LLM comparator sees shared structures AND complete texts.",
     }
+    if args.structured:
+        configuration["judge_version"] = STRUCTURED_JUDGE_VERSION
     write_json(args.output_dir / "semantic_configuration.json", configuration)
     results = []
     for index, row in enumerate(rows, 1):
@@ -449,31 +523,60 @@ def score_semantic_comparisons(args: argparse.Namespace) -> None:
             )
         else:
             print(f"[{index}/{len(rows)}] Semantic comparison {row['pair_id']}.", flush=True)
-            comparison = compare_stdi_components_semantically(
-                original_text=row["original_text"],
-                modified_text=row["modified_text"],
-                title=None,
-                original_structure=original,
-                modified_structure=modified,
-                model=args.model,
-                provider=args.provider,
-                retry_attempts=1,
-            )
-            response = {
-                "pair_id": row["pair_id"],
-                "request_sha256": request_hash,
-                "time_utc": datetime.now(UTC).isoformat(),
-                "component_drifts": comparison.component_drifts,
-                "rationales": comparison.rationales,
-            }
+            try:
+                comparison = compare_stdi_components_semantically(
+                    original_text=row["original_text"],
+                    modified_text=row["modified_text"],
+                    title=None,
+                    original_structure=original,
+                    modified_structure=modified,
+                    model=args.model,
+                    provider=args.provider,
+                    retry_attempts=1,
+                    structured=args.structured,
+                )
+            except Exception as error:
+                response = {
+                    "pair_id": row["pair_id"],
+                    "request_sha256": request_hash,
+                    "status": "failed",
+                    "exception_type": type(error).__name__,
+                    "time_utc": datetime.now(UTC).isoformat(),
+                    "rationales": {},
+                    "provenance": getattr(error, "provenance", {}),
+                }
+                write_json(args.output_dir / "last_semantic_failure.json", response)
+                print(f"Invalid comparison saved: {type(error).__name__}.", flush=True)
+            else:
+                response = {
+                    "pair_id": row["pair_id"],
+                    "request_sha256": request_hash,
+                    "status": "valid",
+                    "time_utc": datetime.now(UTC).isoformat(),
+                    "component_drifts": comparison.component_drifts,
+                    "rationales": comparison.rationales,
+                    "provenance": comparison.provenance,
+                    "warnings": getattr(comparison, "warnings", []),
+                }
             write_json(path, response)
+        valid = response.get("status", "valid") == "valid"
         metrics = calculate_stdi(
             original,
             modified,
             original_vad=VADScore(**vad[row["original_text"]]),
             compared_vad=VADScore(**vad[row["modified_text"]]),
-            component_overrides=response["component_drifts"],
+            component_overrides=response.get("component_drifts"),
         )
+        if not valid:
+            metrics = dict.fromkeys(metrics)
+        elif args.structured:
+            metrics = complete_stdi(
+                response["component_drifts"],
+                shared_vad_drift(
+                    VADScore(**vad[row["original_text"]]),
+                    VADScore(**vad[row["modified_text"]]),
+                ),
+            )
         results.append(
             {
                 "pair_id": row["pair_id"],
@@ -481,9 +584,20 @@ def score_semantic_comparisons(args: argparse.Namespace) -> None:
                 "change_type": row["change_type"],
                 "comparison_kind": row["comparison_kind"],
                 "cluster_stdi": row["stdi"],
+                "comparison_status": "valid" if valid else "failed",
+                "exception_type": response.get("exception_type"),
                 **metrics,
-                "semantic_minus_cluster": round(metrics["stdi"] - float(row["stdi"]), 6),
+                "semantic_minus_cluster": (
+                    metrics["stdi"] - float(row["stdi"]) if row["stdi"] and valid else None
+                ),
+                "dual_stdi": (
+                    (metrics["stdi"] + float(row["stdi"])) / 2 if row["stdi"] and valid else None
+                ),
+                "method_gap": (
+                    abs(metrics["stdi"] - float(row["stdi"])) if row["stdi"] and valid else None
+                ),
                 "rationales_json": json.dumps(response["rationales"], ensure_ascii=False),
+                "warnings_json": json.dumps(response.get("warnings", []), ensure_ascii=False),
             }
         )
     write_csv(args.output_dir / "semantic_method_comparison.csv", results)
@@ -500,14 +614,26 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "output/audit/STDIControlledInformationAudit_20261004",
+        default=None,
     )
     parser.add_argument("--model", default="gpt-6-luna")
     parser.add_argument("--provider", default="chatgpt")
     parser.add_argument(
+        "--structured",
+        action="store_true",
+        help="Use version-2 extraction and the current embedding/judge branches.",
+    )
+    parser.add_argument(
         "--stage", choices=("prepare", "extract", "score", "semantic", "all"), default="all"
     )
     args = parser.parse_args()
+    if args.output_dir is None:
+        name = (
+            f"STDIControlledInformationAudit_{datetime.now():%Y%m%d_%H%M%S}_structured"
+            if args.structured
+            else "STDIControlledInformationAudit_20261004"
+        )
+        args.output_dir = PROJECT_ROOT / "output/audit" / name
     torch.set_num_threads(4)
     load_dotenv(PROJECT_ROOT / ".env")
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -521,10 +647,22 @@ def main() -> None:
         "provider": args.provider,
         "title": None,
         "system_instruction": TOPIC_DRIFT_SYSTEM_INSTRUCTION,
-        "prompt_template": TOPIC_DRIFT_PROMPT_TEMPLATE,
+        "prompt_template": (
+            STRUCTURED_TOPIC_PROMPT_TEMPLATE if args.structured else TOPIC_DRIFT_PROMPT_TEMPLATE
+        ),
     }
+    if args.structured:
+        configuration["extraction_version"] = STRUCTURED_EXTRACTION_VERSION
     config_hash = digest(json.dumps(configuration, sort_keys=True))
-    write_json(args.output_dir / "extraction_configuration.json", configuration)
+    configuration_path = args.output_dir / "extraction_configuration.json"
+    if configuration_path.exists():
+        previous = json.loads(configuration_path.read_text(encoding="utf-8"))
+        if previous != configuration:
+            raise ValueError(
+                "The output directory belongs to a different extraction configuration. "
+                "Choose a new output directory to preserve the existing audit."
+            )
+    write_json(configuration_path, configuration)
     write_csv(args.output_dir / "input_pairs.csv", pairs)
     write_review(pairs, args.output_dir)
     print(f"Prepared {len(pairs)} pairs and {len(jobs)} extraction jobs.", flush=True)

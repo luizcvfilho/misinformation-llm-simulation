@@ -28,6 +28,20 @@ def write_csv(path: Path, records: list[dict]) -> None:
         writer.writerows(records)
 
 
+def number(value: str | None) -> float | None:
+    return float(value) if value not in (None, "") else None
+
+
+def formatted(value: str | None) -> str:
+    score = number(value)
+    return f"{score:.6f}" if score is not None else "unavailable"
+
+
+def aggregate(rows: list[dict], key: str, operation=statistics.mean) -> float | None:
+    values = [float(row[key]) for row in rows if row.get(key) not in (None, "")]
+    return operation(values) if values else None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -36,31 +50,38 @@ def main() -> None:
         default=ROOT / "output/audit/STDIControlledInformationAudit_20261004",
     )
     parser.add_argument("--export-png", action="store_true")
+    parser.add_argument("--baseline-dir", type=Path)
     args = parser.parse_args()
     directory = args.output_dir
     cluster = read_csv(directory / "scored_pairs.csv")
     semantic = {r["pair_id"]: r for r in read_csv(directory / "semantic_method_comparison.csv")}
+    manifest = json.loads((directory / "run_manifest.json").read_text(encoding="utf-8"))
+    structured = manifest.get("schema_version") == 2
+    cluster_label = "Structured cluster (polarity/duration)" if structured else "Current cluster_v2"
+    judge_label = "Structured LLM judge" if structured else "Existing LLM comparator"
     primary = [r for r in cluster if r["comparison_kind"] == "original_vs_rewrite"]
     change_types = list(dict.fromkeys(r["change_type"] for r in primary))
     summary = []
     for change_type in change_types:
         subset = [r for r in primary if r["change_type"] == change_type]
+        paired = [r for r in subset if r["stdi"] and semantic[r["pair_id"]]["stdi"]]
         summary.append(
             {
                 "change_type": change_type,
                 "n_synthetic_scenarios": len(subset),
-                "cluster_stdi_mean": statistics.mean(float(r["stdi"]) for r in subset),
-                "cluster_stdi_min": min(float(r["stdi"]) for r in subset),
-                "cluster_stdi_max": max(float(r["stdi"]) for r in subset),
-                "cluster_relation_drift_mean": statistics.mean(
-                    float(r["relation_drift"]) for r in subset
+                "n_complete_cluster": sum(bool(r["stdi"]) for r in subset),
+                "n_complete_llm": sum(bool(semantic[r["pair_id"]]["stdi"]) for r in subset),
+                "cluster_stdi_mean": aggregate(subset, "stdi"),
+                "cluster_stdi_min": aggregate(subset, "stdi", min),
+                "cluster_stdi_max": aggregate(subset, "stdi", max),
+                "cluster_relation_drift_mean": aggregate(subset, "relation_drift"),
+                "llm_stdi_mean": aggregate([semantic[r["pair_id"]] for r in subset], "stdi"),
+                "llm_relation_drift_mean": aggregate(
+                    [semantic[r["pair_id"]] for r in subset], "relation_drift"
                 ),
-                "llm_stdi_mean": statistics.mean(
-                    float(semantic[r["pair_id"]]["stdi"]) for r in subset
-                ),
-                "llm_relation_drift_mean": statistics.mean(
-                    float(semantic[r["pair_id"]]["relation_drift"]) for r in subset
-                ),
+                "n_complete_paired": len(paired),
+                "paired_cluster_stdi_mean": aggregate(paired, "stdi"),
+                "paired_llm_stdi_mean": aggregate([semantic[r["pair_id"]] for r in paired], "stdi"),
             }
         )
     write_csv(directory / "change_type_summary.csv", summary)
@@ -70,11 +91,11 @@ def main() -> None:
     for index, scenario in enumerate(("government", "health", "election"), 1):
         subset = [r for r in primary if r["scenario_id"] == scenario]
         for name, color, scores in (
-            ("Current cluster_v2", "#305881", [float(r["stdi"]) for r in subset]),
+            (cluster_label, "#305881", [number(r["stdi"]) for r in subset]),
             (
-                "Existing LLM comparator",
+                judge_label,
                 "#cf7147",
-                [float(semantic[r["pair_id"]]["stdi"]) for r in subset],
+                [number(semantic[r["pair_id"]]["stdi"]) for r in subset],
             ),
         ):
             figures.add_trace(
@@ -96,9 +117,18 @@ def main() -> None:
         template="plotly_white",
         height=1000,
         barmode="group",
-        title="Controlled information changes: current STDI and comparator sensitivity",
-        margin=dict(t=120, b=70),
+        title="Controlled information changes: cluster and LLM STDI",
+        margin=dict(t=120, b=110),
         legend=dict(orientation="h", y=1.065),
+    )
+    figures.add_annotation(
+        text="Missing bars are unavailable scores after validation; they are not zero scores.",
+        x=0,
+        y=-0.08,
+        xref="paper",
+        yref="paper",
+        showarrow=False,
+        xanchor="left",
     )
     if args.export_png:
         figures.write_image(directory / "score_comparison.png", width=1500, height=1000)
@@ -116,10 +146,22 @@ def main() -> None:
         original = json.loads(row["original_structure_json"])
         modified = json.loads(row["modified_structure_json"])
         metrics = (
-            f"Current STDI: {float(row['stdi']):.6f}; "
-            f"current relation drift: {float(row['relation_drift']):.6f}; "
-            f"LLM-comparator STDI: {float(other['stdi']):.6f}."
+            f"{cluster_label} STDI: {formatted(row['stdi'])}; "
+            f"cluster relation drift: {formatted(row['relation_drift'])}; "
+            f"{judge_label} STDI: {formatted(other['stdi'])}."
         )
+        if row.get("comparison_status") == "partial":
+            metrics += f" Cluster issues: {row['comparison_issues_json']}"
+        if other.get("comparison_status") == "failed":
+            metrics += f" LLM validation failed: {other['exception_type']}. See saved raw response."
+        failed_response = ""
+        if other.get("comparison_status") == "failed":
+            checkpoint = json.loads(
+                (directory / "semantic_comparisons" / f"{row['pair_id']}.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            failed_response = checkpoint.get("provenance", {}).get("raw_response", "")
         review += [
             f"## {row['pair_id']}",
             "",
@@ -141,6 +183,18 @@ def main() -> None:
             json.dumps(original["central_relations"], ensure_ascii=False, indent=2),
             "```",
             "",
+            "**LLM rationale**",
+            "",
+            "```json",
+            json.dumps(
+                {
+                    "rationales": json.loads(other["rationales_json"]),
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            "```",
+            "",
             "**Rewritten extracted relations**",
             "",
             "```json",
@@ -150,7 +204,7 @@ def main() -> None:
         ]
         sections.append(
             f"<details><summary>{html.escape(row['pair_id'])} — "
-            f"STDI {float(row['stdi']):.3f}</summary>"
+            f"STDI {formatted(row['stdi'])}</summary>"
             f"<p>{html.escape(metrics)}</p><h3>Original</h3>"
             f"<p>{html.escape(row['original_text'])}</p><h3>Rewrite</h3>"
             f"<p>{html.escape(row['modified_text'])}</p>"
@@ -161,6 +215,10 @@ def main() -> None:
             f"{html.escape(json.dumps(modified, ensure_ascii=False, indent=2))}</pre></div></div>"
             "<h3>LLM comparison rationale</h3><pre>"
             f"{html.escape(json.dumps(json.loads(other['rationales_json']), indent=2))}"
+            "</pre><h3>Cluster alignment and qualifier details</h3><pre>"
+            f"{html.escape(json.dumps(json.loads(row['comparison_details_json']), indent=2))}"
+            "</pre><h3>Invalid judge response, excluded from scores</h3><pre>"
+            f"{html.escape(failed_response) if failed_response else 'None'}"
             "</pre></details>"
         )
     (directory / "scored_examples.md").write_text("\n".join(review), encoding="utf-8")
@@ -178,6 +236,11 @@ def main() -> None:
         "<p>36 fictional English pairs across three short scenarios. Expand each case to inspect "
         "its texts, extracted structures, and scores. The optional LLM comparator sees the full "
         "texts as well as the same structures; it is not a validated reference.</p>"
+        f"<p>Complete primary scores: cluster {sum(bool(r['stdi']) for r in primary)}/"
+        f"{len(primary)}; LLM {sum(bool(semantic[r['pair_id']]['stdi']) for r in primary)}/"
+        f"{len(primary)}. Unavailable scores are "
+        "omitted from bars and averages, and are explicitly marked in the examples. "
+        "Averages can cover different sets of pairs; inspect the coverage counts.</p>"
         + chart
         + "<h2>Examples and extraction details</h2>"
         + "\n".join(sections)
@@ -198,15 +261,55 @@ def main() -> None:
                     ),
                     "cluster_paraphrase_stdi": paraphrase["stdi"],
                     "cluster_changed_stdi": changed["stdi"],
-                    "cluster_order_matches": float(changed["stdi"]) > float(paraphrase["stdi"]),
+                    "cluster_order_matches": (
+                        float(changed["stdi"]) > float(paraphrase["stdi"])
+                        if changed["stdi"] and paraphrase["stdi"]
+                        else None
+                    ),
                     "llm_paraphrase_stdi": semantic[paraphrase["pair_id"]]["stdi"],
                     "llm_changed_stdi": semantic[changed["pair_id"]]["stdi"],
-                    "llm_order_matches": float(semantic[changed["pair_id"]]["stdi"])
-                    > float(semantic[paraphrase["pair_id"]]["stdi"]),
+                    "llm_order_matches": (
+                        float(semantic[changed["pair_id"]]["stdi"])
+                        > float(semantic[paraphrase["pair_id"]]["stdi"])
+                        if semantic[changed["pair_id"]]["stdi"]
+                        and semantic[paraphrase["pair_id"]]["stdi"]
+                        else None
+                    ),
                     "validated_human_target": False,
                 }
             )
     write_csv(directory / "diagnostic_order_checks.csv", checks)
+    if args.baseline_dir:
+        old_cluster = {r["pair_id"]: r for r in read_csv(args.baseline_dir / "scored_pairs.csv")}
+        old_llm = {
+            r["pair_id"]: r for r in read_csv(args.baseline_dir / "semantic_method_comparison.csv")
+        }
+        historical = []
+        for row in cluster:
+            prior = old_cluster[row["pair_id"]]
+            judge = semantic.get(row["pair_id"], {})
+            prior_judge = old_llm.get(row["pair_id"], {})
+            historical.append(
+                {
+                    "pair_id": row["pair_id"],
+                    "comparison_kind": row["comparison_kind"],
+                    "change_type": row["change_type"],
+                    "previous_cluster_stdi": prior["stdi"],
+                    "new_extraction_legacy_cluster_stdi": row.get(
+                        "historical_cluster_on_shared_extraction_stdi"
+                    ),
+                    "new_structured_cluster_stdi": row["stdi"],
+                    "previous_llm_stdi": prior_judge.get("stdi"),
+                    "new_llm_stdi": judge.get("stdi"),
+                    "dual_stdi": judge.get("dual_stdi"),
+                    "method_gap": judge.get("method_gap"),
+                    "text_pair_unchanged": (
+                        row["original_text"] == prior["original_text"]
+                        and row["modified_text"] == prior["modified_text"]
+                    ),
+                }
+            )
+        write_csv(directory / "historical_method_comparison.csv", historical)
     sources = [
         ROOT / "data/synthetic/stdi_information_change_pairs.json",
         ROOT / "scripts/audit_stdi_information_changes.py",
@@ -216,6 +319,10 @@ def main() -> None:
         ROOT / "src/misinformation_simulation/topic_drift/cluster_comparison.py",
         ROOT / "src/misinformation_simulation/topic_drift/metrics.py",
         ROOT / "src/misinformation_simulation/topic_drift/semantic_comparison.py",
+        ROOT / "src/misinformation_simulation/topic_drift/structured_comparison.py",
+        ROOT / "src/misinformation_simulation/topic_drift/qualifiers.py",
+        ROOT / "src/misinformation_simulation/topic_drift/provenance.py",
+        ROOT / "src/misinformation_simulation/topic_drift/models.py",
     ]
     checkpoints = list((directory / "extractions").glob("*.json")) + list(
         (directory / "semantic_comparisons").glob("*.json")
@@ -230,8 +337,12 @@ def main() -> None:
             for path in sorted(checkpoints)
         },
         "successful_extraction_checkpoints": len(list((directory / "extractions").glob("*.json"))),
-        "successful_semantic_comparisons": len(semantic),
+        "semantic_response_checkpoints": len(semantic),
+        "successful_semantic_comparisons": sum(bool(row["stdi"]) for row in semantic.values()),
+        "valid_structured_extractions": manifest.get("valid_structured_extractions"),
         "production_code_modified_by_audit": False,
+        "schema_version": manifest.get("schema_version", 1),
+        "baseline_directory": str(args.baseline_dir) if args.baseline_dir else None,
     }
     (directory / "evidence_manifest.json").write_text(
         json.dumps(evidence, indent=2), encoding="utf-8"

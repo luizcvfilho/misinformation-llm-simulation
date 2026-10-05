@@ -28,6 +28,7 @@ class SemanticSTDIComparison:
     component_drifts: dict[str, float]
     rationales: dict[str, str]
     provenance: dict[str, Any] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)
 
 
 class JudgeValidationError(ValueError):
@@ -80,6 +81,28 @@ def _parse_semantic_comparison(raw_text: str) -> SemanticSTDIComparison:
         for component in SEMANTIC_COMPONENT_COLUMNS
     }
     return SemanticSTDIComparison(component_drifts=component_drifts, rationales=rationales)
+
+
+def parse_structured_semantic_comparison(
+    raw_text: str,
+    *,
+    provenance: dict[str, Any] | None = None,
+) -> SemanticSTDIComparison:
+    """Parse numeric judgments and optional rationales with saved provenance."""
+    result = _parse_semantic_comparison(raw_text)
+    payload = _extract_json_object(raw_text)
+    warnings = []
+    for component in SEMANTIC_COMPONENT_COLUMNS:
+        if not result.rationales[component]:
+            warnings.append(f"Missing rationale for {component}")
+        if payload[component] not in SEMANTIC_DRIFT_LEVELS:
+            warnings.append(f"{component} rounded to the nearest rubric level")
+    return SemanticSTDIComparison(
+        component_drifts=result.component_drifts,
+        rationales=result.rationales,
+        provenance=provenance or {},
+        warnings=list(dict.fromkeys(warnings)),
+    )
 
 
 def compare_stdi_components_semantically(
@@ -156,16 +179,8 @@ def compare_stdi_components_semantically(
         inputs={"original_text": original_text, "modified_text": modified_text, "title": title},
     )
     try:
-        result = _parse_semantic_comparison(raw_response)
-        payload = _extract_json_object(raw_response)
-        for component in SEMANTIC_COMPONENT_COLUMNS:
-            if payload[component] not in SEMANTIC_DRIFT_LEVELS:
-                raise ValueError(f"'{component}' must use an anchored rubric level.")
-            if not result.rationales[component]:
-                raise ValueError(f"Missing rationale for '{component}'.")
-        return SemanticSTDIComparison(
-            component_drifts=result.component_drifts,
-            rationales=result.rationales,
+        return parse_structured_semantic_comparison(
+            raw_response,
             provenance=provenance,
         )
     except (ValueError, TypeError, KeyError) as exc:

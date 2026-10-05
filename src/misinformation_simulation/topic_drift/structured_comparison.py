@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import math
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, replace
@@ -9,13 +10,17 @@ from misinformation_simulation.config.prompts import STRUCTURED_JUDGE_VERSION
 from misinformation_simulation.text_metrics.vad import VADScore
 from misinformation_simulation.topic_drift.cluster_comparison import (
     ClusterSTDIComparator,
+    ClusterSTDIComparison,
     TopicStructurePair,
 )
-from misinformation_simulation.topic_drift.models import TopicStructure, topic_structure_to_dict
+from misinformation_simulation.topic_drift.models import (
+    TopicRelation,
+    TopicStructure,
+    topic_structure_to_dict,
+)
 from misinformation_simulation.topic_drift.provenance import EvaluationCache, input_hash
 from misinformation_simulation.topic_drift.qualifiers import (
     adjust_relation_distance,
-    normalize_duration,
 )
 from misinformation_simulation.topic_drift.semantic_comparison import (
     SemanticSTDIComparison,
@@ -23,6 +28,7 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
 )
 
 DUAL_STDI_VERSION = "dual_stdi_v3"
+STRUCTURED_CLUSTER_VERSION = "cluster_v3"
 FORMULA_VERSION = "stdi_remaining_distance_v1_mean_50_50"
 NUMERICAL_TOLERANCE = 1e-12
 CONTENT_COMPONENTS = ("theme_drift", "subtopic_drift", "entity_drift", "relation_drift")
@@ -39,42 +45,61 @@ def _core(structure: TopicStructure) -> TopicStructure:
 
 
 def structure_issues(structure: TopicStructure) -> list[str]:
-    issues = list(structure.extraction_issues)
-    if structure.schema_version != 2 or structure.extraction_status != "valid":
-        issues.append("A valid version-2 extraction is required")
+    issues = [
+        issue
+        for issue in structure.extraction_issues
+        if issue == "Invalid contradiction score"
+        or issue == "Invalid relation record"
+        or issue.startswith("Invalid list:")
+        and not issue.endswith("opinions")
+        or issue == "Missing required field: central_relations"
+    ]
+    if structure.schema_version != 2:
+        issues.append("A version-2 extraction is required")
+    if structure.extraction_status == "failed":
+        issues.append("Extraction failed")
     if not structure.main_topic:
         issues.append("Main topic is unavailable")
     for index, relation in enumerate(structure.central_relations):
-        if not all(
-            (
-                relation.subject,
-                relation.action,
-                relation.object,
-                relation.base_action,
-                relation.signed_action,
-                relation.predicate,
-            )
-        ):
+        if not relation.subject or not relation.action:
             issues.append(f"Relation {index} has incomplete required fields")
-        if relation.assertion_type not in {
-            "asserted",
-            "hypothesis",
-            "recommendation",
-            "attributed_intention",
-        }:
-            issues.append(f"Relation {index} has unknown assertion type")
-        if relation.polarity not in {"affirmed", "negated"}:
-            issues.append(f"Relation {index} has unknown polarity")
-        if relation.polarity == "negated" and not relation.negation_scope:
-            issues.append(f"Relation {index} has unknown negation scope")
-        if relation.duration_status not in {"absent", "exact"} or (
-            relation.duration_status == "exact" and normalize_duration(relation) is None
-        ):
-            issues.append(f"Relation {index} has incomplete duration")
     return issues
 
 
 class StructuredEmbeddingComparator(ClusterSTDIComparator):
+    def _relation_similarity(self, left: TopicRelation, right: TopicRelation) -> float:
+        similarity = super()._relation_similarity(left, right)
+        if not left.object and not right.object:
+            similarity = min(similarity + 0.15, 1.0)
+        return similarity
+
+    def compare(
+        self,
+        original: TopicStructure,
+        modified: TopicStructure,
+        *,
+        round_scores: bool = True,
+    ) -> ClusterSTDIComparison:
+        if original.schema_version == modified.schema_version == 1:
+            return super().compare(original, modified, round_scores=round_scores)
+        result = self.compare_structured(original, modified)
+        if result["status"] != "valid":
+            raise ValueError("; ".join(result["issues"]))
+        components = result["components"]
+        return ClusterSTDIComparison(
+            component_drifts={
+                key: round(value, 6) if round_scores else value for key, value in components.items()
+            },
+            details={
+                **result["cluster_details"],
+                "qualifiers": {
+                    "comparison_version": STRUCTURED_CLUSTER_VERSION,
+                    "warnings_json": json.dumps(result["warnings"], ensure_ascii=False),
+                    "relations_json": json.dumps(result["relations"], ensure_ascii=False),
+                },
+            },
+        )
+
     def fit(self, pairs: Sequence[TopicStructurePair]) -> StructuredEmbeddingComparator:
         self.fit_error = None
         try:
@@ -122,8 +147,8 @@ class StructuredEmbeddingComparator(ClusterSTDIComparator):
             )
         unmatched = len(left.central_relations) + len(right.central_relations) - 2 * len(details)
         issues = structure_issues(original) + structure_issues(modified)
-        if any(item["status"] != "valid" for item in details):
-            issues.append("Incomplete aligned polarity/duration assessment")
+        warnings = list(original.extraction_issues) + list(modified.extraction_issues)
+        warnings.extend(warning for item in details for warning in item["warnings"])
         count = max(len(left.central_relations), len(right.central_relations))
         components = dict(baseline.component_drifts)
         if not issues:
@@ -134,8 +159,10 @@ class StructuredEmbeddingComparator(ClusterSTDIComparator):
         return {
             "status": "partial" if issues else "valid",
             "issues": issues,
+            "warnings": list(dict.fromkeys(warnings)),
             "components": components,
             "semantic_only_components": baseline.component_drifts,
+            "cluster_details": baseline.details,
             "relations": details,
             "unmatched_relations": unmatched,
             "unmatched_reference_indices": [

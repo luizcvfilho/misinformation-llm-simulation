@@ -56,7 +56,6 @@ from misinformation_simulation.topic_drift import (
 )
 from misinformation_simulation.topic_drift.cluster_comparison import (
     CLUSTER_STDI_COMPARISON_VERSION,
-    ClusterSTDIComparator,
     TextEmbedder,
     TopicStructurePair,
 )
@@ -69,6 +68,7 @@ from misinformation_simulation.topic_drift.models import (
 from misinformation_simulation.topic_drift.provenance import EvaluationCache
 from misinformation_simulation.topic_drift.structured_comparison import (
     DUAL_STDI_VERSION,
+    STRUCTURED_CLUSTER_VERSION,
     StructuredEmbeddingComparator,
     compare_dual_stdi,
 )
@@ -282,7 +282,7 @@ def run_news_interaction_graph(
     judge_limiter = MinuteRateLimiter(max_requests_per_minute)
 
     def extract_structure(**kwargs: Any) -> TopicStructure:
-        if stdi_comparison_method != "dual":
+        if stdi_comparison_method not in {"dual", "cluster"}:
             return extract_topic_structure(**kwargs)
         inputs = {
             key: str(value) if key in {"model", "provider"} else value
@@ -746,11 +746,7 @@ def run_news_interaction_graph(
             TopicStructurePair(f"{index}:incremental", previous, rewritten)
             for index, (_, _, _, previous, rewritten, _, _, _) in enumerate(scoring_contexts)
         ]
-        comparator_class = (
-            StructuredEmbeddingComparator
-            if stdi_comparison_method == "dual"
-            else ClusterSTDIComparator
-        )
+        comparator_class = StructuredEmbeddingComparator
         comparator = comparator_class(
             embedder=stdi_embedder,
             embedding_model=stdi_embedding_model,
@@ -865,7 +861,15 @@ def run_news_interaction_graph(
     comparison_version = (
         DUAL_STDI_VERSION
         if stdi_comparison_method == "dual"
-        else CLUSTER_STDI_COMPARISON_VERSION
+        else (
+            STRUCTURED_CLUSTER_VERSION
+            if any(
+                structure.schema_version == 2
+                for context in scoring_contexts
+                for structure in (context[2], context[3], context[4])
+            )
+            else CLUSTER_STDI_COMPARISON_VERSION
+        )
         if stdi_comparison_method == "cluster"
         else "lexical_v1"
     )

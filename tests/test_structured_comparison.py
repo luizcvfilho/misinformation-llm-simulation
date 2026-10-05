@@ -185,7 +185,10 @@ def test_absent_added_and_unknown_duration_are_distinct():
         duration(-1),
     ):
         assert compare_duration(duration(10), bad)["status"] == "partial"
-    assert adjust_relation_distance(0.2, relation(polarity=None), relation())["distance"] is None
+    normalized = adjust_relation_distance(0.2, relation(polarity=None), relation())
+    assert normalized["distance"] == pytest.approx(0.16)
+    assert normalized["resolved_polarities"] == ["affirmed", "affirmed"]
+    assert normalized["warnings"]
 
 
 def test_greedy_matching_counts_unmatched_and_never_discounts_omissions():
@@ -234,9 +237,10 @@ def test_failure_and_missing_qualifiers_preserve_available_branch():
     assert result["llm_judge"]["status"] == "failed"
     assert result["stdi"] is None and result["status"] == "partial"
     result = compare(modified=structure(relation(polarity=None)))
-    assert result["embedding"]["metrics"] is None
+    assert result["embedding"]["metrics"] is not None
     assert result["llm_judge"]["metrics"] is not None
-    assert result["stdi"] is None
+    assert result["stdi"] is not None
+    assert result["embedding"]["warnings"]
     result = compare(original_vad=VADScore(None, 3, 3))
     assert result["stdi"] is None
     assert result["llm_judge"]["metrics"] is None
@@ -488,7 +492,7 @@ def test_empty_relations_with_failed_extraction_are_not_zero_drift():
     assert result["embedding"]["metrics"] is None
     unknown = structure(relation(polarity=None))
     result = compare(original=unknown, modified=structure())
-    assert result["embedding"]["metrics"] is None
+    assert result["embedding"]["metrics"]["relation_drift"] == 1
 
 
 def test_nonfinite_scores_and_invalid_weights_are_rejected():

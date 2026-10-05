@@ -1,20 +1,31 @@
 # Dual STDI evaluation
 
 Interaction-graph runs now default to `dual`. The **Dual STDI (embeddings + LLM judge)**
-checkbox is enabled by default in execution settings. Uncheck it to run the existing
-`cluster` method. `lexical` remains available through the Python API and CLI. The extraction
+checkbox is enabled by default in execution settings. Uncheck it to run the structured
+`cluster` branch alone, including polarity/duration adjustments without judge requests.
+`lexical` remains available through the Python API and CLI. The extraction
 provider/model also evaluates the judge; rewriting nodes retain their own configurations.
 Dual evaluation adds LLM requests, and an initial run may download the embedding/VAD models.
 
 ## Computation
 
-Each distinct text/title/configuration is extracted once with schema version 2. Legacy
-extraction prompts remain unchanged for legacy methods. Version-2 relations preserve the
+Each distinct text/title/configuration is extracted once with schema version 2 in `dual`
+and new `cluster` runs. The legacy prompt remains available for legacy extraction. Relations preserve the
 signed action, base action, affirmed/negated polarity and scope, exact duration, assertion
-type. No `evidence` field is requested or exported by extraction or the judge. Pure opinions/recommendations are recorded separately.
-Historical missing qualifiers remain unknown; existing execution artifacts are not rewritten.
-The extraction and judge prompt versions were updated to invalidate older request caches.
-Purposes and attribution remain in action/object and are retained in the base action.
+type. There is no `evidence` field in relation extraction or judge output, and no supporting
+passage validation. Optional annotation fields are diagnostic metadata.
+Intransitive actions may have an empty object. Purposes and attribution remain in action/object
+and are preserved in the base action, rather than stored in a separate passage field.
+Pure opinions/recommendations are recorded separately. Historical version-1 structures retain
+their missing qualifiers and legacy comparison behavior; saved artifacts are not rewritten.
+
+The current versions are `structured_extraction_v4`, `structured_judge_v3`, `cluster_v3`,
+and `dual_stdi_v3`. Prompt versions invalidate request caches for new runs.
+The extraction prompt requires exactly `affirmed` or `negated`, never `unknown`.
+Hypothesis/uncertainty is represented by assertion type, independently of polarity.
+If a schema-2 response omits or violates the polarity enum, the parser normalizes it from
+explicit negation in its signed action/scope, otherwise `affirmed`, and records a diagnostic.
+This fallback concerns grammatical polarity, not factual truth or predicate equivalence.
 
 The embedding branch retains the current theme, subtopic and entity comparisons, relation
 core weights `0.45/0.25/0.15/0.15`, greedy one-to-one matching, and tie ordering. It compares
@@ -34,11 +45,15 @@ equivalence gate. Unmatched relations contribute 1 without a polarity discount. 
 seconds/minutes/hours/days/weeks can be converted, including Portuguese units. Duration absent
 in both texts is neutral; explicit addition/omission provisionally contributes `d_t=1`.
 Two zeros produce zero distance, and zero-to-positive produces one; neither has a defined
-percentage. Calendar months/years, ranges, approximations, incompatible units and unknown
-scope remain incomplete. Raw percentages beyond the cap are retained in relation details.
+percentage. Calendar months/years, ranges, approximations and incompatible/unknown units
+retain an unavailable duration adjustment in diagnostic details. The relation keeps its
+polarity-adjusted semantic distance, so this optional qualifier does not block the score.
+Unsupported duration is not reported as a measured zero. Raw percentages beyond the cap
+are retained in relation details. Counts, dates, money and ages are not event durations.
 
 The independent judge reads the full texts and shared structures, supplies all five component
 scores on the anchored `0/0.25/0.5/0.75/1` rubric, and provides concise rationales.
+Numeric score validation remains mandatory; missing rationales produce diagnostics.
 Its relation score already includes semantic polarity, duration, roles, purposes and omissions;
 embedding adjustments are not applied again. The judge does not receive embedding scores or
 persona labels and does not evaluate factual truth against external knowledge.
@@ -53,8 +68,9 @@ STDI_final = (STDI_embedding + STDI_llm_judge) / 2
 method_gap = abs(STDI_embedding-STDI_llm_judge)
 ```
 
-Full precision is retained until display. Missing qualifiers, extraction failures, incomplete
-VAD, invalid judge output and provider errors never become zero scores. Available complete
+Full precision is retained until display. Optional qualifier diagnostics do not block
+the branch. Failed extraction, unusable relation cores, incomplete VAD, invalid numeric judge
+output and provider errors never become zero scores. Available complete
 branches are retained, but the final mean requires both. Exact identical text/context reuses
 the valid reference extraction and yields zero for both branches without a new judge call.
 The method gap measures disagreement, not calibrated confidence.

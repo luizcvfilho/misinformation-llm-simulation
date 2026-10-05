@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 import unicodedata
 from dataclasses import asdict
 from typing import Any
@@ -34,6 +35,20 @@ _DURATION_UNITS = {
     "semana": 604800,
     "semanas": 604800,
 }
+
+
+def resolve_polarity(relation: TopicRelation) -> str:
+    if relation.polarity in {"affirmed", "negated"}:
+        return relation.polarity
+    signed_action = relation.signed_action or relation.action
+    negated = bool(relation.negation_scope) or bool(
+        re.search(
+            r"\b(?:not|never|neither|nor|no|não|nao|nunca|jamais)\b|n['’]t\b",
+            signed_action,
+            flags=re.IGNORECASE,
+        )
+    )
+    return "negated" if negated else "affirmed"
 
 
 def normalize_duration(relation: TopicRelation) -> float | None:
@@ -93,24 +108,29 @@ def adjust_relation_distance(
     ):
         raise ValueError("Distances and contribution weights must be in [0, 1].")
     duration = compare_duration(left, right)
-    known = left.polarity in {"affirmed", "negated"} and right.polarity in {"affirmed", "negated"}
-    delta = int(left.polarity != right.polarity) if known else None
-    adjusted = (
-        (1 - polarity_weight) * semantic_distance + polarity_weight * delta if known else None
-    )
+    polarities = (resolve_polarity(left), resolve_polarity(right))
+    delta = int(polarities[0] != polarities[1])
+    adjusted = (1 - polarity_weight) * semantic_distance + polarity_weight * delta
+    warnings = []
+    if (left.polarity, right.polarity) != polarities:
+        warnings.append("Missing/invalid polarity normalized from the signed action")
+    if duration["status"] != "valid":
+        warnings.append("Duration adjustment unavailable; retaining the polarity-adjusted distance")
     distance = (
         adjusted + (1 - adjusted) * duration_weight * duration["distance"]
-        if adjusted is not None and duration["status"] == "valid"
-        else None
+        if duration["status"] == "valid"
+        else adjusted
     )
     return {
         "semantic_distance": semantic_distance,
         "delta_p": delta,
         "polarity_adjusted_distance": adjusted,
-        "polarity_adjustment": (adjusted - semantic_distance if adjusted is not None else None),
+        "polarity_adjustment": adjusted - semantic_distance,
+        "resolved_polarities": list(polarities),
         "duration": duration,
         "distance": distance,
-        "status": "valid" if distance is not None else "partial",
+        "status": "valid",
+        "warnings": warnings,
         "reference": asdict(left),
         "rewrite": asdict(right),
     }

@@ -27,6 +27,10 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     SemanticSTDIComparison,
     compare_stdi_components_semantically,
 )
+from misinformation_simulation.topic_drift.structured_comparison import (
+    STRUCTURED_CLUSTER_VERSION,
+    StructuredEmbeddingComparator,
+)
 
 ComparisonMethod = Literal["llm_semantic", "cluster", "dual"]
 SUPPORTED_COMPARISON_METHODS: tuple[ComparisonMethod, ...] = ("llm_semantic", "cluster", "dual")
@@ -251,6 +255,7 @@ def run_comparison_workflow(
                     provider=extraction_provider,
                     api_key=extraction_api_key,
                     base_url=extraction_base_url,
+                    **({"structured": True} if resolved_method == "cluster" else {}),
                 )
             if modified_structure is None:
                 if progress_callback is not None:
@@ -266,6 +271,7 @@ def run_comparison_workflow(
                     provider=extraction_provider,
                     api_key=extraction_api_key,
                     base_url=extraction_base_url,
+                    **({"structured": True} if resolved_method == "cluster" else {}),
                 )
         except Exception as exc:
             result.at[row_index, "comparison_status"] = "error"
@@ -301,7 +307,7 @@ def run_comparison_workflow(
             progress_callback(
                 f"Fitting shared clusters from {len(prepared_pairs)} prepared pair(s)."
             )
-        cluster_comparator = ClusterSTDIComparator(
+        cluster_comparator = StructuredEmbeddingComparator(
             embedder=embedder,
             embedding_model=embedding_model,
             n_clusters=n_clusters,
@@ -407,7 +413,14 @@ def run_comparison_workflow(
         ),
         "cluster": (
             {
-                "comparison_version": CLUSTER_STDI_COMPARISON_VERSION,
+                "comparison_version": (
+                    STRUCTURED_CLUSTER_VERSION
+                    if any(
+                        pair.original.schema_version == 2 or pair.modified.schema_version == 2
+                        for pair in prepared_pairs
+                    )
+                    else CLUSTER_STDI_COMPARISON_VERSION
+                ),
                 "embedding_model": embedding_model,
                 "n_clusters": n_clusters,
                 "random_state": random_state,

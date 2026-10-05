@@ -255,11 +255,16 @@ Additional extraction rules:
 - action and signed_action preserve the original signed predicate expression.
 - base_action excludes explicit syntactic negation and separately recorded duration only.
   Never replace a lexically negative verb (ignore, refuse) with another positive verb.
-- polarity must be affirmed, negated, or unknown; identify the affected predicate and scope.
+- polarity must ALWAYS be exactly affirmed or negated. Never return unknown, null, or omit it.
+  Polarity describes explicit grammatical negation, not certainty or factual truth.
+  A hypothesis such as "may have closed" is affirmed; "may not have closed" is negated.
+  An unnegated recommendation is affirmed. Lexically negative verbs such as refuse or ignore
+  remain affirmed unless explicitly negated. Identify the affected predicate and scope.
 - duration_status must be exact, absent, or ambiguous. Use absent only when no duration is
   expressed. For exact durations record a nonnegative numeric duration_value and duration_unit.
   Preserve duration_expression verbatim. Intervals, approximations and calendar months/years
   are ambiguous. Never confuse a date, count, money or age with an event duration.
+- object may be empty for an intransitive action; do not invent an object to fill the field.
 - assertion_type is asserted, hypothesis, recommendation, or attributed_intention.
   Preserve who made a claim; do not infer speakers or events. Pure opinion belongs in opinions.
 - Do not duplicate one event to separately count its purpose. Preserve its purpose in the
