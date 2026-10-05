@@ -118,7 +118,15 @@ def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRela
         action = str(item.get("action", "") or "").strip()
         obj = str(item.get("object", "") or "").strip()
         normalized = (
-            json.dumps(item, sort_keys=True, ensure_ascii=False)
+            json.dumps(
+                {
+                    key: value
+                    for key, value in item.items()
+                    if key in TopicRelation.__dataclass_fields__
+                },
+                sort_keys=True,
+                ensure_ascii=False,
+            )
             if structured
             else _normalize_relation(subject, action, obj)
         )
@@ -136,7 +144,6 @@ def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRela
                 "base_action",
                 "duration_unit",
                 "duration_expression",
-                "evidence",
                 "assertion_type",
             ):
                 qualifiers[key] = str(item[key]).strip() if item.get(key) else None
@@ -318,9 +325,4 @@ def extract_topic_structure(
     except (ValueError, TypeError) as exc:
         raise ExtractionValidationError(str(exc), provenance) from exc
     structure.provenance = provenance
-    for index, relation in enumerate(structure.central_relations):
-        if not relation.evidence or relation.evidence not in text:
-            structure.extraction_issues.append(f"Relation {index} has unsupported evidence")
-    if structure.extraction_issues:
-        structure.extraction_status = "partial"
     return structure

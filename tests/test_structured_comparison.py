@@ -57,7 +57,6 @@ def relation(**changes):
             predicate="helps",
             signed_action="helps",
             base_action="helps",
-            evidence="Agency helps residents.",
             assertion_type="asserted",
             duration_status="absent",
         ),
@@ -308,14 +307,10 @@ def test_structured_extraction_prompt_and_raw_response_are_saved(monkeypatch):
     assert result.provenance["temperature_sent"] is None
 
 
-def test_structured_judge_requires_verbatim_evidence_and_preserves_failed_raw_response(monkeypatch):
+def test_structured_judge_validates_scores_and_preserves_raw_response(monkeypatch):
     payload = {
         **dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), 0.5),
         "rationales": dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), "Change"),
-        "evidence": {
-            key: [{"original": "Agency", "modified": "Agency"}]
-            for key in (*CONTENT_COMPONENTS, "contradiction_drift")
-        },
     }
     monkeypatch.setattr(
         semantic_comparison, "create_llm_client", lambda **kwargs: ("chatgpt", object())
@@ -335,11 +330,14 @@ def test_structured_judge_requires_verbatim_evidence_and_preserves_failed_raw_re
         provider="chatgpt",
         structured=True,
     )
-    assert semantic_comparison.compare_stdi_components_semantically(**kwargs).evidence
-    payload["evidence"]["theme_drift"][0]["original"] = "Invented evidence"
+    result = semantic_comparison.compare_stdi_components_semantically(**kwargs)
+    assert not hasattr(result, "evidence")
+    assert result.component_drifts["theme_drift"] == 0.5
+    assert result.provenance["raw_response"] == json.dumps(payload)
+    payload["theme_drift"] = None
     with pytest.raises(semantic_comparison.JudgeValidationError) as error:
         semantic_comparison.compare_stdi_components_semantically(**kwargs)
-    assert "Invented evidence" in error.value.provenance["raw_response"]
+    assert error.value.provenance["raw_response"] == json.dumps(payload)
 
 
 def test_workflow_deduplicates_extraction_and_exports_both_methods(tmp_path):

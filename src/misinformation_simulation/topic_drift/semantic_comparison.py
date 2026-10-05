@@ -27,7 +27,6 @@ from misinformation_simulation.topic_drift.models import TopicStructure, topic_s
 class SemanticSTDIComparison:
     component_drifts: dict[str, float]
     rationales: dict[str, str]
-    evidence: dict[str, list[dict[str, str]]] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
 
 
@@ -159,30 +158,15 @@ def compare_stdi_components_semantically(
     try:
         result = _parse_semantic_comparison(raw_response)
         payload = _extract_json_object(raw_response)
-        evidence = payload.get("evidence")
-        if not isinstance(evidence, dict):
-            raise ValueError("The structured judge must provide evidence for every component.")
         for component in SEMANTIC_COMPONENT_COLUMNS:
             if payload[component] not in SEMANTIC_DRIFT_LEVELS:
                 raise ValueError(f"'{component}' must use an anchored rubric level.")
-            if not result.rationales[component] or not isinstance(evidence.get(component), list):
-                raise ValueError(f"Missing rationale/evidence for '{component}'.")
-            if result.component_drifts[component] > 0 and not evidence[component]:
-                raise ValueError(f"Changed component '{component}' requires supporting passages.")
-            for passage in evidence[component]:
-                if not isinstance(passage, dict):
-                    raise ValueError("Evidence must contain original/modified passage objects.")
-                for side, text in (("original", original_text), ("modified", modified_text)):
-                    span = passage.get(side)
-                    if not isinstance(span, str) or (span and span not in text):
-                        raise ValueError(f"Judge evidence is not a verbatim {side} passage.")
-                if not passage["original"] and not passage["modified"]:
-                    raise ValueError("An evidence pair cannot contain two empty passages.")
+            if not result.rationales[component]:
+                raise ValueError(f"Missing rationale for '{component}'.")
         return SemanticSTDIComparison(
-            result.component_drifts,
-            result.rationales,
-            evidence,
-            provenance,
+            component_drifts=result.component_drifts,
+            rationales=result.rationales,
+            provenance=provenance,
         )
     except (ValueError, TypeError, KeyError) as exc:
         raise JudgeValidationError(str(exc), provenance) from exc

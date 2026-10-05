@@ -4,6 +4,10 @@ Status: final architecture selected by the user on 2026-10-05; software implemen
 
 ## 1. Objective and selected architecture
 
+The user removed the `evidence` field from extraction and judge output on 2026-10-05.
+No supporting-passage validation is part of the current method. Preserve the existing
+polarity/duration calculations and other STDI weights.
+
 Measure information and affective drift between a reference news text and its rewrite. Produce two complete STDI values and define the final value as their unweighted arithmetic mean:
 
     STDI_final = (STDI_embedding + STDI_llm_judge) / 2
@@ -24,12 +28,12 @@ Retain the existing main topic, subtopics, central entities, subject/action/obje
 
 - Explicit affirmed/negated polarity, the predicate it concerns, and negation scope.
 - Duration value and unit, preserving the original duration expression.
-- Supporting text spans and status for unknown or ambiguous qualifiers.
+- Duration status for absent or ambiguous values.
 - Original signed predicate expression and a base action expression for separately scored qualifiers.
 
 Adjust the prompt to preserve actors, actions, quantities, purposes, attribution, and uncertainty. Do not infer a speaker or event not supported by the text. Keep hypothesis, recommendation, and asserted action distinguishable without requiring a complete new proposition schema in the first release. Record pure opinion/recommendation separately from claims about what happened.
 
-A source-event assertion and an added purpose must not be counted twice. Use the existing relation representation where possible; preserve supporting text for distinctions it cannot fully encode.
+A source-event assertion and an added purpose must not be counted twice. Use the existing relation representation where possible; preserve purpose and attribution in action/object and retain them in the base action.
 
 Extract each unique text/context once and reuse the saved structure across methods and chain comparisons. Both methods use the same text versions, title context, and saved structures. The judge also reads the full texts as primary evidence; its input is richer than an embedding comparison of extracted fields. Document this difference.
 
@@ -87,7 +91,7 @@ The embedding branch compares the two extracted polarity labels directly, indepe
 
 Remove predicate-equivalence gates, synonym dictionaries, lexical-resource selection, and the earlier verb-pair-specific exceptions from this branch. Under the user's selected rule, both help/not-assist and ignore/not-help have different extracted grammatical polarity and therefore receive the increasing adjustment. The independent LLM judge remains responsible for contextual semantic judgment in its own branch; do not feed its score back into the embedding adjustment.
 
-Extraction still needs to identify which action is affirmed or negated. This is qualifier extraction, not a later synonym-equivalence test. Separate explicit syntactic negation and duration from the action core when they are scored independently; preserve the original expressions as evidence. Do not rewrite a lexically negative verb into a different positive verb. Retain the current encoder and comparison method for the resulting subject/action/object core.
+Extraction still needs to identify which action is affirmed or negated. This is qualifier extraction, not a later synonym-equivalence test. Separate explicit syntactic negation and duration from the action core when they are scored independently; retain signed action and duration expression. Do not rewrite a lexically negative verb into a different positive verb. Retain the current encoder and comparison method for the resulting subject/action/object core.
 
 For exact comparable durations, normalize units and use the reference value:
 
@@ -117,13 +121,13 @@ Adapt the existing semantic comparator. Supply reference and rewritten texts, ti
 - Relation drift: actions, responsibility, roles, attributed purposes, semantic polarity, duration, additions, and omissions.
 - Internal contradiction within the rewrite, distinguished from conflict between versions.
 
-Use the existing anchored levels 0, 0.25, 0.5, 0.75, and 1 as the initial rubric: preserved meaning, slight change, relevant partial change, strong change, and essentially different. Require short justifications and supporting passages, including relation-level examples when relevant. These categories are a scoring convention, not a validated interval scale.
+Use the existing anchored levels 0, 0.25, 0.5, 0.75, and 1 as the initial rubric: preserved meaning, slight change, relevant partial change, strong change, and essentially different. Request short justifications without separate supporting-passage fields. These categories are a scoring convention, not a validated interval scale.
 
 The judge must assess meaning rather than writing quality, ideological agreement, or truth against external knowledge. It must preserve distinctions between a hypothesis, an attributed intention, a recommendation, and an asserted action. Do not provide persona labels or embedding scores before judgment.
 
 Judge relation drift already includes semantic polarity and duration. Do not apply the embedding branch's polarity/duration increments to this result again. The judge does not estimate VAD.
 
-Save raw responses, parsed scores, rationale, evidence, model/provider configuration, effective supported sampling settings, prompt version, and input hashes. Use a fixed rubric and canonical cached judgment per pair. Repeated uncached judgments on an evaluation sample measure variability; caching does not make new model calls deterministic.
+Save raw responses, parsed scores, rationale, model/provider configuration, effective supported sampling settings, prompt version, and input hashes. Use a fixed rubric and canonical cached judgment per pair. Repeated uncached judgments on an evaluation sample measure variability; caching does not make new model calls deterministic.
 
 ## 6. Complete STDI calculation and final mean
 
@@ -170,7 +174,7 @@ Required mathematical checks: bounds [0,1], equal polarity lowers or preserves a
 1. Define shared schema extension, scoring rubric, direct polarity adjustment, validity states, and reviewed fixtures.
 2. Implement extraction/parser/cache changes with backward compatibility.
 3. Retain deterministic greedy relation alignment; implement duration normalization, direct polarity adjustment, and duration increment.
-4. Adapt the existing judge with evidence-backed component outputs and saved responses.
+4. Adapt the existing judge with component scores, concise rationales and saved responses.
 5. Calculate both complete STDI values, fixed final mean, and disagreement metadata.
 6. Run development calibration and held-out evaluation.
 7. Add an opt-in simulation mode and result inspection, then pilot saved rewrites before generating a full new run.
@@ -179,7 +183,7 @@ Expected files: topic_drift/models.py, config/prompts.py, topic_drift/extraction
 
 For each chain step, compare against the original and the previous version. Average complete branch scores for each pair; cumulative final drift is the sum of valid incremental final scores, not a single [0,1] distance. Report incomplete chains and coverage.
 
-Expose both branch values and components, final mean, method gap, qualifier evidence, binary polarity flags and adjustments, and valid/partial/failed status. Record exact extraction, comparator, prompt, model, and formula versions. Preserve old execution artifacts; reprocessing creates separately labeled outputs.
+Expose both branch values and components, final mean, method gap, qualifier details, binary polarity flags and adjustments, and valid/partial/failed status. Record exact extraction, comparator, prompt, model, and formula versions. Preserve old execution artifacts; reprocessing creates separately labeled outputs.
 
 ## 9. Methodological basis and completion criteria
 
@@ -201,7 +205,7 @@ The changed file is repository implementation documentation in English. It has n
 The `dual` comparison method is implemented and is the default in the graph API and CLI.
 The graph UI enables its checkbox by default and selects the existing `cluster` method when
 it is disabled. The software includes schema-v2 extraction, qualifier adjustments, a contextual
-judge with evidence, shared VAD, complete-score averaging, validity states, traceable exports,
+judge with scores/rationales, shared VAD, complete-score averaging, validity states, traceable exports,
 caching, and valid incremental-chain coverage. Legacy comparison modes remain available.
 
 Automated verification uses frozen structures and mocked model responses. The evaluation runner

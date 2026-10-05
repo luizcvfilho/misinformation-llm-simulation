@@ -22,7 +22,7 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 
-DUAL_STDI_VERSION = "dual_stdi_v1"
+DUAL_STDI_VERSION = "dual_stdi_v3"
 FORMULA_VERSION = "stdi_remaining_distance_v1_mean_50_50"
 NUMERICAL_TOLERANCE = 1e-12
 CONTENT_COMPONENTS = ("theme_drift", "subtopic_drift", "entity_drift", "relation_drift")
@@ -53,7 +53,6 @@ def structure_issues(structure: TopicStructure) -> list[str]:
                 relation.base_action,
                 relation.signed_action,
                 relation.predicate,
-                relation.evidence,
             )
         ):
             issues.append(f"Relation {index} has incomplete required fields")

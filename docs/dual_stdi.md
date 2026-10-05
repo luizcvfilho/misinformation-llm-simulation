@@ -11,8 +11,10 @@ Dual evaluation adds LLM requests, and an initial run may download the embedding
 Each distinct text/title/configuration is extracted once with schema version 2. Legacy
 extraction prompts remain unchanged for legacy methods. Version-2 relations preserve the
 signed action, base action, affirmed/negated polarity and scope, exact duration, assertion
-type, and verbatim evidence. Pure opinions/recommendations are recorded separately.
+type. No `evidence` field is requested or exported by extraction or the judge. Pure opinions/recommendations are recorded separately.
 Historical missing qualifiers remain unknown; existing execution artifacts are not rewritten.
+The extraction and judge prompt versions were updated to invalidate older request caches.
+Purposes and attribution remain in action/object and are retained in the base action.
 
 The embedding branch retains the current theme, subtopic and entity comparisons, relation
 core weights `0.45/0.25/0.15/0.15`, greedy one-to-one matching, and tie ordering. It compares
@@ -33,10 +35,10 @@ seconds/minutes/hours/days/weeks can be converted, including Portuguese units. D
 in both texts is neutral; explicit addition/omission provisionally contributes `d_t=1`.
 Two zeros produce zero distance, and zero-to-positive produces one; neither has a defined
 percentage. Calendar months/years, ranges, approximations, incompatible units and unknown
-scope remain incomplete. Raw percentages beyond the cap are retained in evidence details.
+scope remain incomplete. Raw percentages beyond the cap are retained in relation details.
 
 The independent judge reads the full texts and shared structures, supplies all five component
-scores on the anchored `0/0.25/0.5/0.75/1` rubric, and provides rationale plus verbatim evidence.
+scores on the anchored `0/0.25/0.5/0.75/1` rubric, and provides concise rationales.
 Its relation score already includes semantic polarity, duration, roles, purposes and omissions;
 embedding adjustments are not applied again. The judge does not receive embedding scores or
 persona labels and does not evaluate factual truth against external knowledge.
@@ -59,12 +61,12 @@ The method gap measures disagreement, not calibrated confidence.
 
 ## Inspecting results
 
-Step details show both branch scores, disagreement, and expandable components/evidence.
+Step details show both branch scores, disagreement, and expandable components/qualifiers.
 The existing `stdi_vs_original` and `stdi_incremental` fields hold the final mean in dual mode.
 Legacy category columns explicitly represent the embedding branch, not averaged components.
 Both complete branch component sets appear in `metadata_dual_stdi_vs_original` and
 `metadata_dual_stdi_incremental` in JSONL exports. These records include relation baselines,
-adjustments, raw judge responses, rationale, passages, input hashes and configuration versions.
+adjustments, raw judge responses, rationale, input hashes and configuration versions.
 `stdi_embedding_*`, `stdi_llm_judge_*`, `stdi_method_gap_*` and `stdi_status_*` expose the summary.
 
 `stdi_cumulative` sums valid incremental final means and can exceed 1.
@@ -85,7 +87,7 @@ uv run python scripts/run_topic_drift_comparison.py --method dual --input output
 ```
 
 This re-extracts historical version-1 structures with the extended schema and keeps the input
-file intact. It writes `comparison_results.csv`, a manifest, and cached evidence to a new
+file intact. It writes `comparison_results.csv`, a manifest, and cached responses to a new
 directory. Complete embedding/judge scores and both branch component sets are exported.
 `historical_embedding_stdi` recomputes the old embedding formula on shared new structures;
 it is a comparator baseline, not a claim to reproduce historical extraction outputs.

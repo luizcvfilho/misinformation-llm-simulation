@@ -184,8 +184,9 @@ Missing qualifiers or VAD do not imply zero drift. If either complete branch is 
 the final mean is unavailable and the available branch remains visible. Identical text and
 context reuse the reference extraction and receive zero comparison drift without a judge call.
 Legacy component columns describe the embedding branch in dual mode; full judge components,
-evidence and raw responses appear in the step details and JSONL export. See
+qualifier details and raw responses appear in the step details and JSONL export. See
 [dual STDI usage and validation](docs/dual_stdi.md).
+The extraction and judge no longer request or export an `evidence` field.
 
 For `cluster`, [ClusterSTDIComparator](src/misinformation_simulation/topic_drift/cluster_comparison.py)
 embeds the extracted labels and relations with

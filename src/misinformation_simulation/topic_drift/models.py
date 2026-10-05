@@ -19,7 +19,6 @@ class TopicRelation:
     duration_value: float | None = None
     duration_unit: str | None = None
     duration_expression: str | None = None
-    evidence: str | None = None
     assertion_type: str | None = None
 
 
