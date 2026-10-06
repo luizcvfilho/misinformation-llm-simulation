@@ -39,7 +39,8 @@ def _refresh_graph_backend_if_stale() -> None:
     backend_module = simulation_graph
     if getattr(
         simulation_graph, "GRAPH_STEP_SCHEMA_VERSION", 0
-    ) < 3 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
+    ) < 4 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
+        importlib.reload(sys.modules["misinformation_simulation.simulation.types"])
         backend_module = importlib.reload(simulation_graph)
     current_runner = backend_module.run_news_interaction_graph
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):

@@ -4,6 +4,8 @@ from typing import Any
 
 import pandas as pd
 
+from misinformation_simulation.apps.interaction_graph_ui import branch_score_columns
+
 CATEGORY_METRICS = (
     "stdi_vs_original",
     "stdi_incremental",
@@ -29,7 +31,8 @@ def build_category_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
     if expanded.empty:
         return pd.DataFrame()
 
-    for metric in CATEGORY_METRICS:
+    branch_columns = branch_score_columns(expanded)
+    for metric in (*CATEGORY_METRICS, *branch_columns):
         if metric not in expanded.columns:
             expanded[metric] = pd.NA
         expanded[metric] = pd.to_numeric(expanded[metric], errors="coerce")
@@ -47,6 +50,7 @@ def build_category_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
             mean_stdi_cumulative=("stdi_cumulative", "mean"),
             mean_vad_drift_vs_original=("vad_drift_vs_original", "mean"),
             mean_contradiction_drift_vs_original=("contradiction_drift_vs_original", "mean"),
+            **{f"mean_{column}": (column, "mean") for column in branch_columns},
         )
         .reset_index()
         .sort_values(["category", "step_index", "node_label"])

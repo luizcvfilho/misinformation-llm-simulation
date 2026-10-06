@@ -213,7 +213,7 @@ def _record_stdi_metrics(
         setattr(step, f"{component}_{suffix}", metrics[component])
 
 
-GRAPH_STEP_SCHEMA_VERSION = 3
+GRAPH_STEP_SCHEMA_VERSION = 4
 
 
 def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[str, Any]) -> None:
@@ -759,6 +759,8 @@ def run_news_interaction_graph(
         last_row_position = 0
         cumulative_stdi = 0.0
         valid_steps = 0
+        branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
+        branch_valid_steps = {"cluster": 0, "llm_judge": 0}
         for (
             row_position,
             step,
@@ -775,6 +777,8 @@ def run_news_interaction_graph(
             if row_position != last_row_position:
                 cumulative_stdi = 0.0
                 valid_steps = 0
+                branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
+                branch_valid_steps = {"cluster": 0, "llm_judge": 0}
                 last_row_position = row_position
             if stdi_comparison_method == "dual":
                 _emit_progress(
@@ -820,6 +824,18 @@ def run_news_interaction_graph(
                 step.stdi_cumulative = cumulative_stdi
                 step.stdi_cumulative_valid_steps = valid_steps
                 step.stdi_chain_complete = valid_steps == step.step_index
+                for branch, name in (("embedding", "cluster"), ("llm_judge", "llm_judge")):
+                    metrics = incremental_dual[branch].get("metrics")
+                    if metrics is not None:
+                        branch_cumulative[name] += metrics["stdi"]
+                        branch_valid_steps[name] += 1
+                    setattr(step, f"stdi_{name}_cumulative", branch_cumulative[name])
+                    setattr(step, f"stdi_{name}_cumulative_valid_steps", branch_valid_steps[name])
+                    setattr(
+                        step,
+                        f"stdi_{name}_chain_complete",
+                        branch_valid_steps[name] == step.step_index,
+                    )
                 continue
             vs_original = calculate_stdi(
                 original,

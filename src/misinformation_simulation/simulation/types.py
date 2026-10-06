@@ -6,6 +6,37 @@ from typing import Any
 
 from misinformation_simulation.enums import Provider
 
+EVALUATION_METRICS = (
+    "stdi",
+    "theme_drift",
+    "subtopic_drift",
+    "entity_drift",
+    "relation_drift",
+    "contradiction_drift",
+    "valence_drift",
+    "arousal_drift",
+    "dominance_drift",
+    "vad_drift",
+    "content_drift",
+)
+
+
+def expand_dual_evaluation_record(record: dict[str, Any]) -> dict[str, Any]:
+    """Expose each branch independently, including historical dual records."""
+    for suffix in ("vs_original", "incremental"):
+        dual = record.get(f"metadata_dual_stdi_{suffix}")
+        if not isinstance(dual, dict):
+            continue
+        for branch, name in (("embedding", "cluster"), ("llm_judge", "llm_judge")):
+            evaluation = dual.get(branch, {})
+            record[f"{name}_evaluation_{suffix}"] = evaluation
+            record[f"stdi_status_{name}_{suffix}"] = evaluation.get("status", "not_requested")
+            record[f"stdi_error_{name}_{suffix}"] = evaluation.get("error")
+            metrics = evaluation.get("metrics") or {}
+            for metric in EVALUATION_METRICS:
+                record[f"{metric}_{name}_{suffix}"] = metrics.get(metric)
+    return record
+
 
 @dataclass(slots=True)
 class SimulationNode:
@@ -74,6 +105,12 @@ class SimulationStepResult:
     stdi_status_incremental: str = "not_requested"
     stdi_cumulative_valid_steps: int = 0
     stdi_chain_complete: bool | None = None
+    stdi_cluster_cumulative: float | None = None
+    stdi_cluster_cumulative_valid_steps: int = 0
+    stdi_cluster_chain_complete: bool | None = None
+    stdi_llm_judge_cumulative: float | None = None
+    stdi_llm_judge_cumulative_valid_steps: int = 0
+    stdi_llm_judge_chain_complete: bool | None = None
     original_topic_structure_status: str = "not_requested"
     original_topic_structure_error: str | None = None
     original_vad_status: str = "not_requested"
@@ -89,7 +126,7 @@ class SimulationStepResult:
         metadata = record.pop("metadata", {})
         for key, value in metadata.items():
             record[f"metadata_{key}"] = value
-        return record
+        return expand_dual_evaluation_record(record)
 
 
 @dataclass(slots=True)

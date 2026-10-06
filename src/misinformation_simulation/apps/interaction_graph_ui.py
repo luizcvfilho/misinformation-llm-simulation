@@ -23,6 +23,16 @@ AVAILABLE_MODELS = [model.value for model in Models]
 AVAILABLE_PROVIDERS = [provider.value for provider in Provider]
 
 
+def branch_score_columns(steps_df: pd.DataFrame) -> list[str]:
+    return [
+        f"stdi_{branch}_{suffix}"
+        for branch in ("cluster", "llm_judge")
+        if f"stdi_{branch}_vs_original" in steps_df.columns
+        for suffix in ("vs_original", "incremental", "cumulative")
+        if f"stdi_{branch}_{suffix}" in steps_df.columns
+    ]
+
+
 def create_default_node_form(position: int) -> dict[str, str]:
     preset_names = list(PREDEFINED_PERSONALITIES)
     preset_name = preset_names[(position - 1) % len(preset_names)]
@@ -158,6 +168,7 @@ def build_node_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
             mean_stdi_cumulative=("stdi_cumulative", "mean"),
             mean_vad_drift_vs_original=("vad_drift_vs_original", "mean"),
             mean_contradiction_drift_vs_original=("contradiction_drift_vs_original", "mean"),
+            **{f"mean_{column}": (column, "mean") for column in branch_score_columns(steps_df)},
         )
         .reset_index()
         .sort_values("step_index")
@@ -173,6 +184,9 @@ def build_news_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
     aggregations = {"title": ("metadata_title", "first")}
     if "metadata_category" in steps_df.columns:
         aggregations["category"] = ("metadata_category", "first")
+    aggregations.update(
+        {f"max_{column}": (column, "max") for column in branch_score_columns(steps_df)}
+    )
     grouped = (
         steps_df.groupby("news_id", dropna=False)
         .agg(

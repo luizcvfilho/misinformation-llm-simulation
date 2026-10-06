@@ -104,11 +104,36 @@ Legacy category columns explicitly represent the embedding branch, not averaged 
 Both complete branch component sets appear in `metadata_dual_stdi_vs_original` and
 `metadata_dual_stdi_incremental` in JSONL exports. These records include relation baselines,
 adjustments, raw judge responses, rationale, input hashes and configuration versions.
-`stdi_embedding_*`, `stdi_llm_judge_*`, `stdi_method_gap_*` and `stdi_status_*` expose the summary.
+Graph step schema 4 also exposes the evaluations separately as `cluster_evaluation_vs_original`,
+`cluster_evaluation_incremental`, `llm_judge_evaluation_vs_original` and
+`llm_judge_evaluation_incremental`. Each contains the complete branch result, including its
+status, metrics, diagnostics and available error/provenance details.
+
+All eleven metrics are exported as separate flat columns, for example
+`stdi_cluster_vs_original`, `relation_drift_cluster_incremental`,
+`stdi_llm_judge_vs_original` and `relation_drift_llm_judge_incremental`.
+`stdi_status_{branch}_{suffix}` and `stdi_error_{branch}_{suffix}` distinguish missing or failed
+evaluations from measured zeros. The existing `stdi_embedding_*` columns remain compatible aliases
+for the Cluster STDI. `stdi_method_gap_*` and `stdi_status_*` still describe the final Dual result.
+
+The result tables and charts show Cluster and LLM judge scores alongside Dual. Node, news and
+category summaries aggregate each branch independently. The per-step details show separate
+expandable evaluations for Cluster, LLM judge and the final Dual result. CSV downloads include
+the flat component columns, while saved JSONL retains the complete nested evaluations.
+Importing historical Dual JSONL derives the separate columns from its existing metadata without
+rewriting files or rerunning models; unavailable historical branch accumulations remain absent.
+
+The pair-comparison workflow similarly exports `cluster_*` and `llm_judge_*` metrics,
+`cluster_evaluation_json` and `llm_judge_evaluation_json`, retaining `embedding_*` aliases and
+the existing final `stdi` and `dual_evaluation_json` columns.
 
 `stdi_cumulative` sums valid incremental final means and can exceed 1.
 `stdi_cumulative_valid_steps` and `stdi_chain_complete` distinguish complete chains from
 partial sums. Judge failures do not change a successfully rewritten text into a rewrite error.
+`stdi_cluster_cumulative` and `stdi_llm_judge_cumulative` independently sum each branch's available
+incremental scores. Each has its own `stdi_{branch}_cumulative_valid_steps` and
+`stdi_{branch}_chain_complete`; a failed branch does not discard the other branch's valid score.
+Accumulations reset for every news item and retain full precision.
 Cancellation stops further judge calls; already evaluated results remain available.
 
 Canonical extraction/judge outputs are stored under `evaluation_cache/` in the execution

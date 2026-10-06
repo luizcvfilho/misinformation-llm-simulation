@@ -12,6 +12,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
+    branch_score_columns,
 )
 
 
@@ -127,6 +128,11 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     steps_df = run_bundle["steps_df"]
     node_summary_df = run_bundle["node_summary_df"]
     news_summary_df = run_bundle["news_summary_df"]
+    branch_columns = branch_score_columns(steps_df)
+    if summary.get("stdi_comparison_method") == "dual":
+        st.caption(
+            "Final STDI columns show Dual; Cluster and LLM judge scores are stored separately."
+        )
 
     st.caption(f"Transmission mode: {summary.get('rewrite_mode', 'legacy (mode not recorded)')}")
 
@@ -193,12 +199,26 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     "mean_stdi_cumulative",
                     "mean_vad_drift_vs_original",
                     "mean_contradiction_drift_vs_original",
+                    *[
+                        f"mean_{column}"
+                        for column in branch_columns
+                        if f"mean_{column}" in node_summary_df.columns
+                    ],
                 ]
             ],
             width="stretch",
         )
         chart_df = node_summary_df.set_index("node_label")[
-            ["mean_stdi_vs_original", "mean_stdi_incremental"]
+            [
+                "mean_stdi_vs_original",
+                "mean_stdi_incremental",
+                *[
+                    f"mean_{column}"
+                    for column in branch_columns
+                    if not column.endswith("cumulative")
+                    and f"mean_{column}" in node_summary_df.columns
+                ],
+            ]
         ]
         st.bar_chart(chart_df)
 
@@ -217,7 +237,13 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         )
         if not selected_steps.empty:
             st.line_chart(
-                selected_steps.set_index("step_index")[["stdi_vs_original", "stdi_incremental"]]
+                selected_steps.set_index("step_index")[
+                    [
+                        "stdi_vs_original",
+                        "stdi_incremental",
+                        *[column for column in branch_columns if not column.endswith("cumulative")],
+                    ]
+                ]
             )
             st.dataframe(
                 selected_steps[
@@ -228,6 +254,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         "stdi_vs_original",
                         "stdi_incremental",
                         "stdi_cumulative",
+                        *branch_columns,
                         "vad_drift_vs_original",
                         "vad_drift_incremental",
                         "contradiction_drift_vs_original",
@@ -298,20 +325,28 @@ def render_dual_stdi(row: pd.Series) -> None:
         if not isinstance(value, dict):
             continue
         st.markdown(f"**Dual STDI — {label} ({value.get('status', 'unavailable')})**")
-        columns = st.columns(3)
+        columns = st.columns(4)
         for column, branch, title in (
-            (columns[0], "embedding", "Embedding STDI"),
+            (columns[0], "embedding", "Cluster STDI"),
             (columns[1], "llm_judge", "LLM judge STDI"),
         ):
             metrics = value.get(branch, {}).get("metrics") or {}
             column.metric(title, format_metric(metrics.get("stdi")))
-        columns[2].metric("Method disagreement", format_metric(value.get("method_gap")))
+        columns[2].metric("Final Dual STDI", format_metric(value.get("stdi")))
+        columns[3].metric("Method disagreement", format_metric(value.get("method_gap")))
         st.caption(
             "The final STDI is the mean of both complete scores. "
-            "Category scores below describe the embedding branch. "
+            "Category scores below describe the Cluster branch. "
             "Disagreement is not calibrated confidence."
         )
-        with st.expander(f"Components, polarity/numeric details and judge rationale — {label}"):
+        for branch, title in (("embedding", "Cluster"), ("llm_judge", "LLM judge")):
+            evaluation = value.get(branch, {})
+            with st.expander(f"{title} evaluation — {label}"):
+                st.caption(f"Status: {evaluation.get('status', 'unavailable')}")
+                if evaluation.get("error"):
+                    st.error(evaluation["error"])
+                st.json(evaluation)
+        with st.expander(f"Final Dual result and provenance — {label}"):
             st.json(value)
     complete = row.get("stdi_chain_complete")
     if complete is not None and pd.notna(complete) and not complete:

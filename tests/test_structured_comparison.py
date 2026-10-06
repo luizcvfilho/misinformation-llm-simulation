@@ -8,7 +8,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
+from streamlit.testing.v1 import AppTest
 
+from misinformation_simulation.apps.interaction_graph_categories import (
+    build_category_summary_dataframe,
+)
+from misinformation_simulation.apps.interaction_graph_results import load_saved_result
 from misinformation_simulation.simulation import graph
 from misinformation_simulation.simulation.types import SimulationNode
 from misinformation_simulation.text_metrics.vad import VADScore
@@ -370,6 +375,13 @@ def test_workflow_deduplicates_extraction_and_exports_both_methods(tmp_path):
     assert result.manifest["valid_pairs"] == 2
     assert result.results["embedding_stdi"].notna().all()
     assert result.results["llm_judge_stdi"].notna().all()
+    assert result.results["cluster_stdi"].equals(result.results["embedding_stdi"])
+    for _, row in result.results.iterrows():
+        cluster = json.loads(row["cluster_evaluation_json"])
+        llm = json.loads(row["llm_judge_evaluation_json"])
+        assert row["stdi"] == (cluster["metrics"]["stdi"] + llm["metrics"]["stdi"]) / 2
+        for branch in ("cluster", "llm_judge"):
+            assert row[f"{branch}_valence_drift"] == 0
     write_comparison_output(tmp_path / "output", result)
     assert (tmp_path / "output" / "comparison_results.csv").exists()
 
@@ -419,6 +431,143 @@ def test_graph_defaults_to_dual_and_retains_valid_branch_on_judge_failure(monkey
     saved = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
     assert saved[0]["stdi_vs_original"] == first.stdi_vs_original
     assert saved[1]["metadata_dual_stdi_vs_original"]["llm_judge"]["status"] == "failed"
+    for suffix in ("vs_original", "incremental"):
+        record = saved[0]
+        assert (
+            record[f"stdi_{suffix}"]
+            == (record[f"stdi_cluster_{suffix}"] + record[f"stdi_llm_judge_{suffix}"]) / 2
+        )
+        for branch in ("cluster", "llm_judge"):
+            metrics = record[f"{branch}_evaluation_{suffix}"]["metrics"]
+            for component, value in metrics.items():
+                assert record[f"{component}_{branch}_{suffix}"] == value
+            assert record[f"stdi_status_{branch}_{suffix}"] == "valid"
+        assert saved[1][f"stdi_status_llm_judge_{suffix}"] == "failed"
+        assert saved[1][f"stdi_error_llm_judge_{suffix}"] == "Judge failed"
+        assert saved[1][f"theme_drift_llm_judge_{suffix}"] is None
+        assert saved[1][f"stdi_cluster_{suffix}"] is not None
+    assert second.stdi_cluster_chain_complete
+    assert second.stdi_cluster_cumulative_valid_steps == 2
+    assert not second.stdi_llm_judge_chain_complete
+    assert second.stdi_llm_judge_cumulative_valid_steps == 1
+    assert second.stdi_llm_judge_cumulative == first.stdi_llm_judge_incremental
+    assert second.stdi_cluster_cumulative == sum(r["stdi_cluster_incremental"] for r in saved)
+
+    bundle = load_saved_result(result.summary_path)
+    assert bundle["node_summary_df"].iloc[0]["mean_stdi_cluster_vs_original"] == (
+        first.stdi_embedding_vs_original
+    )
+    assert bundle["news_summary_df"].iloc[0]["max_stdi_llm_judge_vs_original"] == (
+        first.stdi_llm_judge_vs_original
+    )
+    csv = tmp_path / "steps.csv"
+    bundle["steps_df"].to_csv(csv, index=False)
+    exported = pd.read_csv(csv)
+    assert (
+        exported.iloc[0]["relation_drift_cluster_vs_original"]
+        != (exported.iloc[0]["relation_drift_llm_judge_vs_original"])
+    )
+    assert pd.isna(exported.iloc[1]["stdi_llm_judge_vs_original"])
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_results import load_saved_result\n"
+        "from misinformation_simulation.apps.interaction_graph_components "
+        "import render_result_bundle\n"
+        "from pathlib import Path\n"
+        f"render_result_bundle(load_saved_result(Path({str(result.summary_path)!r})))"
+    ).run(timeout=30)
+    assert not app.exception
+    metric_labels = {metric.label for metric in app.metric}
+    assert {"Cluster STDI", "LLM judge STDI", "Final Dual STDI"} <= metric_labels
+    assert "mean_stdi_cluster_vs_original" in app.dataframe[0].value
+
+    historical = [
+        {
+            key: value
+            for key, value in record.items()
+            if "_cluster_" not in key
+            and not key.startswith("cluster_evaluation_")
+            and not key.startswith("llm_judge_evaluation_")
+            and not ("_llm_judge_" in key and not key.startswith("stdi_llm_judge_"))
+        }
+        for record in saved
+    ]
+    result.steps_path.write_text("".join(json.dumps(record) + "\n" for record in historical))
+    before = result.steps_path.read_bytes()
+    restored = load_saved_result(result.summary_path)
+    assert restored["steps_df"].iloc[0]["stdi_cluster_vs_original"] == (
+        first.stdi_embedding_vs_original
+    )
+    assert restored["steps_df"].iloc[0]["relation_drift_llm_judge_vs_original"] == 0.5
+    assert result.steps_path.read_bytes() == before
+
+
+def test_dual_branch_accumulation_resets_for_each_news_item(monkeypatch, tmp_path):
+    monkeypatch.setattr(graph, "create_llm_client", lambda **kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **kwargs: structure(relation()))
+    monkeypatch.setattr(graph, "_generate_rewrite", lambda **kwargs: "Rewrite")
+    result = graph.run_news_interaction_graph(
+        pd.DataFrame(
+            [
+                {"description": "First original", "category": "politics"},
+                {"description": "Second original", "category": "politics"},
+            ]
+        ),
+        nodes=[SimulationNode("a", "test", "chatgpt", "persona")],
+        stdi_embedder=ConstantEmbedder(),
+        stdi_judge_fn=judge,
+        vad_scorer=lambda text: VADScore(3, 3, 3),
+        output_dir=tmp_path,
+    )
+    for step in result.step_results:
+        record = step.to_record()
+        for branch in ("cluster", "llm_judge"):
+            assert record[f"stdi_{branch}_cumulative"] == record[f"stdi_{branch}_incremental"]
+            assert record[f"stdi_{branch}_cumulative_valid_steps"] == 1
+            assert record[f"stdi_{branch}_chain_complete"]
+    bundle = load_saved_result(result.summary_path)
+    category = build_category_summary_dataframe(bundle["steps_df"])
+    assert category.iloc[0]["mean_stdi_llm_judge_vs_original"] == (
+        result.step_results[0].stdi_llm_judge_vs_original
+    )
+
+
+@pytest.mark.parametrize("identity", [False, True])
+def test_graph_retains_separate_branches_for_cluster_failure_and_identity(
+    identity, monkeypatch, tmp_path
+):
+    monkeypatch.setattr(graph, "create_llm_client", lambda **kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **kwargs: structure(relation()))
+    monkeypatch.setattr(
+        graph, "_generate_rewrite", lambda **kwargs: "Original" if identity else "Rewrite"
+    )
+
+    def fail(*args):
+        raise RuntimeError("Cluster unavailable")
+
+    monkeypatch.setattr(StructuredEmbeddingComparator, "compare_structured", fail)
+    result = graph.run_news_interaction_graph(
+        pd.DataFrame([{"description": "Original"}]),
+        nodes=[SimulationNode("a", "test", "chatgpt", "persona")],
+        stdi_embedder=ConstantEmbedder(),
+        stdi_judge_fn=judge,
+        vad_scorer=lambda text: VADScore(3, 3, 3),
+        output_dir=tmp_path,
+    )
+    record = json.loads(result.steps_path.read_text())
+    for suffix in ("vs_original", "incremental"):
+        if identity:
+            assert (
+                record[f"stdi_{suffix}"]
+                == record[f"stdi_cluster_{suffix}"]
+                == (record[f"stdi_llm_judge_{suffix}"])
+                == 0
+            )
+        else:
+            assert record[f"stdi_{suffix}"] is None
+            assert record[f"stdi_cluster_{suffix}"] is None
+            assert record[f"stdi_llm_judge_{suffix}"] is not None
+            assert record[f"stdi_error_cluster_{suffix}"] == "Cluster unavailable"
+            assert record[f"stdi_status_llm_judge_{suffix}"] == "valid"
 
 
 def test_complete_formula_keeps_full_precision():

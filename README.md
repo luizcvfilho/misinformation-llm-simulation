@@ -193,8 +193,11 @@ Failed extraction, invalid numeric judgments and unavailable VAD do not imply ze
 If either complete branch is unavailable,
 the final mean is unavailable and the available branch remains visible. Identical text and
 context reuse the reference extraction and receive zero comparison drift without a judge call.
-Legacy component columns describe the embedding branch in dual mode; full judge components,
-qualifier details and raw responses appear in the step details and JSONL export. See
+Legacy component columns describe the embedding branch in dual mode. Separate Cluster/LLM
+evaluation records and flat component columns are saved alongside the final
+Dual result. Each branch has independent status, errors and cumulative scores, and result tables
+include both branches. Historical Dual results expose their saved branch metrics on import.
+Qualifier details and raw responses appear in the step details and JSONL export. See
 [dual STDI usage and validation](docs/dual_stdi.md).
 
 Topic extraction and LLM semantic evaluation retry API errors, empty responses, malformed JSON,

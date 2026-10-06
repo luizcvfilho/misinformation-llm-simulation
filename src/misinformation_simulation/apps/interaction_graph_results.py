@@ -10,6 +10,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_news_summary_dataframe,
     build_node_summary_dataframe,
 )
+from misinformation_simulation.simulation.types import expand_dual_evaluation_record
 
 
 def find_saved_results(output_dir: Path) -> list[Path]:
@@ -38,6 +39,7 @@ def load_saved_result(summary_path: Path) -> dict[str, Any]:
     ]
     if any(not isinstance(record, dict) for record in records):
         raise ValueError("The steps file must contain JSON objects, one per line.")
+    records = [expand_dual_evaluation_record(record) for record in records]
     steps_df = pd.DataFrame(records)
     if not steps_df.empty:
         required = {

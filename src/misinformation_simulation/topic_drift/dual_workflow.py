@@ -89,6 +89,10 @@ def run_dual_workflow(
         "comparison_status",
         "embedding_status",
         "llm_judge_status",
+        "embedding_error",
+        "llm_judge_error",
+        "cluster_evaluation_json",
+        "llm_judge_evaluation_json",
         "comparison_error",
         "historical_embedding_stdi",
         "historical_lexical_stdi",
@@ -98,6 +102,9 @@ def run_dual_workflow(
         for component in (
             *CONTENT_COMPONENTS,
             "contradiction_drift",
+            "valence_drift",
+            "arousal_drift",
+            "dominance_drift",
             "vad_drift",
             "content_drift",
             "stdi",
@@ -264,10 +271,18 @@ def run_dual_workflow(
         for branch in ("embedding", "llm_judge"):
             branch_result = evaluation[branch]
             result.at[row_index, f"{branch}_status"] = branch_result["status"]
+            result.at[row_index, f"{branch}_error"] = branch_result.get("error")
+            name = "cluster" if branch == "embedding" else branch
+            result.at[row_index, f"{name}_evaluation_json"] = json.dumps(
+                branch_result, ensure_ascii=False, allow_nan=False
+            )
             metrics = branch_result.get("metrics") or {}
             for key in (
                 *CONTENT_COMPONENTS,
                 "contradiction_drift",
+                "valence_drift",
+                "arousal_drift",
+                "dominance_drift",
                 "vad_drift",
                 "content_drift",
                 "stdi",
@@ -295,6 +310,9 @@ def run_dual_workflow(
                 compared_vad=scores[1],
                 component_overrides=historical_comparator.compare(*structures).component_drifts,
             )["stdi"]
+    for column in list(result.columns):
+        if column.startswith("embedding_"):
+            result[column.replace("embedding_", "cluster_", 1)] = result[column]
     manifest = {
         "method": "dual",
         "version": DUAL_STDI_VERSION,
