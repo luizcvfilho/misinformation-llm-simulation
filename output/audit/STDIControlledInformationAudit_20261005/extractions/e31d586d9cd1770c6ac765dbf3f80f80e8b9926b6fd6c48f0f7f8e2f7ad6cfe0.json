@@ -1,0 +1,69 @@
+{
+  "job_id": "e31d586d9cd1770c6ac765dbf3f80f80e8b9926b6fd6c48f0f7f8e2f7ad6cfe0",
+  "text": "The health department did not close a clinic for two days. The clinic workers requested a review of the decision.",
+  "replicate": 1,
+  "configuration_sha256": "52e2494f3ad778d75a6b783c557551d879d22e092a59dbc61511613f1139d05f",
+  "time_utc": "2026-10-05T23:55:20.703230+00:00",
+  "structure": {
+    "main_topic": "A clinic non-closure and workers' request for a review",
+    "subtopics": [
+      "Health department decision",
+      "Clinic workers' review request"
+    ],
+    "central_entities": [
+      "health department",
+      "clinic",
+      "clinic workers"
+    ],
+    "central_relations": [
+      {
+        "subject": "health department",
+        "action": "did not close",
+        "object": "clinic",
+        "polarity": "negated",
+        "predicate": "close",
+        "negation_scope": "close a clinic",
+        "signed_action": "did not close",
+        "base_action": "close",
+        "duration_status": "exact",
+        "duration_value": 2.0,
+        "duration_unit": "days",
+        "duration_expression": "for two days",
+        "assertion_type": "asserted"
+      },
+      {
+        "subject": "clinic workers",
+        "action": "requested a review of",
+        "object": "the decision",
+        "polarity": "affirmed",
+        "predicate": "request",
+        "negation_scope": null,
+        "signed_action": "requested",
+        "base_action": "request a review of",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted"
+      }
+    ],
+    "narrative_frame": "Clinic workers seek review of a health department decision not to close the clinic.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v4",
+      "prompt_sha256": "98e86636c6d0a8c2d67729cc7be4d16e40e48b23b5cd52623ca760d537536601",
+      "input_sha256": "a69183fd0883df1ae10de15976409aed368c36203d051758afdfac846ec1b67b",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A clinic non-closure and workers' request for a review\",\n  \"subtopics\": [\n    \"Health department decision\",\n    \"Clinic workers' review request\"\n  ],\n  \"central_entities\": [\n    \"health department\",\n    \"clinic\",\n    \"clinic workers\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"health department\",\n      \"action\": \"did not close\",\n      \"object\": \"clinic\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"close\",\n      \"negation_scope\": \"close a clinic\",\n      \"signed_action\": \"did not close\",\n      \"base_action\": \"close\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 2,\n      \"duration_unit\": \"days\",\n      \"duration_expression\": \"for two days\",\n      \"assertion_type\": \"asserted\"\n    },\n    {\n      \"subject\": \"clinic workers\",\n      \"action\": \"requested a review of\",\n      \"object\": \"the decision\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"request\",\n      \"negation_scope\": null,\n      \"signed_action\": \"requested\",\n      \"base_action\": \"request a review of\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\"\n    }\n  ],\n  \"narrative_frame\": \"Clinic workers seek review of a health department decision not to close the clinic.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}

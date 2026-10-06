@@ -21,6 +21,41 @@ audit = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(audit)
 
 
+def test_audit_extraction_retries_invalid_response_before_checkpoint(tmp_path, monkeypatch):
+    from misinformation_simulation.llm import retry
+    from misinformation_simulation.topic_drift import extraction
+
+    response = json.dumps(
+        {
+            "schema_version": 2,
+            "main_topic": "Negotiations",
+            "subtopics": [],
+            "central_entities": ["union"],
+            "central_relations": [],
+            "opinions": [],
+            "has_internal_contradiction": False,
+            "internal_contradiction_score": 0.0,
+        }
+    )
+    responses = iter(["invalid JSON", response])
+    calls = []
+
+    def generate(*args, **kwargs):
+        calls.append(kwargs)
+        return next(responses)
+
+    monkeypatch.setattr(extraction, "create_llm_client", lambda **kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(extraction, "generate_openai_text_with_retry", generate)
+    monkeypatch.setattr(retry.time, "sleep", lambda delay: None)
+    job = {"job_id": "test-job", "text": "The union requested talks.", "replicate": 1}
+    args = Namespace(output_dir=tmp_path, model="test", provider="chatgpt", structured=True)
+    audit.extract_jobs([job], args, "test-configuration")
+    checkpoint = json.loads((tmp_path / "extractions/test-job.json").read_text())
+    assert len(calls) == 2
+    assert checkpoint["structure"]["extraction_status"] == "valid"
+    assert checkpoint["structure"]["provenance"]["raw_response"] == response
+
+
 @pytest.mark.parametrize("judge_fails", [True, False])
 def test_judge_checkpoints_preserve_failure_and_zero_scores(tmp_path, monkeypatch, judge_fails):
     structure = {"main_topic": "Negotiations", "central_relations": []}

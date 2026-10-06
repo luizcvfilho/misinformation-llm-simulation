@@ -32,6 +32,7 @@ from misinformation_simulation.config.prompts import (  # noqa: E402
     TOPIC_DRIFT_PROMPT_TEMPLATE,
     TOPIC_DRIFT_SYSTEM_INSTRUCTION,
 )
+from misinformation_simulation.llm.retry import MAX_EVALUATION_ATTEMPTS  # noqa: E402
 from misinformation_simulation.text_metrics.vad import (  # noqa: E402
     DEFAULT_VAD_MODEL_NAME,
     VADScore,
@@ -153,7 +154,6 @@ def extract_jobs(jobs: list[dict], args: argparse.Namespace, config_hash: str) -
                 title=None,
                 model=args.model,
                 provider=args.provider,
-                retry_attempts=1,
                 max_requests_per_minute=None,
                 structured=args.structured,
             )
@@ -410,6 +410,7 @@ def score_pairs(
             "frozen_original_extraction": True,
             "unique_texts": len(texts),
             "extraction_calls_planned": len(jobs),
+            "evaluation_max_attempts": MAX_EVALUATION_ATTEMPTS,
             "comparison_rows": len(results),
             "comparator_only_probes": len(probe_results),
             "comparison_version": CLUSTER_STDI_COMPARISON_VERSION,
@@ -534,7 +535,6 @@ def score_semantic_comparisons(args: argparse.Namespace) -> None:
                     modified_structure=modified,
                     model=args.model,
                     provider=args.provider,
-                    retry_attempts=1,
                     structured=args.structured,
                 )
             except Exception as error:
