@@ -143,6 +143,27 @@ Referências do MEmoLon na comparação atual: `buechel2020memolon`, `buechel202
 Referência da distribuição e traduções do NRC v1: `mohammad2018vadresource`.
 Referências do NRC v2 na comparação atual e no histórico: `mohammad2025vadv2`, `mohammad2025breaking`.
 
+- **Piloto BERT versus LLM em 06/10/2026:** por solicitação do pesquisador,
+  comparar somente textos completos, sem segmentação ou alteração do estimador
+  principal/STDI. O fluxo `notebooks/llm_vad_comparison_workbench.ipynb` usa
+  20 pares sintéticos anteriores e 30 pares original/final das mesmas cinco
+  notícias em seis cadeias (SSSS, CCCC, PPPP, DDDD, CCPP e PPCC), selecionadas
+  por ordem de hash antes da avaliação. Foram avaliados 75 textos únicos por
+  `gpt-6-luna`, individualmente, sem persona, par correspondente ou nota BERT,
+  com rubrica `llm_vad_expressed_tone_v1` e escala nominal 1–5. As 75 avaliações
+  e os 50 pares têm VAD completo. Nas simulações, o drift médio normalizado
+  foi 0,01986 com BERT e 0,07167 com LLM; nos controles, 0,05450 e 0,06250.
+  Cinco reescritas finais, não os originais, excederam 512 tokens WordPiece;
+  excluindo esses pares, as médias foram 0,02049 e 0,07000 (25 pares, com
+  contagens desiguais por cadeia). A valência aumentou em 20/20 controles
+  BERT e 19/20 LLM, com um empate LLM. Resultados e respostas brutas estão em
+  `output/audit/LLMVADComparison_20261006/`; `interpretation.md` registra também
+  possível mistura de agência do ator e do narrador em justificativas de
+  dominância. São resultados deste estudo, sem avaliação humana independente
+  ou repetição de notas bem-sucedidas. Maior drift não demonstra superioridade;
+  escalas nominais iguais não calibram estimadores. As cinco notícias, não os
+  30 pares das cadeias, são as unidades independentes desse recorte.
+
 #### Validação
 
 - Rubrica dos 50 pares controlados.

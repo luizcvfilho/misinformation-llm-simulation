@@ -985,6 +985,38 @@ dependent; cumulative STDI can exceed one. These English-only comparisons lack
 independent human VAD ratings. Coverage, variation, or proximity to BERT do not
 establish accuracy, and the results do not validate Portuguese.
 
+### Current BERT versus LLM VAD Pilot
+
+`notebooks/llm_vad_comparison_workbench.ipynb` inspects an independent full-text
+comparison, orchestrated by `scripts/compare_llm_vad.py`. The initial scope is the
+20 saved synthetic context pairs and original/final pairs for the same five
+news items across SSSS, CCCC, PPPP, DDDD, CCPP, and PPCC (50 pairs, 75 unique texts).
+News are selected by hashed ID before scoring. No segmentation, new rewrites,
+or changes to the production VAD scorer/STDI are introduced.
+
+The default LLM is the project's configured `gpt-6-luna` via `chatgpt`. Each input
+contains only one complete text, without persona, paired text, context label,
+or BERT scores. The versioned rubric rates expressed affective tone on nominal
+1–5 scales. Dominance concerns narrator/speaker emotional agency, not certainty
+or institutional authority. Raw responses, literal evidence, rationales,
+validation attempts, and missing values are checkpointed per unique text.
+
+```bash
+uv run python scripts/compare_llm_vad.py --stage prepare
+uv run python scripts/compare_llm_vad.py --stage all
+uv run python scripts/compare_llm_vad.py --stage report
+```
+
+Outputs are in `output/audit/LLMVADComparison_20261006/`. Preparation makes no
+API calls; `all` evaluates/resumes and exports reports, while `report` reuses
+saved responses. Changing model, rubric, or inputs requires a new output directory.
+The report also includes an offline `comparison_dashboard.html` with interactive
+plots and disagreement cases, generated entirely from saved assessments.
+The notebook loads existing results by default; external evaluation is opt-in.
+See [docs/llm_vad_comparison.md](docs/llm_vad_comparison.md) for the exact pilot
+scope, response policy, and interpretation limits. A prepared/pending report
+does not indicate a completed LLM comparison.
+
 ### Initial Portuguese and English VAD Pilot
 
 The initial bilingual diagnostic is retained in
