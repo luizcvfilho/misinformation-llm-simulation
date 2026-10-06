@@ -418,6 +418,8 @@ def score_pairs(
             "schema_version": 2 if args.structured else 1,
             "polarity_weight": 0.2 if args.structured else None,
             "duration_weight": 0.2 if args.structured else None,
+            "numeric_weight": 0.2 if args.structured else None,
+            "numeric_aggregation": "maximum" if args.structured else None,
             "complete_cluster_rows": sum(row["stdi"] is not None for row in results),
             "valid_structured_extractions": sum(row["status"] == "valid" for row in validation),
             "comparator_probes_method": "Legacy cluster_v2; manual version-1 relations",

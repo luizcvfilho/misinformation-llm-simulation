@@ -171,4 +171,4 @@ def test_standalone_cluster_uses_binary_polarity_without_a_judge():
     assert all(call["structured"] for call in calls)
     assert result.results.iloc[0]["relation_drift"] == pytest.approx(0.2)
     assert result.results.iloc[0]["comparison_status"] == "success"
-    assert result.manifest["cluster"]["comparison_version"] == "cluster_v3"
+    assert result.manifest["cluster"]["comparison_version"] == "cluster_v4"

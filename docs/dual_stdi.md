@@ -2,7 +2,7 @@
 
 Interaction-graph runs now default to `dual`. The **Dual STDI (embeddings + LLM judge)**
 checkbox is enabled by default in execution settings. Uncheck it to run the structured
-`cluster` branch alone, including polarity/duration adjustments without judge requests.
+`cluster` branch alone, including polarity/numeric adjustments without judge requests.
 `lexical` remains available through the Python API and CLI. The extraction
 provider/model also evaluates the judge; rewriting nodes retain their own configurations.
 Dual evaluation adds LLM requests, and an initial run may download the embedding/VAD models.
@@ -11,7 +11,7 @@ Dual evaluation adds LLM requests, and an initial run may download the embedding
 
 Each distinct text/title/configuration is extracted once with schema version 2 in `dual`
 and new `cluster` runs. The legacy prompt remains available for legacy extraction. Relations preserve the
-signed action, base action, affirmed/negated polarity and scope, exact duration, assertion
+signed action, base action, affirmed/negated polarity and scope, contextual numeric values, assertion
 type. There is no `evidence` field in relation extraction or judge output, and no supporting
 passage validation. Optional annotation fields are diagnostic metadata.
 Intransitive actions may have an empty object. Purposes and attribution remain in action/object
@@ -19,8 +19,8 @@ and are preserved in the base action, rather than stored in a separate passage f
 Pure opinions/recommendations are recorded separately. Historical version-1 structures retain
 their missing qualifiers and legacy comparison behavior; saved artifacts are not rewritten.
 
-The current versions are `structured_extraction_v4`, `structured_judge_v3`, `cluster_v3`,
-and `dual_stdi_v3`. Prompt versions invalidate request caches for new runs.
+The current versions are `structured_extraction_v5`, `structured_judge_v4`, `cluster_v4`,
+and `dual_stdi_v4`. Prompt versions invalidate request caches for new runs.
 The extraction prompt requires exactly `affirmed` or `negated`, never `unknown`.
 Hypothesis/uncertainty is represented by assertion type, independently of polarity.
 If a schema-2 response omits or violates the polarity enum, the parser normalizes it from
@@ -35,26 +35,47 @@ of qualifiers. Each aligned semantic distance `d_s` is adjusted as:
 ```text
 delta_p = 0 for equal known polarity, 1 for different known polarity
 d_adjusted = 0.80*d_s + 0.20*delta_p
-d_t = min(abs(rewrite_duration-reference_duration)/reference_duration, 1)
-d_relation = d_adjusted + (1-d_adjusted)*0.20*d_t
+d_value = min(abs(rewrite_value-reference_value)/abs(reference_value), 1)
+d_numeric = max(distances of corresponding numeric slots)
+d_relation = d_adjusted + (1-d_adjusted)*0.20*d_numeric
 R = (sum(aligned distances) + number of unmatched relations) / max(list sizes)
 ```
 
 Equal polarity can reduce drift even when actions/participants differ. There is no predicate
 equivalence gate. Unmatched relations contribute 1 without a polarity discount. Exact
-seconds/minutes/hours/days/weeks can be converted, including Portuguese units. Duration absent
-in both texts is neutral; explicit addition/omission provisionally contributes `d_t=1`.
-Two zeros produce zero distance, and zero-to-positive produces one; neither has a defined
-percentage. Calendar months/years, ranges, approximations and incompatible/unknown units
-retain an unavailable duration adjustment in diagnostic details. The relation keeps its
-polarity-adjusted semantic distance, so this optional qualifier does not block the score.
-Unsupported duration is not reported as a measured zero. Raw percentages beyond the cap
-are retained in relation details. Counts, dates, money and ages are not event durations.
+seconds/minutes/hours/days/weeks can be converted, including Portuguese units. Each relation's
+`numeric_values` stores role, kind, value, unit, exact/approximate/unknown status and source expression.
+Corresponding measurements are aligned by normalized role inside the already matched relation;
+array position or numerical proximity never pairs unrelated values. Roles must be distinct and
+stable; differences in role labels remain a possible source of extraction-driven drift.
+
+Scalar values use the reference's absolute magnitude, supporting signed values and zero without
+division errors. Two zeros yield zero; zero-to-nonzero yields one, with no defined percentage.
+Explicit numerical addition/omission contributes one. The user selected **maximum**, not mean,
+for multiple numerical changes, keeping a single fixed 0.20 adjustment per relation. Exact ranges
+can be represented as distinct lower/upper bound roles. Approximate values and unspecified bounds
+remain unavailable, rather than being invented or treated as measured zero.
+
+Compatible elapsed-time, metric length/mass/volume, percent/fraction and age year/month units are
+normalized. Other units require the same normalized label. Currencies require a shared currency
+label; there is no exchange-rate conversion. Calendar months/years are not converted to seconds.
+Complete ISO dates and identifiers use equality (zero if equal, one otherwise), with no arithmetic
+percentage; standalone numerical years retain scalar comparison. Identifiers retain leading zeros.
+Raw scalar percentage changes beyond the cap remain in the exported comparison details.
+
+Missing, invalid, approximate, duplicate-role or incompatible measurements retain an unavailable
+numeric adjustment and diagnostics. The branch keeps its polarity-adjusted semantic distance.
+`numeric_values=None` distinguishes historical unavailable qualifiers from explicit absence `[]`.
+When both structures predate the new numeric slots, the old duration comparator is retained;
+those structures do not acquire inferred counts, amounts or other numerical annotations.
+The legacy duration fields, `duration` details and `duration_weight` alias remain compatible.
+New numeric slots include duration, and the legacy duration adjustment is not additionally applied.
+Exports identify `numeric_weight=0.20` and `numeric_aggregation=maximum`.
 
 The independent judge reads the full texts and shared structures, supplies all five component
 scores on the anchored `0/0.25/0.5/0.75/1` rubric, and provides concise rationales.
 Numeric score validation remains mandatory; missing rationales produce diagnostics.
-Its relation score already includes semantic polarity, duration, roles, purposes and omissions;
+Its relation score already includes semantic polarity, numeric changes, roles, purposes and omissions;
 embedding adjustments are not applied again. The judge does not receive embedding scores or
 persona labels and does not evaluate factual truth against external knowledge.
 

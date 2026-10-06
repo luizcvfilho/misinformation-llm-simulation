@@ -27,8 +27,8 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 
-DUAL_STDI_VERSION = "dual_stdi_v3"
-STRUCTURED_CLUSTER_VERSION = "cluster_v3"
+DUAL_STDI_VERSION = "dual_stdi_v4"
+STRUCTURED_CLUSTER_VERSION = "cluster_v4"
 FORMULA_VERSION = "stdi_remaining_distance_v1_mean_50_50"
 NUMERICAL_TOLERANCE = 1e-12
 CONTENT_COMPONENTS = ("theme_drift", "subtopic_drift", "entity_drift", "relation_drift")
@@ -227,6 +227,8 @@ def compare_dual_stdi(
         "numerical_tolerance": NUMERICAL_TOLERANCE,
         "polarity_weight": 0.2,
         "duration_weight": 0.2,
+        "numeric_weight": 0.2,
+        "numeric_aggregation": "maximum",
         "branch_weights": [0.5, 0.5],
         "stdi": None,
         "method_gap": None,

@@ -313,6 +313,8 @@ def run_dual_workflow(
         "branch_weights": [0.5, 0.5],
         "polarity_weight": 0.2,
         "duration_weight": 0.2,
+        "numeric_weight": 0.2,
+        "numeric_aggregation": "maximum",
         "legacy_component_columns": "embedding",
         "uncached_judge": uncached_judge,
         "vad_model": "custom_scorer" if vad_scorer else "RobroKools/vad-bert",

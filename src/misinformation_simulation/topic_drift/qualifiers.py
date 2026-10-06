@@ -7,9 +7,11 @@ from dataclasses import asdict
 from typing import Any
 
 from misinformation_simulation.topic_drift.models import TopicRelation
+from misinformation_simulation.topic_drift.numeric_comparison import compare_numeric_values
 
 POLARITY_WEIGHT = 0.20
-DURATION_WEIGHT = 0.20
+NUMERIC_WEIGHT = 0.20
+DURATION_WEIGHT = NUMERIC_WEIGHT
 _DURATION_UNITS = {
     "second": 1,
     "seconds": 1,
@@ -101,24 +103,36 @@ def adjust_relation_distance(
     *,
     polarity_weight: float = POLARITY_WEIGHT,
     duration_weight: float = DURATION_WEIGHT,
+    numeric_weight: float | None = None,
 ) -> dict[str, Any]:
+    weight = duration_weight if numeric_weight is None else numeric_weight
     if not all(
         math.isfinite(value) and 0 <= value <= 1
-        for value in (semantic_distance, polarity_weight, duration_weight)
+        for value in (semantic_distance, polarity_weight, duration_weight, weight)
     ):
         raise ValueError("Distances and contribution weights must be in [0, 1].")
     duration = compare_duration(left, right)
+    legacy = left.numeric_values is None and right.numeric_values is None
+    numeric = (
+        {**duration, "mode": "legacy_duration", "aggregation": "maximum", "comparisons": []}
+        if legacy
+        else compare_numeric_values(left, right)
+    )
     polarities = (resolve_polarity(left), resolve_polarity(right))
     delta = int(polarities[0] != polarities[1])
     adjusted = (1 - polarity_weight) * semantic_distance + polarity_weight * delta
     warnings = []
     if (left.polarity, right.polarity) != polarities:
         warnings.append("Missing/invalid polarity normalized from the signed action")
-    if duration["status"] != "valid":
-        warnings.append("Duration adjustment unavailable; retaining the polarity-adjusted distance")
+    if numeric["status"] != "valid":
+        warnings.extend(numeric.get("warnings", []))
+        qualifier = "Duration" if legacy else "Numeric"
+        warnings.append(
+            f"{qualifier} adjustment unavailable; retaining the polarity-adjusted distance"
+        )
     distance = (
-        adjusted + (1 - adjusted) * duration_weight * duration["distance"]
-        if duration["status"] == "valid"
+        adjusted + (1 - adjusted) * weight * numeric["distance"]
+        if numeric["status"] == "valid"
         else adjusted
     )
     return {
@@ -128,6 +142,7 @@ def adjust_relation_distance(
         "polarity_adjustment": adjusted - semantic_distance,
         "resolved_polarities": list(polarities),
         "duration": duration,
+        "numeric": numeric,
         "distance": distance,
         "status": "valid",
         "warnings": warnings,

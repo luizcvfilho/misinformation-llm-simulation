@@ -169,7 +169,7 @@ The extraction step builds a structured representation for each text with:
 The four content components depend on the comparison method. **Interaction-graph
 simulations default to `dual`**, the mean of two complete evaluations. The UI checkbox
 "Dual STDI (embeddings + LLM judge)" is enabled by default; disabling it selects the
-`cluster` embedding branch with the same polarity/duration adjustments. The CLI accepts `--stdi-comparison-method
+`cluster` embedding branch with the same polarity/numeric adjustments. The CLI accepts `--stdi-comparison-method
 dual|cluster|lexical`. Calling
 `calculate_stdi(...)` without `component_overrides` uses the lexical method;
 `calculate_stdi_chain_metrics(...)`, `annotate_stdi_for_rewrites(...)`, and
@@ -177,13 +177,18 @@ dual|cluster|lexical`. Calling
 evaluation workflow uses `llm_semantic` scores for these four components.
 
 New `cluster` and `dual` runs extend the existing relation comparison with direct binary polarity
-and exact duration adjustments (both fixed at 0.20). `dual` independently obtains five
+and contextual numeric adjustments (both fixed at 0.20). Numeric slots cover counts, amounts,
+percentages, durations, ages, measurements, years, dates and identifiers. The largest valid
+change within an aligned relation supplies one numeric adjustment; duration is not counted twice.
+`dual` independently obtains five
 contextual component judgments from an LLM. Both branches reuse one VAD calculation;
 the final value averages complete STDI scores after contradiction and VAD contributions.
 Polarity is always `affirmed` or `negated` in schema-2 extraction; uncertainty is separate.
 No `evidence` field is requested or exported by extraction or the judge.
 Optional metadata produces diagnostics rather than blocking scores.
-Unsupported duration skips that adjustment while preserving the semantic/polarity score.
+Unavailable numeric values or incompatible units skip that adjustment with diagnostics while
+preserving the semantic/polarity score. Historical structures without numeric slots retain
+the legacy duration-only adjustment until re-extracted with the current prompt.
 Failed extraction, invalid numeric judgments and unavailable VAD do not imply zero drift.
 If either complete branch is unavailable,
 the final mean is unavailable and the available branch remains visible. Identical text and
@@ -445,7 +450,7 @@ inside the run that fitted them; fit one shared comparator over the complete
 collection of original and rewritten structures.
 
 The cluster theme drift is **1 minus** the direct embedding similarity between
-`main_topic` labels. New schema-2 cluster comparisons are recorded as `cluster_v3`; reused
+`main_topic` labels. New schema-2 cluster comparisons are recorded as `cluster_v4`; reused
 version-1 comparisons retain `cluster_v2`. These versions appear in graph
 step metadata, graph summaries, and comparison manifests. It no longer extracts
 `topic_domain` or forces maximum theme drift based on different domain labels.

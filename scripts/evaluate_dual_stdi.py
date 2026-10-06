@@ -69,6 +69,7 @@ def build_validation_report(canonical: pd.DataFrame, repetitions: pd.DataFrame) 
         for expected_column, actual in (
             ("expected_delta_p", comparison["delta_p"]),
             ("expected_duration_distance", comparison["duration"]["distance"]),
+            ("expected_numeric_distance", comparison.get("numeric", {}).get("distance")),
         ):
             expected = row.get(expected_column)
             if expected is not None and pd.notna(expected):

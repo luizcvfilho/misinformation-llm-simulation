@@ -4,6 +4,19 @@ Status: final architecture selected by the user on 2026-10-05; software implemen
 
 ## 1. Objective and selected architecture
 
+### Numeric generalization — 2026-10-05
+
+The latest user request broadens the duration-only qualifier to contextual numeric values:
+counts, amounts, percentages, ages, measurements, years, dates and identifiers as well as durations.
+The user explicitly selected the largest change across corresponding values in one relation,
+with one fixed contribution strength of 0.20. This supersedes the duration-only numerical scope
+in the earlier sections below; polarity, relation matching, content weights and the 50/50 mean stay fixed.
+Extraction stores typed numeric slots with stable roles, units and source expressions. Exact scalar
+changes use the capped reference-relative difference; dates and identifiers use equality. Unknown
+or incomparable numerical annotations stay diagnostic. Historical duration-only artifacts are
+preserved, and general numeric measurement requires new extraction. The current implementation
+and boundary policies are documented in `docs/dual_stdi.md`; empirical/human validation is pending.
+
 ### Current policy amendment — 2026-10-05
 
 The user's latest instruction removes the `evidence` field entirely from extraction and judge

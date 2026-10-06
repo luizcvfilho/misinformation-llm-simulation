@@ -311,7 +311,7 @@ def render_dual_stdi(row: pd.Series) -> None:
             "Category scores below describe the embedding branch. "
             "Disagreement is not calibrated confidence."
         )
-        with st.expander(f"Components, polarity/duration details and judge rationale — {label}"):
+        with st.expander(f"Components, polarity/numeric details and judge rationale — {label}"):
             st.json(value)
     complete = row.get("stdi_chain_complete")
     if complete is not None and pd.notna(complete) and not complete:

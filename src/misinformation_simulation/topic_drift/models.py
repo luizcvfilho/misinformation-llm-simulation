@@ -6,6 +6,16 @@ from typing import Any
 
 
 @dataclass(slots=True)
+class NumericValue:
+    role: str
+    value: float | str | None
+    unit: str | None = None
+    kind: str = "number"
+    status: str = "exact"
+    expression: str | None = None
+
+
+@dataclass(slots=True)
 class TopicRelation:
     subject: str
     action: str
@@ -20,6 +30,7 @@ class TopicRelation:
     duration_unit: str | None = None
     duration_expression: str | None = None
     assertion_type: str | None = None
+    numeric_values: list[NumericValue] | None = None
 
 
 @dataclass(slots=True)

@@ -25,7 +25,7 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
-from misinformation_simulation.topic_drift.models import TopicRelation, TopicStructure
+from misinformation_simulation.topic_drift.models import NumericValue, TopicRelation, TopicStructure
 from misinformation_simulation.topic_drift.qualifiers import resolve_polarity
 
 DEFAULT_TOPIC_DRIFT_MODEL = DEFAULT_LLM_MODEL
@@ -106,6 +106,42 @@ def _coerce_string_list(value: Any) -> list[str]:
     return _deduplicate_preserve_order(items)
 
 
+def _coerce_numeric_values(value: Any) -> list[NumericValue] | None:
+    if not isinstance(value, list):
+        return None
+    result = []
+    for item in value:
+        if not isinstance(item, dict):
+            result.append(NumericValue("", None, status="unknown"))
+            continue
+        kind = str(item.get("kind") or "number").strip().lower()
+        number = item.get("value")
+        if kind in {"date", "identifier"}:
+            finite = not isinstance(number, float) or math.isfinite(number)
+            number = (
+                str(number).strip()
+                if number is not None and not isinstance(number, bool) and finite
+                else None
+            )
+        else:
+            try:
+                number = float(number) if not isinstance(number, bool) else float("nan")
+                number = number if math.isfinite(number) else None
+            except (TypeError, ValueError, OverflowError):
+                number = None
+        result.append(
+            NumericValue(
+                role=str(item.get("role") or "").strip(),
+                value=number,
+                unit=str(item["unit"]).strip() if item.get("unit") else None,
+                kind=kind,
+                status=str(item.get("status") or "unknown").strip().lower(),
+                expression=str(item["expression"]).strip() if item.get("expression") else None,
+            )
+        )
+    return result
+
+
 def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRelation]:
     if not isinstance(value, list):
         return []
@@ -166,6 +202,7 @@ def _coerce_relations(value: Any, *, structured: bool = False) -> list[TopicRela
                 )
             except (TypeError, ValueError):
                 qualifiers["duration_value"] = None
+            qualifiers["numeric_values"] = _coerce_numeric_values(item.get("numeric_values"))
         relation = TopicRelation(subject=subject, action=action, object=obj, **qualifiers)
         if structured:
             relation.polarity = resolve_polarity(relation)
@@ -246,6 +283,9 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
         for index, item in enumerate(payload["central_relations"]):
             if isinstance(item, dict) and item.get("polarity") not in {"affirmed", "negated"}:
                 issues.append(f"Relation {index} polarity normalized from the signed action")
+            if isinstance(item, dict) and "numeric_values" in item:
+                if not isinstance(item["numeric_values"], list):
+                    issues.append(f"Relation {index} numeric values unavailable")
     blocking = [
         issue
         for issue in issues

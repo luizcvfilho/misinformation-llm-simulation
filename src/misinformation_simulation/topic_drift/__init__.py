@@ -29,7 +29,13 @@ from .manual_evaluation_definitions import (
     MetricRewritePrompt,
 )
 from .metrics import calculate_stdi, calculate_stdi_chain_metrics, calculate_vad_drift
-from .models import TopicRelation, TopicStructure, flatten_topic_structure, topic_structure_to_dict
+from .models import (
+    NumericValue,
+    TopicRelation,
+    TopicStructure,
+    flatten_topic_structure,
+    topic_structure_to_dict,
+)
 from .semantic_comparison import SemanticSTDIComparison, compare_stdi_components_semantically
 from .stdi_logistic_regression import run_stdi_logistic_regression_analysis
 from .stdi_regression_features import (
@@ -47,6 +53,7 @@ from .stdi_regression_features import (
 from .structured_comparison import StructuredEmbeddingComparator, compare_dual_stdi
 
 __all__ = [
+    "NumericValue",
     "TopicRelation",
     "TopicStructure",
     "topic_structure_to_dict",
