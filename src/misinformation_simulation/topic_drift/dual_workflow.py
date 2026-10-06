@@ -68,6 +68,7 @@ def run_dual_workflow(
     cache_dir: Path | str | None,
     vad_scorer: Callable[[str], VADScore] | None,
     uncached_judge: bool,
+    judge_repeats: int,
 ) -> ComparisonWorkflowResult:
     from misinformation_simulation.topic_drift.comparison_workflow import (
         ComparisonWorkflowResult,
@@ -257,6 +258,7 @@ def run_dual_workflow(
             judge_fn=judge_fn,
             cache=cache,
             uncached_judge=uncached_judge,
+            judge_repeats=judge_repeats,
         )
         for key, value in {
             "comparison_method": "dual",
@@ -335,6 +337,8 @@ def run_dual_workflow(
         "numeric_aggregation": "maximum",
         "legacy_component_columns": "embedding",
         "uncached_judge": uncached_judge,
+        "judge_repeats": judge_repeats,
+        "judge_aggregation": "mean_complete_metrics",
         "vad_model": "custom_scorer" if vad_scorer else "RobroKools/vad-bert",
     }
     return ComparisonWorkflowResult(result, manifest)

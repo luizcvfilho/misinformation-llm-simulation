@@ -54,7 +54,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 12
+GRAPH_OUTPUT_LAYOUT_VERSION = 13
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -184,6 +184,32 @@ def _render_execution_settings(
             "Requires additional LLM judgments. Disable to use the existing embedding evaluation."
         ),
     )
+    repeat_judge = st.checkbox(
+        "Repeat LLM judge evaluation",
+        value=True,
+        key="repeat_stdi_judge",
+        disabled=not evaluate_dual_stdi,
+        help="Evaluate each text pair multiple times with the same model and rubric.",
+    )
+    judge_repeats = st.number_input(
+        "LLM judge evaluations per pair",
+        min_value=2,
+        value=3,
+        step=1,
+        key="stdi_judge_repeats",
+        disabled=not evaluate_dual_stdi or not repeat_judge,
+        help=(
+            "Total evaluations per pair, including the first. "
+            "Disable repetition for one evaluation."
+        ),
+    )
+    if evaluate_dual_stdi:
+        effective_repeats = int(judge_repeats) if repeat_judge else 1
+        st.caption(
+            f"Each pair uses {effective_repeats} judge evaluation(s). Scores are averaged; "
+            "individual judgments and variability are saved. Additional evaluations increase "
+            "judge API cost approximately in proportion to their count."
+        )
     advanced_settings = _render_advanced_settings()
     return {
         "graph_name": graph_name,
@@ -194,6 +220,7 @@ def _render_execution_settings(
         "allow_title_fallback": allow_title_fallback,
         "rewrite_mode": rewrite_mode,
         "stdi_comparison_method": "dual" if evaluate_dual_stdi else "cluster",
+        "stdi_judge_repeats": int(judge_repeats) if evaluate_dual_stdi and repeat_judge else 1,
         **advanced_settings,
     }
 

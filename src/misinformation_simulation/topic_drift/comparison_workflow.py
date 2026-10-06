@@ -28,8 +28,10 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 from misinformation_simulation.topic_drift.structured_comparison import (
+    DEFAULT_JUDGE_REPEATS,
     STRUCTURED_CLUSTER_VERSION,
     StructuredEmbeddingComparator,
+    validate_judge_repeats,
 )
 
 ComparisonMethod = Literal["llm_semantic", "cluster", "dual"]
@@ -163,9 +165,11 @@ def run_comparison_workflow(
     cache_dir: Path | str | None = None,
     vad_scorer: Callable[..., Any] | None = None,
     uncached_judge: bool = False,
+    judge_repeats: int = DEFAULT_JUDGE_REPEATS,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
     resolved_method = _validate_method(str(method))
+    validate_judge_repeats(judge_repeats)
     if resolved_method == "dual":
         from misinformation_simulation.topic_drift.dual_workflow import run_dual_workflow
 
@@ -192,6 +196,7 @@ def run_comparison_workflow(
             cache_dir=cache_dir,
             vad_scorer=vad_scorer,
             uncached_judge=uncached_judge,
+            judge_repeats=judge_repeats,
         )
     required_columns = {original_text_column, modified_text_column}
     missing_columns = sorted(required_columns - set(df.columns))

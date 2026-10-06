@@ -53,6 +53,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--topic-drift-model", default=DEFAULT_LLM_MODEL.value)
     parser.add_argument("--topic-drift-provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument(
+        "--stdi-judge-repeats",
+        type=int,
+        default=3,
+        help="Total LLM judge evaluations per pair in dual mode (default: 3; use 1 to disable).",
+    )
+    parser.add_argument(
         "--stdi-comparison-method",
         choices=("dual", "cluster", "lexical"),
         default="dual",
@@ -96,6 +102,7 @@ def main() -> None:
         topic_drift_model=args.topic_drift_model,
         topic_drift_provider=args.topic_drift_provider,
         stdi_comparison_method=args.stdi_comparison_method,
+        stdi_judge_repeats=args.stdi_judge_repeats,
         stdi_embedding_model=args.stdi_embedding_model,
         output_dir=args.output_dir,
         output_prefix=args.output_prefix,

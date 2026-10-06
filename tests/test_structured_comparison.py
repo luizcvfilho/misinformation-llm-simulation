@@ -278,17 +278,136 @@ def test_judge_cache_is_durable_and_uncached_samples_do_not_replace_canonical(tm
 
     def counting_judge(**kwargs):
         calls.append(kwargs)
-        return judge(**kwargs)
+        return SemanticSTDIComparison(
+            dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), len(calls) / 10), {}
+        )
 
     a = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
     b = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
-    assert len(calls) == 1
+    assert len(calls) == 3
     assert not a["llm_judge"]["cache_hit"] and b["llm_judge"]["cache_hit"]
     assert a["stdi"] == b["stdi"]
-    compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge, uncached_judge=True)
-    assert len(calls) == 2
+    uncached = compare(
+        cache=EvaluationCache(tmp_path), judge_fn=counting_judge, uncached_judge=True
+    )
+    assert len(calls) == 6
+    assert uncached["stdi"] != a["stdi"]
+    restored = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
+    assert len(calls) == 6
+    assert restored["llm_judge"]["metrics"] == a["llm_judge"]["metrics"]
+    assert restored["llm_judge"]["statistics"] == a["llm_judge"]["statistics"]
     compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge, title="New context")
-    assert len(calls) == 3
+    assert len(calls) == 9
+
+
+def test_repeated_judge_averages_complete_scores_and_preserves_draws():
+    draws = iter([0.0, 0.5, 1.0])
+    requests = []
+
+    def varying_judge(**kwargs):
+        requests.append(kwargs)
+        value = next(draws)
+        return SemanticSTDIComparison(
+            dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), value),
+            dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), f"Draw {value}"),
+            provenance={"raw_response": f"response {value}"},
+        )
+
+    result = compare(judge_fn=varying_judge)
+    branch = result["llm_judge"]
+    assert len(requests) == 3
+    assert requests[0] == requests[1] == requests[2]
+    assert branch["requested_repeats"] == branch["valid_repeats"] == 3
+    assert branch["metrics"]["theme_drift"] == 0.5
+    assert branch["metrics"]["stdi"] == pytest.approx((0 + 0.55 + 1) / 3)
+    assert branch["statistics"]["theme_drift"]["std"] == 0.5
+    assert branch["statistics"]["stdi"]["mean"] == branch["metrics"]["stdi"]
+    assert [s["judgment"]["provenance"]["raw_response"] for s in branch["samples"]] == [
+        "response 0.0",
+        "response 0.5",
+        "response 1.0",
+    ]
+    assert "judgment" not in branch
+
+
+def test_repeat_count_can_expand_a_legacy_single_judgment_cache(tmp_path):
+    calls = []
+
+    def counting_judge(**kwargs):
+        calls.append(kwargs)
+        return judge(**kwargs)
+
+    single = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge, judge_repeats=1)
+    assert len(calls) == 1
+    assert single["llm_judge"]["judgment"]["component_drifts"]["theme_drift"] == 0.5
+    assert single["llm_judge"]["statistics"]["theme_drift"]["std"] is None
+    expanded = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge, judge_repeats=5)
+    assert len(calls) == 5
+    assert [s["cache_hit"] for s in expanded["llm_judge"]["samples"]] == [
+        True,
+        False,
+        False,
+        False,
+        False,
+    ]
+    smaller = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge, judge_repeats=3)
+    assert len(calls) == 5
+    assert smaller["llm_judge"]["cache_hit"]
+    assert smaller["llm_judge"]["valid_repeats"] == 3
+
+
+def test_partial_repetitions_preserve_successes_and_retry_only_missing_draws(tmp_path):
+    calls = []
+
+    def intermittent_judge(**kwargs):
+        calls.append(kwargs)
+        if len(calls) == 2:
+            raise ValueError("Provider failed")
+        return judge(**kwargs)
+
+    first = compare(cache=EvaluationCache(tmp_path), judge_fn=intermittent_judge)
+    branch = first["llm_judge"]
+    assert branch["status"] == "partial" and branch["valid_repeats"] == 2
+    assert branch["metrics"] is None and first["stdi"] is None
+    assert first["embedding"]["metrics"] is not None
+    assert branch["statistics"]["theme_drift"]["count"] == 2
+    assert "Repeat 2: Provider failed" in branch["error"]
+    recovered = compare(cache=EvaluationCache(tmp_path), judge_fn=intermittent_judge)
+    assert len(calls) == 4
+    assert recovered["status"] == "valid"
+    assert [s["cache_hit"] for s in recovered["llm_judge"]["samples"]] == [True, False, True]
+
+
+def test_invalid_judge_draw_is_unavailable_and_is_not_cached(tmp_path):
+    invalid = SemanticSTDIComparison(
+        dict.fromkeys((*CONTENT_COMPONENTS, "contradiction_drift"), float("nan")), {}
+    )
+    result = compare(cache=EvaluationCache(tmp_path), judge_fn=lambda **kwargs: invalid)
+    assert result["llm_judge"]["status"] == "failed"
+    assert result["llm_judge"]["valid_repeats"] == 0
+    assert not list(tmp_path.glob("judge_*.json"))
+    json.dumps(result, allow_nan=False)
+
+
+@pytest.mark.parametrize("count", [0, -1, 1.5, True, "3"])
+def test_invalid_repeat_count_fails_before_requests(count):
+    with pytest.raises(ValueError, match="positive integer"):
+        compare(judge_repeats=count, judge_fn=lambda **kwargs: pytest.fail("Unexpected request"))
+
+
+def test_cancellation_stops_between_judge_draws_and_retains_completed_draw():
+    calls = []
+
+    def counting_judge(**kwargs):
+        calls.append(kwargs)
+        return judge(**kwargs)
+
+    result = compare(judge_fn=counting_judge, cancel_check=lambda: bool(calls))
+    assert len(calls) == 1
+    assert result["llm_judge"]["cancelled"]
+    assert result["llm_judge"]["executed_repeats"] == 1
+    assert result["llm_judge"]["samples"][0]["metrics"] is not None
+    assert result["stdi"] is None
 
 
 def test_parser_preserves_qualifiers_and_incomplete_relations():
@@ -420,7 +539,8 @@ def test_graph_defaults_to_dual_and_retains_valid_branch_on_judge_failure(monkey
     first, second = result.step_results
     assert result.summary["stdi_comparison_method"] == "dual"
     assert calls == ["Original", "First", "Second"]
-    assert judge_calls.count(("Original", "First")) == 1
+    assert judge_calls.count(("Original", "First")) == 3
+    assert result.summary["stdi_judge_repeats"] == 3
     assert first.stdi_vs_original is not None
     assert first.stdi_chain_complete
     assert second.rewrite_status == "success"
@@ -443,7 +563,7 @@ def test_graph_defaults_to_dual_and_retains_valid_branch_on_judge_failure(monkey
                 assert record[f"{component}_{branch}_{suffix}"] == value
             assert record[f"stdi_status_{branch}_{suffix}"] == "valid"
         assert saved[1][f"stdi_status_llm_judge_{suffix}"] == "failed"
-        assert saved[1][f"stdi_error_llm_judge_{suffix}"] == "Judge failed"
+        assert "Judge failed" in saved[1][f"stdi_error_llm_judge_{suffix}"]
         assert saved[1][f"theme_drift_llm_judge_{suffix}"] is None
         assert saved[1][f"stdi_cluster_{suffix}"] is not None
     assert second.stdi_cluster_chain_complete

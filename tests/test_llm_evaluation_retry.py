@@ -231,7 +231,10 @@ def test_optional_judge_rationales_do_not_trigger_retry(monkeypatch):
 
 
 @pytest.mark.parametrize("failed_stage", ["extraction", "judge"])
-def test_workflow_continues_after_exhausted_retries(monkeypatch, tmp_path, failed_stage):
+@pytest.mark.parametrize("judge_repeats", [1, 3])
+def test_workflow_continues_after_exhausted_retries(
+    monkeypatch, tmp_path, failed_stage, judge_repeats
+):
     extraction_raw = json.dumps(valid_payload("extraction"))
     judge_raw = json.dumps(valid_payload("judge"))
     extraction_responses = (
@@ -240,7 +243,9 @@ def test_workflow_continues_after_exhausted_retries(monkeypatch, tmp_path, faile
         else [extraction_raw] * 4
     )
     judge_responses = (
-        ["invalid judgment"] * 4 + [judge_raw] if failed_stage == "judge" else [judge_raw] * 2
+        ["invalid judgment"] * 4 + [judge_raw] * (2 * judge_repeats - 1)
+        if failed_stage == "judge"
+        else [judge_raw] * (2 * judge_repeats)
     )
     extractor = install_client(monkeypatch, "extraction", "chatgpt", extraction_responses)
     judge = install_client(monkeypatch, "judge", "chatgpt", judge_responses)
@@ -262,6 +267,7 @@ def test_workflow_continues_after_exhausted_retries(monkeypatch, tmp_path, faile
         reuse_structures=False,
         vad_scorer=lambda _text: VADScore(3, 3, 3),
         cache_dir=tmp_path,
+        judge_repeats=judge_repeats,
     ).results
 
     assert result.iloc[0]["comparison_status"] == "partial"
@@ -273,7 +279,11 @@ def test_workflow_continues_after_exhausted_retries(monkeypatch, tmp_path, faile
         assert "JSON object" in details["extraction_issues"][0]
         assert details["provenance"]["raw_response"] == "invalid extraction"
     else:
-        assert judge.calls == 5
+        assert judge.calls == 4 + 2 * judge_repeats - 1
         details = json.loads(result.iloc[0]["dual_evaluation_json"])
-        assert details["llm_judge"]["status"] == "failed"
-        assert details["llm_judge"]["provenance"]["raw_response"] == "invalid judgment"
+        branch = details["llm_judge"]
+        assert branch["status"] == ("failed" if judge_repeats == 1 else "partial")
+        assert branch["valid_repeats"] == judge_repeats - 1
+        assert branch["samples"][0]["provenance"]["raw_response"] == "invalid judgment"
+        if judge_repeats == 1:
+            assert branch["provenance"]["raw_response"] == "invalid judgment"

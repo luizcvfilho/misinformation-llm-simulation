@@ -4,6 +4,10 @@
 
 **Verificação adicional das fontes VAD:** 01/10/2026, para MEmoLon, NRC v1 e recursos associados. As demais referências não foram verificadas novamente nesta atualização.
 
+**Verificação adicional de avaliação repetida por LLM:** 06/10/2026, para `saha2026judgebudget`
+e `haldar2025ratingroulette`, nas páginas oficiais dos anais. As demais fontes não foram
+verificadas novamente nesta atualização.
+
 **Arquivo de citações:** [`references.bib`](../references.bib)
 
 **Plano de uso na escrita:** [`plano_escrita_tcc.md`](plano_escrita_tcc.md)
@@ -60,6 +64,20 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | `whitehouse2022knowledge` | Explicar que conhecimento externo pode melhorar detecção quando a base é pertinente e atualizada. | Reforça a distinção entre STDI e checagem factual; não é um método adotado atualmente. |
 | `grootendorst2022bertopic` | Fundamentar uma análise exploratória de temas no corpus ou nas trajetórias de reescrita. | BERTopic não deve substituir os componentes pareados do STDI sem novo experimento e validação. |
 | `karnam2026bowling` | Precedente de procedimento: embeddings de rótulos livres com `all-MiniLM-L6-v2`, BERTopic e consolidação qualitativa de tópicos. | O objeto de estudo é interação humano–ChatGPT, não desinformação. Serve como referência de método, não de fenômeno. |
+
+### Avaliação repetida por LLM como judge
+
+| Chave BibTeX | Uso recomendado | Cuidado de interpretação |
+| --- | --- | --- |
+| `saha2026judgebudget` | Saha, Wagde e Kveton (AISTATS 2026), *LLM-as-a-Judge on a Budget*. Fundamenta consultas repetidas para estimar a média das notas de um judge estocástico e a alocação de orçamento conforme a variância estimada por par. Fonte primária: [PMLR](https://proceedings.mlr.press/v300/saha26a.html), resumo e metadados verificados em 06/10/2026. | A implementação deste projeto usa quantidade fixa configurável; não implementa o algoritmo adaptativo do artigo. O padrão de três é uma decisão de orçamento do estudo, sem alegação de suficiência demonstrada. Estabilidade não substitui validação humana nem checagem factual. |
+| `haldar2025ratingroulette` | Haldar e Hockenmaier (Findings EMNLP 2025), *Rating Roulette*. Apoia a necessidade de medir variabilidade das notas do mesmo judge entre execuções. Fonte primária: [ACL Anthology](https://aclanthology.org/2025.findings-emnlp.1361/), resumo e metadados verificados em 06/10/2026. | A variabilidade observada nas tarefas do artigo não é um resultado do STDI. Não usar a fonte para afirmar que três repetições eliminam viés ou garantem concordância humana. |
+
+Usar as fontes em Materiais e métodos e nas ameaças à validade. Registrar o número solicitado
+e válido de avaliações, as notas individuais, a média e o desvio padrão amostral. Reutilizar
+textos, estruturas e VAD para isolar a variabilidade do judge. A regra de média dos STDIs
+completos e a exigência de todas as avaliações válidas são decisões desta implementação.
+A rubrica ordinal e a média numérica continuam sendo convenções operacionais do estudo.
+Não apresentar a repetição como validação dos pesos ou como evidência de veracidade externa.
 
 ## 4. Trabalhos mantidos fora do núcleo
 
@@ -128,6 +146,8 @@ Fontes primárias conferidas: [artigo MEmoLon](https://aclanthology.org/2020.acl
 1. `abdurahman2025primer`
 2. `chen2025rpa`
 3. `frisch2024interaction`
+4. `saha2026judgebudget`
+5. `haldar2025ratingroulette`
 
 ## 6. Regras para uso durante a escrita
 

@@ -67,10 +67,12 @@ from misinformation_simulation.topic_drift.models import (
 )
 from misinformation_simulation.topic_drift.provenance import EvaluationCache
 from misinformation_simulation.topic_drift.structured_comparison import (
+    DEFAULT_JUDGE_REPEATS,
     DUAL_STDI_VERSION,
     STRUCTURED_CLUSTER_VERSION,
     StructuredEmbeddingComparator,
     compare_dual_stdi,
+    validate_judge_repeats,
 )
 
 DEFAULT_SIMULATION_OUTPUT_DIR = Path("output") / "interaction_graph"
@@ -256,6 +258,7 @@ def run_news_interaction_graph(
     stdi_embedder: TextEmbedder | None = None,
     stdi_cache_dir: Path | str | None = None,
     stdi_judge_fn: Callable[..., Any] | None = None,
+    stdi_judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
     output_dir: Path | str | None = None,
@@ -273,6 +276,7 @@ def run_news_interaction_graph(
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
     if stdi_comparison_method not in {"dual", "cluster", "lexical"}:
         raise ValueError("'stdi_comparison_method' must be 'dual', 'cluster' or 'lexical'.")
+    validate_judge_repeats(stdi_judge_repeats)
     cache_directory = stdi_cache_dir
     if cache_directory is None and persist_results and stdi_comparison_method == "dual":
         cache_directory = Path(output_dir or DEFAULT_SIMULATION_OUTPUT_DIR) / "evaluation_cache"
@@ -359,6 +363,10 @@ def run_news_interaction_graph(
         limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
     evaluation_metadata = {
+        "stdi_judge_repeats": stdi_judge_repeats if stdi_comparison_method == "dual" else None,
+        "stdi_judge_aggregation": "mean_complete_metrics"
+        if stdi_comparison_method == "dual"
+        else None,
         "topic_drift_model": str(topic_drift_model),
         "topic_drift_provider": normalize_provider(topic_drift_provider),
         "topic_extraction_original_title_context": rewrite_prompt.original_title_context,
@@ -797,6 +805,8 @@ def run_news_interaction_graph(
                     "base_url": topic_drift_base_url,
                     "retry_attempts": retry_attempts,
                     "before_request_hook": judge_limiter.acquire,
+                    "judge_repeats": stdi_judge_repeats,
+                    "cancel_check": cancel_check,
                     "cache": evaluation_cache,
                     **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
                 }

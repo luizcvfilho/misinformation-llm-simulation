@@ -5,7 +5,77 @@ checkbox is enabled by default in execution settings. Uncheck it to run the stru
 `cluster` branch alone, including polarity/numeric adjustments without judge requests.
 `lexical` remains available through the Python API and CLI. The extraction
 provider/model also evaluates the judge; rewriting nodes retain their own configurations.
+Dual evaluation defaults to **three LLM judge evaluations per distinct pair**. In execution
+settings, **Repeat LLM judge evaluation** is checked by default. Use **LLM judge evaluations
+per pair** to choose any integer of at least two; uncheck repetition for exactly one evaluation.
+Both controls are disabled when Dual STDI is off, so Cluster runs issue no judge requests.
+The selected settings apply to every graph in the execution queue.
 Dual evaluation adds LLM requests, and an initial run may download the embedding/VAD models.
+
+## Repeated judge evaluations
+
+Each draw receives the same complete texts, extracted structures, model, endpoint and rubric.
+Draws do not see other judgments or embedding scores. Extraction, embeddings and VAD are reused.
+Repetition is distinct from retrying failed requests: every draw has its own existing bounded
+retry budget. Scores and the final 50/50 branch weights remain unchanged.
+
+For each draw, calculate all five component scores and its complete STDI with shared VAD.
+The LLM branch then averages the complete per-draw metrics at full precision. In particular,
+its STDI is the mean of the individual STDIs, **not** STDI recomputed from mean components:
+the contradiction adjustment is nonlinear. The final Dual score averages this LLM branch STDI
+with the embedding branch STDI.
+
+`llm_judge.samples` retains each numbered draw's status, cache hit, component scores,
+rationales, raw response/provenance and complete metrics. `llm_judge.statistics` records
+count, mean, sample standard deviation (`ddof=1`), minimum and maximum for each judged
+component and STDI. A standard deviation requires two available values; otherwise it is null.
+These are descriptive repeatability statistics, not calibrated confidence intervals.
+The branch records `requested_repeats`, `executed_repeats`, `valid_repeats` and `aggregation`.
+`executed_repeats` counts processed draws, including cached ones, rather than API attempts.
+Graph summaries/step metadata identify `stdi_judge_repeats` and `stdi_judge_aggregation`;
+pair manifests identify `judge_repeats` and `judge_aggregation`.
+
+A complete LLM branch requires all requested draws and complete VAD. If any draw fails after
+its retry budget, successful draws and their descriptive statistics remain available, but
+the LLM branch and final Dual score are unavailable (`partial`, or `failed` if no draw succeeds).
+Failures never enter the mean as zeros. Cached successes survive a restart; only missing draws
+need new requests. Cancellation is checked between draws and retains completed sample records.
+The identical-text shortcut still issues zero judge calls and explicitly records that shortcut.
+
+Every draw has a separate durable cache entry. The first keeps the historical single-judge
+key; subsequent keys also include a zero-based `repeat_index`. Increasing from one to three
+draws adds two calls, while lowering the count uses only the selected prefix of saved draws.
+Model, prompt, text, context or structure changes invalidate the corresponding keys.
+`uncached_judge=True` bypasses all draw caches without replacing canonical saved judgments.
+Saved historical scores are not recalculated automatically.
+
+For uncached pairs, three draws cost approximately three times as much as one **in the judge
+stage**, excluding retry differences and provider prompt-cache discounts. Rewriting and
+extraction costs do not multiply. Comparisons against the original and against the previous
+version can be distinct pairs; repeated identical pairs reuse the cache.
+
+The default of three is a project budget choice, not a literature-validated sufficient count.
+[Saha, Wagde and Kveton (2026), *LLM-as-a-Judge on a Budget*](https://proceedings.mlr.press/v300/saha26a.html)
+studies repeated queries for mean-score estimation and allocating more queries to pairs with
+higher estimated variance. This implementation uses a fixed user-selected count, not their
+adaptive allocation algorithm. [Haldar and Hockenmaier (2025), *Rating Roulette*](https://aclanthology.org/2025.findings-emnlp.1361/)
+documents variation in judges' scores across runs. Repetition describes and can reduce sampling
+noise; it does not establish factual accuracy or agreement with independent human annotations.
+Validate one versus multiple draws on a predefined human-reviewed sample before claiming gains.
+
+Python configuration: `run_news_interaction_graph(..., stdi_judge_repeats=3)` and
+`compare_dual_stdi(..., judge_repeats=3)`; `run_comparison_workflow(..., method="dual",
+judge_repeats=3)` accepts the same setting. Use `1` to disable repetition. All reject nonpositive
+or noninteger counts before requests. The low-level `compare_stdi_components_semantically`
+function still performs one draw; legacy `llm_semantic` and manual annotation workflows keep
+their existing single-draw behavior. This setting applies to the Dual judge branch.
+
+```powershell
+uv run python scripts/run_interaction_graph.py --input data/news.csv --graph-config data/graph.json --stdi-judge-repeats 3
+uv run python scripts/run_topic_drift_comparison.py --method dual --input output/stdi_manual_evaluation/scored_stdi_pairs.csv --output-dir output/dual_stdi_pilot --judge-repeats 3
+```
+
+Replace the illustrative input/configuration paths with existing project files.
 
 ## Computation
 
@@ -20,7 +90,8 @@ Pure opinions/recommendations are recorded separately. Historical version-1 stru
 their missing qualifiers and legacy comparison behavior; saved artifacts are not rewritten.
 
 The current versions are `structured_extraction_v5`, `structured_judge_v4`, `cluster_v4`,
-and `dual_stdi_v4`. Prompt versions invalidate request caches for new runs.
+and `dual_stdi_v5`. Prompt versions invalidate request caches for new runs. Dual v5 identifies
+repeated-judge aggregation; the per-draw judge prompt and STDI formula are unchanged.
 The extraction prompt requires exactly `affirmed` or `negated`, never `unknown`.
 Hypothesis/uncertainty is represented by assertion type, independently of polarity.
 If a schema-2 response omits or violates the polarity enum, the parser normalizes it from
@@ -176,8 +247,12 @@ uv run python scripts/evaluate_dual_stdi.py --input data/synthetic/dual_stdi_val
 uv run python scripts/evaluate_dual_stdi.py --input data/synthetic/dual_stdi_validation_pairs.json --output-dir output/dual_stdi_held_out --split held_out --judge-repeats 3
 ```
 
-The runner saves canonical comparisons, additional uncached judge repetitions, variability
-statistics, coverage, method disagreements and qualifier-policy checks. Repeated judgments
+The runner defaults to three canonical draws per pair (`--judge-evaluations 3`). Its existing
+`--judge-repeats` option counts **additional diagnostic single draws** on the selected sample,
+not the number of canonical draws. These diagnostic draws remain unaggregated so that their
+variability can be measured directly. The runner saves canonical comparisons, additional
+uncached judge repetitions, variability statistics, coverage, disagreements and policy checks.
+Repeated diagnostic judgments
 do not replace the canonical cached judgment. The standalone comparison command also accepts
 `--uncached-judge`. Human expected scores enter error statistics only when
 `manual_review_status=reviewed`; retain disagreement and annotation history separately.
@@ -199,5 +274,7 @@ Real-model judge repeatability, independent human annotation and held-out findin
 running the supplied evaluation workflow and reviewing its evidence. Neither averaging nor the
 selected 0.20 strengths have been empirically validated by these software tests.
 
-This is software documentation. No thesis LaTeX or bibliography files require an Overleaf
-update, and repository edits are not synchronized to Overleaf automatically.
+This is software documentation. The repeatability sources are also recorded in the repository's
+`references.bib` and thesis literature map. To use them in Overleaf, manually update
+`elementos-postextuais/referencias.bib` from `references.bib`; no thesis LaTeX source was edited
+for this implementation. Repository edits are not synchronized to Overleaf automatically.

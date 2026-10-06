@@ -348,6 +348,28 @@ def render_dual_stdi(row: pd.Series) -> None:
             evaluation = value.get(branch, {})
             with st.expander(f"{title} evaluation — {label}"):
                 st.caption(f"Status: {evaluation.get('status', 'unavailable')}")
+                if branch == "llm_judge" and "requested_repeats" in evaluation:
+                    if evaluation.get("identity_shortcut"):
+                        st.caption("Identical texts: zero drift without judge requests.")
+                    else:
+                        st.caption(
+                            f"Valid evaluations: {evaluation['valid_repeats']}/"
+                            f"{evaluation['requested_repeats']}. "
+                            "The LLM score averages complete per-evaluation scores."
+                        )
+                        statistics = evaluation.get("statistics", {})
+                        if statistics:
+                            st.dataframe(
+                                pd.DataFrame.from_dict(statistics, orient="index")
+                                .rename_axis("Metric")
+                                .reset_index(),
+                                hide_index=True,
+                                width="stretch",
+                            )
+                            st.caption(
+                                "std is the sample standard deviation across available draws; "
+                                "it requires at least two values and is not calibrated confidence."
+                            )
                 if evaluation.get("error"):
                     st.error(evaluation["error"])
                 st.json(evaluation)

@@ -34,6 +34,7 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
         df,
         *,
         stdi_comparison_method="cluster",
+        stdi_judge_repeats=3,
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
@@ -59,6 +60,7 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         df,
         *,
         stdi_comparison_method="cluster",
+        stdi_judge_repeats=3,
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
@@ -69,6 +71,7 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         df,
         *,
         stdi_comparison_method="cluster",
+        stdi_judge_repeats=3,
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
@@ -111,11 +114,25 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     dual_control = next(control for control in app.checkbox if control.key == "evaluate_dual_stdi")
     assert dual_control.value is True
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
-    dual_control.uncheck().run(timeout=30)
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 3
+    repeats_control = app.checkbox(key="repeat_stdi_judge")
+    count_control = app.number_input(key="stdi_judge_repeats")
+    assert repeats_control.value is True
+    count_control.set_value(5).run(timeout=30)
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 5
+    app.checkbox(key="repeat_stdi_judge").uncheck().run(timeout=30)
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 1
+    assert app.number_input(key="stdi_judge_repeats").disabled
+    app.checkbox(key="repeat_stdi_judge").check().run(timeout=30)
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 5
+    app.checkbox(key="evaluate_dual_stdi").uncheck().run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
-    dual_control.check().run(timeout=30)
+    assert app.checkbox(key="repeat_stdi_judge").disabled
+    assert app.number_input(key="stdi_judge_repeats").disabled
+    app.checkbox(key="evaluate_dual_stdi").check().run(timeout=30)
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 5
 
 
 def test_build_simulation_nodes_resolves_preset_personality() -> None:

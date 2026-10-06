@@ -183,6 +183,18 @@ change within an aligned relation supplies one numeric adjustment; duration is n
 `dual` independently obtains five
 contextual component judgments from an LLM. Both branches reuse one VAD calculation;
 the final value averages complete STDI scores after contradiction and VAD contributions.
+The Dual judge defaults to **three evaluations per pair**. In the UI, leave **Repeat LLM judge
+evaluation** enabled and select **LLM judge evaluations per pair** (default `3`), or disable
+repetition for one evaluation. Cluster mode disables these controls and issues no judge calls.
+The LLM branch averages complete per-evaluation scores and exports individual judgments plus
+sample standard deviations. All requested evaluations must succeed for a complete branch;
+failed draws never count as zeros. Extraction, embeddings and VAD are reused, and each draw is
+cached separately. Increasing the count adds only missing draws; existing results stay unchanged.
+Python uses `stdi_judge_repeats=3` for graph runs and `judge_repeats=3` for Dual pair comparisons.
+CLI equivalents are `--stdi-judge-repeats 3` and `--judge-repeats 3`, respectively; use `1` for
+one evaluation. Repetition multiplies judge-stage API cost approximately by the selected count.
+The default is a budget choice, not proof that three draws ensure reliability. For the protocol,
+failure policy and verified research references, see [repeated judge evaluations](docs/dual_stdi.md#repeated-judge-evaluations).
 Polarity is always `affirmed` or `negated` in schema-2 extraction; uncertainty is separate.
 No `evidence` field is requested or exported by extraction or the judge.
 Optional metadata produces diagnostics rather than blocking scores.

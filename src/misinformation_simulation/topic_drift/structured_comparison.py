@@ -4,6 +4,7 @@ import json
 import math
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, replace
+from statistics import fmean, stdev
 from typing import Any
 
 from misinformation_simulation.config.prompts import STRUCTURED_JUDGE_VERSION
@@ -27,11 +28,17 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 
-DUAL_STDI_VERSION = "dual_stdi_v4"
+DUAL_STDI_VERSION = "dual_stdi_v5"
+DEFAULT_JUDGE_REPEATS = 3
 STRUCTURED_CLUSTER_VERSION = "cluster_v4"
 FORMULA_VERSION = "stdi_remaining_distance_v1_mean_50_50"
 NUMERICAL_TOLERANCE = 1e-12
 CONTENT_COMPONENTS = ("theme_drift", "subtopic_drift", "entity_drift", "relation_drift")
+
+
+def validate_judge_repeats(judge_repeats: int) -> None:
+    if isinstance(judge_repeats, bool) or not isinstance(judge_repeats, int) or judge_repeats < 1:
+        raise ValueError("'judge_repeats' must be a positive integer.")
 
 
 def _core(structure: TopicStructure) -> TopicStructure:
@@ -219,7 +226,10 @@ def compare_dual_stdi(
     judge_fn: Callable[..., SemanticSTDIComparison] = compare_stdi_components_semantically,
     cache: EvaluationCache | None = None,
     uncached_judge: bool = False,
+    judge_repeats: int = DEFAULT_JUDGE_REPEATS,
+    cancel_check: Callable[[], bool] | None = None,
 ) -> dict[str, Any]:
+    validate_judge_repeats(judge_repeats)
     cache = cache or EvaluationCache()
     result: dict[str, Any] = {
         "version": DUAL_STDI_VERSION,
@@ -230,6 +240,8 @@ def compare_dual_stdi(
         "numeric_weight": 0.2,
         "numeric_aggregation": "maximum",
         "branch_weights": [0.5, 0.5],
+        "judge_repeats": judge_repeats,
+        "judge_aggregation": "mean_complete_metrics",
         "stdi": None,
         "method_gap": None,
         "input_sha256": input_hash(
@@ -262,7 +274,15 @@ def compare_dual_stdi(
             stdi=0.0,
             method_gap=0.0,
             embedding={"status": "valid", "metrics": zero},
-            llm_judge={"status": "valid", "metrics": zero},
+            llm_judge={
+                "status": "valid",
+                "metrics": zero,
+                "requested_repeats": judge_repeats,
+                "valid_repeats": 0,
+                "executed_repeats": 0,
+                "identity_shortcut": True,
+                "samples": [],
+            },
             shared_vad={"status": "valid", **{k: 0.0 for k in vad if k != "status"}},
         )
         return result
@@ -289,43 +309,106 @@ def compare_dual_stdi(
         "base_url": base_url,
         "prompt_version": STRUCTURED_JUDGE_VERSION,
     }
-    try:
-        saved = None if uncached_judge else cache.get("judge", inputs)
-        cache_hit = saved is not None
-        if saved is None:
-            judgment = judge_fn(
-                original_text=original_text,
-                modified_text=modified_text,
-                title=title,
-                original_structure=original_structure,
-                modified_structure=modified_structure,
-                model=model,
-                provider=provider,
-                api_key=api_key,
-                base_url=base_url,
-                retry_attempts=retry_attempts,
-                before_request_hook=before_request_hook,
-                structured=True,
+    samples = []
+    cancelled = False
+    for repeat_index in range(judge_repeats):
+        if cancel_check is not None and cancel_check():
+            cancelled = True
+            break
+        # Keep the historical first draw; subsequent draws have distinct durable keys.
+        sample_inputs = inputs if repeat_index == 0 else {**inputs, "repeat_index": repeat_index}
+        sample: dict[str, Any] = {"repeat": repeat_index + 1, "metrics": None}
+        try:
+            saved = None if uncached_judge else cache.get("judge", sample_inputs)
+            sample["cache_hit"] = saved is not None
+            if saved is None:
+                saved = asdict(
+                    judge_fn(
+                        original_text=original_text,
+                        modified_text=modified_text,
+                        title=title,
+                        original_structure=original_structure,
+                        modified_structure=modified_structure,
+                        model=model,
+                        provider=provider,
+                        api_key=api_key,
+                        base_url=base_url,
+                        retry_attempts=retry_attempts,
+                        before_request_hook=before_request_hook,
+                        structured=True,
+                    )
+                )
+            scores = [
+                saved["component_drifts"][key]
+                for key in (*CONTENT_COMPONENTS, "contradiction_drift")
+            ]
+            if not all(math.isfinite(value) and 0 <= value <= 1 for value in scores):
+                raise ValueError("Judge components must be finite scores between zero and one")
+            sample["judgment"] = saved
+            if not uncached_judge and not sample["cache_hit"]:
+                cache.put("judge", sample_inputs, saved)
+            sample["status"] = "valid"
+            if vad["status"] == "valid":
+                sample["metrics"] = complete_stdi(saved["component_drifts"], vad)
+        except Exception as exc:
+            sample.update(
+                status="failed", error=str(exc), provenance=getattr(exc, "provenance", {})
             )
-            saved = asdict(judgment)
-            if not uncached_judge:
-                cache.put("judge", inputs, saved)
-        judge_metrics = (
-            complete_stdi(saved["component_drifts"], vad) if vad["status"] == "valid" else None
+        samples.append(sample)
+    valid_samples = [sample for sample in samples if sample["status"] == "valid"]
+    all_valid = len(valid_samples) == judge_repeats
+    complete_metrics = [sample["metrics"] for sample in valid_samples if sample["metrics"]]
+    statistics = {}
+    for key in (*CONTENT_COMPONENTS, "contradiction_drift", "stdi"):
+        values = (
+            [metrics[key] for metrics in complete_metrics]
+            if key == "stdi"
+            else [sample["judgment"]["component_drifts"][key] for sample in valid_samples]
         )
-        result["llm_judge"] = {
-            "status": "valid" if judge_metrics is not None else "partial",
-            "metrics": judge_metrics,
-            "judgment": saved,
-            "cache_hit": cache_hit,
+        statistics[key] = {
+            "count": len(values),
+            "mean": fmean(values) if values else None,
+            "std": stdev(values) if len(values) > 1 else None,
+            "min": min(values) if values else None,
+            "max": max(values) if values else None,
         }
-    except Exception as exc:
-        result["llm_judge"] = {
-            "status": "failed",
-            "error": str(exc),
-            "metrics": None,
-            "provenance": getattr(exc, "provenance", {}),
-        }
+    judge_metrics = (
+        {key: fmean(metrics[key] for metrics in complete_metrics) for key in complete_metrics[0]}
+        if all_valid and len(complete_metrics) == judge_repeats
+        else None
+    )
+    branch: dict[str, Any] = {
+        "status": "valid"
+        if judge_metrics is not None
+        else "partial"
+        if valid_samples
+        else "failed",
+        "metrics": judge_metrics,
+        "aggregation": "mean_complete_metrics",
+        "requested_repeats": judge_repeats,
+        "executed_repeats": len(samples),
+        "valid_repeats": len(valid_samples),
+        "cache_hit": bool(samples) and all(sample.get("cache_hit", False) for sample in samples),
+        "cancelled": cancelled,
+        "samples": samples,
+        "statistics": statistics,
+    }
+    if judge_repeats == 1 and valid_samples:
+        branch["judgment"] = valid_samples[0]["judgment"]
+    elif judge_repeats == 1 and samples:
+        branch["provenance"] = samples[0].get("provenance", {})
+    if not all_valid:
+        errors = [
+            f"Repeat {sample['repeat']}: {sample['error']}"
+            for sample in samples
+            if sample["status"] == "failed"
+        ]
+        if cancelled:
+            errors.append("Judge evaluation cancelled before all repeats completed")
+        branch["error"] = "; ".join(errors)
+        if judge_repeats == 1 and samples and not cancelled:
+            branch["error"] = samples[0]["error"]
+    result["llm_judge"] = branch
     a, b = result["embedding"]["metrics"], result["llm_judge"]["metrics"]
     if a is not None and b is not None:
         result.update(

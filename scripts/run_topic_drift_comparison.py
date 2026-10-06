@@ -54,6 +54,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--random-state", type=int, default=42)
     parser.add_argument("--cache-dir", type=Path, default=None)
     parser.add_argument(
+        "--judge-repeats",
+        type=int,
+        default=3,
+        help="Total judge evaluations per pair in dual mode (default: 3; use 1 to disable).",
+    )
+    parser.add_argument(
         "--uncached-judge",
         action="store_true",
         help="Bypass canonical judgments to measure judge variability.",
@@ -100,6 +106,7 @@ def main() -> None:
         reuse_structures=not args.refresh_structures,
         cache_dir=args.cache_dir or args.output_dir / "evaluation_cache",
         uncached_judge=args.uncached_judge,
+        judge_repeats=args.judge_repeats,
         progress_callback=print,
     )
     write_comparison_output(args.output_dir, workflow)

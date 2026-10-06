@@ -102,7 +102,8 @@ def test_queue_archive_preserves_folder_import_order_with_over_99_graphs() -> No
     assert len(set(names)) == 101
 
 
-def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
+@pytest.mark.parametrize("judge_repeats", [None, 1, 5])
+def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> None:
     nodes = [create_default_node_form(1)]
     graphs = []
     queue.add_graph(graphs, "First", nodes)
@@ -110,12 +111,14 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     calls = []
     comparison_methods = []
     rewrite_modes = []
+    judge_counts = []
     output_dirs = []
 
     def fake_run(**kwargs):
         calls.append(kwargs["output_prefix"])
         comparison_methods.append(kwargs["stdi_comparison_method"])
         rewrite_modes.append(kwargs["rewrite_mode"])
+        judge_counts.append(kwargs["stdi_judge_repeats"])
         output_dirs.append(kwargs["output_dir"])
         if len(calls) == 1:
             raise RuntimeError("provider unavailable")
@@ -143,6 +146,8 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     }
 
     job = run_job.GraphRunJob()
+    if judge_repeats is not None:
+        settings["stdi_judge_repeats"] = judge_repeats
     run_job._run_graph_queue(
         job=job,
         df=pd.DataFrame([{"title": "t", "description": "d"}]),
@@ -158,6 +163,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path) -> None:
     assert calls == ["01_first", "02_second"]
     assert comparison_methods == ["dual", "dual"]
     assert rewrite_modes == ["interpretive", "interpretive"]
+    assert judge_counts == [judge_repeats or 3, judge_repeats or 3]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
     assert sorted(path.name for path in (tmp_path / "batch").iterdir()) == sorted(calls)

@@ -103,12 +103,19 @@ def main() -> None:
         "--judge-repeats", type=int, default=0, help="Additional uncached judgments on a sample."
     )
     parser.add_argument("--repeat-sample-size", type=int, default=8)
+    parser.add_argument(
+        "--judge-evaluations",
+        type=int,
+        default=3,
+        help="Total evaluations per canonical pair (default: 3). Diagnostic repeats use one draw.",
+    )
     parser.add_argument("--model", default=DEFAULT_LLM_MODEL.value)
     parser.add_argument("--provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument("--base-url", default=None)
     args = parser.parse_args()
     if (
         args.judge_repeats < 0
+        or args.judge_evaluations < 1
         or args.repeat_sample_size <= 0
         or (args.max_pairs is not None and args.max_pairs <= 0)
     ):
@@ -133,7 +140,7 @@ def main() -> None:
         "cache_dir": args.output_dir / "evaluation_cache",
         "progress_callback": print,
     }
-    canonical = run_comparison_workflow(source, **options)
+    canonical = run_comparison_workflow(source, **options, judge_repeats=args.judge_evaluations)
     write_comparison_output(args.output_dir / "canonical", canonical)
     repetitions = []
     for repeat in range(args.judge_repeats):
@@ -141,6 +148,7 @@ def main() -> None:
             canonical.results.head(args.repeat_sample_size),
             **options,
             uncached_judge=True,
+            judge_repeats=1,
         )
         workflow.results["repeat"] = repeat + 1
         write_comparison_output(args.output_dir / f"repeat_{repeat + 1:02d}", workflow)

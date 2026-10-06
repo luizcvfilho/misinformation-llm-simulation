@@ -151,7 +151,21 @@ Referências do NRC v2 na comparação atual e no histórico: `mohammad2025vadv2
 - Correlação/erro entre julgamento humano e componentes calculados.
 - Sensibilidade a pesos, prompt, modelo e repetição.
 
-Referências: `abdurahman2025primer`, `chen2025rpa`.
+- **Atualização de 06/10/2026:** novas avaliações `dual_stdi_v5` usam três avaliações do judge
+  por par por padrão, com quantidade configurável na UI/API/CLI e opção de avaliação única.
+  Cada avaliação recebe os mesmos textos e estruturas e reutiliza VAD. A pontuação LLM é a
+  média dos STDIs completos de cada avaliação; a média final Dual permanece 50/50 com embeddings.
+  Preservar notas, justificativas, respostas brutas, falhas e desvio padrão amostral por componente
+  e STDI. Todas as avaliações solicitadas e VAD completo são necessários para uma pontuação
+  agregada disponível. Avaliações salvas têm cache por repetição; resultados históricos não
+  são recalculados automaticamente. O padrão de três é uma escolha de orçamento, sem validação
+  empírica de suficiência. Comparar uma versus múltiplas avaliações em amostra humana predefinida
+  antes de alegar melhora. `saha2026judgebudget` fundamenta consultas repetidas para estimar médias
+  sob orçamento; seu algoritmo adaptativo não foi adotado. `haldar2025ratingroulette` documenta
+  inconsistência entre execuções em outras tarefas, sem validar o STDI deste estudo.
+
+Referências: `abdurahman2025primer`, `chen2025rpa`, `saha2026judgebudget`,
+`haldar2025ratingroulette`.
 
 ### 2.5 Resultados
 
