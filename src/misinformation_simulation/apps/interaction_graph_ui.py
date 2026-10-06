@@ -24,6 +24,8 @@ AVAILABLE_PROVIDERS = [provider.value for provider in Provider]
 
 
 def branch_score_columns(steps_df: pd.DataFrame) -> list[str]:
+    if "stdi_evaluation" in steps_df.columns:
+        return []
     return [
         f"stdi_{branch}_{suffix}"
         for branch in ("cluster", "llm_judge")

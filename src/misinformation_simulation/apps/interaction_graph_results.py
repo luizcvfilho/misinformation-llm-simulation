@@ -6,11 +6,25 @@ from typing import Any
 
 import pandas as pd
 
+from misinformation_simulation.analysis.stdi_evaluation import select_evaluation_steps
 from misinformation_simulation.apps.interaction_graph_ui import (
     build_news_summary_dataframe,
     build_node_summary_dataframe,
 )
 from misinformation_simulation.simulation.types import expand_dual_evaluation_record
+
+
+def evaluation_result_bundle(bundle: dict[str, Any], evaluation: str) -> dict[str, Any]:
+    steps = select_evaluation_steps(
+        bundle["steps_df"], evaluation, bundle.get("summary", {}).get("stdi_comparison_method")
+    )
+    return {
+        **bundle,
+        "steps_df": steps,
+        "node_summary_df": build_node_summary_dataframe(steps),
+        "news_summary_df": build_news_summary_dataframe(steps),
+        "stdi_evaluation": evaluation,
+    }
 
 
 def find_saved_results(output_dir: Path) -> list[Path]:

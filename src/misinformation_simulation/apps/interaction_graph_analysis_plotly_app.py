@@ -53,11 +53,16 @@ from misinformation_simulation.analysis.interaction_graph_visualization import (
     successful_steps,
     summarize_metric,
 )
+from misinformation_simulation.analysis.stdi_evaluation import (
+    EVALUATION_LABELS,
+    available_evaluations,
+    select_evaluation_steps,
+)
 from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 6
+ANALYSIS_CACHE_SCHEMA_VERSION = 7
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -154,6 +159,16 @@ def main() -> None:
         format_func=lambda mode: mode_labels.get(mode, mode),
     )
     steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
+    evaluations = available_evaluations(steps)
+    if evaluations:
+        selected_evaluation = st.sidebar.selectbox(
+            "STDI evaluation",
+            evaluations,
+            format_func=EVALUATION_LABELS.__getitem__,
+            key="analysis_stdi_evaluation",
+        )
+        steps = select_evaluation_steps(steps, selected_evaluation)
+        st.caption(f"STDI evaluation: {EVALUATION_LABELS[selected_evaluation]}")
     metrics = available_metrics(steps)
     if not metrics:
         st.warning("No numeric STDI metrics are available for this selection.")
@@ -167,6 +182,10 @@ def main() -> None:
         st.warning("Selecione pelo menos uma cadeia.")
         st.stop()
     selected_steps = filter_chains(steps, selected_chains)
+    metrics = available_metrics(selected_steps)
+    if selected_metric not in metrics:
+        st.warning("The selected evaluation and metric have no scores for these chains.")
+        st.stop()
 
     first_column, second_column, third_column = st.columns(3)
     first_column.metric("Chain step files", selected_steps["source_path"].nunique())

@@ -6,13 +6,17 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.analysis.stdi_evaluation import (
+    EVALUATION_LABELS,
+    available_evaluations,
+)
+from misinformation_simulation.apps.interaction_graph_results import evaluation_result_bundle
 from misinformation_simulation.apps.interaction_graph_state import move_node, remove_node
 from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
-    branch_score_columns,
 )
 
 
@@ -124,15 +128,28 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
 
 
 def render_result_bundle(run_bundle: dict[str, Any]) -> None:
+    if "stdi_evaluation" not in run_bundle:
+        evaluations = available_evaluations(
+            run_bundle["steps_df"], run_bundle["summary"].get("stdi_comparison_method")
+        )
+        if evaluations:
+            evaluation = st.selectbox(
+                "STDI evaluation",
+                evaluations,
+                format_func=EVALUATION_LABELS.__getitem__,
+                key="result_bundle_stdi_evaluation",
+            )
+            run_bundle = evaluation_result_bundle(run_bundle, evaluation)
     summary = run_bundle["summary"]
     steps_df = run_bundle["steps_df"]
     node_summary_df = run_bundle["node_summary_df"]
     news_summary_df = run_bundle["news_summary_df"]
-    branch_columns = branch_score_columns(steps_df)
-    if summary.get("stdi_comparison_method") == "dual":
-        st.caption(
-            "Final STDI columns show Dual; Cluster and LLM judge scores are stored separately."
-        )
+    if "stdi_evaluation" in run_bundle:
+        st.caption(f"STDI evaluation: {EVALUATION_LABELS[run_bundle['stdi_evaluation']]}")
+        if not steps_df.empty and not any(
+            steps_df[column].notna().any() for column in ("stdi_vs_original", "stdi_incremental")
+        ):
+            st.info("The selected evaluation has no STDI scores for this graph.")
 
     st.caption(f"Transmission mode: {summary.get('rewrite_mode', 'legacy (mode not recorded)')}")
 
@@ -199,11 +216,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     "mean_stdi_cumulative",
                     "mean_vad_drift_vs_original",
                     "mean_contradiction_drift_vs_original",
-                    *[
-                        f"mean_{column}"
-                        for column in branch_columns
-                        if f"mean_{column}" in node_summary_df.columns
-                    ],
                 ]
             ],
             width="stretch",
@@ -212,12 +224,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
             [
                 "mean_stdi_vs_original",
                 "mean_stdi_incremental",
-                *[
-                    f"mean_{column}"
-                    for column in branch_columns
-                    if not column.endswith("cumulative")
-                    and f"mean_{column}" in node_summary_df.columns
-                ],
             ]
         ]
         st.bar_chart(chart_df)
@@ -241,7 +247,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     [
                         "stdi_vs_original",
                         "stdi_incremental",
-                        *[column for column in branch_columns if not column.endswith("cumulative")],
                     ]
                 ]
             )
@@ -254,7 +259,6 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         "stdi_vs_original",
                         "stdi_incremental",
                         "stdi_cumulative",
-                        *branch_columns,
                         "vad_drift_vs_original",
                         "vad_drift_incremental",
                         "contradiction_drift_vs_original",
@@ -334,9 +338,10 @@ def render_dual_stdi(row: pd.Series) -> None:
             column.metric(title, format_metric(metrics.get("stdi")))
         columns[2].metric("Final Dual STDI", format_metric(value.get("stdi")))
         columns[3].metric("Method disagreement", format_metric(value.get("method_gap")))
+        evaluation_label = EVALUATION_LABELS.get(row.get("stdi_evaluation"), "Cluster")
         st.caption(
             "The final STDI is the mean of both complete scores. "
-            "Category scores below describe the Cluster branch. "
+            f"Category scores below describe {evaluation_label}. "
             "Disagreement is not calibrated confidence."
         )
         for branch, title in (("embedding", "Cluster"), ("llm_judge", "LLM judge")):

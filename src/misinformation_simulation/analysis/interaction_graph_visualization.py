@@ -11,6 +11,9 @@ from shutil import which
 
 import pandas as pd
 
+from misinformation_simulation.analysis.stdi_evaluation import BRANCH_ANALYSIS_COLUMNS
+from misinformation_simulation.simulation.types import expand_dual_evaluation_record
+
 # Accept compact prefixes and historical run names used by VAD analysis.
 RUN_ID_PATTERN = re.compile(
     r"(?:^|_)(?:(?P<batch_id>\d+)_)?(?P<graph_id>\d+)_(?P<chain_code>[A-Za-z0-9-]+)$"
@@ -43,6 +46,7 @@ METRIC_LABELS = {
     **STDI_COMPONENT_COLUMNS,
 }
 ANALYSIS_STEP_COLUMNS = {
+    *BRANCH_ANALYSIS_COLUMNS,
     *REQUIRED_STEP_COLUMNS,
     *METRIC_LABELS,
     "node_id",
@@ -377,7 +381,7 @@ def export_analysis_tables(runs: InteractionGraphRuns, output_dir: Path) -> dict
     return paths
 
 
-def _run_metadata(path: Path) -> dict[str, str]:
+def _run_metadata(path: Path) -> dict[str, str | None]:
     run_id = path.stem.removesuffix("_steps")
     summary_path = path.with_name(f"{run_id}_summary.json")
     graph_name = None
@@ -385,6 +389,11 @@ def _run_metadata(path: Path) -> dict[str, str]:
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         if isinstance(summary, dict):
             graph_name = summary.get("graph_name")
+            comparison_method = summary.get("stdi_comparison_method")
+        else:
+            comparison_method = None
+    else:
+        comparison_method = None
     execution_dir = path.parent
     if execution_dir.name == run_id:
         execution_dir = execution_dir.parent
@@ -393,6 +402,8 @@ def _run_metadata(path: Path) -> dict[str, str]:
         "execution_label": execution_dir.name,
         "source_path": str(path),
     }
+    if comparison_method is not None:
+        execution_metadata["metadata_stdi_comparison_method"] = comparison_method
     match = next((match for pattern in RUN_ID_PATTERNS if (match := pattern.match(run_id))), None)
     if match is None:
         return {
@@ -429,6 +440,7 @@ def _read_analysis_columns(path: Path) -> pd.DataFrame:
             record = json.loads(line)
             if not isinstance(record, dict):
                 raise ValueError(f"'{path}' must contain JSON objects, one per line.")
+            record = expand_dual_evaluation_record(record)
             records.append({column: record.get(column) for column in ANALYSIS_STEP_COLUMNS})
     return pd.DataFrame.from_records(records)
 

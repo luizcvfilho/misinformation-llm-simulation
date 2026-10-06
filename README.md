@@ -195,8 +195,11 @@ the final mean is unavailable and the available branch remains visible. Identica
 context reuse the reference extraction and receive zero comparison drift without a judge call.
 Legacy component columns describe the embedding branch in dual mode. Separate Cluster/LLM
 evaluation records and flat component columns are saved alongside the final
-Dual result. Each branch has independent status, errors and cumulative scores, and result tables
-include both branches. Historical Dual results expose their saved branch metrics on import.
+Dual result. Each branch has independent status, errors and cumulative scores.
+Historical Dual results expose their saved branch metrics on import.
+Use **STDI evaluation** in Results or the STDI analysis sidebar to keep the existing analysis
+interface while switching all scores and components between Dual, Cluster and LLM. Only available
+methods are offered; missing scores stay unavailable. The selected view leaves saved results intact.
 Qualifier details and raw responses appear in the step details and JSONL export. See
 [dual STDI usage and validation](docs/dual_stdi.md).
 

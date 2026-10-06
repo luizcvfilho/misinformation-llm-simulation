@@ -17,13 +17,17 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 from misinformation_simulation import simulation  # noqa: E402
 from misinformation_simulation.apps import (  # noqa: E402
+    interaction_graph_categories,
+    interaction_graph_components,
     interaction_graph_dataset_builder,
     interaction_graph_io,
     interaction_graph_queue,
+    interaction_graph_results,
     interaction_graph_run_job,
     interaction_graph_sections,
     interaction_graph_sidebar,
     interaction_graph_state,
+    interaction_graph_ui,
 )
 from misinformation_simulation.simulation import graph as simulation_graph  # noqa: E402
 
@@ -46,7 +50,11 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 11:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 12:
+        importlib.reload(interaction_graph_ui)
+        importlib.reload(interaction_graph_results)
+        importlib.reload(interaction_graph_categories)
+        importlib.reload(interaction_graph_components)
         importlib.reload(interaction_graph_io)
         importlib.reload(interaction_graph_state)
         importlib.reload(interaction_graph_queue)

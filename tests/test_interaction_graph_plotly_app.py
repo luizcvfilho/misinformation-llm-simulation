@@ -19,6 +19,7 @@ from misinformation_simulation.analysis.interaction_graph_plotly import (
     build_transition_pair_figure,
 )
 from misinformation_simulation.apps import interaction_graph_analysis_plotly_app as analysis_app
+from misinformation_simulation.simulation.types import EVALUATION_METRICS
 
 
 def _steps() -> pd.DataFrame:
@@ -134,6 +135,79 @@ def test_analysis_filters_transmission_modes_before_rendering(monkeypatch) -> No
     assert not app.exception
     assert len(rendered) == 6
     assert all(set(frame["metadata_rewrite_mode"]) == {"legacy"} for frame in rendered)
+
+
+def test_analysis_evaluation_selector_updates_every_tab_and_component(monkeypatch):
+    steps = _paired_scenario_steps().assign(
+        metadata_rewrite_mode="faithful", metadata_stdi_comparison_version="dual_stdi_v4"
+    )
+    for suffix in ("vs_original", "incremental"):
+        for metric in EVALUATION_METRICS:
+            steps[f"{metric}_cluster_{suffix}"] = 0.2
+            steps[f"{metric}_llm_judge_{suffix}"] = 0.8
+        steps[f"stdi_{suffix}"] = 0.5
+    steps["stdi_cumulative"] = steps["step_index"] * 0.5
+    monkeypatch.setattr(analysis_app, "load_steps", lambda *_args: (steps, 2))
+    rendered = []
+    for name in (
+        "_render_overview",
+        "_render_news_group_analysis",
+        "_render_persona_analysis",
+        "_render_transition_analysis",
+        "_render_scenario_contrasts",
+        "_render_case_explorer",
+    ):
+        monkeypatch.setattr(analysis_app, name, lambda frame, *_args: rendered.append(frame.copy()))
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
+        "main()"
+    ).run(timeout=30)
+    assert not app.exception
+    selector = app.selectbox(key="analysis_stdi_evaluation")
+    assert selector.options == ["Dual", "Cluster", "LLM"]
+    for evaluation, expected in (("cluster", 0.2), ("llm_judge", 0.8), ("dual", 0.5)):
+        rendered.clear()
+        selector.set_value(evaluation).run(timeout=30)
+        assert not app.exception
+        assert len(rendered) == 6
+        for frame in rendered:
+            for suffix in ("vs_original", "incremental"):
+                for metric in EVALUATION_METRICS:
+                    assert frame[f"{metric}_{suffix}"].eq(expected).all()
+            assert (frame["stdi_cumulative"] == frame["step_index"] * expected).all()
+    assert steps["stdi_vs_original"].eq(0.5).all()
+    missing_chain = steps["chain_label"].iloc[0]
+    steps.loc[steps["chain_label"].eq(missing_chain), "stdi_llm_judge_vs_original"] = float("nan")
+    steps.loc[steps["chain_label"].eq(missing_chain), "stdi_llm_judge_incremental"] = float("nan")
+    app.run(timeout=30)
+    app.selectbox(key="analysis_stdi_evaluation").set_value("llm_judge").run(timeout=30)
+    rendered.clear()
+    chains = next(control for control in app.multiselect if control.label == "Cadeias")
+    chains.set_value([missing_chain]).run(timeout=30)
+    assert not app.exception
+    assert app.warning
+    assert not rendered
+    chains.set_value(steps["chain_label"].unique().tolist()).run(timeout=30)
+    cluster_only = _paired_scenario_steps().assign(
+        metadata_rewrite_mode="faithful",
+        metadata_stdi_comparison_version="cluster_v4",
+        execution_id="cluster-execution",
+        execution_label="Cluster execution",
+        stdi_vs_original=0.3,
+        stdi_incremental=0.3,
+    )
+    monkeypatch.setattr(
+        analysis_app, "load_steps", lambda *_args: (pd.concat([steps, cluster_only]), 4)
+    )
+    app.run(timeout=30)
+    app.selectbox(key="analysis_stdi_evaluation").set_value("llm_judge").run(timeout=30)
+    rendered.clear()
+    active = next(control for control in app.selectbox if control.label == "Active execution")
+    active.set_value("cluster-execution").run(timeout=30)
+    assert not app.exception
+    assert app.selectbox(key="analysis_stdi_evaluation").options == ["Cluster"]
+    assert len(rendered) == 6
+    assert all(frame["stdi_vs_original"].eq(0.3).all() for frame in rendered)
 
 
 def test_persona_transition_and_contrast_figures() -> None:

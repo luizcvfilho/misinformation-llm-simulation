@@ -478,7 +478,8 @@ def test_graph_defaults_to_dual_and_retains_valid_branch_on_judge_failure(monkey
     assert not app.exception
     metric_labels = {metric.label for metric in app.metric}
     assert {"Cluster STDI", "LLM judge STDI", "Final Dual STDI"} <= metric_labels
-    assert "mean_stdi_cluster_vs_original" in app.dataframe[0].value
+    assert app.selectbox(key="result_bundle_stdi_evaluation").options == ["Dual", "Cluster", "LLM"]
+    assert app.dataframe[0].value.iloc[0]["mean_stdi_vs_original"] == first.stdi_vs_original
 
     historical = [
         {

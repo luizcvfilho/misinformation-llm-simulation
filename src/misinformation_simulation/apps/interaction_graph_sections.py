@@ -12,6 +12,10 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.analysis.stdi_evaluation import (
+    EVALUATION_LABELS,
+    available_evaluations,
+)
 from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_comparison_dataframe,
 )
@@ -29,6 +33,7 @@ from misinformation_simulation.apps.interaction_graph_queue import (
 )
 from misinformation_simulation.apps.interaction_graph_results import (
     clear_imported_results,
+    evaluation_result_bundle,
     find_saved_results,
     load_saved_result,
     remove_imported_result,
@@ -49,7 +54,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 11
+GRAPH_OUTPUT_LAYOUT_VERSION = 12
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -603,7 +608,30 @@ def render_results_tab() -> None:
                 }
             )
         st.dataframe(pd.DataFrame(rows), width="stretch")
-        _render_category_comparison(bundles)
+        available = {
+            evaluation
+            for bundle in bundles
+            if isinstance(bundle.get("steps_df"), pd.DataFrame)
+            for evaluation in available_evaluations(
+                bundle["steps_df"], bundle.get("summary", {}).get("stdi_comparison_method")
+            )
+        }
+        evaluations = [evaluation for evaluation in EVALUATION_LABELS if evaluation in available]
+        selected_evaluation = None
+        if evaluations:
+            selected_evaluation = st.selectbox(
+                "STDI evaluation",
+                evaluations,
+                format_func=EVALUATION_LABELS.__getitem__,
+                key="results_stdi_evaluation",
+            )
+        displayed_bundles = [
+            evaluation_result_bundle(bundle, selected_evaluation)
+            if selected_evaluation and isinstance(bundle.get("steps_df"), pd.DataFrame)
+            else bundle
+            for bundle in bundles
+        ]
+        _render_category_comparison(displayed_bundles)
         selected_index = st.selectbox(
             "Inspect graph result",
             range(len(bundles)),
@@ -638,7 +666,7 @@ def render_results_tab() -> None:
         else:
             if selected["status"] == "cancelled":
                 st.warning("Simulation cancelled; showing completed steps.")
-            render_result_bundle(selected)
+            render_result_bundle(displayed_bundles[selected_index])
 
 
 def _refresh_category_data_from_saved_results(bundles: list[dict[str, Any]]) -> None:

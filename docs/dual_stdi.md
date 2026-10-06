@@ -116,12 +116,28 @@ All eleven metrics are exported as separate flat columns, for example
 evaluations from measured zeros. The existing `stdi_embedding_*` columns remain compatible aliases
 for the Cluster STDI. `stdi_method_gap_*` and `stdi_status_*` still describe the final Dual result.
 
-The result tables and charts show Cluster and LLM judge scores alongside Dual. Node, news and
+The stored summaries can aggregate Cluster and LLM judge scores alongside Dual. Node, news and
 category summaries aggregate each branch independently. The per-step details show separate
 expandable evaluations for Cluster, LLM judge and the final Dual result. CSV downloads include
 the flat component columns, while saved JSONL retains the complete nested evaluations.
+The **STDI evaluation** selector in the Results dashboard and the STDI analysis sidebar switches
+the existing charts, tables, component views, categories, persona/transition comparisons and cases
+between **Dual**, **Cluster** and **LLM**, when those scores are available. Dual is the default when
+available. A selected method never borrows another method's scores for missing evaluations.
+Runs whose method was not recorded retain a **Saved evaluation (legacy)** option rather than
+being labelled as Dual. Known standalone Cluster runs remain available as Cluster.
+
+In the selected Dual view, component values are the arithmetic mean of the corresponding complete
+Cluster and LLM branch metrics; the total STDI remains the saved mean of the two complete STDI
+scores, rather than being recomputed from averaged components. Branch views use their own complete
+component sets, evaluation status and chain completeness. Historical branch cumulative scores are
+reconstructed from saved increments within each news item and graph, with valid-step counts.
+Unavailable increments remain missing; cumulative totals sum only available scores.
+The selectors create an in-memory view and never overwrite persisted results or request new model
+evaluations. Step CSV downloads identify the selected method in `stdi_evaluation`; analysis summary
+downloads contain the selected method's scores.
 Importing historical Dual JSONL derives the separate columns from its existing metadata without
-rewriting files or rerunning models; unavailable historical branch accumulations remain absent.
+rewriting files or rerunning models; unavailable historical increments remain missing.
 
 The pair-comparison workflow similarly exports `cluster_*` and `llm_judge_*` metrics,
 `cluster_evaluation_json` and `llm_judge_evaluation_json`, retaining `embedding_*` aliases and
