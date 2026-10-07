@@ -141,6 +141,9 @@ def test_summarizes_personas_components_and_transitions() -> None:
         ("Conspiracy", "Conspiratorial"),
         ("Skeptic", "Investigative skeptic"),
         ("ConservativeRight", "Conservative"),
+        ("4. Neutral relay", "Neutral relay"),
+        ("NeutralRelay", "Neutral relay"),
+        ("Neutral", "Neutral relay"),
         ("1. Custom commentator", "Custom commentator"),
     ],
 )

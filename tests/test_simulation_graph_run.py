@@ -54,8 +54,11 @@ class KeywordEmbedder:
 
 
 @pytest.mark.parametrize("mode", ["faithful", "interpretive"])
+@pytest.mark.parametrize(
+    "second_personality", [DefaultPersonality.InvestigativeSkeptic, DefaultPersonality.NeutralRelay]
+)
 def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_provenance(
-    mode, monkeypatch, tmp_path
+    mode, second_personality, monkeypatch, tmp_path
 ) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
     extraction_titles = []
@@ -77,7 +80,7 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     monkeypatch.setattr(graph, "_generate_rewrite", rewrite)
     nodes = [
         SimulationNode("first", "model", "chatgpt", DefaultPersonality.ConspiracyDenialist),
-        SimulationNode("second", "model", "chatgpt", DefaultPersonality.InvestigativeSkeptic),
+        SimulationNode("second", "model", "chatgpt", second_personality),
     ]
     title = "Distinct original headline"
     original = "The government proposed a policy after an open debate."
@@ -145,10 +148,10 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
         assert all(title not in call["prompt"] for call in calls)
         assert "Keep factual content unchanged" not in calls[0]["prompt"]
         conspiracy_extension = INTERPRETIVE_PERSONALITY_EXTENSIONS["ConspiracyDenialist"]
-        skeptic_extension = INTERPRETIVE_PERSONALITY_EXTENSIONS["InvestigativeSkeptic"]
+        second_extension = INTERPRETIVE_PERSONALITY_EXTENSIONS[second_personality.name]
         assert conspiracy_extension in calls[0]["prompt"]
-        assert skeptic_extension not in calls[0]["prompt"]
-        assert skeptic_extension in calls[1]["prompt"]
+        assert second_extension not in calls[0]["prompt"]
+        assert second_extension in calls[1]["prompt"]
         assert conspiracy_extension not in calls[1]["prompt"]
         assert "conspir" not in prompt_config.template.casefold()
         assert "skept" not in prompt_config.template.casefold()
@@ -156,7 +159,12 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
 
 
 @pytest.mark.parametrize(
-    "preset", [DefaultPersonality.ConspiracyDenialist, DefaultPersonality.InvestigativeSkeptic]
+    "preset",
+    [
+        DefaultPersonality.ConspiracyDenialist,
+        DefaultPersonality.InvestigativeSkeptic,
+        DefaultPersonality.NeutralRelay,
+    ],
 )
 @pytest.mark.parametrize("opening_sentence_only", [False, True])
 def test_personality_extensions_support_full_and_legacy_presets(preset, opening_sentence_only):

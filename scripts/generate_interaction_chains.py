@@ -3,6 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from misinformation_simulation.config.interaction_chains import (
+    DEFAULT_INTERACTION_CHAIN_CODES,
+    DEFAULT_INTERACTION_CHAINS_PATH,
+)
 from misinformation_simulation.enums import (
     DEFAULT_LLM_MODEL,
     DEFAULT_LLM_PROVIDER,
@@ -10,7 +14,7 @@ from misinformation_simulation.enums import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = PROJECT_ROOT / "data" / "graphs" / "interaction_chains"
+OUTPUT_DIR = PROJECT_ROOT / DEFAULT_INTERACTION_CHAINS_PATH
 
 PERSONALITIES = {
     "C": ("Conservative", DefaultPersonality.ConservativeRight),
@@ -19,26 +23,10 @@ PERSONALITIES = {
     "S": ("Investigative skeptic", DefaultPersonality.InvestigativeSkeptic),
     "E": ("Emotional amplifier", DefaultPersonality.EmotionalAmplifier),
     "M": ("Conciliatory communicator", DefaultPersonality.ConciliatoryCommunicator),
+    "N": ("Neutral relay", DefaultPersonality.NeutralRelay),
 }
 
-SCENARIOS = (
-    "SSSS",
-    "CCCC",
-    "PPPP",
-    "DDDD",
-    "CCPP",
-    "PPCC",
-    "CPCP",
-    "PCPC",
-    "DDSS",
-    "SSDD",
-    "DSDS",
-    "SDSD",
-    "DDES",
-    "DDSE",
-    "CMPC",
-    "CPMC",
-)
+SCENARIOS = DEFAULT_INTERACTION_CHAIN_CODES
 
 
 def build_graph(sequence: str) -> dict[str, object]:

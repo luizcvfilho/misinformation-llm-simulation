@@ -23,9 +23,24 @@ def test_initialize_state_sets_defaults(monkeypatch) -> None:
 
     assert fake_st.session_state.dataset_path == state.DEFAULT_DATASET_PATH
     assert fake_st.session_state.graph_config_path == state.DEFAULT_GRAPH_CONFIG_PATH
+    assert fake_st.session_state.graph_queue_folder_path == state.DEFAULT_INTERACTION_CHAINS_PATH
     assert fake_st.session_state.graph_nodes == [{"node_id": "node_1"}]
     assert fake_st.session_state.run_bundle is None
     assert fake_st.session_state.current_graph_name == Path(state.DEFAULT_GRAPH_CONFIG_PATH).stem
+
+
+def test_initialize_state_migrates_chain_root_but_keeps_selected_subfolders(monkeypatch) -> None:
+    fake_st = SimpleNamespace(
+        session_state=FakeSessionState(graph_queue_folder_path=state.INTERACTION_CHAINS_ROOT)
+    )
+    monkeypatch.setattr(state, "st", fake_st)
+    monkeypatch.setattr(state, "load_initial_graph_nodes", lambda: [])
+    state.initialize_state()
+    assert fake_st.session_state.graph_queue_folder_path == state.DEFAULT_INTERACTION_CHAINS_PATH
+
+    fake_st.session_state.graph_queue_folder_path = f"{state.INTERACTION_CHAINS_ROOT}/legacy"
+    state.initialize_state()
+    assert fake_st.session_state.graph_queue_folder_path.endswith("/legacy")
 
 
 def test_move_and_remove_node_update_session_state(monkeypatch) -> None:

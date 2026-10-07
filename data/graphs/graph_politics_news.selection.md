@@ -42,7 +42,7 @@ Reproduce the selected news rows by reading `selected_articles` in array order, 
 Run the same dataset across the existing chains using distinct output prefixes and the same model and evaluation settings. No simulations were run while creating this dataset.
 
 ```powershell
-uv run python scripts/run_interaction_graph.py --input data/graphs/graph_politics_news.csv --graph-config data/graphs/interaction_chains/05_ccpp.json --text-column description --news-id-column article_id --output-prefix politics_ccpp
+uv run python scripts/run_interaction_graph.py --input data/graphs/graph_politics_news.csv --graph-config data/graphs/interaction_chains/neutral_relay/05_ccpp.json --text-column description --news-id-column article_id --output-prefix politics_ccpp
 ```
 
 ## Article selection notes

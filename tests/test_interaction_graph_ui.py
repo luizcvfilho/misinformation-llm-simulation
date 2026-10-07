@@ -179,7 +179,12 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
 
 @pytest.mark.parametrize(
     "preset",
-    [DefaultPersonality.EmotionalAmplifier, DefaultPersonality.ConciliatoryCommunicator],
+    [
+        DefaultPersonality.EmotionalAmplifier,
+        DefaultPersonality.ConciliatoryCommunicator,
+        DefaultPersonality.NeutralRelay,
+        DefaultPersonality.InvestigativeSkeptic,
+    ],
 )
 def test_new_personality_presets_round_trip_through_graph_editor(
     preset: DefaultPersonality,

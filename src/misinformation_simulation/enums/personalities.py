@@ -10,3 +10,4 @@ class DefaultPersonality(StrEnum):
     InvestigativeSkeptic = PERSONALITY_PROMPTS["InvestigativeSkeptic"]
     EmotionalAmplifier = PERSONALITY_PROMPTS["EmotionalAmplifier"]
     ConciliatoryCommunicator = PERSONALITY_PROMPTS["ConciliatoryCommunicator"]
+    NeutralRelay = PERSONALITY_PROMPTS["NeutralRelay"]

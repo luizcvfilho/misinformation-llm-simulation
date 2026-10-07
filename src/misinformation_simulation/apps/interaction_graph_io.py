@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.config.interaction_chains import DEFAULT_INTERACTION_GRAPH_PATH
 from misinformation_simulation.simulation.io import (
     DEFAULT_PROJECT_ROOT,
     filter_query_metadata_rows,
@@ -17,7 +18,7 @@ from misinformation_simulation.simulation.io import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_DATASET_PATH = "data/graphs/graph_news.csv"
-DEFAULT_GRAPH_CONFIG_PATH = "data/graphs/graph_config.json"
+DEFAULT_GRAPH_CONFIG_PATH = DEFAULT_INTERACTION_GRAPH_PATH
 
 
 @st.cache_data(show_spinner=False)

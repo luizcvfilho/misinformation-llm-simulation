@@ -15,6 +15,7 @@ PERSONA_CODE_LABELS = {
     "S": "Investigative skeptic",
     "E": "Emotional amplifier",
     "M": "Conciliatory communicator",
+    "N": "Neutral relay",
 }
 PERSONA_DISPLAY_LABELS = {
     "C": "Direita conservadora",
@@ -23,6 +24,7 @@ PERSONA_DISPLAY_LABELS = {
     "S": "Cética investigativa",
     "E": "Amplificadora emocional",
     "M": "Comunicadora conciliatória",
+    "N": "Neutral relay",
 }
 PERSONA_DESCRIPTIONS = {
     "C": "Enquadramento de direita e socialmente conservador",
@@ -31,6 +33,7 @@ PERSONA_DESCRIPTIONS = {
     "S": "Ceticismo investigativo orientado à qualidade das evidências",
     "E": "Comunicação emocionalmente expressiva",
     "M": "Comunicação conciliatória entre perspectivas",
+    "N": "Minimal wording changes while preserving the received content and framing",
 }
 INCREMENTAL_COMPONENT_COLUMNS = {
     "theme_drift_incremental": "Theme",
@@ -50,6 +53,7 @@ SCENARIO_CONTRASTS = (
     ("DSDS", "SDSD", "Alternating conspiratorial and skeptical perspectives"),
     ("DDES", "DDSE", "Emotional amplifier before versus after the skeptic"),
     ("CMPC", "CPMC", "Conciliatory communicator at different positions"),
+    ("DDNN", "NNDD", "Conspiratorial and neutral relay blocks in reverse order"),
 )
 
 _NODE_NUMBER_PREFIX = re.compile(r"^\d+\.\s*")
@@ -68,6 +72,8 @@ _PERSONA_LABEL_ALIASES = {
     "investigativeskeptic": "S",
     "emotionalamplifier": "E",
     "conciliatorycommunicator": "M",
+    "neutralrelay": "N",
+    "neutral": "N",
 }
 
 

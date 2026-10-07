@@ -146,6 +146,10 @@ def test_exports_summaries_and_static_figures(tmp_path, monkeypatch) -> None:
         ("01_progressive_conservative", "01", "progressive_conservative"),
         ("02_02_custom_chain", "02", "custom_chain"),
         ("01_01_ssss", "01", "SSSS"),
+        ("01_01_nnnn", "01", "NNNN"),
+        ("07_07_ddnn", "07", "DDNN"),
+        ("batch_08_08_nndd", "08", "NNDD"),
+        ("simulation_ui_20261006_223837_07_07_ddnn", "07", "DDNN"),
         ("free chain name", "free chain name", "free chain name"),
     ],
 )

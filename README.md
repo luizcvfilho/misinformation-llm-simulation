@@ -698,7 +698,7 @@ Script:
 This workflow runs a chained LLM interaction graph over a news dataset using:
 
 - an input file such as `data/graphs/graph_news.csv`
-- a graph definition such as `data/graphs/graph_config.json`
+- a graph definition such as `data/graphs/interaction_chains/neutral_relay/01_nnnn.json`
 
 Default Make targets:
 
@@ -712,14 +712,14 @@ make interaction-graph-dashboards
 Useful overrides:
 
 ```powershell
-make interaction-graph GRAPH_INPUT=data/graphs/graph_news.csv GRAPH_CONFIG=data/graphs/graph_config.json GRAPH_MAX_ROWS=5
+make interaction-graph GRAPH_INPUT=data/graphs/graph_news.csv GRAPH_CONFIG=data/graphs/interaction_chains/neutral_relay/01_nnnn.json GRAPH_MAX_ROWS=5
 make interaction-graph-verbose GRAPH_TEXT_COLUMN=description GRAPH_OUTPUT_PREFIX=politics_graph
 ```
 
 Main variables:
 
 - `GRAPH_INPUT`: input CSV/JSON/JSONL file (`data/graphs/graph_news.csv` default)
-- `GRAPH_CONFIG`: graph JSON config (`data/graphs/graph_config.json` default)
+- `GRAPH_CONFIG`: graph JSON config (`data/graphs/interaction_chains/neutral_relay/01_nnnn.json` default)
 - `GRAPH_TEXT_COLUMN`: text column used by the simulation (`description` default)
 - `GRAPH_TITLE_COLUMN`: title column (`title` default)
 - `GRAPH_NEWS_ID_COLUMN`: optional custom id column
@@ -762,7 +762,7 @@ apply, including any explicit fact-preservation constraints in custom personas.
 
 The shared interpretive template contains only the transmission rules.
 `INTERPRETIVE_PERSONALITY_EXTENSIONS` in `config/prompts.py` supplies the extra behavior for
-`ConspiracyDenialist` and `InvestigativeSkeptic`, attaching only the matching extension in the
+`ConspiracyDenialist`, `InvestigativeSkeptic`, and `NeutralRelay`, attaching only the matching extension in the
 interpretive mode. Full preset texts and their legacy opening-sentence forms are recognized;
 other personality text is used as supplied. The faithful mode keeps the original personality
 text. Each step saves `metadata_rewrite_effective_personality` for prompt reconstruction.
@@ -775,7 +775,7 @@ execution; graph JSON files continue to describe the topology and personalities.
 For a command-line run:
 
 ```powershell
-uv run python scripts/run_interaction_graph.py --input data/graphs/graph_politics_news.csv --graph-config data/graphs/graph_config.json --news-id-column article_id --max-rows 5 --rewrite-mode interpretive --output-dir output/interaction_graph/interpretive_pilot --output-prefix interpretive_pilot --verbose
+uv run python scripts/run_interaction_graph.py --input data/graphs/graph_politics_news.csv --graph-config data/graphs/interaction_chains/neutral_relay/01_nnnn.json --news-id-column article_id --max-rows 5 --rewrite-mode interpretive --output-dir output/interaction_graph/interpretive_pilot --output-prefix interpretive_pilot --verbose
 ```
 
 The Make workflow also accepts `GRAPH_REWRITE_MODE=interpretive`. Start with the same small news
@@ -783,6 +783,28 @@ sample in both modes, using the same models, personas, chain lengths, and evalua
 Compare homogeneous chains with reversed mixed chains, and repeat runs to inspect variation rather
 than selecting only extreme outputs. Keep command-line analysis runs for each mode in separate
 directories; the Plotly analysis app has a **Transmission mode** filter to select one condition.
+
+### Predefined chain sets
+
+The default set is `data/graphs/interaction_chains/neutral_relay/`: NNNN, CCCC, PPPP,
+DDDD, CCPP, PPCC, DDNN, and NNDD. The graph editor and Make workflow default to
+`01_nnnn.json`; **Graph queue -> Add graphs from a folder** defaults to the same set's
+directory. Run `uv run python scripts/generate_interaction_chains.py` to regenerate
+only these eight configurations from the current presets and model defaults.
+
+`NeutralRelay` (N) makes minimal wording changes while preserving the received content,
+framing, attribution, and certainty. It does not add doubts, correct the message, or
+neutralize a preceding persona's interpretation. Its interpretive extension declines
+optional omissions and reinterpretations. This is an instructed reference condition,
+not a guarantee of zero STDI. `InvestigativeSkeptic` (S) remains a separate, unchanged preset.
+
+The previous 16 JSON configurations are preserved in `data/graphs/interaction_chains/legacy/`.
+Select a single subfolder for queue import; importing the root does not recursively mix
+sets. The analysis app recognizes N alongside the historical personas and offers DDNN
+versus NNDD as a preset contrast while retaining the old contrasts. Existing saved results
+and the historical VAD comparison subsets are not regenerated or relabeled.
+
+See [the chain catalog](data/graphs/interaction_chains/README.md) for both sets.
 Older files without this metadata are labelled **Legacy (mode not recorded)**.
 
 Both modes request temperature `0.8` and use the same STDI/VAD evaluation. The existing OpenAI

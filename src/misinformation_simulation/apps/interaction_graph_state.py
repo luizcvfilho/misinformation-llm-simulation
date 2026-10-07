@@ -15,6 +15,10 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     create_default_node_form,
     normalize_node_form,
 )
+from misinformation_simulation.config.interaction_chains import (
+    DEFAULT_INTERACTION_CHAINS_PATH,
+    INTERACTION_CHAINS_ROOT,
+)
 from misinformation_simulation.simulation.graph import (
     SimulationEdge,
     SimulationNode,
@@ -31,6 +35,8 @@ def initialize_state() -> None:
         st.session_state.dataset_path = DEFAULT_DATASET_PATH
     if "graph_config_path" not in st.session_state:
         st.session_state.graph_config_path = DEFAULT_GRAPH_CONFIG_PATH
+    if st.session_state.get("graph_queue_folder_path", "") in {"", INTERACTION_CHAINS_ROOT}:
+        st.session_state.graph_queue_folder_path = DEFAULT_INTERACTION_CHAINS_PATH
     if "graph_nodes" not in st.session_state:
         st.session_state.graph_nodes = load_initial_graph_nodes()
     if "current_graph_name" not in st.session_state:

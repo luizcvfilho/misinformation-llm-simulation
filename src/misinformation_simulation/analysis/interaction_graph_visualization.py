@@ -418,7 +418,7 @@ def _run_metadata(path: Path) -> dict[str, str | None]:
     metadata = match.groupdict()
     graph_id = metadata["graph_id"].zfill(2)
     chain_code = metadata["chain_code"]
-    if metadata.get("batch_id") and re.fullmatch(r"[CPDSEMcpdsem]+", chain_code):
+    if metadata.get("batch_id") and re.fullmatch(r"[CPDSEMNcpdsemn]+", chain_code):
         chain_code = chain_code.upper()
     return {
         **execution_metadata,

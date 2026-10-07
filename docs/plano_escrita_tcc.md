@@ -98,7 +98,8 @@ Este documento concentra a pergunta de pesquisa, o escopo, o histórico metodol�
 - análises VAD: `output/audit/VADPatternAudit/`, `output/audit/TopicMatchedVADAudit/` e `output/audit/VADContextContrastAudit/`;
 - avaliação do STDI: `output/stdi_manual_evaluation/` e `output/topic_drift/refreshed_{llm,cluster}/`;
 - cobertura e regressões: `output/audit/topic_domain_coverage_1000_description/` e `output/stdi_logistic_regression/`;
-- cenários e resultados: `data/graphs/interaction_chains/README.md` e `output/interaction_graph/app_runs/simulation_ui_20260918_000717_*/`.
+- cenários históricos e resultados: `data/graphs/interaction_chains/legacy/README.md` e `output/interaction_graph/app_runs/simulation_ui_20260918_000717_*/`;
+- cenários da nova rodada: `data/graphs/interaction_chains/neutral_relay/README.md`.
 ### 2.4 Materiais e métodos
 
 #### Dados
@@ -112,10 +113,25 @@ Este documento concentra a pergunta de pesquisa, o escopo, o histórico metodol�
 - Modelo e versão, data de execução, temperatura e demais parâmetros.
 - Prompt integral ou referência a apêndice.
 - Definição operacional de cada persona.
-- Ordem das personas e 16 cenários.
+- Ordem das personas e conjunto de cenários: 16 no desenho histórico; oito no desenho da nova rodada.
 - Estratégia de erro, repetição e saídas ausentes.
 
 Referências: `chuang2024opinion`, `frisch2024interaction`, `chen2025rpa`, `abdurahman2025primer`.
+
+**Atualização de 07/10/2026 para a nova rodada:** manter `InvestigativeSkeptic` (S), sem
+alteração de seu prompt, e adicionar `NeutralRelay` (N). A nova persona retransmite a
+mensagem recebida com mudanças mínimas de redação, preservando conteúdo, enquadramento,
+atribuição e grau de certeza; não acrescenta suspeitas, não corrige a mensagem e não
+reconstitui o original. No modo interpretativo, sua extensão instrui a não exercer as
+permissões opcionais de omissão e reinterpretação. Isso não garante STDI zero nem
+veracidade externa. O conjunto novo tem quatro posições em NNNN, CCCC, PPPP, DDDD,
+CCPP, PPCC, DDNN e NNDD, em `data/graphs/interaction_chains/neutral_relay/`. Os 16 JSONs
+anteriores ficam em `legacy/`, preservados; as análises de resultados salvos continuam
+históricas e S não deve ser reinterpretado como N. Para 50 notícias, a nova rodada
+prevê 1.600 reescritas, sem resultados novos nesta alteração de configuração.
+Alternância, amplificação emocional e conciliação ficam fora deste recorte. Os pares
+invertidos mantêm a composição, mas alteram posições e a persona final; não isolam o
+efeito da última persona. Repetição das notas do judge não equivale a repetir as gerações.
 
 #### Extração estrutural e STDI
 

@@ -313,6 +313,43 @@ def test_custom_chain_pairs_render_summary_boxplot_and_cases() -> None:
     assert any(control.label == "Caso para leitura" for control in app.selectbox)
 
 
+def test_neutral_relay_renders_personas_transitions_and_preset_contrasts() -> None:
+    steps = _paired_scenario_steps()
+    steps["chain_code"] = steps["chain_code"].replace({"CCPP": "DDNN", "PPCC": "NNDD"})
+    for column in ("node_label", "source_node_label"):
+        steps[column] = (
+            steps[column]
+            .str.replace("Conservative", "Conspiratorial")
+            .str.replace("Progressive", "Neutral relay")
+        )
+    summary = summarize_scenario_contrasts(steps, bootstrap_iterations=20)
+    assert summary["label_a"].tolist() == ["DDNN"]
+    assert summary["label_b"].tolist() == ["NNDD"]
+    figure = build_persona_boxplot(steps, "stdi_incremental")
+    assert {trace.name for trace in figure.data} == {"D · Conspiratorial", "N · Neutral relay"}
+
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import "
+        "_render_persona_analysis, _render_transition_analysis, "
+        "_render_scenario_contrasts, _render_contrast_cases\n"
+        "from misinformation_simulation.analysis.interaction_graph_visualization "
+        "import available_metrics\n"
+        "import streamlit as st\n"
+        "steps = st.session_state['steps']\n"
+        "_render_persona_analysis(steps)\n"
+        "_render_transition_analysis(steps)\n"
+        "_render_scenario_contrasts(steps, available_metrics(steps))\n"
+        "_render_contrast_cases(steps, available_metrics(steps))\n"
+    )
+    app.session_state["steps"] = steps
+    app.run(timeout=30)
+    assert not app.exception
+    comparisons = [control for control in app.radio if control.label == "Chain comparisons"]
+    assert comparisons
+    assert all(control.value == "Preset contrasts" for control in comparisons)
+    assert any(control.label == "Caso para leitura" for control in app.selectbox)
+
+
 def test_overview_handles_a_single_iteration() -> None:
     app = AppTest.from_string(
         "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app "
