@@ -38,6 +38,7 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
+        vad_method="model",
     ):
         return df, stdi_comparison_method
 
@@ -64,6 +65,7 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
+        vad_method="model",
     ):
         return df
 
@@ -75,6 +77,7 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         work_progress_callback=None,
         cancel_check=None,
         rewrite_mode="faithful",
+        vad_method="model",
     ):
         return df
 
@@ -143,6 +146,35 @@ def test_build_simulation_nodes_resolves_preset_personality() -> None:
     assert len(nodes) == 1
     assert nodes[0].node_id == "node_1"
     assert nodes[0].personality.startswith("You are")
+
+
+def test_vad_selection_is_independent_of_stdi_selection() -> None:
+    app = AppTest.from_string(
+        """
+import pandas as pd
+import streamlit as st
+from misinformation_simulation.apps.interaction_graph_sections import _render_execution_settings
+df = pd.DataFrame([{'title': 'Title', 'description': 'News'}])
+st.session_state.test_settings = _render_execution_settings(df, df.columns.tolist())
+"""
+    ).run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["vad_method"] == "model"
+    assert app.text_input(key="vad_llm_model").disabled
+    app.selectbox(key="vad_method").set_value("dual").run(timeout=30)
+    assert app.session_state.test_settings["vad_method"] == "dual"
+    assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
+    assert not app.text_input(key="vad_llm_model").disabled
+    app.checkbox(key="evaluate_dual_stdi").uncheck().run(timeout=30)
+    assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
+    assert app.session_state.test_settings["vad_method"] == "dual"
+    app.selectbox(key="single_stdi_method").set_value("llm").run(timeout=30)
+    assert app.session_state.test_settings["stdi_comparison_method"] == "llm"
+    assert not app.checkbox(key="repeat_stdi_judge").disabled
+    assert app.session_state.test_settings["stdi_judge_repeats"] == 3
+    app.selectbox(key="vad_method").set_value("llm").run(timeout=30)
+    assert app.session_state.test_settings["vad_method"] == "llm"
+    assert not app.exception
 
 
 @pytest.mark.parametrize(

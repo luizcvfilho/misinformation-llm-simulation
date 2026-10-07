@@ -112,6 +112,9 @@ def main() -> None:
     parser.add_argument("--model", default=DEFAULT_LLM_MODEL.value)
     parser.add_argument("--provider", default=DEFAULT_LLM_PROVIDER.value)
     parser.add_argument("--base-url", default=None)
+    parser.add_argument("--vad-method", choices=("model", "llm", "dual"), default="model")
+    parser.add_argument("--vad-llm-model", default=None)
+    parser.add_argument("--vad-llm-provider", default=None)
     args = parser.parse_args()
     if (
         args.judge_repeats < 0
@@ -139,6 +142,9 @@ def main() -> None:
         "extraction_base_url": args.base_url,
         "cache_dir": args.output_dir / "evaluation_cache",
         "progress_callback": print,
+        "vad_method": args.vad_method,
+        "vad_llm_model": args.vad_llm_model,
+        "vad_llm_provider": args.vad_llm_provider,
     }
     canonical = run_comparison_workflow(source, **options, judge_repeats=args.judge_evaluations)
     write_comparison_output(args.output_dir / "canonical", canonical)

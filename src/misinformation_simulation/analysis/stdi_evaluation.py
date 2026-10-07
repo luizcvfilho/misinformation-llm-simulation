@@ -57,6 +57,7 @@ def prepare_evaluation_steps(steps: pd.DataFrame, method: str | None = None) -> 
     )
     methods = data.get("metadata_stdi_comparison_method", pd.Series(index=data.index, dtype=object))
     methods = methods.fillna(method or "")
+    methods = methods.replace({"llm": "llm_judge"})
     versions = data.get("metadata_stdi_comparison_version", pd.Series("", index=data.index)).fillna(
         ""
     )
@@ -148,10 +149,11 @@ def select_evaluation_steps(
             if evaluation in ("dual", "saved"):
                 values = _numeric(original, column).where(native)
                 if evaluation == "dual" and metric != "stdi":
-                    values = (
+                    fallback = (
                         _numeric(original, f"{metric}_cluster_{suffix}")
                         + _numeric(original, f"{metric}_llm_judge_{suffix}")
                     ) / 2
+                    values = _numeric(original, f"{metric}_dual_{suffix}").combine_first(fallback)
                     values = values.where(native)
             else:
                 values = _numeric(original, f"{metric}_{evaluation}_{suffix}")

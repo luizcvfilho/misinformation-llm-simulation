@@ -5,6 +5,7 @@ import json
 import numpy as np
 import pandas as pd
 
+from misinformation_simulation.text_metrics.vad import VADScore
 from misinformation_simulation.topic_drift.comparison_workflow import (
     compare_method_outputs,
     load_comparison_input,
@@ -13,6 +14,10 @@ from misinformation_simulation.topic_drift.comparison_workflow import (
 )
 from misinformation_simulation.topic_drift.models import TopicStructure
 from misinformation_simulation.topic_drift.semantic_comparison import SemanticSTDIComparison
+
+
+def neutral_vad(_text: str) -> VADScore:
+    return VADScore(3, 3, 3)
 
 
 class StableEmbedder:
@@ -105,6 +110,7 @@ def test_cluster_workflow_reuses_persisted_structures_without_extraction() -> No
     workflow = run_comparison_workflow(
         _pairs(),
         method="cluster",
+        vad_scorer=neutral_vad,
         extraction_fn=extractor,
         embedder=StableEmbedder(),
         random_state=1,
@@ -143,6 +149,7 @@ def test_llm_workflow_and_output_reuse(tmp_path) -> None:
     llm_workflow = run_comparison_workflow(
         _pairs(),
         method="llm_semantic",
+        vad_scorer=neutral_vad,
         llm_comparison_fn=semantic_comparator,
         llm_comparison_model="gpt-5.6-luna",
         llm_comparison_provider="chatgpt",
@@ -162,6 +169,7 @@ def test_llm_workflow_and_output_reuse(tmp_path) -> None:
     cluster_workflow = run_comparison_workflow(
         loaded,
         method="cluster",
+        vad_scorer=neutral_vad,
         embedder=StableEmbedder(),
         random_state=1,
     )
@@ -196,6 +204,7 @@ def test_refresh_structures_accepts_empty_numeric_structure_columns() -> None:
     workflow = run_comparison_workflow(
         source,
         method="cluster",
+        vad_scorer=neutral_vad,
         reuse_structures=False,
         extraction_fn=lambda **_kwargs: next(extracted_structures),
         embedder=StableEmbedder(),

@@ -9,10 +9,15 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 from misinformation_simulation.config.prompts import STRUCTURED_EXTRACTION_VERSION
+from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.text_metrics.vad import (
-    DEFAULT_VAD_MODEL_NAME,
     VADScore,
-    predict_text_vad,
+)
+from misinformation_simulation.text_metrics.vad_evaluation import (
+    VADTextEvaluator,
+    compare_vad_evaluations,
+    evaluation_score,
+    vad_pair_columns,
 )
 from misinformation_simulation.topic_drift.cluster_comparison import (
     ClusterSTDIComparator,
@@ -69,6 +74,12 @@ def run_dual_workflow(
     vad_scorer: Callable[[str], VADScore] | None,
     uncached_judge: bool,
     judge_repeats: int,
+    vad_method: str = "model",
+    vad_llm_model: str | None = None,
+    vad_llm_provider: str | None = None,
+    vad_llm_scorer=None,
+    vad_llm_api_key: str | None = None,
+    vad_llm_base_url: str | None = None,
 ) -> ComparisonWorkflowResult:
     from misinformation_simulation.topic_drift.comparison_workflow import (
         ComparisonWorkflowResult,
@@ -99,7 +110,7 @@ def run_dual_workflow(
         "historical_lexical_stdi",
     ):
         result[key] = pd.Series(index=result.index, dtype=object)
-    for branch in ("embedding", "llm_judge"):
+    for branch in ("embedding", "llm_judge", "dual"):
         for component in (
             *CONTENT_COMPONENTS,
             "contradiction_drift",
@@ -123,6 +134,18 @@ def run_dual_workflow(
     result["comparison_method"] = "dual"
     result["pair_id"] = _resolved_pair_ids(df, pair_id_column)
     cache = EvaluationCache(cache_dir)
+    vad_provider = vad_llm_provider or judge_provider
+    reuse_vad_endpoint = normalize_provider(vad_provider) == normalize_provider(extraction_provider)
+    evaluator = VADTextEvaluator(
+        method=vad_method,
+        model_scorer=vad_scorer,
+        llm_scorer=vad_llm_scorer,
+        llm_model=vad_llm_model or judge_model,
+        llm_provider=vad_provider,
+        cache=cache,
+        api_key=vad_llm_api_key or (api_key if reuse_vad_endpoint else None),
+        base_url=vad_llm_base_url or (base_url if reuse_vad_endpoint else None),
+    )
     prepared = []
     vad_scores = {}
     vad_errors = {}
@@ -191,21 +214,23 @@ def run_dual_workflow(
                         result[key] = result[key].astype(object)
                     result.at[row_index, key] = value
                 if text not in vad_scores:
-                    try:
-                        vad_inputs = {"text": text, "model": DEFAULT_VAD_MODEL_NAME}
-                        saved_vad = cache.get("vad", vad_inputs) if vad_scorer is None else None
-                        vad_scores[text] = (
-                            VADScore(**saved_vad)
-                            if saved_vad
-                            else predict_text_vad(text, scorer=vad_scorer)
-                        )
-                        if vad_scorer is None and all(
-                            value is not None for value in asdict(vad_scores[text]).values()
-                        ):
-                            cache.put("vad", vad_inputs, asdict(vad_scores[text]))
-                    except Exception as exc:
-                        vad_scores[text] = None
-                        vad_errors[text] = str(exc)
+                    evaluation = evaluator.evaluate(text)
+                    source = "model" if vad_method == "dual" else vad_method
+                    vad_scores[text] = evaluation_score(evaluation, source)
+                    required = ("model", "llm") if vad_method == "dual" else (vad_method,)
+                    errors = [
+                        evaluation[method].get("error", "Incomplete VAD scores.")
+                        for method in required
+                        if evaluation[method]["status"] != "valid"
+                    ]
+                    if errors:
+                        vad_errors[text] = "; ".join(errors)
+                column = f"{prefix}_vad_evaluation_json"
+                if column not in result:
+                    result[column] = pd.Series(index=result.index, dtype=object)
+                result.at[row_index, column] = json.dumps(
+                    evaluator.records[text], ensure_ascii=False
+                )
                 scores.append(vad_scores[text])
                 result.at[row_index, f"{prefix}_vad_error"] = vad_errors.get(text)
                 if scores[-1] is not None:
@@ -259,6 +284,9 @@ def run_dual_workflow(
             cache=cache,
             uncached_judge=uncached_judge,
             judge_repeats=judge_repeats,
+            vad_evaluation=compare_vad_evaluations(
+                evaluator.records[texts[0]], evaluator.records[texts[1]], method=vad_method
+            ),
         )
         for key, value in {
             "comparison_method": "dual",
@@ -298,6 +326,20 @@ def run_dual_workflow(
                     "content_drift",
                 ):
                     result.at[row_index, key] = metrics.get(key)
+        for key, value in vad_pair_columns(evaluation["vad_evaluation"]).items():
+            if key not in result:
+                result[key] = pd.Series(index=result.index, dtype=object)
+            result.at[row_index, key] = value
+        for branch, source in evaluation["vad_sources"].items():
+            column = f"{branch}_vad_source"
+            if column not in result:
+                result[column] = pd.Series(index=result.index, dtype=object)
+            result.at[row_index, column] = source
+        for key, value in (evaluation.get("metrics") or {}).items():
+            column = f"dual_{key}"
+            if column not in result:
+                result[column] = pd.Series(index=result.index, dtype=object)
+            result.at[row_index, column] = value
         result.at[row_index, "historical_lexical_stdi"] = calculate_stdi(
             *structures,
             original_vad=scores[0],
@@ -312,9 +354,18 @@ def run_dual_workflow(
                 compared_vad=scores[1],
                 component_overrides=historical_comparator.compare(*structures).component_drifts,
             )["stdi"]
-    for column in list(result.columns):
-        if column.startswith("embedding_"):
-            result[column.replace("embedding_", "cluster_", 1)] = result[column]
+    cluster_aliases = {
+        column.replace("embedding_", "cluster_", 1): result[column]
+        for column in result.columns
+        if column.startswith("embedding_")
+    }
+    result = pd.concat(
+        [
+            result.drop(columns=list(cluster_aliases), errors="ignore"),
+            pd.DataFrame(cluster_aliases),
+        ],
+        axis=1,
+    )
     manifest = {
         "method": "dual",
         "version": DUAL_STDI_VERSION,
@@ -339,6 +390,12 @@ def run_dual_workflow(
         "uncached_judge": uncached_judge,
         "judge_repeats": judge_repeats,
         "judge_aggregation": "mean_complete_metrics",
-        "vad_model": "custom_scorer" if vad_scorer else "RobroKools/vad-bert",
+        "vad_model": ("custom_scorer" if vad_scorer else "RobroKools/vad-bert")
+        if vad_method != "llm"
+        else None,
+        "vad_method": vad_method,
+        "vad_llm_model": evaluator.llm_model if vad_method != "model" else None,
+        "vad_llm_provider": evaluator.llm_provider if vad_method != "model" else None,
+        "dual_aggregation": "mean_complete_branches_with_selected_vad",
     }
     return ComparisonWorkflowResult(result, manifest)

@@ -109,9 +109,22 @@ def parse_llm_vad_assessment(raw_response: str, text: str) -> LLMVADAssessment:
 
 
 class LLMVADScorer:
-    def __init__(self, *, model: str = DEFAULT_LLM_MODEL, provider=DEFAULT_LLM_PROVIDER):
+    def __init__(
+        self,
+        *,
+        model: str = DEFAULT_LLM_MODEL,
+        provider=DEFAULT_LLM_PROVIDER,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        before_request_hook=None,
+        retry_attempts: int = 4,
+    ):
         self.model = str(model)
-        self.provider, self.client = create_llm_client(provider=provider, max_retries=0)
+        self.provider, self.client = create_llm_client(
+            provider=provider, api_key=api_key, base_url=base_url, max_retries=0
+        )
+        self.before_request_hook = before_request_hook
+        self.retry_attempts = retry_attempts
         self.last_attempts: list[dict] = []
 
     def assess(self, text: str) -> LLMVADAssessment:
@@ -134,6 +147,7 @@ class LLMVADScorer:
                     system_instruction=LLM_VAD_SYSTEM_INSTRUCTION,
                     temperature=0.0,
                     max_attempts=1,
+                    before_request_hook=self.before_request_hook,
                 )
             except Exception as error:
                 attempt["exception_type"] = type(error).__name__
@@ -150,4 +164,4 @@ class LLMVADScorer:
             self.last_attempts[-1]["status"] = "valid"
             return assessment
 
-        return generate_and_parse_with_retry(request, parse)
+        return generate_and_parse_with_retry(request, parse, max_attempts=self.retry_attempts)

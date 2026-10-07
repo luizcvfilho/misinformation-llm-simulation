@@ -56,11 +56,11 @@ def _parse_args() -> argparse.Namespace:
         "--stdi-judge-repeats",
         type=int,
         default=3,
-        help="Total LLM judge evaluations per pair in dual mode (default: 3; use 1 to disable).",
+        help="Total judge evaluations per pair in Dual or LLM mode (default: 3; use 1 to disable).",
     )
     parser.add_argument(
         "--stdi-comparison-method",
-        choices=("dual", "cluster", "lexical"),
+        choices=("dual", "cluster", "llm", "lexical"),
         default="dual",
     )
     parser.add_argument(
@@ -68,6 +68,9 @@ def _parse_args() -> argparse.Namespace:
         default="sentence-transformers/all-MiniLM-L6-v2",
     )
     parser.add_argument("--output-dir", default="output/interaction_graph")
+    parser.add_argument("--vad-method", choices=("model", "llm", "dual"), default="model")
+    parser.add_argument("--vad-llm-model", default=None)
+    parser.add_argument("--vad-llm-provider", default=None)
     parser.add_argument("--output-prefix", default="simulation")
     parser.add_argument(
         "--verbose",
@@ -103,6 +106,9 @@ def main() -> None:
         topic_drift_provider=args.topic_drift_provider,
         stdi_comparison_method=args.stdi_comparison_method,
         stdi_judge_repeats=args.stdi_judge_repeats,
+        vad_method=args.vad_method,
+        vad_llm_model=args.vad_llm_model,
+        vad_llm_provider=args.vad_llm_provider,
         stdi_embedding_model=args.stdi_embedding_model,
         output_dir=args.output_dir,
         output_prefix=args.output_prefix,

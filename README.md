@@ -168,9 +168,10 @@ The extraction step builds a structured representation for each text with:
 
 The four content components depend on the comparison method. **Interaction-graph
 simulations default to `dual`**, the mean of two complete evaluations. The UI checkbox
-"Dual STDI (embeddings + LLM judge)" is enabled by default; disabling it selects the
-`cluster` embedding branch with the same polarity/numeric adjustments. The CLI accepts `--stdi-comparison-method
-dual|cluster|lexical`. Calling
+"Dual STDI (embeddings + LLM judge)" is enabled by default; disabling it lets you select
+`cluster` or `llm` alone. The CLI accepts `--stdi-comparison-method dual|cluster|llm|lexical`.
+VAD is selected independently as `model` (default), `llm`, or `dual`; see the
+[selection matrix and Dual formula](docs/vad_stdi_methods.md). Calling
 `calculate_stdi(...)` without `component_overrides` uses the lexical method;
 `calculate_stdi_chain_metrics(...)`, `annotate_stdi_for_rewrites(...)`, and
 `annotate_stdi_for_version_chain(...)` also use lexical comparison. The manual
@@ -181,8 +182,9 @@ and contextual numeric adjustments (both fixed at 0.20). Numeric slots cover cou
 percentages, durations, ages, measurements, years, dates and identifiers. The largest valid
 change within an aligned relation supplies one numeric adjustment; duration is not counted twice.
 `dual` independently obtains five
-contextual component judgments from an LLM. Both branches reuse one VAD calculation;
-the final value averages complete STDI scores after contradiction and VAD contributions.
+contextual component judgments from an LLM. Each complete branch uses the selected VAD.
+When both methods are Dual, Cluster uses Model VAD and LLM uses LLM VAD; the final Dual
+recalculates both structural evaluations with Dual VAD before averaging complete scores.
 The Dual judge defaults to **three evaluations per pair**. In the UI, leave **Repeat LLM judge
 evaluation** enabled and select **LLM judge evaluations per pair** (default `3`), or disable
 repetition for one evaluation. Cluster mode disables these controls and issues no judge calls.
@@ -205,7 +207,8 @@ Failed extraction, invalid numeric judgments and unavailable VAD do not imply ze
 If either complete branch is unavailable,
 the final mean is unavailable and the available branch remains visible. Identical text and
 context reuse the reference extraction and receive zero comparison drift without a judge call.
-Legacy component columns describe the embedding branch in dual mode. Separate Cluster/LLM
+New main graph component columns describe the selected evaluation; older Dual graph columns
+describe the embedding branch. Separate Cluster/LLM
 evaluation records and flat component columns are saved alongside the final
 Dual result. Each branch has independent status, errors and cumulative scores.
 Historical Dual results expose their saved branch metrics on import.
@@ -450,9 +453,8 @@ The project can compare the same LLM-extracted structures using two methods:
 Both methods read the same pair schema (`original_text`, `modified_text`, and optional
 `original_*` / `modified_*` extracted fields) and produce `comparison_results.csv` with the
 same base drift columns. A result folder can be re-used as input for the other method.
-This reusable comparison workflow calls `calculate_stdi(...)` without VAD objects,
-so its VAD drift columns are 0 and its STDI includes content and contradiction
-only. The manual evaluation and graph workflows supply VAD separately.
+New reusable comparison runs include the selected VAD contribution (`--vad-method model|llm|dual`).
+Earlier standalone Cluster/LLM comparisons omitted VAD; their saved scores remain unchanged.
 
 ```powershell
 # First method. Missing structures are extracted once by the configured LLM.
@@ -864,7 +866,8 @@ older step files without `metadata_category` need their original category data r
 Each graph in the queue is a single connected chain of nodes, as required by the backend.
 
 Each graph step computes VAD (valence, arousal, and dominance) for the source article and
-the rewritten text using the project's default `RobroKools/vad-bert` model. The STDI
+the rewritten text using Model, LLM, or Dual VAD. The default remains `RobroKools/vad-bert`.
+The STDI
 uses the local `sentence-transformers/all-MiniLM-L6-v2` embedding comparator for theme,
 subtopic, entity, and relation drift. It fits a shared comparator across the successful
 steps in each graph run, then calculates both original and incremental scores using
@@ -874,7 +877,8 @@ direct similarities and greedy matching (see the STDI section above). The summar
 STDI includes both VAD drift and the existing internal-contradiction contribution. Step records
 include these components against the original article and the previous version, together
 with the raw VAD scores. The VAD model is loaded locally and may need to be downloaded on
-its first use. A graph run requires all three VAD scores for each evaluated text.
+its first use. Complete STDI requires all three dimensions from its selected VAD source;
+failed ratings retain available independent results and never become zero drift.
 Graph step records also include `stdi_cumulative`, the running sum of successful incremental
 STDI values for each news item. Failed steps have no cumulative score; a later successful step
 continues from the last successful version. This sum is not normalized and can exceed 1.
@@ -991,8 +995,9 @@ establish accuracy, and the results do not validate Portuguese.
 comparison, orchestrated by `scripts/compare_llm_vad.py`. The initial scope is the
 20 saved synthetic context pairs and original/final pairs for the same five
 news items across SSSS, CCCC, PPPP, DDDD, CCPP, and PPCC (50 pairs, 75 unique texts).
-News are selected by hashed ID before scoring. No segmentation, new rewrites,
-or changes to the production VAD scorer/STDI are introduced.
+News are selected by hashed ID before scoring. That pilot introduced no segmentation,
+new rewrites or production VAD/STDI changes. Subsequent integration adds
+[selectable Model, LLM and Dual VAD](docs/vad_stdi_methods.md) for new runs.
 
 The default LLM is the project's configured `gpt-6-luna` via `chatgpt`. Each input
 contains only one complete text, without persona, paired text, context label,

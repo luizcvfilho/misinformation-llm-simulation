@@ -164,6 +164,20 @@ Referências do NRC v2 na comparação atual e no histórico: `mohammad2025vadv2
   escalas nominais iguais não calibram estimadores. As cinco notícias, não os
   30 pares das cadeias, são as unidades independentes desse recorte.
 
+- **Integração de 06/10/2026:** novas execuções permitem selecionar VAD Modelo, LLM ou Dual
+  independentemente do método estrutural. O Dual é a média dos drifts normalizados de Modelo
+  e LLM, nunca a distância entre vetores brutos previamente promediados. Se apenas um VAD
+  for selecionado, todos os STDIs solicitados usam esse estimador. Se VAD e STDI forem Dual,
+  o STDI Cluster exibido usa VAD Modelo e o STDI LLM exibido usa VAD LLM; o STDI Dual aplica
+  VAD Dual a ambas as avaliações estruturais e calcula a média dos STDIs completos resultantes.
+  Assim, o Dual pode diferir da média dos dois STDIs exibidos com seus VADs próprios.
+  STDI Cluster ou LLM isolado com VAD Dual usa essa média afetiva. O padrão VAD permanece
+  Modelo; não há segmentação, mudança de pesos ou recálculo dos resultados históricos.
+  `dual_stdi_v6` e esquema 5 identificam a nova execução, com fontes, notas, respostas e
+  falhas preservadas. Ausências não entram como zeros nem acionam substituição silenciosa.
+  Testes com respostas fixas verificam integração e exportação, sem demonstrar superioridade
+  empírica, emoção do leitor ou impacto comportamental. Protocolo em `docs/vad_stdi_methods.md`.
+
 #### Validação
 
 - Rubrica dos 50 pares controlados.

@@ -49,6 +49,13 @@ from misinformation_simulation.text_metrics.vad import (
     VADScore,
     predict_text_vad,
 )
+from misinformation_simulation.text_metrics.vad_evaluation import (
+    VADTextEvaluator,
+    compare_vad_evaluations,
+    evaluation_score,
+    vad_for_branch,
+    validate_vad_method,
+)
 from misinformation_simulation.topic_drift import (
     calculate_stdi,
     extract_topic_structure,
@@ -72,6 +79,7 @@ from misinformation_simulation.topic_drift.structured_comparison import (
     STRUCTURED_CLUSTER_VERSION,
     StructuredEmbeddingComparator,
     compare_dual_stdi,
+    complete_stdi,
     validate_judge_repeats,
 )
 
@@ -215,7 +223,7 @@ def _record_stdi_metrics(
         setattr(step, f"{component}_{suffix}", metrics[component])
 
 
-GRAPH_STEP_SCHEMA_VERSION = 4
+GRAPH_STEP_SCHEMA_VERSION = 5
 
 
 def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[str, Any]) -> None:
@@ -226,8 +234,8 @@ def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[s
     for branch in ("embedding", "llm_judge"):
         metrics = result[branch].get("metrics")
         setattr(step, f"stdi_{branch}_{suffix}", metrics["stdi"] if metrics else None)
-    # Legacy component columns explicitly describe the embedding branch in dual mode.
-    embedding = result["embedding"].get("metrics")
+    # New records expose the selected evaluation; historical branch columns stay recoverable.
+    embedding = result.get("metrics")
     if embedding:
         for component in STDI_COMPONENTS:
             if component != "stdi":
@@ -261,6 +269,12 @@ def run_news_interaction_graph(
     stdi_judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     vad_model_bundle: VADModelBundle | None = None,
     vad_scorer: Callable[[str], VADScore] | None = None,
+    vad_method: str = "model",
+    vad_llm_model: str | None = None,
+    vad_llm_provider: Provider | str | None = None,
+    vad_llm_api_key: str | None = None,
+    vad_llm_base_url: str | None = None,
+    vad_llm_scorer: Callable[[str], Any] | None = None,
     output_dir: Path | str | None = None,
     output_prefix: str = "simulation",
     persist_results: bool = True,
@@ -274,19 +288,40 @@ def run_news_interaction_graph(
         raise ValueError("The DataFrame is empty.")
     if max_requests_per_minute is not None and max_requests_per_minute <= 0:
         raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
-    if stdi_comparison_method not in {"dual", "cluster", "lexical"}:
-        raise ValueError("'stdi_comparison_method' must be 'dual', 'cluster' or 'lexical'.")
+    if stdi_comparison_method not in {"dual", "cluster", "llm", "lexical"}:
+        raise ValueError("'stdi_comparison_method' must be 'dual', 'cluster', 'llm' or 'lexical'.")
+    validate_vad_method(vad_method)
     validate_judge_repeats(stdi_judge_repeats)
     cache_directory = stdi_cache_dir
-    if cache_directory is None and persist_results and stdi_comparison_method == "dual":
+    if (
+        cache_directory is None
+        and persist_results
+        and (stdi_comparison_method in {"dual", "llm"} or vad_method != "model")
+    ):
         cache_directory = Path(output_dir or DEFAULT_SIMULATION_OUTPUT_DIR) / "evaluation_cache"
     evaluation_cache = EvaluationCache(cache_directory)
     vad_cache: dict[str, VADScore] = {}
     vad_errors: dict[str, str] = {}
     judge_limiter = MinuteRateLimiter(max_requests_per_minute)
+    vad_provider = vad_llm_provider or topic_drift_provider
+    reuse_vad_endpoint = normalize_provider(vad_provider) == normalize_provider(
+        topic_drift_provider
+    )
+    vad_evaluator = VADTextEvaluator(
+        method=vad_method,
+        model_bundle=vad_model_bundle,
+        model_scorer=vad_scorer,
+        llm_scorer=vad_llm_scorer,
+        llm_model=vad_llm_model or topic_drift_model,
+        llm_provider=vad_provider,
+        api_key=vad_llm_api_key or (topic_drift_api_key if reuse_vad_endpoint else None),
+        base_url=vad_llm_base_url or (topic_drift_base_url if reuse_vad_endpoint else None),
+        before_request_hook=judge_limiter.acquire,
+        cache=evaluation_cache,
+    )
 
     def extract_structure(**kwargs: Any) -> TopicStructure:
-        if stdi_comparison_method not in {"dual", "cluster"}:
+        if stdi_comparison_method not in {"dual", "cluster", "llm"}:
             return extract_topic_structure(**kwargs)
         inputs = {
             key: str(value) if key in {"model", "provider"} else value
@@ -314,14 +349,21 @@ def run_news_interaction_graph(
         return structure
 
     def score_vad(text: str) -> VADScore:
-        if stdi_comparison_method != "dual" or text not in vad_cache:
-            try:
-                vad_cache[text] = _score_vad(text, model_bundle=vad_model_bundle, scorer=vad_scorer)
-            except Exception as exc:
-                if stdi_comparison_method != "dual":
-                    raise
-                vad_cache[text] = VADScore(None, None, None)
-                vad_errors[text] = str(exc)
+        evaluation = vad_evaluator.evaluate(text)
+        source = "model" if vad_method == "dual" else vad_method
+        vad_cache[text] = evaluation_score(evaluation, source)
+        required = ("model", "llm") if vad_method == "dual" else (vad_method,)
+        errors = [
+            evaluation[method].get(
+                "error", "VAD scoring must return valence, arousal, and dominance."
+            )
+            for method in required
+            if evaluation[method]["status"] != "valid"
+        ]
+        if errors:
+            vad_errors[text] = "; ".join(errors)
+            if vad_method == "model" and stdi_comparison_method not in {"dual", "llm"}:
+                raise ValueError(vad_errors[text])
         return vad_cache[text]
 
     rewrite_prompt = resolve_graph_rewrite_prompt(rewrite_mode)
@@ -363,9 +405,17 @@ def run_news_interaction_graph(
         limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
     evaluation_metadata = {
-        "stdi_judge_repeats": stdi_judge_repeats if stdi_comparison_method == "dual" else None,
+        "vad_method": vad_method,
+        "vad_evaluation_version": "vad_evaluation_v1",
+        "vad_llm_model": str(vad_llm_model or topic_drift_model) if vad_method != "model" else None,
+        "vad_llm_provider": normalize_provider(vad_llm_provider or topic_drift_provider)
+        if vad_method != "model"
+        else None,
+        "stdi_judge_repeats": stdi_judge_repeats
+        if stdi_comparison_method in {"dual", "llm"}
+        else None,
         "stdi_judge_aggregation": "mean_complete_metrics"
-        if stdi_comparison_method == "dual"
+        if stdi_comparison_method in {"dual", "llm"}
         else None,
         "topic_drift_model": str(topic_drift_model),
         "topic_drift_provider": normalize_provider(topic_drift_provider),
@@ -555,14 +605,14 @@ def run_news_interaction_graph(
                 rewrite_error=None,
                 original_topic_structure_status=(
                     "success"
-                    if stdi_comparison_method != "dual"
+                    if stdi_comparison_method not in {"dual", "llm"}
                     or original_structure.extraction_status == "valid"
                     else "error"
                 ),
                 original_topic_structure_error=(
                     "; ".join(original_structure.extraction_issues) or None
                 ),
-                original_vad_status="success" if original_vad.valence is not None else "error",
+                original_vad_status="success" if original_text not in vad_errors else "error",
                 original_vad_error=(vad_errors.get(original_text)),
                 metadata={
                     **evaluation_metadata,
@@ -573,7 +623,7 @@ def run_news_interaction_graph(
                     "source_text_column": source_column,
                     **(
                         {"original_text": original_text, "extraction_title": extraction_title}
-                        if stdi_comparison_method == "dual"
+                        if stdi_comparison_method in {"dual", "llm"}
                         else {}
                     ),
                     **flatten_topic_structure(original_structure, prefix="original"),
@@ -581,6 +631,8 @@ def run_news_interaction_graph(
             )
             _record_vad(step_result, "original", original_vad)
             _record_vad(step_result, "source", previous_vad)
+            step_result.metadata["original_vad_evaluation"] = vad_evaluator.records[original_text]
+            step_result.metadata["source_vad_evaluation"] = vad_evaluator.records[previous_text]
 
             rewritten_structure_ready = False
             rewritten_vad_ready = False
@@ -618,7 +670,7 @@ def run_news_interaction_graph(
                         max_requests_per_minute=max_requests_per_minute,
                         retry_attempts=retry_attempts,
                     )
-                    if stdi_comparison_method == "dual"
+                    if stdi_comparison_method in {"dual", "llm"}
                     else _extract_compared_structure(
                         compared_text=rewritten_text,
                         title=extraction_title,
@@ -636,7 +688,7 @@ def run_news_interaction_graph(
                     break
                 step_result.rewritten_topic_structure_status = (
                     "success"
-                    if stdi_comparison_method != "dual"
+                    if stdi_comparison_method not in {"dual", "llm"}
                     or rewritten_structure.extraction_status == "valid"
                     else "error"
                 )
@@ -649,11 +701,23 @@ def run_news_interaction_graph(
                 rewritten_vad = score_vad(rewritten_text)
                 rewritten_vad_ready = True
                 step_result.rewritten_vad_status = (
-                    "success" if rewritten_vad.valence is not None else "error"
+                    "success" if rewritten_text not in vad_errors else "error"
                 )
                 step_result.rewritten_vad_error = vad_errors.get(rewritten_text)
                 _record_vad(step_result, "rewritten", rewritten_vad)
-                if stdi_comparison_method in {"cluster", "dual"}:
+                step_result.metadata["rewritten_vad_evaluation"] = vad_evaluator.records[
+                    rewritten_text
+                ]
+                for suffix, reference in (
+                    ("vs_original", original_text),
+                    ("incremental", previous_text),
+                ):
+                    step_result.metadata[f"vad_evaluation_{suffix}"] = compare_vad_evaluations(
+                        vad_evaluator.records[reference],
+                        vad_evaluator.records[rewritten_text],
+                        method=vad_method,
+                    )
+                if stdi_comparison_method in {"cluster", "dual", "llm"}:
                     scoring_contexts.append(
                         (
                             row_position,
@@ -673,9 +737,6 @@ def run_news_interaction_graph(
                         original_vad=original_vad,
                         compared_vad=rewritten_vad,
                     )
-                    _record_stdi_metrics(
-                        step_result, suffix="vs_original", metrics=vs_original_metrics
-                    )
                     if previous_rewritten_text is None:
                         incremental_metrics = vs_original_metrics
                     else:
@@ -685,10 +746,25 @@ def run_news_interaction_graph(
                             original_vad=previous_vad,
                             compared_vad=rewritten_vad,
                         )
-                    _record_stdi_metrics(
-                        step_result, suffix="incremental", metrics=incremental_metrics
-                    )
-                    cumulative_stdi += incremental_metrics["stdi"]
+                    for suffix, metrics in (
+                        ("vs_original", vs_original_metrics),
+                        ("incremental", incremental_metrics),
+                    ):
+                        vad = vad_for_branch(
+                            step_result.metadata[f"vad_evaluation_{suffix}"], "embedding"
+                        )
+                        if vad["status"] == "valid":
+                            metrics.update(
+                                {
+                                    key: round(value, 6)
+                                    for key, value in complete_stdi(metrics, vad).items()
+                                }
+                            )
+                        else:
+                            metrics.update(dict.fromkeys(STDI_COMPONENTS))
+                        _record_stdi_metrics(step_result, suffix=suffix, metrics=metrics)
+                    if incremental_metrics["stdi"] is not None:
+                        cumulative_stdi += incremental_metrics["stdi"]
                     step_result.stdi_cumulative = round(cumulative_stdi, 6)
 
                 previous_text = rewritten_text
@@ -760,9 +836,10 @@ def run_news_interaction_graph(
             embedding_model=stdi_embedding_model,
         )
         try:
-            comparator.fit(pairs)
+            if stdi_comparison_method != "llm":
+                comparator.fit(pairs)
         except Exception:
-            if stdi_comparison_method != "dual":
+            if stdi_comparison_method not in {"dual", "llm"}:
                 raise
         last_row_position = 0
         cumulative_stdi = 0.0
@@ -779,7 +856,7 @@ def run_news_interaction_graph(
             previous_vad,
             rewritten_vad,
         ) in scoring_contexts:
-            if stdi_comparison_method == "dual" and _cancel_requested(cancel_check):
+            if stdi_comparison_method in {"dual", "llm"} and _cancel_requested(cancel_check):
                 cancelled = True
                 break
             if row_position != last_row_position:
@@ -788,7 +865,7 @@ def run_news_interaction_graph(
                 branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
                 branch_valid_steps = {"cluster": 0, "llm_judge": 0}
                 last_row_position = row_position
-            if stdi_comparison_method == "dual":
+            if stdi_comparison_method in {"dual", "llm"}:
                 _emit_progress(
                     progress_callback,
                     f"Evaluating dual STDI for '{step.news_id}' step {step.step_index}.",
@@ -808,12 +885,14 @@ def run_news_interaction_graph(
                     "judge_repeats": stdi_judge_repeats,
                     "cancel_check": cancel_check,
                     "cache": evaluation_cache,
+                    "comparison_method": stdi_comparison_method,
                     **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
                 }
                 vs_original_dual = compare_dual_stdi(
                     original_text=step.metadata["original_text"],
                     original_structure=original,
                     original_vad=original_vad,
+                    vad_evaluation=step.metadata["vad_evaluation_vs_original"],
                     **common,
                 )
                 if _cancel_requested(cancel_check):
@@ -824,6 +903,7 @@ def run_news_interaction_graph(
                     original_text=step.source_text,
                     original_structure=previous,
                     original_vad=previous_vad,
+                    vad_evaluation=step.metadata["vad_evaluation_incremental"],
                     **common,
                 )
                 _record_dual_metrics(step, "vs_original", vs_original_dual)
@@ -861,9 +941,20 @@ def run_news_interaction_graph(
                 compared_vad=rewritten_vad,
                 component_overrides=comparator.compare(previous, rewritten).component_drifts,
             )
+            for suffix, metrics in (("vs_original", vs_original), ("incremental", incremental)):
+                vad = vad_for_branch(step.metadata[f"vad_evaluation_{suffix}"], "embedding")
+                step.metadata[f"stdi_vad_source_{suffix}"] = vad["source"]
+                setattr(step, f"stdi_status_{suffix}", vad["status"])
+                if vad["status"] == "valid":
+                    metrics.update(
+                        {key: round(value, 6) for key, value in complete_stdi(metrics, vad).items()}
+                    )
+                else:
+                    metrics.update(dict.fromkeys(STDI_COMPONENTS))
             _record_stdi_metrics(step, suffix="vs_original", metrics=vs_original)
             _record_stdi_metrics(step, suffix="incremental", metrics=incremental)
-            cumulative_stdi += incremental["stdi"]
+            if incremental["stdi"] is not None:
+                cumulative_stdi += incremental["stdi"]
             step.stdi_cumulative = round(cumulative_stdi, 6)
 
     if _cancel_requested(cancel_check):
@@ -875,6 +966,8 @@ def run_news_interaction_graph(
         vad_model_name = vad_model_bundle.model_name
     if vad_scorer is not None:
         vad_model_name = "custom_scorer"
+    if vad_method == "llm":
+        vad_model_name = None
     embedding_model_name = (
         (
             stdi_embedding_model
@@ -886,7 +979,7 @@ def run_news_interaction_graph(
     )
     comparison_version = (
         DUAL_STDI_VERSION
-        if stdi_comparison_method == "dual"
+        if stdi_comparison_method in {"dual", "llm"}
         else (
             STRUCTURED_CLUSTER_VERSION
             if any(
@@ -926,9 +1019,9 @@ def run_news_interaction_graph(
         "stdi_complete_incremental_pairs": sum(
             step.stdi_status_incremental == "valid" for step in step_results
         )
-        if stdi_comparison_method == "dual"
+        if stdi_comparison_method in {"dual", "llm"}
         else None,
-        "stdi_components_branch": "embedding" if stdi_comparison_method == "dual" else None,
+        "stdi_components_branch": "selected_evaluation",
         "graph": {
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,

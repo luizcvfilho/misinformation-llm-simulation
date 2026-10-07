@@ -9,6 +9,7 @@ from typing import Any
 
 from misinformation_simulation.config.prompts import STRUCTURED_JUDGE_VERSION
 from misinformation_simulation.text_metrics.vad import VADScore
+from misinformation_simulation.text_metrics.vad_evaluation import vad_for_branch
 from misinformation_simulation.topic_drift.cluster_comparison import (
     ClusterSTDIComparator,
     ClusterSTDIComparison,
@@ -28,7 +29,7 @@ from misinformation_simulation.topic_drift.semantic_comparison import (
     compare_stdi_components_semantically,
 )
 
-DUAL_STDI_VERSION = "dual_stdi_v5"
+DUAL_STDI_VERSION = "dual_stdi_v6"
 DEFAULT_JUDGE_REPEATS = 3
 STRUCTURED_CLUSTER_VERSION = "cluster_v4"
 FORMULA_VERSION = "stdi_remaining_distance_v1_mean_50_50"
@@ -201,7 +202,11 @@ def complete_stdi(components: dict[str, float], vad: dict[str, Any]) -> dict[str
     contradiction = content + (1 - content) * 0.2 * components["contradiction_drift"]
     return {
         **components,
-        **{k: v for k, v in vad.items() if k != "status"},
+        **{
+            key: vad[key]
+            for key in ("valence_drift", "arousal_drift", "dominance_drift", "vad_drift")
+            if key in vad
+        },
         "content_drift": content,
         "stdi": contradiction + (1 - contradiction) * 0.2 * vad["vad_drift"],
     }
@@ -228,7 +233,11 @@ def compare_dual_stdi(
     uncached_judge: bool = False,
     judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     cancel_check: Callable[[], bool] | None = None,
+    vad_evaluation: dict[str, Any] | None = None,
+    comparison_method: str = "dual",
 ) -> dict[str, Any]:
+    if comparison_method not in {"dual", "cluster", "llm"}:
+        raise ValueError("STDI comparison method must be 'dual', 'cluster' or 'llm'.")
     validate_judge_repeats(judge_repeats)
     cache = cache or EvaluationCache()
     result: dict[str, Any] = {
@@ -244,12 +253,25 @@ def compare_dual_stdi(
         "judge_aggregation": "mean_complete_metrics",
         "stdi": None,
         "method_gap": None,
+        "metrics": None,
+        "comparison_method": comparison_method,
         "input_sha256": input_hash(
             {"original": original_text, "modified": modified_text, "title": title}
         ),
     }
-    vad = shared_vad_drift(original_vad, modified_vad)
+    legacy_vad = shared_vad_drift(original_vad, modified_vad)
+    evaluation = vad_evaluation or {"method": "model", "model": legacy_vad}
+    paired = comparison_method == "dual"
+    embedding_vad = vad_for_branch(evaluation, "embedding", paired=paired)
+    judge_vad = vad_for_branch(evaluation, "llm_judge", paired=paired)
+    vad = vad_for_branch(evaluation, "dual", paired=paired)
     result["shared_vad"] = vad
+    result["vad_evaluation"] = evaluation
+    result["vad_method"] = evaluation["method"]
+    result["vad_sources"] = dict(
+        embedding=embedding_vad["source"], llm_judge=judge_vad["source"], dual=vad["source"]
+    )
+    result["dual_aggregation"] = "mean_complete_branches_with_selected_vad"
     if (
         original_text == modified_text
         and not structure_issues(original_structure)
@@ -273,7 +295,7 @@ def compare_dual_stdi(
             identity_shortcut=True,
             stdi=0.0,
             method_gap=0.0,
-            embedding={"status": "valid", "metrics": zero},
+            embedding={"status": "valid", "metrics": zero, "vad_source": embedding_vad["source"]},
             llm_judge={
                 "status": "valid",
                 "metrics": zero,
@@ -282,18 +304,41 @@ def compare_dual_stdi(
                 "executed_repeats": 0,
                 "identity_shortcut": True,
                 "samples": [],
+                "vad_source": judge_vad["source"],
             },
-            shared_vad={"status": "valid", **{k: 0.0 for k in vad if k != "status"}},
+            shared_vad={
+                "status": "valid",
+                "source": vad["source"],
+                **{
+                    key: 0.0
+                    for key in ("valence_drift", "arousal_drift", "dominance_drift", "vad_drift")
+                },
+            },
+            metrics=zero,
         )
+        if comparison_method != "dual":
+            excluded = "embedding" if comparison_method == "llm" else "llm_judge"
+            result[excluded] = {"status": "not_requested", "metrics": None}
+            result["method_gap"] = None
         return result
     try:
-        embedding = comparator.compare_structured(original_structure, modified_structure)
+        embedding = (
+            comparator.compare_structured(original_structure, modified_structure)
+            if comparison_method != "llm"
+            else {"status": "not_requested", "components": None}
+        )
         embedding["metrics"] = (
+            complete_stdi(embedding["components"], embedding_vad)
+            if embedding["status"] == "valid" and embedding_vad["status"] == "valid"
+            else None
+        )
+        embedding["dual_metrics"] = (
             complete_stdi(embedding["components"], vad)
             if embedding["status"] == "valid" and vad["status"] == "valid"
             else None
         )
-        if embedding["metrics"] is None:
+        embedding["vad_source"] = embedding_vad["source"]
+        if embedding["metrics"] is None and embedding["status"] != "not_requested":
             embedding["status"] = "partial"
         result["embedding"] = embedding
     except Exception as exc:
@@ -311,7 +356,7 @@ def compare_dual_stdi(
     }
     samples = []
     cancelled = False
-    for repeat_index in range(judge_repeats):
+    for repeat_index in range(judge_repeats if comparison_method != "cluster" else 0):
         if cancel_check is not None and cancel_check():
             cancelled = True
             break
@@ -348,8 +393,10 @@ def compare_dual_stdi(
             if not uncached_judge and not sample["cache_hit"]:
                 cache.put("judge", sample_inputs, saved)
             sample["status"] = "valid"
+            if judge_vad["status"] == "valid":
+                sample["metrics"] = complete_stdi(saved["component_drifts"], judge_vad)
             if vad["status"] == "valid":
-                sample["metrics"] = complete_stdi(saved["component_drifts"], vad)
+                sample["dual_metrics"] = complete_stdi(saved["component_drifts"], vad)
         except Exception as exc:
             sample.update(
                 status="failed", error=str(exc), provenance=getattr(exc, "provenance", {})
@@ -377,6 +424,14 @@ def compare_dual_stdi(
         if all_valid and len(complete_metrics) == judge_repeats
         else None
     )
+    dual_samples = [
+        sample["dual_metrics"] for sample in valid_samples if sample.get("dual_metrics") is not None
+    ]
+    dual_judge_metrics = (
+        {key: fmean(metrics[key] for metrics in dual_samples) for key in dual_samples[0]}
+        if all_valid and len(dual_samples) == judge_repeats
+        else None
+    )
     branch: dict[str, Any] = {
         "status": "valid"
         if judge_metrics is not None
@@ -384,6 +439,8 @@ def compare_dual_stdi(
         if valid_samples
         else "failed",
         "metrics": judge_metrics,
+        "dual_metrics": dual_judge_metrics,
+        "vad_source": judge_vad["source"],
         "aggregation": "mean_complete_metrics",
         "requested_repeats": judge_repeats,
         "executed_repeats": len(samples),
@@ -409,10 +466,26 @@ def compare_dual_stdi(
         if judge_repeats == 1 and samples and not cancelled:
             branch["error"] = samples[0]["error"]
     result["llm_judge"] = branch
-    a, b = result["embedding"]["metrics"], result["llm_judge"]["metrics"]
-    if a is not None and b is not None:
+    if comparison_method == "cluster":
+        result["llm_judge"].update(status="not_requested")
+    if comparison_method != "dual":
+        chosen = result["embedding" if comparison_method == "cluster" else "llm_judge"]
+        metrics = chosen.get("metrics")
         result.update(
-            status="valid", stdi=(a["stdi"] + b["stdi"]) / 2, method_gap=abs(a["stdi"] - b["stdi"])
+            status=chosen["status"], metrics=metrics, stdi=metrics["stdi"] if metrics else None
+        )
+        return result
+    a, b = result["embedding"].get("dual_metrics"), result["llm_judge"].get("dual_metrics")
+    if a is not None and b is not None:
+        metrics = {key: (a[key] + b[key]) / 2 for key in a}
+        own_a, own_b = result["embedding"]["metrics"], result["llm_judge"]["metrics"]
+        result.update(
+            status="valid",
+            stdi=metrics["stdi"],
+            metrics=metrics,
+            method_gap=abs(own_a["stdi"] - own_b["stdi"])
+            if own_a is not None and own_b is not None
+            else None,
         )
     else:
         result["status"] = (

@@ -10,6 +10,14 @@ import numpy as np
 import pandas as pd
 
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from misinformation_simulation.llm.clients import normalize_provider
+from misinformation_simulation.text_metrics.vad_evaluation import (
+    VADTextEvaluator,
+    compare_vad_evaluations,
+    vad_for_branch,
+    vad_pair_columns,
+    validate_vad_method,
+)
 from misinformation_simulation.topic_drift.cluster_comparison import (
     CLUSTER_STDI_COMPARISON_VERSION,
     ClusterSTDIComparator,
@@ -23,6 +31,7 @@ from misinformation_simulation.topic_drift.models import (
     TopicStructure,
     flatten_topic_structure,
 )
+from misinformation_simulation.topic_drift.provenance import EvaluationCache
 from misinformation_simulation.topic_drift.semantic_comparison import (
     SemanticSTDIComparison,
     compare_stdi_components_semantically,
@@ -31,6 +40,7 @@ from misinformation_simulation.topic_drift.structured_comparison import (
     DEFAULT_JUDGE_REPEATS,
     STRUCTURED_CLUSTER_VERSION,
     StructuredEmbeddingComparator,
+    complete_stdi,
     validate_judge_repeats,
 )
 
@@ -166,10 +176,17 @@ def run_comparison_workflow(
     vad_scorer: Callable[..., Any] | None = None,
     uncached_judge: bool = False,
     judge_repeats: int = DEFAULT_JUDGE_REPEATS,
+    vad_method: str = "model",
+    vad_llm_model: str | None = None,
+    vad_llm_provider: str | None = None,
+    vad_llm_scorer: Callable[..., Any] | None = None,
+    vad_llm_api_key: str | None = None,
+    vad_llm_base_url: str | None = None,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
     resolved_method = _validate_method(str(method))
     validate_judge_repeats(judge_repeats)
+    validate_vad_method(vad_method)
     if resolved_method == "dual":
         from misinformation_simulation.topic_drift.dual_workflow import run_dual_workflow
 
@@ -197,6 +214,12 @@ def run_comparison_workflow(
             vad_scorer=vad_scorer,
             uncached_judge=uncached_judge,
             judge_repeats=judge_repeats,
+            vad_method=vad_method,
+            vad_llm_model=vad_llm_model,
+            vad_llm_provider=vad_llm_provider,
+            vad_llm_scorer=vad_llm_scorer,
+            vad_llm_api_key=vad_llm_api_key,
+            vad_llm_base_url=vad_llm_base_url,
         )
     required_columns = {original_text_column, modified_text_column}
     missing_columns = sorted(required_columns - set(df.columns))
@@ -226,6 +249,18 @@ def run_comparison_workflow(
     result["pair_id"] = pair_ids
     prepared_pairs: list[TopicStructurePair] = []
     row_structures: dict[Any, tuple[TopicStructure, TopicStructure]] = {}
+    vad_provider = vad_llm_provider or llm_comparison_provider or extraction_provider
+    reuse_vad_endpoint = normalize_provider(vad_provider) == normalize_provider(extraction_provider)
+    vad_evaluator = VADTextEvaluator(
+        method=vad_method,
+        model_scorer=vad_scorer,
+        llm_scorer=vad_llm_scorer,
+        llm_model=vad_llm_model or llm_comparison_model or extraction_model,
+        llm_provider=vad_provider,
+        cache=EvaluationCache(cache_dir),
+        api_key=vad_llm_api_key or (extraction_api_key if reuse_vad_endpoint else None),
+        base_url=vad_llm_base_url or (extraction_base_url if reuse_vad_endpoint else None),
+    )
 
     total_rows = len(result)
     for row_position, (row_index, row) in enumerate(result.iterrows(), start=1):
@@ -371,6 +406,31 @@ def run_comparison_workflow(
                 modified_structure,
                 component_overrides=component_overrides,
             )
+            text_evaluations = {
+                prefix: vad_evaluator.evaluate(_as_non_empty_text(row[column]))
+                for prefix, column in (
+                    ("original", original_text_column),
+                    ("modified", modified_text_column),
+                )
+            }
+            vad_evaluation = compare_vad_evaluations(
+                text_evaluations["original"], text_evaluations["modified"], method=vad_method
+            )
+            for key, value in vad_pair_columns(vad_evaluation).items():
+                if key not in result:
+                    result[key] = pd.Series(index=result.index, dtype=object)
+                result.at[row_index, key] = value
+            for prefix, evaluation in text_evaluations.items():
+                key = f"{prefix}_vad_evaluation_json"
+                if key not in result:
+                    result[key] = pd.Series(index=result.index, dtype=object)
+                result.at[row_index, key] = json.dumps(evaluation, ensure_ascii=False)
+            vad = vad_for_branch(
+                vad_evaluation, "embedding" if resolved_method == "cluster" else "llm_judge"
+            )
+            if vad["status"] != "valid":
+                raise ValueError("Selected VAD evaluation is incomplete.")
+            metrics = complete_stdi(metrics, vad)
             result.at[row_index, "comparison_method"] = resolved_method
             result.at[row_index, "comparison_status"] = "success"
             result.at[row_index, "comparison_error"] = pd.NA
@@ -391,12 +451,20 @@ def run_comparison_workflow(
                 "entity_drift",
                 "relation_drift",
                 "content_drift",
+                "contradiction_drift",
+                "valence_drift",
+                "arousal_drift",
+                "dominance_drift",
+                "vad_drift",
                 "stdi",
             ):
                 result.at[row_index, metric] = np.nan
 
     manifest = {
         "schema_version": 1,
+        "vad_method": vad_method,
+        "vad_llm_model": vad_evaluator.llm_model if vad_method != "model" else None,
+        "vad_llm_provider": vad_evaluator.llm_provider if vad_method != "model" else None,
         "comparison_method": resolved_method,
         "pair_count": len(result),
         "successful_pair_count": int(result["comparison_status"].eq("success").sum()),

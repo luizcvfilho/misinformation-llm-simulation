@@ -2,13 +2,16 @@
 
 Interaction-graph runs now default to `dual`. The **Dual STDI (embeddings + LLM judge)**
 checkbox is enabled by default in execution settings. Uncheck it to run the structured
-`cluster` branch alone, including polarity/numeric adjustments without judge requests.
+`cluster` or `llm` alone. Cluster includes polarity/numeric adjustments without judge requests.
+Select Model, LLM or Dual VAD independently; the default remains Model.
+The [VAD/STDI selection matrix](vad_stdi_methods.md) defines all nine combinations,
+including paired branch results and the final Dual aggregation.
 `lexical` remains available through the Python API and CLI. The extraction
 provider/model also evaluates the judge; rewriting nodes retain their own configurations.
 Dual evaluation defaults to **three LLM judge evaluations per distinct pair**. In execution
 settings, **Repeat LLM judge evaluation** is checked by default. Use **LLM judge evaluations
 per pair** to choose any integer of at least two; uncheck repetition for exactly one evaluation.
-Both controls are disabled when Dual STDI is off, so Cluster runs issue no judge requests.
+Both controls are disabled for Cluster; they remain available for LLM-only STDI.
 The selected settings apply to every graph in the execution queue.
 Dual evaluation adds LLM requests, and an initial run may download the embedding/VAD models.
 
@@ -19,11 +22,13 @@ Draws do not see other judgments or embedding scores. Extraction, embeddings and
 Repetition is distinct from retrying failed requests: every draw has its own existing bounded
 retry budget. Scores and the final 50/50 branch weights remain unchanged.
 
-For each draw, calculate all five component scores and its complete STDI with shared VAD.
+For each draw, calculate all five component scores and its complete STDI with its selected VAD.
 The LLM branch then averages the complete per-draw metrics at full precision. In particular,
 its STDI is the mean of the individual STDIs, **not** STDI recomputed from mean components:
 the contradiction adjustment is nonlinear. The final Dual score averages this LLM branch STDI
-with the embedding branch STDI.
+with the embedding branch STDI after applying the selected VAD to both structural evaluations.
+When VAD is also Dual, the displayed branches use Model/LLM VAD respectively, while the
+final Dual recomputes both complete scores with Dual VAD; see the exact formula below.
 
 `llm_judge.samples` retains each numbered draw's status, cache hit, component scores,
 rationales, raw response/provenance and complete metrics. `llm_judge.statistics` records
@@ -90,8 +95,9 @@ Pure opinions/recommendations are recorded separately. Historical version-1 stru
 their missing qualifiers and legacy comparison behavior; saved artifacts are not rewritten.
 
 The current versions are `structured_extraction_v5`, `structured_judge_v4`, `cluster_v4`,
-and `dual_stdi_v5`. Prompt versions invalidate request caches for new runs. Dual v5 identifies
-repeated-judge aggregation; the per-draw judge prompt and STDI formula are unchanged.
+and `dual_stdi_v6`. Prompt versions invalidate request caches for new runs. Dual v5 introduced
+repeated-judge aggregation; v6 identifies selectable VAD and final Dual recomputation.
+The per-draw judge prompt and component STDI formula are unchanged.
 The extraction prompt requires exactly `affirmed` or `negated`, never `unknown`.
 Hypothesis/uncertainty is represented by assertion type, independently of polarity.
 If a schema-2 response omits or violates the polarity enum, the parser normalizes it from
@@ -150,15 +156,20 @@ Its relation score already includes semantic polarity, numeric changes, roles, p
 embedding adjustments are not applied again. The judge does not receive embedding scores or
 persona labels and does not evaluate factual truth against external knowledge.
 
-Both complete branches reuse the same VAD drift:
+The final Dual calculation applies the selected VAD drift to both structural evaluations:
 
 ```text
 C = (theme + subtopic + entity + relation) / 4
 J = C + (1-C)*0.20*internal_contradiction
 STDI_branch = J + (1-J)*0.20*VAD_drift
-STDI_final = (STDI_embedding + STDI_llm_judge) / 2
-method_gap = abs(STDI_embedding-STDI_llm_judge)
+STDI_final = (STDI_embedding_with_selected_VAD + STDI_llm_judge_with_selected_VAD) / 2
+method_gap = abs(displayed_STDI_embedding-displayed_STDI_llm_judge)
 ```
+
+Model-only or LLM-only VAD is shared across the displayed branches. With Dual VAD and
+Dual STDI, displayed Cluster uses Model VAD and displayed LLM uses LLM VAD; the final
+score uses their mean drift as VAD in both structural evaluations before averaging.
+It may therefore differ from the mean of the displayed paired branch scores.
 
 Full precision is retained until display. Optional qualifier diagnostics do not block
 the branch. Failed extraction, unusable relation cores, incomplete VAD, invalid numeric judge
@@ -171,11 +182,12 @@ The method gap measures disagreement, not calibrated confidence.
 
 Step details show both branch scores, disagreement, and expandable components/qualifiers.
 The existing `stdi_vs_original` and `stdi_incremental` fields hold the final mean in dual mode.
-Legacy category columns explicitly represent the embedding branch, not averaged components.
+New main graph category columns represent the selected evaluation. Legacy Dual graph
+category columns represent the embedding branch.
 Both complete branch component sets appear in `metadata_dual_stdi_vs_original` and
 `metadata_dual_stdi_incremental` in JSONL exports. These records include relation baselines,
 adjustments, raw judge responses, rationale, input hashes and configuration versions.
-Graph step schema 4 also exposes the evaluations separately as `cluster_evaluation_vs_original`,
+Graph step schema 5 exposes the evaluations separately as `cluster_evaluation_vs_original`,
 `cluster_evaluation_incremental`, `llm_judge_evaluation_vs_original` and
 `llm_judge_evaluation_incremental`. Each contains the complete branch result, including its
 status, metrics, diagnostics and available error/provenance details.
@@ -198,9 +210,10 @@ available. A selected method never borrows another method's scores for missing e
 Runs whose method was not recorded retain a **Saved evaluation (legacy)** option rather than
 being labelled as Dual. Known standalone Cluster runs remain available as Cluster.
 
-In the selected Dual view, component values are the arithmetic mean of the corresponding complete
-Cluster and LLM branch metrics; the total STDI remains the saved mean of the two complete STDI
-scores, rather than being recomputed from averaged components. Branch views use their own complete
+In the selected Dual view, new component values use explicitly saved final Dual metrics.
+Historical files fall back to the mean of their shared-VAD branch metrics. The total STDI
+remains the saved final score, rather than being recomputed from averaged components.
+Branch views use their own complete
 component sets, evaluation status and chain completeness. Historical branch cumulative scores are
 reconstructed from saved increments within each news item and graph, with valid-step counts.
 Unavailable increments remain missing; cumulative totals sum only available scores.

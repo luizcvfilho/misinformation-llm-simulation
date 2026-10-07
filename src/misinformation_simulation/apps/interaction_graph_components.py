@@ -278,6 +278,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                     info_cols[2].metric("Provider", str(row["provider"]))
                     info_cols[3].metric("Model", str(row["model"]))
                     st.metric("Cumulative STDI", format_metric(row["stdi_cumulative"]))
+                    render_vad_evaluations(row)
                     render_dual_stdi(row)
                     component_cols = st.columns(4)
                     component_cols[0].metric(
@@ -315,6 +316,53 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     st.dataframe(steps_df, width="stretch")
 
 
+def render_vad_evaluations(row: pd.Series) -> None:
+    labels = {"model": "Current model", "llm": "LLM", "dual": "Dual"}
+    for suffix, label in (
+        ("vs_original", "Original comparison"),
+        ("incremental", "Input comparison"),
+    ):
+        value = row.get(f"metadata_vad_evaluation_{suffix}")
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError:
+                continue
+        if not isinstance(value, dict):
+            continue
+        st.markdown(f"**VAD evaluations — {label}**")
+        rows = []
+        for method, title in labels.items():
+            metrics = value.get(method, {})
+            if metrics.get("status") == "not_requested":
+                continue
+            rows.append(
+                {
+                    "Method": title,
+                    "Status": metrics.get("status"),
+                    **{
+                        name: metrics.get(key)
+                        for name, key in (
+                            ("VAD drift", "vad_drift"),
+                            ("Valence drift", "valence_drift"),
+                            ("Arousal drift", "arousal_drift"),
+                            ("Dominance drift", "dominance_drift"),
+                        )
+                    },
+                }
+            )
+        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+        st.caption(
+            f"Selected VAD: {labels.get(value.get('method'), 'Unknown')}. "
+            "Dual averages normalized drifts, not raw VAD scores."
+        )
+    for role, label in (("original", "Original"), ("rewritten", "Rewritten")):
+        evaluation = row.get(f"metadata_{role}_vad_evaluation")
+        if isinstance(evaluation, dict):
+            with st.expander(f"{label} VAD scores, evidence, and provenance"):
+                st.json(evaluation)
+
+
 def render_dual_stdi(row: pd.Series) -> None:
     for suffix, label in (
         ("vs_original", "Original comparison"),
@@ -328,6 +376,12 @@ def render_dual_stdi(row: pd.Series) -> None:
                 continue
         if not isinstance(value, dict):
             continue
+        if value.get("comparison_method") == "llm":
+            st.markdown(f"**LLM STDI — {label} ({value.get('status', 'unavailable')})**")
+            st.metric("LLM STDI", format_metric(value.get("stdi")))
+            with st.expander(f"LLM evaluation and provenance — {label}"):
+                st.json(value)
+            continue
         st.markdown(f"**Dual STDI — {label} ({value.get('status', 'unavailable')})**")
         columns = st.columns(4)
         for column, branch, title in (
@@ -340,13 +394,16 @@ def render_dual_stdi(row: pd.Series) -> None:
         columns[3].metric("Method disagreement", format_metric(value.get("method_gap")))
         evaluation_label = EVALUATION_LABELS.get(row.get("stdi_evaluation"), "Cluster")
         st.caption(
-            "The final STDI is the mean of both complete scores. "
+            "The final Dual STDI averages the complete structural evaluations "
+            "with the selected VAD. "
             f"Category scores below describe {evaluation_label}. "
             "Disagreement is not calibrated confidence."
         )
         for branch, title in (("embedding", "Cluster"), ("llm_judge", "LLM judge")):
             evaluation = value.get(branch, {})
             with st.expander(f"{title} evaluation — {label}"):
+                if evaluation.get("vad_source"):
+                    st.caption(f"VAD source: {evaluation['vad_source']}")
                 st.caption(f"Status: {evaluation.get('status', 'unavailable')}")
                 if branch == "llm_judge" and "requested_repeats" in evaluation:
                     if evaluation.get("identity_shortcut"):

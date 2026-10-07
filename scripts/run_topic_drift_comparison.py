@@ -53,6 +53,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--n-clusters", type=int, default=None)
     parser.add_argument("--random-state", type=int, default=42)
     parser.add_argument("--cache-dir", type=Path, default=None)
+    parser.add_argument("--vad-method", choices=("model", "llm", "dual"), default="model")
+    parser.add_argument("--vad-llm-model", default=None)
+    parser.add_argument("--vad-llm-provider", default=None)
     parser.add_argument(
         "--judge-repeats",
         type=int,
@@ -107,6 +110,9 @@ def main() -> None:
         cache_dir=args.cache_dir or args.output_dir / "evaluation_cache",
         uncached_judge=args.uncached_judge,
         judge_repeats=args.judge_repeats,
+        vad_method=args.vad_method,
+        vad_llm_model=args.vad_llm_model,
+        vad_llm_provider=args.vad_llm_provider,
         progress_callback=print,
     )
     write_comparison_output(args.output_dir, workflow)

@@ -23,7 +23,20 @@ EVALUATION_METRICS = (
 
 def expand_dual_evaluation_record(record: dict[str, Any]) -> dict[str, Any]:
     """Expose each branch independently, including historical dual records."""
+    for role in ("original", "source", "rewritten"):
+        evaluation = record.get(f"metadata_{role}_vad_evaluation")
+        if not isinstance(evaluation, dict):
+            continue
+        for source in ("model", "llm"):
+            scores = evaluation.get(source, {}).get("score") or {}
+            for dimension in ("valence", "arousal", "dominance"):
+                record[f"vad_{source}_{role}_{dimension}"] = scores.get(dimension)
     for suffix in ("vs_original", "incremental"):
+        from misinformation_simulation.text_metrics.vad_evaluation import vad_pair_columns
+
+        vad = record.get(f"metadata_vad_evaluation_{suffix}")
+        if isinstance(vad, dict):
+            record.update(vad_pair_columns(vad, suffix=suffix))
         dual = record.get(f"metadata_dual_stdi_{suffix}")
         if not isinstance(dual, dict):
             continue
@@ -33,8 +46,14 @@ def expand_dual_evaluation_record(record: dict[str, Any]) -> dict[str, Any]:
             record[f"stdi_status_{name}_{suffix}"] = evaluation.get("status", "not_requested")
             record[f"stdi_error_{name}_{suffix}"] = evaluation.get("error")
             metrics = evaluation.get("metrics") or {}
+            record[f"stdi_vad_source_{name}_{suffix}"] = evaluation.get("vad_source")
             for metric in EVALUATION_METRICS:
                 record[f"{metric}_{name}_{suffix}"] = metrics.get(metric)
+        metrics = dual.get("metrics") or {}
+        if dual.get("comparison_method", "dual") == "dual":
+            for metric in EVALUATION_METRICS:
+                record[f"{metric}_dual_{suffix}"] = metrics.get(metric)
+            record[f"stdi_vad_source_dual_{suffix}"] = dual.get("vad_sources", {}).get("dual")
     return record
 
 

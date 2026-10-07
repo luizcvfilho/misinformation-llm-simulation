@@ -54,7 +54,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 13
+GRAPH_OUTPUT_LAYOUT_VERSION = 14
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -180,15 +180,24 @@ def _render_execution_settings(
         value=True,
         key="evaluate_dual_stdi",
         help=(
-            "Calculate both complete STDI scores and their 50/50 mean. "
-            "Requires additional LLM judgments. Disable to use the existing embedding evaluation."
+            "Calculate both structural evaluations and average their complete scores "
+            "using the selected VAD. Disable to choose Cluster or LLM alone."
         ),
     )
+    single_stdi_method = "cluster"
+    if not evaluate_dual_stdi:
+        single_stdi_method = st.selectbox(
+            "STDI method",
+            options=["cluster", "llm"],
+            format_func=lambda method: {"cluster": "Cluster", "llm": "LLM"}[method],
+            key="single_stdi_method",
+        )
+    judge_requested = evaluate_dual_stdi or single_stdi_method == "llm"
     repeat_judge = st.checkbox(
         "Repeat LLM judge evaluation",
         value=True,
         key="repeat_stdi_judge",
-        disabled=not evaluate_dual_stdi,
+        disabled=not judge_requested,
         help="Evaluate each text pair multiple times with the same model and rubric.",
     )
     judge_repeats = st.number_input(
@@ -197,13 +206,13 @@ def _render_execution_settings(
         value=3,
         step=1,
         key="stdi_judge_repeats",
-        disabled=not evaluate_dual_stdi or not repeat_judge,
+        disabled=not judge_requested or not repeat_judge,
         help=(
             "Total evaluations per pair, including the first. "
             "Disable repetition for one evaluation."
         ),
     )
-    if evaluate_dual_stdi:
+    if judge_requested:
         effective_repeats = int(judge_repeats) if repeat_judge else 1
         st.caption(
             f"Each pair uses {effective_repeats} judge evaluation(s). Scores are averaged; "
@@ -211,6 +220,26 @@ def _render_execution_settings(
             "judge API cost approximately in proportion to their count."
         )
     advanced_settings = _render_advanced_settings()
+    vad_method = st.selectbox(
+        "VAD method",
+        options=["model", "llm", "dual"],
+        format_func=lambda method: {"model": "Current model", "llm": "LLM", "dual": "Dual"}[method],
+        key="vad_method",
+        help="Dual averages VAD drifts. With Dual STDI, each branch uses its corresponding VAD.",
+    )
+    vad_llm_model = st.text_input(
+        "VAD evaluator model",
+        value=str(advanced_settings["topic_drift_model"]),
+        key="vad_llm_model",
+        disabled=vad_method == "model",
+    )
+    vad_llm_provider = st.selectbox(
+        "VAD evaluator provider",
+        options=AVAILABLE_PROVIDERS,
+        key="vad_llm_provider",
+        disabled=vad_method == "model",
+        index=AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
+    )
     return {
         "graph_name": graph_name,
         "text_column": text_column,
@@ -219,8 +248,11 @@ def _render_execution_settings(
         "max_rows": max_rows,
         "allow_title_fallback": allow_title_fallback,
         "rewrite_mode": rewrite_mode,
-        "stdi_comparison_method": "dual" if evaluate_dual_stdi else "cluster",
-        "stdi_judge_repeats": int(judge_repeats) if evaluate_dual_stdi and repeat_judge else 1,
+        "stdi_comparison_method": "dual" if evaluate_dual_stdi else single_stdi_method,
+        "vad_method": vad_method,
+        "vad_llm_model": vad_llm_model,
+        "vad_llm_provider": vad_llm_provider,
+        "stdi_judge_repeats": int(judge_repeats) if judge_requested and repeat_judge else 1,
         **advanced_settings,
     }
 
