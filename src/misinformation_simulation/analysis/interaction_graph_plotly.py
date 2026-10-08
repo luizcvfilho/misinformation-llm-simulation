@@ -51,14 +51,14 @@ def build_group_composition_figure(summary: pd.DataFrame) -> go.Figure:
             marker={"color": "#4C78A8"},
             customdata=ordered[["group_value"]],
             hovertemplate=(
-                "Grupo: %{x}<br>Notícias: %{y}<br>Valor persistido: %{customdata[0]}<extra></extra>"
+                "Group: %{x}<br>News items: %{y}<br>Saved value: %{customdata[0]}<extra></extra>"
             ),
         )
     )
     figure.update_layout(
-        title="Composição das notícias por grupo",
-        xaxis_title="Grupo de notícias",
-        yaxis_title="Notícias",
+        title="News composition by group",
+        xaxis_title="News group",
+        yaxis_title="News items",
         height=500,
         margin={"l": 60, "r": 30, "t": 70, "b": 130},
     )
@@ -85,17 +85,16 @@ def build_group_proximity_interval_figure(summary: pd.DataFrame) -> go.Figure:
             },
             customdata=ordered[["news_items", "median_range", "mean_pairwise_abs_diff"]],
             hovertemplate=(
-                "Grupo: %{y}<br>Amplitude média: %{x:.3f}"
-                "<br>Mediana: %{customdata[1]:.3f}"
-                "<br>Diferença média entre pares: %{customdata[2]:.3f}"
-                "<br>Notícias: %{customdata[0]}<extra></extra>"
+                "Group: %{y}<br>Mean range: %{x:.3f}<br>Median: %{customdata[1]:.3f}<br>Mean "
+                "pairwise difference: %{customdata[2]:.3f}<br>News items: "
+                "%{customdata[0]}<extra></extra>"
             ),
         )
     )
     figure.update_layout(
-        title="Proximidade das cadeias por grupo — amplitude média e IC bootstrap de 95%",
-        xaxis_title="Amplitude do resultado final entre cadeias",
-        yaxis_title="Grupo de notícias",
+        title="Chain proximity by group — mean range and 95% bootstrap CI",
+        xaxis_title="Final-score range across chains",
+        yaxis_title="News group",
         xaxis={"rangemode": "tozero"},
         height=max(430, 55 * len(ordered) + 180),
         margin={"l": 180, "r": 40, "t": 80, "b": 60},
@@ -134,16 +133,16 @@ def build_group_proximity_boxplot(
                     }
                 ),
                 hovertemplate=(
-                    "Grupo: %{fullData.name}<br>Notícia: %{customdata[0]}"
+                    "Group: %{fullData.name}<br>News item: %{customdata[0]}"
                     f"<br>{PROXIMITY_MEASURE_LABELS[measure]}: %{{y:.3f}}"
-                    "<br>Cadeias observadas: %{customdata[1]}"
-                    "<br>Média da notícia: %{customdata[2]:.3f}<extra></extra>"
+                    "<br>Observed chains: %{customdata[1]}<br>News item mean: "
+                    "%{customdata[2]:.3f}<extra></extra>"
                 ),
             )
         )
     figure.update_layout(
-        title=f"{PROXIMITY_MEASURE_LABELS[measure]} por grupo de notícias",
-        xaxis_title="Grupo de notícias",
+        title=f"{PROXIMITY_MEASURE_LABELS[measure]} by news group",
+        xaxis_title="News group",
         yaxis_title=PROXIMITY_MEASURE_LABELS[measure],
         yaxis={"rangemode": "tozero"},
         height=570,
@@ -156,7 +155,7 @@ def build_group_proximity_boxplot(
 
 
 def build_chain_pair_heatmap(pair_summary: pd.DataFrame, group_value: str) -> go.Figure:
-    """Show mean absolute final-score differences for all chain pairs in one news group."""
+    "Show mean absolute final-score differences for all chain pairs in one news group."
     data = pair_summary.loc[pair_summary["group_value"].eq(group_value)].copy()
     if data.empty:
         return go.Figure()
@@ -180,17 +179,16 @@ def build_chain_pair_heatmap(pair_summary: pd.DataFrame, group_value: str) -> go
             zmin=0,
             customdata=counts.to_numpy(),
             hovertemplate=(
-                "Cadeia A: %{y}<br>Cadeia B: %{x}"
-                "<br>Diferença absoluta média: %{z:.3f}"
-                "<br>Notícias pareadas: %{customdata:.0f}<extra></extra>"
+                "Chain A: %{y}<br>Chain B: %{x}<br>Mean absolute difference: "
+                "%{z:.3f}<br>Paired news items: %{customdata:.0f}<extra></extra>"
             ),
-            colorbar={"title": "Diferença<br>média"},
+            colorbar={"title": "Mean<br>difference"},
         )
     )
     figure.update_layout(
-        title=f"Proximidade entre pares de cadeias — {label}",
-        xaxis_title="Cadeia",
-        yaxis_title="Cadeia",
+        title=f"Chain pair proximity — {label}",
+        xaxis_title="Chain",
+        yaxis_title="Chain",
         height=650,
         margin={"l": 90, "r": 50, "t": 80, "b": 90},
     )
@@ -214,8 +212,8 @@ def build_evolution_figure(steps: pd.DataFrame, metric: str) -> go.Figure:
                 opacity=0.72,
                 customdata=group[["observations"]],
                 hovertemplate=(
-                    "Cadeia: %{fullData.name}<br>Iteração: %{x}<br>Média: %{y:.3f}"
-                    "<br>Notícias: %{customdata[0]}<extra></extra>"
+                    "Chain: %{fullData.name}<br>Iteration: %{x}<br>Mean: %{y:.3f}<br>News items: "
+                    "%{customdata[0]}<extra></extra>"
                 ),
             )
         )
@@ -225,20 +223,20 @@ def build_evolution_figure(steps: pd.DataFrame, metric: str) -> go.Figure:
             x=global_summary["step_index"],
             y=global_summary["mean"],
             mode="lines+markers",
-            name="Média global",
+            name="Global mean",
             line={"color": "#111111", "width": 3.5},
             marker={"size": 7},
             customdata=global_summary[["median", "observations"]],
             hovertemplate=(
-                "Iteração: %{x}<br>Média global: %{y:.3f}<br>Mediana: %{customdata[0]:.3f}"
-                "<br>Observações: %{customdata[1]}<extra></extra>"
+                "Iteration: %{x}<br>Global mean: %{y:.3f}<br>Median: "
+                "%{customdata[0]:.3f}<br>Observations: %{customdata[1]}<extra></extra>"
             ),
         )
     )
     _configure_evolution_layout(
         figure,
         metric_label=METRIC_LABELS[metric],
-        title=f"Evolução: {METRIC_LABELS[metric]}",
+        title=f"Evolution: {METRIC_LABELS[metric]}",
     )
     return figure
 
@@ -277,19 +275,19 @@ def build_component_figure(steps: pd.DataFrame, selected_components: list[str]) 
                 marker={"size": 6},
                 customdata=component_data[["q1", "q3", "observations"]],
                 hovertemplate=(
-                    "Iteração: %{x}<br>Média: %{y:.3f}<br>Q1: %{customdata[0]:.3f}"
-                    "<br>Q3: %{customdata[1]:.3f}<br>Notícias: %{customdata[2]}<extra></extra>"
+                    "Iteration: %{x}<br>Mean: %{y:.3f}<br>Q1: %{customdata[0]:.3f}<br>Q3: "
+                    "%{customdata[1]:.3f}<br>News items: %{customdata[2]}<extra></extra>"
                 ),
                 showlegend=False,
             ),
             row=row,
             col=column,
         )
-        figure.update_yaxes(range=[0, 1], title_text="Desvio", row=row, col=column)
-        figure.update_xaxes(dtick=1, title_text="Iteração", row=row, col=column)
+        figure.update_yaxes(range=[0, 1], title_text="Drift", row=row, col=column)
+        figure.update_xaxes(dtick=1, title_text="Iteration", row=row, col=column)
 
     figure.update_layout(
-        title="Componentes do STDI e dimensões VAD em relação à notícia original",
+        title="STDI components and VAD dimensions relative to the original news text",
         height=(360 * row_count) + 80,
         hovermode="closest",
         margin={"l": 50, "r": 30, "t": 90, "b": 50},
@@ -315,14 +313,14 @@ def build_distribution_figure(
                 marker={"size": 5, "opacity": 0.42},
                 line={"width": 1.4},
                 hovertemplate=(
-                    f"Cadeia: %{{fullData.name}}<br>{METRIC_LABELS[metric]}: %{{y:.3f}}"
+                    f"Chain: %{{fullData.name}}<br>{METRIC_LABELS[metric]}: %{{y:.3f}}"
                     "<extra></extra>"
                 ),
             )
         )
     figure.update_layout(
-        title=f"Distribuição por cadeia — iteração {iteration}: {METRIC_LABELS[metric]}",
-        xaxis_title="Cadeia",
+        title=f"Distribution by chain — iteration {iteration}: {METRIC_LABELS[metric]}",
+        xaxis_title="Chain",
         yaxis_title=METRIC_LABELS[metric],
         yaxis={"rangemode": "tozero"},
         height=560,
@@ -347,14 +345,14 @@ def build_iteration_distribution_figure(steps: pd.DataFrame, metric: str) -> go.
                 marker={"size": 5, "opacity": 0.12, "color": "#1F4E79"},
                 line={"width": 1.5, "color": "#4C78A8"},
                 hovertemplate=(
-                    f"Iteração: %{{fullData.name}}<br>{METRIC_LABELS[metric]}: %{{y:.3f}}"
+                    f"Iteration: %{{fullData.name}}<br>{METRIC_LABELS[metric]}: %{{y:.3f}}"
                     "<extra></extra>"
                 ),
             )
         )
     figure.update_layout(
-        title=f"Distribuição de {METRIC_LABELS[metric]} por iteração",
-        xaxis_title="Iteração",
+        title=f"Distribution of {METRIC_LABELS[metric]} by iteration",
+        xaxis_title="Iteration",
         yaxis_title=METRIC_LABELS[metric],
         yaxis={"rangemode": "tozero"},
         height=560,
@@ -383,13 +381,13 @@ def build_persona_boxplot(steps: pd.DataFrame, metric: str) -> go.Figure:
                 line={"width": 1.5, "color": PERSONA_COLORS[code]},
                 customdata=_news_customdata(group),
                 hovertemplate=(
-                    "Persona: %{fullData.name}<br>Notícia: %{customdata[1]}"
-                    "<br>Valor agregado: %{y:.3f}<extra></extra>"
+                    "Persona: %{fullData.name}<br>News item: %{customdata[1]}<br>Aggregated "
+                    "value: %{y:.3f}<extra></extra>"
                 ),
             )
         )
     figure.update_layout(
-        title=f"Distribuição por persona — {_analysis_metric_label(metric)}",
+        title=f"Distribution by persona — {_analysis_metric_label(metric)}",
         xaxis_title="Persona",
         yaxis_title=_analysis_metric_label(metric),
         yaxis={"rangemode": "tozero"},
@@ -410,7 +408,7 @@ def build_persona_position_boxplot(steps: pd.DataFrame, metric: str) -> go.Figur
     figure = make_subplots(
         rows=row_count,
         cols=column_count,
-        subplot_titles=[f"Posição {position}" for position in positions],
+        subplot_titles=[f"Position {position}" for position in positions],
         shared_yaxes=True,
         vertical_spacing=0.15,
     )
@@ -434,8 +432,8 @@ def build_persona_position_boxplot(steps: pd.DataFrame, metric: str) -> go.Figur
                     line={"width": 1.3, "color": PERSONA_COLORS[code]},
                     customdata=_news_customdata(group),
                     hovertemplate=(
-                        f"Persona: {code} · {label}<br>Posição: {position}"
-                        "<br>Notícia: %{customdata[1]}<br>Valor: %{y:.3f}<extra></extra>"
+                        f"Persona: {code} · {label}<br>Position: {position}"
+                        "<br>News item: %{customdata[1]}<br>Value: %{y:.3f}<extra></extra>"
                     ),
                     showlegend=position_index == 0,
                 ),
@@ -445,7 +443,7 @@ def build_persona_position_boxplot(steps: pd.DataFrame, metric: str) -> go.Figur
         figure.update_xaxes(title_text="Persona", row=row, col=column)
         figure.update_yaxes(title_text=_analysis_metric_label(metric), row=row, col=column)
     figure.update_layout(
-        title=f"Distribuição por persona e posição — {_analysis_metric_label(metric)}",
+        title=f"Distribution by persona and position — {_analysis_metric_label(metric)}",
         height=(380 * row_count) + 80,
         legend={"title": "Persona"},
         hovermode="closest",
@@ -465,7 +463,7 @@ def build_transition_pair_figure(
     figure = make_subplots(
         rows=1,
         cols=2,
-        subplot_titles=("Valores por direção", "Diferença pareada A − B"),
+        subplot_titles=("Values by direction", "Paired difference A − B"),
         horizontal_spacing=0.14,
     )
     for column, color, name in (
@@ -483,8 +481,8 @@ def build_transition_pair_figure(
                 line={"width": 1.5, "color": color},
                 customdata=_news_customdata(data),
                 hovertemplate=(
-                    "Direção: %{fullData.name}<br>Notícia: %{customdata[1]}"
-                    "<br>Valor: %{y:.3f}<extra></extra>"
+                    "Direction: %{fullData.name}<br>News item: %{customdata[1]}<br>Value: "
+                    "%{y:.3f}<extra></extra>"
                 ),
                 showlegend=False,
             ),
@@ -501,7 +499,7 @@ def build_transition_pair_figure(
             marker={"size": 5, "opacity": 0.48, "color": "#7A5195"},
             line={"width": 1.5, "color": "#7A5195"},
             customdata=_news_customdata(data),
-            hovertemplate=("Notícia: %{customdata[1]}<br>Diferença: %{y:+.3f}<extra></extra>"),
+            hovertemplate=("News item: %{customdata[1]}<br>Difference: %{y:+.3f}<extra></extra>"),
             showlegend=False,
         ),
         row=1,
@@ -509,9 +507,9 @@ def build_transition_pair_figure(
     )
     figure.add_hline(y=0, line={"color": "#222222", "dash": "dash"}, row=1, col=2)
     figure.update_yaxes(title_text=_analysis_metric_label(metric), row=1, col=1)
-    figure.update_yaxes(title_text="Diferença A − B", row=1, col=2)
+    figure.update_yaxes(title_text="Difference A − B", row=1, col=2)
     figure.update_layout(
-        title="Comparação direcional pareada por notícia",
+        title="Directional comparison paired by news item",
         height=570,
         hovermode="closest",
         margin={"l": 60, "r": 30, "t": 90, "b": 100},
@@ -542,16 +540,16 @@ def build_scenario_difference_boxplot(
                 line={"width": 1.5},
                 customdata=_news_customdata(group),
                 hovertemplate=(
-                    "Contraste: %{fullData.name}<br>Notícia: %{customdata[1]}"
-                    "<br>Diferença A − B: %{y:+.3f}<extra></extra>"
+                    "Contrast: %{fullData.name}<br>News item: %{customdata[1]}<br>Difference A − "
+                    "B: %{y:+.3f}<extra></extra>"
                 ),
             )
         )
     figure.add_hline(y=0, line={"color": "#222222", "dash": "dash", "width": 1.5})
     figure.update_layout(
-        title=f"Diferenças pareadas por cenário — {_analysis_metric_label(metric)}",
-        xaxis_title="Contraste A − B",
-        yaxis_title="Diferença pareada",
+        title=f"Paired differences by scenario — {_analysis_metric_label(metric)}",
+        xaxis_title="Contrast A − B",
+        yaxis_title="Paired difference",
         height=590,
         showlegend=False,
         hovermode="closest",
@@ -579,17 +577,17 @@ def build_contrast_interval_figure(summary: pd.DataFrame) -> go.Figure:
             },
             customdata=ordered[["paired_news", "mean_a", "mean_b"]],
             hovertemplate=(
-                "Contraste: %{y}<br>Diferença média: %{x:+.3f}"
-                "<br>Média A: %{customdata[1]:.3f}<br>Média B: %{customdata[2]:.3f}"
-                "<br>Notícias pareadas: %{customdata[0]}<extra></extra>"
+                "Contrast: %{y}<br>Mean difference: %{x:+.3f}<br>Mean A: "
+                "%{customdata[1]:.3f}<br>Mean B: %{customdata[2]:.3f}<br>Paired news items: "
+                "%{customdata[0]}<extra></extra>"
             ),
         )
     )
     figure.add_vline(x=0, line={"color": "#222222", "dash": "dash", "width": 1.5})
     figure.update_layout(
-        title="Diferença média e intervalo bootstrap de 95%",
-        xaxis_title="Diferença média A − B",
-        yaxis_title="Contraste",
+        title="Mean difference and 95% bootstrap interval",
+        xaxis_title="Mean difference A − B",
+        yaxis_title="Contrast",
         height=max(400, 75 * len(ordered) + 150),
         margin={"l": 110, "r": 30, "t": 70, "b": 60},
     )
@@ -603,13 +601,13 @@ def build_case_component_figure(values: dict[str, float]) -> go.Figure:
             x=list(values.keys()),
             y=list(values.values()),
             marker={"color": "#4C78A8"},
-            hovertemplate="Componente: %{x}<br>Valor: %{y:.3f}<extra></extra>",
+            hovertemplate="Component: %{x}<br>Value: %{y:.3f}<extra></extra>",
         )
     )
     figure.update_layout(
-        title="Decomposição incremental do caso selecionado",
-        xaxis_title="Componente",
-        yaxis_title="Desvio incremental",
+        title="Incremental decomposition of the selected case",
+        xaxis_title="Component",
+        yaxis_title="Incremental drift",
         yaxis={"rangemode": "tozero"},
         height=410,
         margin={"l": 60, "r": 30, "t": 70, "b": 100},
@@ -653,8 +651,8 @@ def _add_iqr_band(
         fill="tonexty",
         fillcolor=IQR_FILL_COLOR,
         line={"width": 0},
-        name="Intervalo interquartil",
-        hovertemplate="Q1: %{y:.3f}<extra>Intervalo interquartil</extra>",
+        name="Interquartile range",
+        hovertemplate="Q1: %{y:.3f}<extra>Interquartile range</extra>",
         showlegend=show_legend,
     )
     if row is None or column is None:
@@ -668,10 +666,10 @@ def _add_iqr_band(
 def _configure_evolution_layout(figure: go.Figure, *, metric_label: str, title: str) -> None:
     figure.update_layout(
         title=title,
-        xaxis={"title": "Iteração", "dtick": 1},
+        xaxis={"title": "Iteration", "dtick": 1},
         yaxis={"title": metric_label, "rangemode": "tozero"},
         height=560,
         hovermode="x unified",
-        legend={"title": "Cadeias", "itemclick": "toggle", "itemdoubleclick": "toggleothers"},
+        legend={"title": "Chains", "itemclick": "toggle", "itemdoubleclick": "toggleothers"},
         margin={"l": 60, "r": 30, "t": 70, "b": 60},
     )

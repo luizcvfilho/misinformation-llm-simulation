@@ -155,6 +155,7 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
         options=text_columns,
         index=text_columns.index(default_topic_column),
         help="Column used to identify the main topic of each news item.",
+        key="simulation_dataset_builder_tab_topic_column",
     )
     separator = st.text_input(
         "Multi-topic separator",
@@ -164,6 +165,7 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
             "Only the first label is used as the main topic. "
             "For 'business; top', the topic is 'business'."
         ),
+        key="simulation_dataset_builder_tab_multi_topic_separator",
     )
     if not separator:
         st.error("Enter a separator character.")
@@ -175,7 +177,10 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
         separator=separator,
     )
     request_table = availability.rename(columns={"topic": "Topic", "available": "Available"})
-    request_table["Requested"] = 0
+    request_key = f"dataset_builder_requests_{topic_column}_{separator}_{len(df)}"
+    counts_key = f"_{request_key}_counts"
+    saved_counts = st.session_state.get(counts_key, {})
+    request_table["Requested"] = request_table["Topic"].map(saved_counts).fillna(0).astype(int)
     edited_requests = st.data_editor(
         request_table,
         column_config={
@@ -185,7 +190,7 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
         },
         disabled=["Topic", "Available"],
         hide_index=True,
-        key=f"dataset_builder_requests_{topic_column}_{separator}_{len(df)}",
+        key=request_key,
         width="stretch",
     )
     requested_counts = {
@@ -193,6 +198,7 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
         for row in edited_requests.itertuples(index=False)
         if pd.notna(row.Requested) and int(row.Requested) > 0
     }
+    st.session_state[counts_key] = requested_counts
 
     seed, output_name = _render_dataset_builder_options(dataset_label)
     requested_total = sum(requested_counts.values())
@@ -249,10 +255,12 @@ def _render_dataset_builder_options(dataset_label: str) -> tuple[int, str]:
         value=42,
         step=1,
         help="Use the same seed and quantities to reproduce the exact sampled dataset.",
+        key="simulation_dataset_builder_options_sampling_seed",
     )
     output_name = options[1].text_input(
         "Output CSV filename",
         value=_default_output_name(dataset_label),
+        key="simulation_dataset_builder_options_output_csv_filename",
     )
     if not output_name.lower().endswith(".csv"):
         output_name = f"{output_name}.csv"

@@ -47,6 +47,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_linear_graph_payload,
     validate_node_forms,
 )
+from misinformation_simulation.apps.interaction_graph_workspace import open_run_analysis
 from misinformation_simulation.config.prompts import (
     GRAPH_REWRITE_MODE_LABELS,
     GRAPH_REWRITE_MODES,
@@ -54,7 +55,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 14
+GRAPH_OUTPUT_LAYOUT_VERSION = 15
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -121,6 +122,7 @@ def _render_execution_settings(
         available_columns or [""],
         index=_option_index(available_columns, default_text_column),
         help="Column containing the source text that will be rewritten by the graph nodes.",
+        key="simulation_execution_settings_text_column",
     )
     title_column = st.selectbox(
         "Title column",
@@ -130,6 +132,7 @@ def _render_execution_settings(
             "Article title used in topic drift extraction and faithful rewrite prompts. "
             "Interpretive relay does not supply the original title to the rewriting nodes."
         ),
+        key="simulation_execution_settings_title_column",
     )
     news_id_options = [""] + available_columns if available_columns else [""]
     news_id_column = st.selectbox(
@@ -138,6 +141,7 @@ def _render_execution_settings(
         index=_option_index(news_id_options, default_news_id_column),
         format_func=lambda value: "Use row index" if value == "" else value,
         help="Optional stable identifier for grouping results by news item.",
+        key="simulation_execution_settings_news_id_column",
     )
     max_rows = st.number_input(
         "Max rows",
@@ -145,6 +149,7 @@ def _render_execution_settings(
         value=min(len(df), 5) if df is not None and not df.empty else 1,
         step=1,
         help="Maximum number of dataset rows to process in this run.",
+        key="simulation_execution_settings_max_rows",
     )
     allow_title_fallback = st.checkbox(
         "Allow title fallback when the text column is empty",
@@ -152,6 +157,7 @@ def _render_execution_settings(
         help=(
             "When enabled, the simulation can use the title if the selected text column is empty."
         ),
+        key="simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
     )
     rewrite_mode = st.selectbox(
         "Transmission mode",
@@ -266,6 +272,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             value=0.0,
             step=0.25,
             help="Delay inserted between simulation steps to reduce API pressure.",
+            key="simulation_advanced_settings_sleep_between_requests_seconds",
         )
         max_requests_per_minute = st.number_input(
             "Max requests per minute",
@@ -273,6 +280,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             value=0,
             step=1,
             help="Use 0 to disable rate limiting.",
+            key="simulation_advanced_settings_max_requests_per_minute",
         )
         retry_attempts = st.number_input(
             "Retry attempts",
@@ -280,6 +288,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             value=5,
             step=1,
             help="Number of retry attempts when a provider request fails temporarily.",
+            key="simulation_advanced_settings_retry_attempts",
         )
         topic_drift_provider = st.selectbox(
             "Topic drift provider",
@@ -290,6 +299,7 @@ def _render_advanced_settings() -> dict[str, Any]:
                 else 0
             ),
             help="Provider used for topic extraction and the dual STDI judge.",
+            key="simulation_advanced_settings_topic_drift_provider",
         )
         topic_drift_model = _render_topic_drift_model_selector()
         output_dir = st.text_input(
@@ -299,6 +309,7 @@ def _render_advanced_settings() -> dict[str, Any]:
                 "Each execution gets a folder containing one subfolder per graph, "
                 "including executions with a single graph."
             ),
+            key="simulation_advanced_settings_output_directory",
         )
         output_prefix = st.text_input(
             "Output prefix",
@@ -307,6 +318,7 @@ def _render_advanced_settings() -> dict[str, Any]:
                 "Date and time prefix for the execution folder. Graph folders and files "
                 "use the queue position and up to 32 characters of the graph name."
             ),
+            key="simulation_advanced_settings_output_prefix",
         )
 
     return {
@@ -702,8 +714,15 @@ def render_results_tab() -> None:
                     else ""
                 )
             ),
+            key="simulation_results_tab_inspect_graph_result",
         )
         selected = bundles[selected_index]
+        if selected.get("summary_path") and "_studio_analysis_page" in st.session_state:
+            if st.button(
+                "Analyze this run",
+                type="primary",
+            ):
+                open_run_analysis(selected["summary_path"], selected_evaluation)
         action_cols = st.columns(2)
         if action_cols[0].button(
             "Remove selected imported result",

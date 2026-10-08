@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis interaction-graph-analysis-ui interaction-graph-dashboards clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis clean
 
 .DEFAULT_GOAL := help
 
@@ -60,7 +60,6 @@ GRAPH_OUTPUT_PREFIX ?= simulation
 GRAPH_ANALYSIS_RUNS_DIR ?= output/interaction_graph/app_runs
 GRAPH_ANALYSIS_OUTPUT_DIR ?= output/interaction_graph/analysis
 GRAPH_UI_PORT ?= 8501
-GRAPH_ANALYSIS_UI_PORT ?= 8502
 
 FETCH_NEWS_OPTIONAL_ARGS := \
 	$(if $(strip $(OUTPUT)),--output $(OUTPUT),) \
@@ -118,10 +117,8 @@ help: ## List available targets
 	@echo "  csv-explorer       Open the generic CSV explorer"
 	@echo "  interaction-graph  Run the interaction graph simulation"
 	@echo "  interaction-graph-verbose Run the interaction graph simulation with progress logs"
-	@echo "  interaction-graph-ui Open the Streamlit UI for the interaction graph workflow"
+	@echo "  interaction-graph-ui Open the unified Simulation and Analysis workspace"
 	@echo "  interaction-graph-analysis Generate reproducible STDI figures and summary tables"
-	@echo "  interaction-graph-analysis-ui Open the Plotly STDI analysis dashboard"
-	@echo "  interaction-graph-dashboards Open both interaction-graph Streamlit dashboards"
 	@echo "  clean              Remove virtual environment"
 
 setup: ## Create .venv, generate lockfile, and sync dependencies (including dev)
@@ -209,12 +206,6 @@ interaction-graph-ui:
 
 interaction-graph-analysis:
 	uv run python scripts/generate_interaction_graph_analysis.py --runs-dir $(GRAPH_ANALYSIS_RUNS_DIR) --output-dir $(GRAPH_ANALYSIS_OUTPUT_DIR)
-
-interaction-graph-analysis-ui:
-	uv run streamlit run src/misinformation_simulation/apps/interaction_graph_analysis_plotly_app.py --server.port $(GRAPH_ANALYSIS_UI_PORT)
-
-interaction-graph-dashboards:
-	$(MAKE) -j2 interaction-graph-ui interaction-graph-analysis-ui
 
 clean: ## Remove virtual environment
 	@$(CLEAN_CMD)

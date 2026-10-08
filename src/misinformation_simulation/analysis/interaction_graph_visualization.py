@@ -29,20 +29,20 @@ RUN_ID_PATTERNS = (
 )
 REQUIRED_STEP_COLUMNS = {"news_id", "step_index", "rewrite_status", "stdi_vs_original"}
 STDI_COMPONENT_COLUMNS = {
-    "theme_drift_vs_original": "Tema",
-    "subtopic_drift_vs_original": "Subtópicos",
-    "entity_drift_vs_original": "Entidades",
-    "relation_drift_vs_original": "Relações",
-    "contradiction_drift_vs_original": "Contradição interna",
+    "theme_drift_vs_original": "Theme",
+    "subtopic_drift_vs_original": "Subtopics",
+    "entity_drift_vs_original": "Entities",
+    "relation_drift_vs_original": "Relations",
+    "contradiction_drift_vs_original": "Internal contradiction",
     "vad_drift_vs_original": "VAD",
-    "valence_drift_vs_original": "Valência (VAD)",
+    "valence_drift_vs_original": "Valence (VAD)",
     "arousal_drift_vs_original": "Arousal (VAD)",
-    "dominance_drift_vs_original": "Dominância (VAD)",
+    "dominance_drift_vs_original": "Dominance (VAD)",
 }
 METRIC_LABELS = {
-    "stdi_vs_original": "STDI em relação ao original",
+    "stdi_vs_original": "STDI vs original",
     "stdi_incremental": "STDI incremental",
-    "stdi_cumulative": "STDI cumulativo",
+    "stdi_cumulative": "Cumulative STDI",
     **STDI_COMPONENT_COLUMNS,
 }
 ANALYSIS_STEP_COLUMNS = {

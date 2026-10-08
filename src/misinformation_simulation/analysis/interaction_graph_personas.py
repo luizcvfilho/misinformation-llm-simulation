@@ -18,21 +18,21 @@ PERSONA_CODE_LABELS = {
     "N": "Neutral relay",
 }
 PERSONA_DISPLAY_LABELS = {
-    "C": "Direita conservadora",
-    "P": "Esquerda progressista",
-    "D": "Negacionista conspiratória",
-    "S": "Cética investigativa",
-    "E": "Amplificadora emocional",
-    "M": "Comunicadora conciliatória",
+    "C": "Conservative right",
+    "P": "Progressive left",
+    "D": "Conspiratorial denialist",
+    "S": "Investigative skeptic",
+    "E": "Emotional amplifier",
+    "M": "Conciliatory communicator",
     "N": "Neutral relay",
 }
 PERSONA_DESCRIPTIONS = {
-    "C": "Enquadramento de direita e socialmente conservador",
-    "P": "Enquadramento de esquerda e progressista",
-    "D": "Enquadramento conspiratório e negacionista",
-    "S": "Ceticismo investigativo orientado à qualidade das evidências",
-    "E": "Comunicação emocionalmente expressiva",
-    "M": "Comunicação conciliatória entre perspectivas",
+    "C": "Right-wing and socially conservative framing",
+    "P": "Left-wing and progressive framing",
+    "D": "Conspiratorial and denialist framing",
+    "S": "Investigative skepticism focused on evidence quality",
+    "E": "Emotionally expressive communication",
+    "M": "Conciliatory communication across perspectives",
     "N": "Minimal wording changes while preserving the received content and framing",
 }
 INCREMENTAL_COMPONENT_COLUMNS = {

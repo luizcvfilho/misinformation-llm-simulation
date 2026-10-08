@@ -10,12 +10,12 @@ from misinformation_simulation.analysis.interaction_graph_visualization import a
 
 ORIGINAL_CATEGORY_GROUPING = "original_category"
 GROUPING_LABELS = {
-    ORIGINAL_CATEGORY_GROUPING: "Classificação original da notícia",
+    ORIGINAL_CATEGORY_GROUPING: "Original news classification",
 }
 PROXIMITY_MEASURE_LABELS = {
-    "range_between_chains": "Amplitude entre cadeias",
-    "sd_between_chains": "Desvio-padrão entre cadeias",
-    "mean_pairwise_abs_diff": "Diferença absoluta média entre pares",
+    "range_between_chains": "Range across chains",
+    "sd_between_chains": "Standard deviation across chains",
+    "mean_pairwise_abs_diff": "Mean pairwise absolute difference",
 }
 
 

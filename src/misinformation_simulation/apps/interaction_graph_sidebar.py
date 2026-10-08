@@ -33,7 +33,12 @@ def render_sidebar() -> tuple[pd.DataFrame | None, str]:
 
 
 def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
-    dataset_mode = st.radio("Dataset source", ["Project file", "Upload"], horizontal=True)
+    dataset_mode = st.radio(
+        "Dataset source",
+        ["Project file", "Upload"],
+        horizontal=True,
+        key="simulation_dataset_loader_dataset_source",
+    )
     dataset_error = None
     df: pd.DataFrame | None = None
     dataset_label = ""
@@ -77,8 +82,14 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
         if uploaded_dataset is not None:
             try:
                 df = load_uploaded_dataframe(uploaded_dataset)
+                st.session_state.uploaded_dataset_frame = df
+                st.session_state.uploaded_dataset_label = dataset_label
             except Exception as exc:
                 dataset_error = str(exc)
+        elif "uploaded_dataset_frame" in st.session_state:
+            df = st.session_state.uploaded_dataset_frame
+            dataset_label = st.session_state.uploaded_dataset_label
+            st.caption(f"Using previously uploaded dataset: {dataset_label}")
 
     if dataset_error:
         st.error(dataset_error)
@@ -90,7 +101,12 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
 
 
 def _render_graph_importer() -> None:
-    graph_mode = st.radio("Graph source", ["Project file", "Upload"], horizontal=True)
+    graph_mode = st.radio(
+        "Graph source",
+        ["Project file", "Upload"],
+        horizontal=True,
+        key="simulation_graph_importer_graph_source",
+    )
     if graph_mode == "Project file":
         graph_path_cols = st.columns([3, 1], vertical_alignment="bottom")
         if graph_path_cols[1].button(

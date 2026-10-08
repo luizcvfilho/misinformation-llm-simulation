@@ -51,8 +51,6 @@ make interaction-graph
 make interaction-graph-verbose GRAPH_MAX_ROWS=5
 make interaction-graph-ui
 make interaction-graph-analysis
-make interaction-graph-analysis-ui
-make interaction-graph-dashboards
 make clean
 ```
 
@@ -98,10 +96,10 @@ Kaleido and Chrome or Chromium are available, PNG copies are generated as well; 
 item. The dashboard also lets the user inspect `stdi_incremental` and `stdi_cumulative`.
 
 To interactively filter chains and metrics, inspect the component trajectories, and move the
-boxplot iteration selector, run:
+boxplot iteration selector, open the workspace and select **Analysis**:
 
 ```powershell
-make interaction-graph-analysis-ui
+make interaction-graph-ui
 ```
 
 The dashboard uses Plotly, including a visible mode bar for zoom, pan, box and lasso selection,
@@ -122,31 +120,37 @@ choose **Custom pairs**, select **Chain A**, and choose one or more chains B to 
 for shared news items. Custom pairs also work in the qualitative contrast case explorer. Preset
 contrasts remain available when their chains are present.
 
-### Running both Streamlit dashboards
+### Unified Simulation and Analysis workspace
 
-The workflow UI and the analysis dashboard use distinct ports by default, so they can run at the
-same time. Start both from one terminal with:
-
-```powershell
-make interaction-graph-dashboards
-```
-
-Then open `http://localhost:8501` for the interaction graph workflow and
-`http://localhost:8502` for the analysis dashboard. Press `Ctrl+C` in that terminal to stop both
-processes.
-
-To start them from separate terminals instead, use:
+Start the workspace with:
 
 ```powershell
 make interaction-graph-ui
-make interaction-graph-analysis-ui
 ```
 
-Override the ports when either default is already in use:
+Open `http://localhost:8501`. The top navigation switches between **Simulation** and **Analysis**
+in the same Streamlit process. Configuration, graph edits, queue contents, dataset selections
+(including loaded uploads), and analysis filters are retained when switching pages. A running
+simulation continues in the background; **Simulation progress** on Analysis shows its progress
+and cancellation control.
 
-```powershell
-make interaction-graph-dashboards GRAPH_UI_PORT=8511 GRAPH_ANALYSIS_UI_PORT=8512
-```
+- **Simulation** contains **Configuration**, **Dataset builder**, and **Results**. Results keeps
+  the operational overview, saved-result imports, category comparison, downloads, and step details.
+  Select a persisted result and click **Analyze this run** to open its execution in Analysis.
+- **Analysis** contains **Overview**, **Domains and categories**, **Personas**, **Transitions**,
+  **Paired comparisons**, **Cases**, and **Run details**. Sidebar filters select run folders,
+  executions, transmission mode, STDI evaluation, chains, and the overview metric.
+  **Run details** reuses the simulation result inspector for saved text, extracted structures,
+  VAD/STDI evaluations, downloads, errors, and cancelled or partial results. Analytical charts
+  still use only successful rewrites; failed steps are retained in Run details.
+
+Changed or newly saved result files invalidate the analysis data cache on the next page rerun.
+Use **Refresh results** to force a reload. The analysis interface, chart labels, tooltips, and
+persona descriptions use English; saved news text and custom names retain their original content.
+
+Use `make interaction-graph-ui` to start the workspace; press `Ctrl+C` to stop it.
+Override the port with `GRAPH_UI_PORT=8511`. Simulation is the default page; select **Analysis**
+in the top navigation to inspect results.
 
 ## Structured Topic Drift Index (STDI)
 
@@ -706,7 +710,6 @@ Default Make targets:
 make interaction-graph
 make interaction-graph-verbose
 make interaction-graph-ui
-make interaction-graph-dashboards
 ```
 
 Useful overrides:
@@ -735,8 +738,7 @@ Main variables:
   is `chatgpt`)
 - `GRAPH_OUTPUT_DIR`: output directory (`output/interaction_graph` default)
 - `GRAPH_OUTPUT_PREFIX`: output file prefix (`simulation` default)
-- `GRAPH_UI_PORT`: Streamlit port for the interaction graph workflow (`8501` default)
-- `GRAPH_ANALYSIS_UI_PORT`: Streamlit port for the analysis dashboard (`8502` default)
+- `GRAPH_UI_PORT`: Streamlit port for the unified workspace (`8501` default)
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 

@@ -18,7 +18,7 @@ from misinformation_simulation.analysis.interaction_graph_plotly import (
     build_scenario_difference_boxplot,
     build_transition_pair_figure,
 )
-from misinformation_simulation.apps import interaction_graph_analysis_plotly_app as analysis_app
+from misinformation_simulation.apps import interaction_graph_analysis as analysis_view
 from misinformation_simulation.simulation.types import EVALUATION_METRICS
 
 
@@ -68,7 +68,7 @@ def test_plotly_figures_include_the_requested_views() -> None:
     assert {trace.name for trace in evolution.data} >= {
         "01 · SSSS",
         "02 · CCCC",
-        "Média global",
+        "Global mean",
     }
     assert len(components.data) == 6
     assert components.layout.height == 440
@@ -105,7 +105,7 @@ def test_analysis_filters_transmission_modes_before_rendering(monkeypatch) -> No
     interpretive = _paired_scenario_steps().assign(metadata_rewrite_mode="interpretive")
     interpretive["stdi_vs_original"] = 0.8
     steps = pd.concat([legacy, interpretive], ignore_index=True)
-    monkeypatch.setattr(analysis_app, "load_steps", lambda *_args: (steps, 4))
+    monkeypatch.setattr(analysis_view, "load_steps", lambda *_args: (steps, 4))
     rendered = []
 
     def capture(frame, *_args):
@@ -119,11 +119,11 @@ def test_analysis_filters_transmission_modes_before_rendering(monkeypatch) -> No
         "_render_scenario_contrasts",
         "_render_case_explorer",
     ):
-        monkeypatch.setattr(analysis_app, render_name, capture)
+        monkeypatch.setattr(analysis_view, render_name, capture)
 
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
-        "main()"
+        "from misinformation_simulation.apps.interaction_graph_analysis import render_analysis\n"
+        "render_analysis()"
     ).run(timeout=30)
     assert not app.exception
     assert len(rendered) == 6
@@ -147,7 +147,7 @@ def test_analysis_evaluation_selector_updates_every_tab_and_component(monkeypatc
             steps[f"{metric}_llm_judge_{suffix}"] = 0.8
         steps[f"stdi_{suffix}"] = 0.5
     steps["stdi_cumulative"] = steps["step_index"] * 0.5
-    monkeypatch.setattr(analysis_app, "load_steps", lambda *_args: (steps, 2))
+    monkeypatch.setattr(analysis_view, "load_steps", lambda *_args: (steps, 2))
     rendered = []
     for name in (
         "_render_overview",
@@ -157,10 +157,12 @@ def test_analysis_evaluation_selector_updates_every_tab_and_component(monkeypatc
         "_render_scenario_contrasts",
         "_render_case_explorer",
     ):
-        monkeypatch.setattr(analysis_app, name, lambda frame, *_args: rendered.append(frame.copy()))
+        monkeypatch.setattr(
+            analysis_view, name, lambda frame, *_args: rendered.append(frame.copy())
+        )
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
-        "main()"
+        "from misinformation_simulation.apps.interaction_graph_analysis import render_analysis\n"
+        "render_analysis()"
     ).run(timeout=30)
     assert not app.exception
     selector = app.selectbox(key="analysis_stdi_evaluation")
@@ -182,7 +184,7 @@ def test_analysis_evaluation_selector_updates_every_tab_and_component(monkeypatc
     app.run(timeout=30)
     app.selectbox(key="analysis_stdi_evaluation").set_value("llm_judge").run(timeout=30)
     rendered.clear()
-    chains = next(control for control in app.multiselect if control.label == "Cadeias")
+    chains = next(control for control in app.multiselect if control.label == "Chains")
     chains.set_value([missing_chain]).run(timeout=30)
     assert not app.exception
     assert app.warning
@@ -197,7 +199,7 @@ def test_analysis_evaluation_selector_updates_every_tab_and_component(monkeypatc
         stdi_incremental=0.3,
     )
     monkeypatch.setattr(
-        analysis_app, "load_steps", lambda *_args: (pd.concat([steps, cluster_only]), 4)
+        analysis_view, "load_steps", lambda *_args: (pd.concat([steps, cluster_only]), 4)
     )
     app.run(timeout=30)
     app.selectbox(key="analysis_stdi_evaluation").set_value("llm_judge").run(timeout=30)
@@ -246,7 +248,7 @@ def test_analysis_switches_executions_without_pooling_shared_news_and_chain_ids(
     second = first.assign(execution_id=older, execution_label="Older execution")
     second["stdi_vs_original"] = 0.9
     steps = pd.concat([second, first], ignore_index=True)
-    monkeypatch.setattr(analysis_app, "load_steps", lambda *_args: (steps, 4))
+    monkeypatch.setattr(analysis_view, "load_steps", lambda *_args: (steps, 4))
     rendered = []
 
     def capture(frame, *_args):
@@ -260,11 +262,11 @@ def test_analysis_switches_executions_without_pooling_shared_news_and_chain_ids(
         "_render_scenario_contrasts",
         "_render_case_explorer",
     ):
-        monkeypatch.setattr(analysis_app, render_name, capture)
+        monkeypatch.setattr(analysis_view, render_name, capture)
 
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
-        "main()"
+        "from misinformation_simulation.apps.interaction_graph_analysis import render_analysis\n"
+        "render_analysis()"
     ).run(timeout=30)
     assert not app.exception
     assert len(rendered) == 6
@@ -297,7 +299,7 @@ def test_custom_chain_pairs_render_summary_boxplot_and_cases() -> None:
     assert list(figure.data[0].y) == list(summary["difference"])
 
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app "
+        "from misinformation_simulation.apps.interaction_graph_analysis "
         "import _render_scenario_contrasts, _render_contrast_cases\n"
         "from misinformation_simulation.analysis.interaction_graph_visualization "
         "import available_metrics\n"
@@ -310,7 +312,7 @@ def test_custom_chain_pairs_render_summary_boxplot_and_cases() -> None:
     app.run(timeout=30)
     assert not app.exception
     assert any(control.label == "Chain A" for control in app.selectbox)
-    assert any(control.label == "Caso para leitura" for control in app.selectbox)
+    assert any(control.label == "Case to read" for control in app.selectbox)
 
 
 def test_neutral_relay_renders_personas_transitions_and_preset_contrasts() -> None:
@@ -329,7 +331,7 @@ def test_neutral_relay_renders_personas_transitions_and_preset_contrasts() -> No
     assert {trace.name for trace in figure.data} == {"D · Conspiratorial", "N · Neutral relay"}
 
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import "
+        "from misinformation_simulation.apps.interaction_graph_analysis import "
         "_render_persona_analysis, _render_transition_analysis, "
         "_render_scenario_contrasts, _render_contrast_cases\n"
         "from misinformation_simulation.analysis.interaction_graph_visualization "
@@ -347,12 +349,12 @@ def test_neutral_relay_renders_personas_transitions_and_preset_contrasts() -> No
     comparisons = [control for control in app.radio if control.label == "Chain comparisons"]
     assert comparisons
     assert all(control.value == "Preset contrasts" for control in comparisons)
-    assert any(control.label == "Caso para leitura" for control in app.selectbox)
+    assert any(control.label == "Case to read" for control in app.selectbox)
 
 
 def test_overview_handles_a_single_iteration() -> None:
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app "
+        "from misinformation_simulation.apps.interaction_graph_analysis "
         "import _render_overview\n"
         "from misinformation_simulation.analysis.interaction_graph_visualization "
         "import available_metrics\n"
@@ -377,10 +379,10 @@ def test_analysis_loads_multiple_folder_inputs(tmp_path, monkeypatch) -> None:
                 orient="records",
                 lines=True,
             )
-    monkeypatch.setattr(analysis_app, "DEFAULT_RUNS_DIR", tmp_path)
+    monkeypatch.setattr(analysis_view, "DEFAULT_RUNS_DIR", tmp_path)
     app = AppTest.from_string(
-        "from misinformation_simulation.apps.interaction_graph_analysis_plotly_app import main\n"
-        "main()"
+        "from misinformation_simulation.apps.interaction_graph_analysis import render_analysis\n"
+        "render_analysis()"
     ).run(timeout=30)
     assert not app.exception
 

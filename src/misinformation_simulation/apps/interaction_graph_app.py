@@ -29,6 +29,9 @@ from misinformation_simulation.apps import (  # noqa: E402
     interaction_graph_state,
     interaction_graph_ui,
 )
+from misinformation_simulation.apps.interaction_graph_workspace import (  # noqa: E402
+    retain_workspace_widgets,
+)
 from misinformation_simulation.simulation import graph as simulation_graph  # noqa: E402
 
 
@@ -53,7 +56,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 14:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 15:
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_results)
         importlib.reload(interaction_graph_categories)
@@ -76,7 +79,36 @@ def main() -> None:
     )
     interaction_graph_state.initialize_state()
 
+    retain_workspace_widgets()
+    simulation_page = st.Page(
+        render_simulation_page,
+        title="Simulation",
+        url_path="simulation",
+        default=True,
+    )
+    analysis_page = st.Page(
+        render_analysis_page,
+        title="Analysis",
+        url_path="analysis",
+    )
+    st.session_state["_studio_analysis_page"] = analysis_page
+    page = st.navigation([simulation_page, analysis_page], position="top")
     st.title("Interaction Graph Studio")
+    page.run()
+
+
+def render_analysis_page() -> None:
+    from misinformation_simulation.apps.interaction_graph_analysis import (
+        render_analysis,
+    )
+
+    if st.session_state.get("run_job") is not None:
+        with st.expander("Simulation progress", expanded=True):
+            interaction_graph_sections._render_run_monitor()
+    render_analysis()
+
+
+def render_simulation_page() -> None:
     st.caption(
         "Configure a chain of personas, run the graph simulation over a news dataset, "
         "and inspect topic drift and rewrite quality without leaving the browser."

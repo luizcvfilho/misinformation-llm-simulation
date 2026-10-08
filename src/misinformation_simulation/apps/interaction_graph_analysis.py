@@ -49,6 +49,7 @@ from misinformation_simulation.analysis.interaction_graph_visualization import (
     METRIC_LABELS,
     STDI_COMPONENT_COLUMNS,
     available_metrics,
+    discover_step_paths,
     load_interaction_graph_runs,
     successful_steps,
     summarize_metric,
@@ -58,11 +59,20 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     available_evaluations,
     select_evaluation_steps,
 )
+from misinformation_simulation.apps.interaction_graph_components import render_result_bundle
+from misinformation_simulation.apps.interaction_graph_results import (
+    evaluation_result_bundle,
+    load_saved_result,
+)
+from misinformation_simulation.apps.interaction_graph_ui import (
+    build_news_summary_dataframe,
+    build_node_summary_dataframe,
+)
 from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 7
+ANALYSIS_CACHE_SCHEMA_VERSION = 8
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -70,14 +80,42 @@ PERSONA_METRIC_LABELS = {
 
 
 @st.cache_data(show_spinner=False)
-def load_steps(runs_dirs: tuple[str, ...], cache_schema_version: int) -> tuple[pd.DataFrame, int]:
-    del cache_schema_version
+def load_steps(
+    runs_dirs: tuple[str, ...],
+    cache_schema_version: int,
+    source_fingerprint: tuple[tuple[str, int, int], ...] = (),
+) -> tuple[pd.DataFrame, int]:
+    del cache_schema_version, source_fingerprint
     runs = load_interaction_graph_runs([Path(directory) for directory in runs_dirs])
-    return successful_steps(runs.steps), len(runs.source_paths)
+    return runs.steps, len(runs.source_paths)
+
+
+def source_fingerprint(runs_dirs: tuple[str, ...]) -> tuple[tuple[str, int, int], ...]:
+    paths = {path for directory in runs_dirs for path in discover_step_paths(Path(directory))}
+    paths.update(
+        path.with_name(path.name.removesuffix("_steps.jsonl") + "_summary.json")
+        for path in list(paths)
+    )
+    return tuple(
+        (str(path), stat.st_mtime_ns, stat.st_size)
+        for path in sorted(paths)
+        if path.is_file() and (stat := path.stat())
+    )
 
 
 def filter_chains(steps: pd.DataFrame, selected_chains: list[str]) -> pd.DataFrame:
     return steps.loc[steps["chain_label"].isin(selected_chains)].copy()
+
+
+def _sync_multiselect_options(key: str, options: list[str]) -> None:
+    known_key = f"_{key}_options"
+    previous = st.session_state.get(known_key)
+    if previous is not None and previous != options and key in st.session_state:
+        selected = st.session_state[key]
+        st.session_state[key] = [
+            option for option in options if option in selected or option not in previous
+        ]
+    st.session_state[known_key] = options
 
 
 def _execution_recency(execution_id: str) -> float:
@@ -103,28 +141,43 @@ def _render_run_folder_input() -> tuple[str, ...]:
     return tuple(dict.fromkeys(line.strip() for line in folder_input.splitlines() if line.strip()))
 
 
-def main() -> None:
-    st.set_page_config(page_title="Análise STDI — Plotly", layout="wide")
-    st.title("Análise exploratória do STDI")
+def render_analysis() -> None:
+    st.header("STDI exploratory analysis")
     st.caption(
-        "Compare cadeias, personas e transições. Os resultados descrevem associações nas "
-        "simulações e não estabelecem causalidade nem verificam factualidade externa."
+        "Compare chains, personas and transitions. Results describe associations in "
+        "simulations; "
+        "they do not establish causality or verify external factual accuracy."
     )
     _render_persona_legend()
 
+    requested_path = st.session_state.pop("_analysis_requested_steps", None)
+    requested_evaluation = st.session_state.pop("_analysis_requested_evaluation", None)
+    if requested_path:
+        path = Path(requested_path)
+        execution_dir = path.parent
+        if execution_dir.name == path.stem.removesuffix("_steps"):
+            execution_dir = execution_dir.parent
+        st.session_state.analysis_runs_folders = str(execution_dir)
     runs_dirs = _render_run_folder_input()
     if not runs_dirs:
         st.warning("Enter at least one run folder.")
-        st.stop()
+        return
+    if st.sidebar.button("Refresh results"):
+        load_steps.clear()
     try:
-        steps, _ = load_steps(runs_dirs, ANALYSIS_CACHE_SCHEMA_VERSION)
+        steps, _ = load_steps(
+            runs_dirs, ANALYSIS_CACHE_SCHEMA_VERSION, source_fingerprint(runs_dirs)
+        )
     except (OSError, ValueError) as error:
         st.error(str(error))
-        st.stop()
-
+        return
     if steps.empty:
-        st.warning("The selected folders contain no successful steps.")
-        st.stop()
+        st.warning("The selected folders contain no step records.")
+        return
+
+    target = (
+        steps.loc[steps["source_path"].eq(requested_path)] if requested_path else steps.iloc[:0]
+    )
     executions = steps[["execution_id", "execution_label"]].drop_duplicates()
     execution_labels = executions.set_index("execution_id")["execution_label"].to_dict()
     execution_options = sorted(
@@ -132,20 +185,26 @@ def main() -> None:
         key=lambda execution_id: (_execution_recency(execution_id), execution_id),
         reverse=True,
     )
+    _sync_multiselect_options("analysis_main_executions", execution_options)
+    if not target.empty:
+        st.session_state.analysis_main_executions = execution_options
+        st.session_state.analysis_main_active_execution = target.iloc[0]["execution_id"]
     selected_executions = st.sidebar.multiselect(
         "Executions",
         execution_options,
         default=execution_options,
         format_func=lambda value: f"{execution_labels[value]} — {value}",
+        key="analysis_main_executions",
     )
     if not selected_executions:
         st.warning("Select at least one execution.")
-        st.stop()
+        return
     active_execution = st.sidebar.selectbox(
         "Active execution",
         [execution_id for execution_id in execution_options if execution_id in selected_executions],
         format_func=lambda value: f"{execution_labels[value]} — {value}",
         help="Defaults to the most recent execution. You can select an older execution manually.",
+        key="analysis_main_active_execution",
     )
     steps = steps.loc[steps["execution_id"].eq(active_execution)].copy()
     st.caption(f"Analyzing execution: {active_execution}")
@@ -153,14 +212,20 @@ def main() -> None:
 
     rewrite_modes = sorted(steps["metadata_rewrite_mode"].unique())
     mode_labels = {**GRAPH_REWRITE_MODE_LABELS, "legacy": "Legacy (mode not recorded)"}
+    if not target.empty:
+        st.session_state.analysis_main_transmission_mode = target.iloc[0]["metadata_rewrite_mode"]
     selected_mode = st.sidebar.selectbox(
         "Transmission mode",
         rewrite_modes,
         format_func=lambda mode: mode_labels.get(mode, mode),
+        key="analysis_main_transmission_mode",
     )
     steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
     evaluations = available_evaluations(steps)
+    selected_evaluation = None
     if evaluations:
+        if requested_evaluation in evaluations:
+            st.session_state.analysis_stdi_evaluation = requested_evaluation
         selected_evaluation = st.sidebar.selectbox(
             "STDI evaluation",
             evaluations,
@@ -169,39 +234,64 @@ def main() -> None:
         )
         steps = select_evaluation_steps(steps, selected_evaluation)
         st.caption(f"STDI evaluation: {EVALUATION_LABELS[selected_evaluation]}")
-    metrics = available_metrics(steps)
-    if not metrics:
-        st.warning("No numeric STDI metrics are available for this selection.")
-        st.stop()
-    selected_metric = st.sidebar.selectbox(
-        "Métrica dos gráficos gerais", options=list(metrics), format_func=metrics.__getitem__
-    )
     chains = sorted(steps["chain_label"].unique())
-    selected_chains = st.sidebar.multiselect("Cadeias", chains, default=chains)
+    _sync_multiselect_options("analysis_main_chains", chains)
+    if not target.empty:
+        st.session_state.analysis_main_chains = chains
+        st.session_state.analysis_detail_source = requested_path
+    selected_chains = st.sidebar.multiselect(
+        "Chains",
+        chains,
+        default=chains,
+        key="analysis_main_chains",
+    )
     if not selected_chains:
-        st.warning("Selecione pelo menos uma cadeia.")
-        st.stop()
-    selected_steps = filter_chains(steps, selected_chains)
+        st.warning("Select at least one chain.")
+        return
+    selected_records = filter_chains(steps, selected_chains)
+    selected_steps = successful_steps(selected_records)
     metrics = available_metrics(selected_steps)
-    if selected_metric not in metrics:
-        st.warning("The selected evaluation and metric have no scores for these chains.")
-        st.stop()
+    all_metrics = available_metrics(successful_steps(steps))
+    selected_metric = (
+        st.sidebar.selectbox(
+            "Overview chart metric",
+            options=list(all_metrics),
+            format_func=all_metrics.__getitem__,
+            key="analysis_main_overview_chart_metric",
+        )
+        if all_metrics
+        else None
+    )
 
     first_column, second_column, third_column = st.columns(3)
-    first_column.metric("Chain step files", selected_steps["source_path"].nunique())
-    second_column.metric("Notícias", selected_steps["news_id"].nunique())
-    third_column.metric("Observações válidas", len(selected_steps))
-
-    overview_tab, groups_tab, personas_tab, transitions_tab, contrasts_tab, cases_tab = st.tabs(
+    first_column.metric("Chain step files", selected_records["source_path"].nunique())
+    second_column.metric("News items", selected_records["news_id"].nunique())
+    third_column.metric("Successful observations", len(selected_steps))
+    (
+        overview_tab,
+        groups_tab,
+        personas_tab,
+        transitions_tab,
+        contrasts_tab,
+        cases_tab,
+        details_tab,
+    ) = st.tabs(
         [
-            "Visão geral",
-            "Domínios e categorias",
+            "Overview",
+            "Domains and categories",
             "Personas",
-            "Transições",
-            "Contrastes pareados",
-            "Casos",
+            "Transitions",
+            "Paired comparisons",
+            "Cases",
+            "Run details",
         ]
     )
+    with details_tab:
+        _render_run_details(selected_records, selected_evaluation, selected_mode)
+    if selected_metric not in metrics:
+        with overview_tab:
+            st.warning("No numeric STDI metrics are available for these chains. Open Run details.")
+        return
     with overview_tab:
         _render_overview(selected_steps, selected_metric, metrics)
     with groups_tab:
@@ -216,15 +306,59 @@ def main() -> None:
         _render_case_explorer(selected_steps, metrics)
 
 
+def _render_run_details(
+    records: pd.DataFrame,
+    evaluation: str | None,
+    rewrite_mode: str,
+) -> None:
+    st.subheader("Saved graph details")
+    st.caption(
+        "Inspect saved texts, evaluation details, errors and partial results. "
+        "Analytical charts use successful steps only; this view also retains failed steps."
+    )
+    sources = records[["source_path", "chain_label"]].drop_duplicates()
+    labels = sources.set_index("source_path")["chain_label"].to_dict()
+    path = st.selectbox(
+        "Graph result",
+        list(labels),
+        format_func=labels.__getitem__,
+        key="analysis_detail_source",
+    )
+    summary_path = Path(path).with_name(
+        Path(path).name.removesuffix("_steps.jsonl") + "_summary.json"
+    )
+    try:
+        bundle = load_saved_result(summary_path)
+    except (OSError, ValueError, KeyError) as error:
+        st.info(f"Detailed summary unavailable: {error}")
+        st.dataframe(records.loc[records["source_path"].eq(path)], width="stretch")
+        return
+    frame = bundle["steps_df"]
+    if not frame.empty and "metadata_rewrite_mode" in frame.columns:
+        frame = frame.loc[frame["metadata_rewrite_mode"].fillna("legacy").eq(rewrite_mode)].copy()
+    bundle = {
+        **bundle,
+        "steps_df": frame,
+        "node_summary_df": build_node_summary_dataframe(frame),
+        "news_summary_df": build_news_summary_dataframe(frame),
+    }
+    if evaluation:
+        bundle = evaluation_result_bundle(bundle, evaluation)
+    if bundle["status"] == "cancelled":
+        st.warning("Simulation cancelled; showing saved partial results.")
+    render_result_bundle(bundle)
+
+
 def _render_persona_legend() -> None:
-    with st.expander("Legenda das personalidades e siglas", expanded=True):
+    with st.expander("Persona names and codes", expanded=True):
         legend = persona_legend().rename(
-            columns={"code": "Sigla", "persona": "Personalidade", "description": "Definição"}
+            columns={"code": "Code", "persona": "Persona", "description": "Definition"}
         )
         st.dataframe(legend, width="stretch", hide_index=True)
         st.caption(
-            "A personalidade S solicita atenção à qualidade das evidências, mas não realiza "
-            "checagem factual externa. `O` significa o texto original nas matrizes de transição."
+            "Persona S asks for attention to evidence quality but does not perform "
+            "external fact checking. `O` denotes the original text in transition "
+            "matrices."
         )
 
 
@@ -234,20 +368,20 @@ def _render_overview(
     metrics: dict[str, str],
 ) -> None:
     st.caption(
-        "Use a barra de ferramentas do Plotly para zoom, pan, seleção por caixa ou laço, "
-        "restauração de escala e exportação da figura."
+        "Use the Plotly toolbar to zoom, pan, select with a box or lasso, reset the "
+        "scale and export the figure."
     )
-    st.subheader("Evolução por iteração")
+    st.subheader("Evolution by iteration")
     st.plotly_chart(
         build_evolution_figure(selected_steps, selected_metric),
         width="stretch",
         config=PLOTLY_CONFIG,
     )
 
-    st.subheader("Componentes do STDI")
+    st.subheader("STDI components")
     st.caption(
-        "Além do VAD agregado, selecione Valência, Arousal ou Dominância para analisar "
-        "cada dimensão afetiva separadamente."
+        "Alongside aggregate VAD, select Valence, Arousal or Dominance to inspect "
+        "each affective dimension separately."
     )
     component_options = [
         component
@@ -255,10 +389,11 @@ def _render_overview(
         if component in selected_steps.columns and selected_steps[component].notna().any()
     ]
     selected_components = st.multiselect(
-        "Componentes exibidos",
+        "Displayed components",
         component_options,
         default=component_options,
         format_func=STDI_COMPONENT_COLUMNS.__getitem__,
+        key="analysis_overview_displayed_components",
     )
     if selected_components:
         st.plotly_chart(
@@ -266,11 +401,12 @@ def _render_overview(
             width="stretch",
             config=PLOTLY_CONFIG,
         )
-        st.subheader("Componente em detalhe")
+        st.subheader("Component detail")
         detail_component = st.selectbox(
-            "Componente para ampliar",
+            "Component to expand",
             selected_components,
             format_func=STDI_COMPONENT_COLUMNS.__getitem__,
+            key="analysis_overview_component_to_expand",
         )
         st.plotly_chart(
             build_evolution_figure(selected_steps, detail_component),
@@ -278,33 +414,36 @@ def _render_overview(
             config=PLOTLY_CONFIG,
         )
 
-    st.subheader("Distribuição")
+    st.subheader("Distribution")
     distribution_metrics = [
         metric for metric in ("stdi_vs_original", "stdi_incremental") if metric in metrics
     ]
     distribution_metric = st.radio(
-        "Comparação usada no boxplot",
+        "Boxplot metric",
         distribution_metrics,
         format_func=METRIC_LABELS.__getitem__,
         horizontal=True,
+        key="analysis_overview_boxplot_metric",
     )
     distribution_view = st.radio(
-        "Agrupamento do boxplot",
-        ("Por cadeia em uma iteração", "Todas as cadeias por iteração"),
+        "Boxplot grouping",
+        ("By chain at one iteration", "All chains by iteration"),
         horizontal=True,
+        key="analysis_overview_boxplot_grouping",
     )
-    if distribution_view == "Por cadeia em uma iteração":
+    if distribution_view == "By chain at one iteration":
         iterations = sorted(int(value) for value in selected_steps["step_index"].unique())
         if len(iterations) == 1:
             selected_iteration = iterations[0]
             st.caption(f"Iteration: {selected_iteration}")
         else:
             selected_iteration = st.slider(
-                "Iteração para o boxplot",
+                "Boxplot iteration",
                 min_value=min(iterations),
                 max_value=max(iterations),
                 value=max(iterations),
                 step=1,
+                key="analysis_overview_boxplot_iteration",
             )
         distribution_figure = build_distribution_figure(
             selected_steps,
@@ -335,32 +474,32 @@ def _render_news_group_analysis(
     selected_steps: pd.DataFrame,
     metrics: dict[str, str],
 ) -> None:
-    st.subheader("Resultados por classificação da notícia")
+    st.subheader("Results by news classification")
     st.info(
-        "Esta análise compara o resultado final das cadeias notícia a notícia. Valores menores "
-        "de amplitude, desvio-padrão ou diferença absoluta indicam cadeias mais próximas. "
-        "As diferenças descrevem este conjunto de notícias e não estabelecem efeito causal "
-        "da categoria."
+        "This analysis compares final chain results for each news item. Smaller "
+        "ranges, standard deviations or absolute differences indicate closer chains. "
+        "Differences describe this news set and do not establish a causal category "
+        "effect."
     )
     groupings = available_news_groupings(selected_steps)
     if not groupings:
         st.warning(
-            "As execuções selecionadas não guardam a classificação original. "
-            "Execute novamente com um dataset que tenha a coluna `category`."
+            "The selected executions do not contain the original classification. Run "
+            "again with a dataset containing a `category` column."
         )
         return
 
     grouping = st.selectbox(
-        "Agrupamento das notícias",
+        "News grouping",
         list(groupings),
         format_func=GROUPING_LABELS.__getitem__,
         key="news_grouping",
     )
     if grouping == ORIGINAL_CATEGORY_GROUPING:
         st.caption(
-            "As categorias vêm da coluna `category` do dataset original e são persistidas como "
-            "`metadata_category`. Uma notícia com categorias separadas por `;` participa de mais "
-            "de um grupo, por isso as contagens podem se sobrepor."
+            "Categories come from the original dataset's `category` column and are saved "
+            "as `metadata_category`. A news item with categories separated by `;` "
+            "belongs to multiple groups, so counts may overlap."
         )
     metric_options = [
         metric
@@ -373,7 +512,7 @@ def _render_news_group_analysis(
         if metric in metrics
     ]
     metric = st.selectbox(
-        "Métrica final comparada entre cadeias",
+        "Final metric compared across chains",
         metric_options,
         format_func=_final_contrast_metric_label,
         key="news_group_metric",
@@ -381,8 +520,7 @@ def _render_news_group_analysis(
     news_proximity = news_chain_proximity(selected_steps, metric, grouping)
     if news_proximity.empty:
         st.warning(
-            "Não há notícias com pelo menos duas cadeias e valores finais válidos para este "
-            "recorte."
+            "No news items have at least two chains with valid final values for this selection."
         )
         return
 
@@ -390,33 +528,33 @@ def _render_news_group_analysis(
     group_options = summary["group_value"].tolist()
     group_labels = summary.set_index("group_value")["group_label"].to_dict()
     selected_groups = st.multiselect(
-        "Grupos exibidos",
+        "Displayed groups",
         group_options,
         default=group_options,
         format_func=lambda value: group_labels.get(value, value),
         key="news_groups_displayed",
     )
     if not selected_groups:
-        st.warning("Selecione pelo menos um grupo de notícias.")
+        st.warning("Select at least one news group.")
         return
     filtered_news = news_proximity.loc[news_proximity["group_value"].isin(selected_groups)].copy()
     filtered_summary = summary.loc[summary["group_value"].isin(selected_groups)].copy()
 
     first, second, third = st.columns(3)
-    first.metric("Grupos", len(filtered_summary))
-    second.metric("Notícias únicas", filtered_news["news_id"].nunique())
-    third.metric("Cadeias selecionadas", selected_steps["chain_label"].nunique())
+    first.metric("Groups", len(filtered_summary))
+    second.metric("Unique news items", filtered_news["news_id"].nunique())
+    third.metric("Selected chains", selected_steps["chain_label"].nunique())
 
     small_groups = filtered_summary.loc[
         filtered_summary["news_items"].lt(5), "group_label"
     ].tolist()
     if small_groups:
         st.warning(
-            "Grupos com menos de cinco notícias devem ser interpretados apenas como casos "
-            "exploratórios: " + ", ".join(small_groups) + "."
+            "Groups with fewer than five news items should be interpreted only as "
+            "exploratory cases: " + ", ".join(small_groups) + "."
         )
 
-    st.subheader("Composição do recorte")
+    st.subheader("Selection composition")
     st.plotly_chart(
         build_group_composition_figure(filtered_summary),
         width="stretch",
@@ -427,14 +565,15 @@ def _render_news_group_analysis(
         unique_news = int(filtered_news["news_id"].nunique())
         if memberships > unique_news:
             st.caption(
-                f"Há {memberships} associações categoria–notícia para {unique_news} notícias "
-                "únicas porque as categorias originais podem ser múltiplas."
+                f"There are {memberships} category–news memberships for {unique_news} "
+                "unique news items because original categories may be multiple."
             )
 
-    st.subheader("Proximidade das cadeias dentro de cada notícia")
+    st.subheader("Chain proximity within each news item")
     st.caption(
-        "A amplitude é calculada, para cada notícia, como o maior resultado final menos o menor "
-        "entre as cadeias selecionadas. O intervalo de 95% reamostra notícias dentro de cada grupo."
+        "For each news item, the range is the largest final result minus the "
+        "smallest across selected chains. The 95% interval resamples news items "
+        "within each group."
     )
     st.plotly_chart(
         build_group_proximity_interval_figure(filtered_summary),
@@ -442,7 +581,7 @@ def _render_news_group_analysis(
         config=PLOTLY_CONFIG,
     )
     proximity_measure = st.selectbox(
-        "Medida para a distribuição notícia a notícia",
+        "Measure for the news-level distribution",
         list(PROXIMITY_MEASURE_LABELS),
         format_func=PROXIMITY_MEASURE_LABELS.__getitem__,
         key="news_group_proximity_measure",
@@ -455,31 +594,31 @@ def _render_news_group_analysis(
 
     summary_display = filtered_summary.rename(
         columns={
-            "group_label": "Grupo",
-            "news_items": "Notícias",
-            "mean_news_metric": "Média da métrica por notícia",
-            "mean_range": "Amplitude média",
-            "median_range": "Amplitude mediana",
-            "range_ci_low": "IC 95% — inferior",
-            "range_ci_high": "IC 95% — superior",
-            "mean_sd": "Desvio-padrão médio",
-            "mean_pairwise_abs_diff": "Diferença média entre pares",
-            "minimum_chains": "Mínimo de cadeias",
-            "maximum_chains": "Máximo de cadeias",
+            "group_label": "Group",
+            "news_items": "News items",
+            "mean_news_metric": "Mean metric per news item",
+            "mean_range": "Mean range",
+            "median_range": "Median range",
+            "range_ci_low": "95% CI — lower",
+            "range_ci_high": "95% CI — upper",
+            "mean_sd": "Mean standard deviation",
+            "mean_pairwise_abs_diff": "Mean pairwise difference",
+            "minimum_chains": "Minimum chains",
+            "maximum_chains": "Maximum chains",
         }
     )
     summary_columns = [
-        "Grupo",
-        "Notícias",
-        "Média da métrica por notícia",
-        "Amplitude média",
-        "Amplitude mediana",
-        "IC 95% — inferior",
-        "IC 95% — superior",
-        "Desvio-padrão médio",
-        "Diferença média entre pares",
-        "Mínimo de cadeias",
-        "Máximo de cadeias",
+        "Group",
+        "News items",
+        "Mean metric per news item",
+        "Mean range",
+        "Median range",
+        "95% CI — lower",
+        "95% CI — upper",
+        "Mean standard deviation",
+        "Mean pairwise difference",
+        "Minimum chains",
+        "Maximum chains",
     ]
     st.dataframe(
         summary_display[summary_columns],
@@ -489,28 +628,28 @@ def _render_news_group_analysis(
     )
     first_download, second_download = st.columns(2)
     first_download.download_button(
-        "Baixar resumo por grupo",
+        "Download group summary",
         data=filtered_summary.to_csv(index=False).encode("utf-8"),
         file_name=f"chain_proximity_by_{grouping}.csv",
         mime="text/csv",
         width="stretch",
     )
     second_download.download_button(
-        "Baixar resultados por notícia",
+        "Download news-level results",
         data=filtered_news.to_csv(index=False).encode("utf-8"),
         file_name=f"news_chain_proximity_by_{grouping}.csv",
         mime="text/csv",
         width="stretch",
     )
 
-    st.subheader("Pares de cadeias dentro de um grupo")
+    st.subheader("Chain pairs within a group")
     pair_summary = summarize_chain_pairs_by_group(selected_steps, metric, grouping)
     pair_summary = pair_summary.loc[pair_summary["group_value"].isin(selected_groups)].copy()
     if pair_summary.empty:
-        st.info("Não há pares de cadeias com notícias comparáveis neste recorte.")
+        st.info("No chain pairs have comparable news items in this selection.")
         return
     selected_pair_group = st.selectbox(
-        "Grupo para a matriz de pares",
+        "Group for the pair matrix",
         selected_groups,
         format_func=lambda value: group_labels.get(value, value),
         key="news_pair_group",
@@ -523,19 +662,19 @@ def _render_news_group_analysis(
     )
     closest_pairs = selected_pairs.nsmallest(10, "mean_absolute_difference").rename(
         columns={
-            "chain_pair": "Par de cadeias",
-            "paired_news": "Notícias pareadas",
-            "mean_absolute_difference": "Diferença absoluta média",
-            "median_absolute_difference": "Diferença absoluta mediana",
+            "chain_pair": "Chain pair",
+            "paired_news": "Paired news items",
+            "mean_absolute_difference": "Mean absolute difference",
+            "median_absolute_difference": "Median absolute difference",
         }
     )
     st.dataframe(
         closest_pairs[
             [
-                "Par de cadeias",
-                "Notícias pareadas",
-                "Diferença absoluta média",
-                "Diferença absoluta mediana",
+                "Chain pair",
+                "Paired news items",
+                "Mean absolute difference",
+                "Median absolute difference",
             ]
         ],
         width="stretch",
@@ -543,37 +682,37 @@ def _render_news_group_analysis(
         column_config=_numeric_column_config(closest_pairs),
     )
 
-    with st.expander("Notícias com cadeias mais próximas ou mais distantes", expanded=False):
+    with st.expander("News items with closer or more distant chains", expanded=False):
         direction = st.radio(
-            "Ordenação dos casos",
-            ("Cadeias mais próximas", "Cadeias mais distantes"),
+            "Case ordering",
+            ("Closest chains", "Most distant chains"),
             horizontal=True,
             key="news_group_case_order",
         )
         cases = filtered_news.sort_values(
             proximity_measure,
-            ascending=direction == "Cadeias mais próximas",
+            ascending=direction == "Closest chains",
         ).rename(
             columns={
-                "metadata_title": "Notícia",
-                "group_label": "Grupo",
-                "chains_observed": "Cadeias observadas",
-                "mean_metric": "Média da métrica",
-                "range_between_chains": "Amplitude",
-                "sd_between_chains": "Desvio-padrão",
-                "mean_pairwise_abs_diff": "Diferença média entre pares",
+                "metadata_title": "News item",
+                "group_label": "Group",
+                "chains_observed": "Observed chains",
+                "mean_metric": "Mean metric",
+                "range_between_chains": "Range",
+                "sd_between_chains": "Standard deviation",
+                "mean_pairwise_abs_diff": "Mean pairwise difference",
             }
         )
         st.dataframe(
             cases[
                 [
-                    "Notícia",
-                    "Grupo",
-                    "Cadeias observadas",
-                    "Média da métrica",
-                    "Amplitude",
-                    "Desvio-padrão",
-                    "Diferença média entre pares",
+                    "News item",
+                    "Group",
+                    "Observed chains",
+                    "Mean metric",
+                    "Range",
+                    "Standard deviation",
+                    "Mean pairwise difference",
                 ]
             ].head(25),
             width="stretch",
@@ -583,33 +722,34 @@ def _render_news_group_analysis(
 
 
 def _render_persona_analysis(selected_steps: pd.DataFrame) -> None:
-    st.subheader("Resultados por personalidade")
+    st.subheader("Results by persona")
     st.info(
-        "O resumo atribui o mesmo peso a cada notícia. Use o STDI incremental para interpretar "
-        "a mudança associada à reescrita atual; o histórico anterior permanece como possível "
-        "fator de confusão."
+        "The summary gives each news item equal weight. Use incremental STDI to "
+        "interpret the change associated with the current rewrite; previous history "
+        "remains a possible confounding factor."
     )
     options = _available_persona_metrics(selected_steps)
     if not options:
-        st.warning("Não há métricas incrementais disponíveis nas execuções selecionadas.")
+        st.warning("No incremental metrics are available in the selected executions.")
         return
     metric = st.selectbox(
-        "Métrica da análise de personas",
+        "Persona analysis metric",
         options,
         format_func=PERSONA_METRIC_LABELS.__getitem__,
         key="persona_metric",
     )
-    st.subheader("Distribuição por personalidade")
+    st.subheader("Distribution by persona")
     st.caption(
-        "Cada ponto representa uma notícia após a média das ocorrências da persona, "
-        "evitando contar a mesma notícia repetidamente como observações independentes."
+        "Each point represents one news item after averaging its persona "
+        "occurrences, avoiding repeated counts of the same news item as independent "
+        "observations."
     )
     st.plotly_chart(
         build_persona_boxplot(selected_steps, metric),
         width="stretch",
         config=PLOTLY_CONFIG,
     )
-    with st.expander("Distribuição separada por posição", expanded=False):
+    with st.expander("Distribution by position", expanded=False):
         st.plotly_chart(
             build_persona_position_boxplot(selected_steps, metric),
             width="stretch",
@@ -626,20 +766,20 @@ def _render_persona_analysis(selected_steps: pd.DataFrame) -> None:
         )
     display = summary.rename(
         columns={
-            "persona_code": "Sigla",
-            "persona_label": "Personalidade",
-            "observations": "Observações",
-            "news_items": "Notícias",
-            "chains": "Cadeias",
-            "positions": "Posições",
-            "position_counts": "Observações por posição",
-            "mean": "Média",
-            "median": "Mediana",
+            "persona_code": "Code",
+            "persona_label": "Persona",
+            "observations": "Observations",
+            "news_items": "News items",
+            "chains": "Chains",
+            "positions": "Positions",
+            "position_counts": "Observations by position",
+            "mean": "Mean",
+            "median": "Median",
             "q1": "Q1",
             "q3": "Q3",
-            "ci_low": "IC 95% — inferior",
-            "ci_high": "IC 95% — superior",
-            "dominant_component": "Componente incremental dominante",
+            "ci_low": "95% CI — lower",
+            "ci_high": "95% CI — upper",
+            "dominant_component": "Dominant incremental component",
         }
     )
     st.dataframe(
@@ -660,17 +800,17 @@ def _render_persona_analysis(selected_steps: pd.DataFrame) -> None:
     ].tolist()
     if incomplete:
         st.warning(
-            "Cobertura de posição incompleta para: " + ", ".join(incomplete) + ". "
-            "Compare essas médias com cautela."
+            "Incomplete position coverage for: " + ", ".join(incomplete) + ". "
+            "Compare these means with caution."
         )
 
     if not components.empty:
-        st.subheader("Perfil incremental por componente")
+        st.subheader("Incremental component profile")
         component_display = components.rename(
             columns={
-                "persona_code": "Sigla",
-                "persona_label": "Personalidade",
-                "dominant_component": "Componente dominante",
+                "persona_code": "Code",
+                "persona_label": "Persona",
+                "dominant_component": "Dominant component",
             }
         )
         st.dataframe(
@@ -682,64 +822,64 @@ def _render_persona_analysis(selected_steps: pd.DataFrame) -> None:
 
 
 def _render_transition_analysis(selected_steps: pd.DataFrame) -> None:
-    st.subheader("Transições entre personalidades")
+    st.subheader("Transitions between personas")
     st.caption(
-        "A linha representa a personalidade anterior e a coluna representa a personalidade "
-        "que realizou a reescrita atual."
+        "Rows represent the previous persona and columns represent the persona "
+        "performing the current rewrite."
     )
     options = _available_persona_metrics(selected_steps)
     if not options:
-        st.warning("Não há métricas incrementais disponíveis nas execuções selecionadas.")
+        st.warning("No incremental metrics are available in the selected executions.")
         return
     metric = st.selectbox(
-        "Métrica da análise de transições",
+        "Transition analysis metric",
         options,
         format_func=PERSONA_METRIC_LABELS.__getitem__,
         key="transition_metric",
     )
     summary = summarize_transitions(selected_steps, metric)
     if summary.empty:
-        st.warning("As cadeias selecionadas não contêm transições comparáveis.")
+        st.warning("The selected chains contain no comparable transitions.")
         return
 
-    st.subheader("Matriz de médias")
+    st.subheader("Mean matrix")
     matrix = build_transition_matrix(summary)
     st.dataframe(matrix.round(3), width="stretch")
     st.caption(
-        "Células vazias representam transições ausentes no desenho selecionado, "
-        "não resultados zero."
+        "Empty cells represent transitions absent from the selected design, rather "
+        "than zero results."
     )
 
-    st.subheader("Cobertura e incerteza das transições")
+    st.subheader("Transition coverage and uncertainty")
     detail = summary.rename(
         columns={
-            "transition_code": "Transição",
-            "transition_label": "Descrição",
-            "observations": "Observações",
-            "news_items": "Notícias",
-            "chains": "Cadeias",
-            "positions": "Posições",
-            "mean": "Média",
-            "median": "Mediana",
+            "transition_code": "Transition",
+            "transition_label": "Description",
+            "observations": "Observations",
+            "news_items": "News items",
+            "chains": "Chains",
+            "positions": "Positions",
+            "mean": "Mean",
+            "median": "Median",
             "q1": "Q1",
             "q3": "Q3",
-            "ci_low": "IC 95% — inferior",
-            "ci_high": "IC 95% — superior",
+            "ci_low": "95% CI — lower",
+            "ci_high": "95% CI — upper",
         }
     )
     retained = [
-        "Transição",
-        "Descrição",
-        "Observações",
-        "Notícias",
-        "Cadeias",
-        "Posições",
-        "Média",
-        "Mediana",
+        "Transition",
+        "Description",
+        "Observations",
+        "News items",
+        "Chains",
+        "Positions",
+        "Mean",
+        "Median",
         "Q1",
         "Q3",
-        "IC 95% — inferior",
-        "IC 95% — superior",
+        "95% CI — lower",
+        "95% CI — upper",
     ]
     st.dataframe(
         detail[retained],
@@ -748,19 +888,21 @@ def _render_transition_analysis(selected_steps: pd.DataFrame) -> None:
         column_config=_numeric_column_config(detail[retained]),
     )
 
-    st.subheader("Assimetria direcional das transições")
+    st.subheader("Directional transition asymmetry")
     st.caption(
-        "Esta comparação é local: reúne as mudanças incrementais de A para B e de B para A "
-        "em passos adjacentes. Ela não compara o resultado final das cadeias completas."
+        "This local comparison groups incremental changes from A to B and from B to "
+        "A in adjacent steps. It does not compare the final results of complete "
+        "chains."
     )
     asymmetry = summarize_transition_asymmetry(selected_steps, metric)
     if asymmetry.empty:
-        st.info("Nenhum par de transições em direções opostas está disponível.")
+        st.info("No pair of transitions in opposite directions is available.")
     else:
         selected_asymmetry = st.selectbox(
-            "Par direcional para o boxplot",
+            "Directional pair for the boxplot",
             list(asymmetry.index),
             format_func=lambda index: str(asymmetry.loc[index, "contrast"]),
+            key="analysis_transition_analysis_directional_pair_for_the_boxplot",
         )
         asymmetry_row = asymmetry.loc[selected_asymmetry]
         st.plotly_chart(
@@ -780,8 +922,8 @@ def _render_transition_analysis(selected_steps: pd.DataFrame) -> None:
             column_config=_contrast_column_config(),
         )
         st.caption(
-            "Diferença positiva indica média maior na primeira direção escrita no contraste. "
-            "As ocorrências podem estar distribuídas por posições e históricos diferentes."
+            "A positive difference indicates a larger mean in the first direction listed "
+            "in the contrast. Occurrences may span different positions and histories."
         )
 
 
@@ -789,11 +931,12 @@ def _render_scenario_contrasts(
     selected_steps: pd.DataFrame,
     metrics: dict[str, str],
 ) -> None:
-    st.subheader("Contrastes pareados entre cenários")
+    st.subheader("Paired scenario contrasts")
     st.info(
-        "Esta comparação é global: usa a posição final de cada cadeia e calcula a diferença "
-        "notícia a notícia. O intervalo de 95% usa reamostragem bootstrap das notícias e a "
-        "taxa de vitórias informa a proporção em que o cenário A obteve valor maior que o B."
+        "This global comparison uses each chain's final position and calculates "
+        "differences for each news item. The 95% interval uses bootstrap resampling "
+        "of news items, and the win rate is the proportion in which scenario A "
+        "scored higher than B."
     )
     contrast_metrics = [
         metric
@@ -806,16 +949,16 @@ def _render_scenario_contrasts(
         if metric in metrics
     ]
     metric = st.selectbox(
-        "Métrica dos contrastes finais",
+        "Final contrast metric",
         contrast_metrics,
         format_func=_final_contrast_metric_label,
         key="contrast_metric",
     )
     if metric == "stdi_incremental":
         st.caption(
-            "STDI incremental no contraste = mudança introduzida somente pelo último passo "
-            "da cadeia. Não é a média dos incrementos da cadeia. Para a soma "
-            "dos incrementos, selecione STDI cumulativo."
+            "Incremental STDI in a contrast is the change introduced only by the chain's "
+            "final step, rather than the mean of all chain increments. Select cumulative "
+            "STDI for the sum of increments."
         )
     contrasts = _select_scenario_contrasts(selected_steps, key_prefix="contrast")
     summary = summarize_scenario_contrasts(selected_steps, metric, contrasts=contrasts)
@@ -823,8 +966,8 @@ def _render_scenario_contrasts(
         st.warning("Select two chains with valid final scores for the same news items.")
         return
     display = _format_contrast_table(summary)
-    display.insert(1, "Comparação", summary["description"])
-    st.subheader("Distribuição das diferenças pareadas")
+    display.insert(1, "Comparison", summary["description"])
+    st.subheader("Paired difference distribution")
     st.plotly_chart(
         build_scenario_difference_boxplot(selected_steps, metric, contrasts=contrasts),
         width="stretch",
@@ -835,17 +978,14 @@ def _render_scenario_contrasts(
         width="stretch",
         config=PLOTLY_CONFIG,
     )
-    st.subheader("Resumo numérico")
+    st.subheader("Numeric summary")
     st.dataframe(
         display,
         width="stretch",
         hide_index=True,
         column_config=_contrast_column_config(),
     )
-    st.caption(
-        "Intervalos que incluem zero não sustentam uma diferença estável "
-        "neste conjunto de notícias."
-    )
+    st.caption("Intervals containing zero do not support a stable difference in this news set.")
 
 
 def _select_scenario_contrasts(
@@ -884,19 +1024,20 @@ def _render_case_explorer(
     selected_steps: pd.DataFrame,
     metrics: dict[str, str],
 ) -> None:
-    st.subheader("Explorador qualitativo de casos")
+    st.subheader("Qualitative case explorer")
     st.caption(
-        "Inspecione os textos que produzem os maiores e menores resultados. As pontuações são "
-        "resultados deste estudo e não indicam, por si só, falsidade factual."
+        "Inspect texts producing the highest and lowest results. Scores are results "
+        "of this study and do not, by themselves, indicate factual falsity."
     )
     analysis_type = st.radio(
-        "Tipo de recorte",
-        ("Personalidade", "Transição", "Contraste de cenários"),
+        "Case grouping",
+        ("Persona", "Transition", "Scenario contrast"),
         horizontal=True,
+        key="analysis_case_explorer_case_grouping",
     )
-    if analysis_type == "Personalidade":
+    if analysis_type == "Persona":
         _render_step_cases(selected_steps, by_transition=False)
-    elif analysis_type == "Transição":
+    elif analysis_type == "Transition":
         _render_step_cases(selected_steps, by_transition=True)
     else:
         _render_contrast_cases(selected_steps, metrics)
@@ -905,10 +1046,10 @@ def _render_case_explorer(
 def _render_step_cases(selected_steps: pd.DataFrame, *, by_transition: bool) -> None:
     options = _available_persona_metrics(selected_steps)
     if not options:
-        st.warning("Não há métricas incrementais disponíveis.")
+        st.warning("No incremental metrics are available.")
         return
     metric = st.selectbox(
-        "Métrica para ordenar os casos",
+        "Metric for case ordering",
         options,
         format_func=PERSONA_METRIC_LABELS.__getitem__,
         key="case_step_metric",
@@ -917,24 +1058,29 @@ def _render_step_cases(selected_steps: pd.DataFrame, *, by_transition: bool) -> 
         summary = summarize_transitions(selected_steps, metric)
         labels = summary["transition_label"].tolist()
         if not labels:
-            st.warning("Não há transições disponíveis.")
+            st.warning("No transitions are available.")
             return
-        selected_label = st.selectbox("Transição", labels)
+        selected_label = st.selectbox("Transition", labels, key="analysis_step_cases_transition")
         cases = step_cases(selected_steps, metric, transition_label=selected_label)
     else:
         summary = summarize_personas(selected_steps, metric)
         labels = summary["persona_label"].tolist()
         if not labels:
-            st.warning("Não há personalidades disponíveis.")
+            st.warning("No personas are available.")
             return
-        selected_label = st.selectbox("Personalidade", labels)
+        selected_label = st.selectbox("Persona", labels, key="analysis_step_cases_persona")
         cases = step_cases(selected_steps, metric, persona_label=selected_label)
 
     if cases.empty:
-        st.warning("Nenhum caso está disponível para o recorte selecionado.")
+        st.warning("No cases are available for this selection.")
         return
-    view = st.radio("Ordenação", ("Maiores resultados", "Menores resultados"), horizontal=True)
-    cases = cases.sort_values(metric, ascending=view == "Menores resultados").reset_index(drop=True)
+    view = st.radio(
+        "Ordering",
+        ("Highest results", "Lowest results"),
+        horizontal=True,
+        key="analysis_step_cases_ordering",
+    )
+    cases = cases.sort_values(metric, ascending=view == "Lowest results").reset_index(drop=True)
     preview_columns = [
         column
         for column in (
@@ -949,16 +1095,17 @@ def _render_step_cases(selected_steps: pd.DataFrame, *, by_transition: bool) -> 
     ]
     st.dataframe(cases[preview_columns].head(20), width="stretch", hide_index=True)
     selected_index = st.selectbox(
-        "Caso para leitura",
+        "Case to read",
         list(cases.index[:20]),
         format_func=lambda index: _case_option_label(cases.loc[index], metric),
+        key="analysis_step_cases_case_to_read",
     )
     selected = cases.loc[selected_index]
     st.markdown(f"**{selected.get('metadata_title') or selected['news_id']}**")
     first, second, third = st.columns(3)
-    _text_panel(first, "Notícia original", selected.get("original_text"))
-    _text_panel(second, "Texto recebido pela persona", selected.get("source_text"))
-    _text_panel(third, "Texto reescrito", selected.get("rewritten_text"))
+    _text_panel(first, "Original news text", selected.get("original_text"))
+    _text_panel(second, "Text received by the persona", selected.get("source_text"))
+    _text_panel(third, "Rewritten text", selected.get("rewritten_text"))
     _render_case_components(selected)
 
 
@@ -967,7 +1114,7 @@ def _render_contrast_cases(selected_steps: pd.DataFrame, metrics: dict[str, str]
         metric for metric in ("stdi_vs_original", *STDI_COMPONENT_COLUMNS) if metric in metrics
     ]
     metric = st.selectbox(
-        "Métrica para ordenar os casos",
+        "Metric for case ordering",
         metric_options,
         format_func=METRIC_LABELS.__getitem__,
         key="case_contrast_metric",
@@ -975,9 +1122,11 @@ def _render_contrast_cases(selected_steps: pd.DataFrame, metrics: dict[str, str]
     selected_pairs = _select_scenario_contrasts(selected_steps, key_prefix="case_contrast")
     contrasts = summarize_scenario_contrasts(selected_steps, metric, contrasts=selected_pairs)
     if contrasts.empty:
-        st.warning("Nenhum contraste completo está disponível nas cadeias selecionadas.")
+        st.warning("No complete contrasts are available in the selected chains.")
         return
-    selected_contrast = st.selectbox("Contraste", contrasts["contrast"].tolist())
+    selected_contrast = st.selectbox(
+        "Contrast", contrasts["contrast"].tolist(), key="analysis_contrast_cases_contrast"
+    )
     contrast = contrasts.loc[contrasts["contrast"].eq(selected_contrast)].iloc[0]
     cases = scenario_contrast_cases(
         selected_steps,
@@ -986,27 +1135,28 @@ def _render_contrast_cases(selected_steps: pd.DataFrame, metrics: dict[str, str]
         str(contrast["label_b"]),
     )
     if cases.empty:
-        st.warning("Não há notícias pareadas para este contraste.")
+        st.warning("No paired news items are available for this contrast.")
         return
     view = st.radio(
-        "Ordenação",
-        ("Maior diferença A − B", "Menor diferença A − B"),
+        "Ordering",
+        ("Largest difference A − B", "Smallest difference A − B"),
         horizontal=True,
+        key="analysis_contrast_cases_ordering",
     )
-    cases = cases.sort_values("difference", ascending=view.startswith("Menor")).reset_index(
+    cases = cases.sort_values("difference", ascending=view.startswith("Smallest")).reset_index(
         drop=True
     )
     preview = pd.DataFrame(
         {
-            "Notícia": cases.get("metadata_title_a", cases["news_id"]),
+            "News item": cases.get("metadata_title_a", cases["news_id"]),
             str(contrast["label_a"]): cases[f"{metric}_a"],
             str(contrast["label_b"]): cases[f"{metric}_b"],
-            "Diferença A − B": cases["difference"],
+            "Difference A − B": cases["difference"],
         }
     )
     st.dataframe(preview.head(20), width="stretch", hide_index=True)
     selected_index = st.selectbox(
-        "Caso para leitura",
+        "Case to read",
         list(cases.index[:20]),
         format_func=lambda index: (
             f"{cases.loc[index].get('metadata_title_a') or cases.loc[index, 'news_id']} — "
@@ -1017,9 +1167,9 @@ def _render_contrast_cases(selected_steps: pd.DataFrame, metrics: dict[str, str]
     selected = cases.loc[selected_index]
     st.markdown(f"**{selected.get('metadata_title_a') or selected['news_id']}**")
     original, first, second = st.columns(3)
-    _text_panel(original, "Notícia original", selected.get("original_text_a"))
-    _text_panel(first, f"Saída final — {contrast['label_a']}", selected.get("rewritten_text_a"))
-    _text_panel(second, f"Saída final — {contrast['label_b']}", selected.get("rewritten_text_b"))
+    _text_panel(original, "Original news text", selected.get("original_text_a"))
+    _text_panel(first, f"Final output — {contrast['label_a']}", selected.get("rewritten_text_a"))
+    _text_panel(second, f"Final output — {contrast['label_b']}", selected.get("rewritten_text_b"))
 
 
 def _available_persona_metrics(steps: pd.DataFrame) -> list[str]:
@@ -1032,41 +1182,41 @@ def _available_persona_metrics(steps: pd.DataFrame) -> list[str]:
 
 def _final_contrast_metric_label(metric: str) -> str:
     if metric == "stdi_incremental":
-        return "STDI incremental no último passo"
+        return "Incremental STDI at the final step"
     if metric == "stdi_cumulative":
-        return "STDI cumulativo no último passo (soma dos incrementos)"
+        return "Cumulative STDI at the final step (sum of increments)"
     return METRIC_LABELS[metric]
 
 
 def _format_contrast_table(summary: pd.DataFrame) -> pd.DataFrame:
     display = summary.rename(
         columns={
-            "contrast": "Contraste A − B",
-            "paired_news": "Notícias pareadas",
-            "mean_a": "Média A",
-            "mean_b": "Média B",
-            "difference": "Diferença média",
-            "median_difference": "Diferença mediana",
-            "ci_low": "IC 95% — inferior",
-            "ci_high": "IC 95% — superior",
-            "win_rate_a": "Taxa de vitórias A",
-            "tie_rate": "Taxa de empates",
+            "contrast": "Contrast A − B",
+            "paired_news": "Paired news items",
+            "mean_a": "Mean A",
+            "mean_b": "Mean B",
+            "difference": "Mean difference",
+            "median_difference": "Median difference",
+            "ci_low": "95% CI — lower",
+            "ci_high": "95% CI — upper",
+            "win_rate_a": "Win rate A",
+            "tie_rate": "Tie rate",
         }
     )
-    display["Taxa de vitórias A"] *= 100
-    display["Taxa de empates"] *= 100
+    display["Win rate A"] *= 100
+    display["Tie rate"] *= 100
     return display[
         [
-            "Contraste A − B",
-            "Notícias pareadas",
-            "Média A",
-            "Média B",
-            "Diferença média",
-            "Diferença mediana",
-            "IC 95% — inferior",
-            "IC 95% — superior",
-            "Taxa de vitórias A",
-            "Taxa de empates",
+            "Contrast A − B",
+            "Paired news items",
+            "Mean A",
+            "Mean B",
+            "Mean difference",
+            "Median difference",
+            "95% CI — lower",
+            "95% CI — upper",
+            "Win rate A",
+            "Tie rate",
         ]
     ]
 
@@ -1081,24 +1231,20 @@ def _numeric_column_config(dataframe: pd.DataFrame) -> dict[str, object]:
 
 def _contrast_column_config() -> dict[str, object]:
     return {
-        "Média A": st.column_config.NumberColumn(format="%.3f"),
-        "Média B": st.column_config.NumberColumn(format="%.3f"),
-        "Diferença média": st.column_config.NumberColumn(format="%+.3f"),
-        "Diferença mediana": st.column_config.NumberColumn(format="%+.3f"),
-        "IC 95% — inferior": st.column_config.NumberColumn(format="%+.3f"),
-        "IC 95% — superior": st.column_config.NumberColumn(format="%+.3f"),
-        "Taxa de vitórias A": st.column_config.ProgressColumn(
-            format="%.1f%%", min_value=0, max_value=100
-        ),
-        "Taxa de empates": st.column_config.ProgressColumn(
-            format="%.1f%%", min_value=0, max_value=100
-        ),
+        "Mean A": st.column_config.NumberColumn(format="%.3f"),
+        "Mean B": st.column_config.NumberColumn(format="%.3f"),
+        "Mean difference": st.column_config.NumberColumn(format="%+.3f"),
+        "Median difference": st.column_config.NumberColumn(format="%+.3f"),
+        "95% CI — lower": st.column_config.NumberColumn(format="%+.3f"),
+        "95% CI — upper": st.column_config.NumberColumn(format="%+.3f"),
+        "Win rate A": st.column_config.ProgressColumn(format="%.1f%%", min_value=0, max_value=100),
+        "Tie rate": st.column_config.ProgressColumn(format="%.1f%%", min_value=0, max_value=100),
     }
 
 
 def _case_option_label(row: pd.Series, metric: str) -> str:
     title = row.get("metadata_title") or row["news_id"]
-    return f"{title} — {row.get('chain_code', '')}, passo {row['step_index']}, {row[metric]:.3f}"
+    return f"{title} — {row.get('chain_code', '')}, step {row['step_index']}, {row[metric]:.3f}"
 
 
 def _text_panel(container: object, label: str, value: object) -> None:
@@ -1124,7 +1270,3 @@ def _render_case_components(row: pd.Series) -> None:
             hide_index=True,
             column_config={label: st.column_config.NumberColumn(format="%.3f") for label in values},
         )
-
-
-if __name__ == "__main__":
-    main()
