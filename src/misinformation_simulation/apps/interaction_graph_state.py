@@ -28,6 +28,7 @@ from misinformation_simulation.simulation.graph import (
     _topological_path,
 )
 from misinformation_simulation.simulation.io import graph_config_from_payload
+from misinformation_simulation.simulation.topology import _root_to_leaf_paths
 
 
 def initialize_state() -> None:
@@ -74,10 +75,17 @@ def graph_nodes_to_forms(
     normalized_edges = _normalize_edges(nodes_by_id, edges)
     resolved_start_node = _resolve_start_node(nodes_by_id, normalized_edges, start_node_id)
     ordered_node_ids = _topological_path(nodes_by_id, normalized_edges, resolved_start_node)
-    return [
+    forms = [
         normalize_node_form(nodes_by_id[node_id], position)
         for position, node_id in enumerate(ordered_node_ids, start=1)
     ]
+    if len(_root_to_leaf_paths(ordered_node_ids, normalized_edges)) > 1:
+        forms_by_id = {form["node_id"]: form for form in forms}
+        parents = {edge.target: edge.source for edge in normalized_edges}
+        for form in forms:
+            parent = parents.get(form["node_id"])
+            form["parent_uid"] = forms_by_id[parent]["uid"] if parent else ""
+    return forms
 
 
 def move_node(index: int, direction: int) -> None:

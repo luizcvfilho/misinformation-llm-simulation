@@ -154,3 +154,4 @@ class SimulationResult:
     step_results: list[SimulationStepResult]
     summary_path: Path | None = None
     steps_path: Path | None = None
+    path_results: list[SimulationResult] = field(default_factory=list)

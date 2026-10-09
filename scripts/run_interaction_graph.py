@@ -28,7 +28,7 @@ from misinformation_simulation.simulation.io import (  # noqa: E402
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run a chained LLM interaction graph over news items.",
+        description="Run a linear or branching LLM interaction graph over news items.",
     )
     parser.add_argument("--input", required=True, help="Input CSV or JSONL file with news rows.")
     parser.add_argument(
@@ -120,6 +120,8 @@ def main() -> None:
         print(f"summary_path={result.summary_path}")
     if result.steps_path is not None:
         print(f"steps_path={result.steps_path}")
+    for path_result in result.path_results:
+        print(f"path={path_result.summary['chain_code']} summary_path={path_result.summary_path}")
 
 
 if __name__ == "__main__":

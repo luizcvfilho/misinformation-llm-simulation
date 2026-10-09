@@ -78,30 +78,44 @@ def _topological_path(
     edges: list[SimulationEdge],
     start_node_id: str,
 ) -> list[str]:
-    next_by_source: dict[str, str] = {}
+    """Return parent-before-child order for a connected rooted tree."""
+    children: dict[str, list[str]] = {node_id: [] for node_id in nodes_by_id}
     for edge in edges:
-        if edge.source in next_by_source:
-            raise ValueError(
-                f"Node '{edge.source}' has multiple outgoing edges. "
-                "This simulation currently supports a single chain path."
-            )
-        next_by_source[edge.source] = edge.target
+        children[edge.source].append(edge.target)
+    if any(edge.target == start_node_id for edge in edges):
+        raise ValueError("The start node cannot receive text from another node (cycle detected).")
 
-    path = [start_node_id]
-    seen = {start_node_id}
-    current = start_node_id
-
-    while current in next_by_source:
-        current = next_by_source[current]
-        if current in seen:
+    path: list[str] = []
+    seen: set[str] = set()
+    pending = [start_node_id]
+    while pending:
+        node_id = pending.pop()
+        if node_id in seen:
             raise ValueError("Cycle detected in the interaction graph.")
-        seen.add(current)
-        path.append(current)
+        seen.add(node_id)
+        path.append(node_id)
+        pending.extend(reversed(children[node_id]))
 
     if len(path) != len(nodes_by_id):
         missing = [node_id for node_id in nodes_by_id if node_id not in seen]
         raise ValueError(
-            "The interaction graph must form a single connected chain. "
+            "The interaction graph must form a connected rooted tree without cycles. "
             f"Unreachable nodes: {', '.join(missing)}."
         )
     return path
+
+
+def _root_to_leaf_paths(
+    ordered_node_ids: list[str], edges: list[SimulationEdge]
+) -> list[list[str]]:
+    parents = {edge.target: edge.source for edge in edges}
+    sources = {edge.source for edge in edges}
+    paths_by_node: dict[str, list[str]] = {}
+    paths: list[list[str]] = []
+    for node_id in ordered_node_ids:
+        parent = parents.get(node_id)
+        path = [*paths_by_node.get(parent, []), node_id]
+        paths_by_node[node_id] = path
+        if node_id not in sources:
+            paths.append(path)
+    return paths

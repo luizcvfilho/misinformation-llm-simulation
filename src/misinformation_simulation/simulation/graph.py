@@ -29,12 +29,14 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.simulation.paths import project_graph_paths
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.topology import (
     _node_label,
     _normalize_edges,
     _normalize_nodes,
     _resolve_start_node,
+    _root_to_leaf_paths,
     _topological_path,
 )
 from misinformation_simulation.simulation.types import (
@@ -223,7 +225,7 @@ def _record_stdi_metrics(
         setattr(step, f"{component}_{suffix}", metrics[component])
 
 
-GRAPH_STEP_SCHEMA_VERSION = 5
+GRAPH_STEP_SCHEMA_VERSION = 6
 
 
 def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[str, Any]) -> None:
@@ -382,6 +384,15 @@ def run_news_interaction_graph(
     normalized_edges = _normalize_edges(nodes_by_id, edges)
     resolved_start_node = _resolve_start_node(nodes_by_id, normalized_edges, start_node_id)
     ordered_node_ids = _topological_path(nodes_by_id, normalized_edges, resolved_start_node)
+    graph_paths = _root_to_leaf_paths(ordered_node_ids, normalized_edges)
+    parents_by_node = {edge.target: edge.source for edge in normalized_edges}
+    depths_by_node: dict[str, int] = {}
+    for node_id in ordered_node_ids:
+        depths_by_node[node_id] = depths_by_node.get(parents_by_node.get(node_id), 0) + 1
+    branching = len(graph_paths) > 1
+    shared_node_ids = {
+        node_id for node_id in ordered_node_ids if sum(node_id in path for path in graph_paths) > 1
+    }
     resolved_text_column = text_column or choose_news_text_column(df)
     rows_to_process = len(df) if max_rows is None else min(len(df), max_rows)
     _emit_progress(
@@ -441,6 +452,7 @@ def run_news_interaction_graph(
     total_rows = len(target_indexes)
     rows_started = 0
     cancelled = False
+    rewrite_operations_started = 0
 
     for row_position, row_index in enumerate(target_indexes, start=1):
         if _cancel_requested(cancel_check):
@@ -501,18 +513,16 @@ def run_news_interaction_graph(
                 progress_callback,
                 f"[{row_position}/{total_rows}] Failed to prepare '{news_id}': {exc}",
             )
-            for step_index, node_id in enumerate(ordered_node_ids, start=1):
+            for node_id in ordered_node_ids:
                 node = nodes_by_id[node_id]
                 provider_normalized, _ = clients_by_node_id[node.node_id]
                 step_results.append(
                     SimulationStepResult(
                         news_id=news_id,
-                        step_index=step_index,
+                        step_index=depths_by_node[node_id],
                         node_id=node.node_id,
                         node_label=_node_label(node),
-                        source_node_id=(
-                            "original" if step_index == 1 else ordered_node_ids[step_index - 2]
-                        ),
+                        source_node_id=(parents_by_node.get(node_id, "original")),
                         source_node_label="source_unavailable",
                         provider=provider_normalized,
                         model=node.model,
@@ -544,6 +554,7 @@ def run_news_interaction_graph(
                             "rewrite_effective_personality": effective_personalities[node_id],
                             "title": title,
                             "category": category,
+                            "graph_step_id": f"{output_prefix}:{row_position}:{node_id}",
                             **(
                                 flatten_topic_structure(original_structure, prefix="original")
                                 if original_structure_ready
@@ -565,12 +576,36 @@ def run_news_interaction_graph(
         previous_vad = original_vad
         previous_rewritten_text: str | None = None
         cumulative_stdi = 0.0
+        initial_state = (
+            previous_node_id,
+            previous_node_label,
+            previous_text,
+            previous_structure,
+            previous_vad,
+            previous_rewritten_text,
+            cumulative_stdi,
+        )
+        states_by_node: dict[str, tuple] = {}
+        failed_nodes: set[str] = set()
 
-        for step_index, node_id in enumerate(ordered_node_ids, start=1):
+        for execution_index, node_id in enumerate(ordered_node_ids, start=1):
             if _cancel_requested(cancel_check):
                 cancelled = True
                 break
             node = nodes_by_id[node_id]
+            step_index = depths_by_node[node_id]
+            parent_id = parents_by_node.get(node_id)
+            inherited_state = states_by_node.get(parent_id, initial_state)
+            (
+                previous_node_id,
+                previous_node_label,
+                previous_text,
+                previous_structure,
+                previous_vad,
+                previous_rewritten_text,
+                cumulative_stdi,
+            ) = inherited_state
+            states_by_node[node_id] = inherited_state
             provider_normalized, client = clients_by_node_id[node.node_id]
             node_label = _node_label(node)
             _emit_progress(
@@ -621,6 +656,8 @@ def run_news_interaction_graph(
                     "title": title,
                     "category": category,
                     "source_text_column": source_column,
+                    "graph_execution_index": execution_index,
+                    "graph_step_id": f"{output_prefix}:{row_position}:{node_id}",
                     **(
                         {"original_text": original_text, "extraction_title": extraction_title}
                         if stdi_comparison_method in {"dual", "llm"}
@@ -636,7 +673,24 @@ def run_news_interaction_graph(
 
             rewritten_structure_ready = False
             rewritten_vad_ready = False
+            if branching and parent_id in failed_nodes:
+                step_result.source_node_id = parent_id
+                step_result.source_node_label = _node_label(nodes_by_id[parent_id])
+                step_result.source_text = ""
+                step_result.rewrite_status = "blocked"
+                step_result.rewrite_error = (
+                    f"Parent node '{parent_id}' did not complete successfully."
+                )
+                failed_nodes.add(node_id)
+                step_results.append(step_result)
+                if work_progress_callback is not None:
+                    work_progress_callback(
+                        row_position, total_rows, execution_index, len(ordered_node_ids)
+                    )
+                continue
             try:
+                rewrite_operations_started += 1
+                step_result.metadata["rewrite_operation_started"] = True
                 rewritten_text = _generate_rewrite(
                     provider_normalized=provider_normalized,
                     client=client,
@@ -773,6 +827,15 @@ def run_news_interaction_graph(
                 previous_vad = rewritten_vad
                 previous_node_id = node.node_id
                 previous_node_label = node_label
+                states_by_node[node_id] = (
+                    previous_node_id,
+                    previous_node_label,
+                    previous_text,
+                    previous_structure,
+                    previous_vad,
+                    previous_rewritten_text,
+                    cumulative_stdi,
+                )
                 _emit_progress(
                     progress_callback,
                     (
@@ -787,6 +850,7 @@ def run_news_interaction_graph(
                     ),
                 )
             except Exception as exc:
+                failed_nodes.add(node_id)
                 step_result.rewrite_status = "error"
                 step_result.rewrite_error = str(exc)
                 if rewritten_structure_ready and not rewritten_vad_ready:
@@ -807,7 +871,9 @@ def run_news_interaction_graph(
 
             step_results.append(step_result)
             if work_progress_callback is not None:
-                work_progress_callback(row_position, total_rows, step_index, len(ordered_node_ids))
+                work_progress_callback(
+                    row_position, total_rows, execution_index, len(ordered_node_ids)
+                )
 
             if sleep_seconds > 0 and _wait_between_steps(sleep_seconds, cancel_check):
                 cancelled = True
@@ -846,6 +912,7 @@ def run_news_interaction_graph(
         valid_steps = 0
         branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
         branch_valid_steps = {"cluster": 0, "llm_judge": 0}
+        totals_by_node: dict[str, tuple] = {}
         for (
             row_position,
             step,
@@ -865,6 +932,17 @@ def run_news_interaction_graph(
                 branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
                 branch_valid_steps = {"cluster": 0, "llm_judge": 0}
                 last_row_position = row_position
+                totals_by_node = {}
+            if branching:
+                parent_totals = totals_by_node.get(parents_by_node.get(step.node_id))
+                if parent_totals is None:
+                    cumulative_stdi, valid_steps = 0.0, 0
+                    branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
+                    branch_valid_steps = {"cluster": 0, "llm_judge": 0}
+                else:
+                    cumulative_stdi, valid_steps, saved_cumulative, saved_valid = parent_totals
+                    branch_cumulative = saved_cumulative.copy()
+                    branch_valid_steps = saved_valid.copy()
             if stdi_comparison_method in {"dual", "llm"}:
                 _emit_progress(
                     progress_callback,
@@ -926,6 +1004,12 @@ def run_news_interaction_graph(
                         f"stdi_{name}_chain_complete",
                         branch_valid_steps[name] == step.step_index,
                     )
+                totals_by_node[step.node_id] = (
+                    cumulative_stdi,
+                    valid_steps,
+                    branch_cumulative.copy(),
+                    branch_valid_steps.copy(),
+                )
                 continue
             vs_original = calculate_stdi(
                 original,
@@ -956,6 +1040,12 @@ def run_news_interaction_graph(
             if incremental["stdi"] is not None:
                 cumulative_stdi += incremental["stdi"]
             step.stdi_cumulative = round(cumulative_stdi, 6)
+            totals_by_node[step.node_id] = (
+                cumulative_stdi,
+                valid_steps,
+                branch_cumulative.copy(),
+                branch_valid_steps.copy(),
+            )
 
     if _cancel_requested(cancel_check):
         cancelled = True
@@ -1000,6 +1090,11 @@ def run_news_interaction_graph(
                 "vad_model": vad_model_name,
                 "stdi_embedding_model": embedding_model_name,
                 "stdi_comparison_version": comparison_version,
+                "graph_shared_node": step.node_id in shared_node_ids,
+                "graph_step_reused": False,
+                "rewrite_operation_attributed": step.metadata.get(
+                    "rewrite_operation_started", False
+                ),
             }
         )
     summary = {
@@ -1012,6 +1107,14 @@ def run_news_interaction_graph(
         "steps_total": len(step_results),
         "steps_success": success_count,
         "steps_error": error_count,
+        "steps_blocked": sum(step.rewrite_status == "blocked" for step in step_results),
+        "result_kind": "branching_graph" if branching else "chain",
+        "rewrite_operations_started": rewrite_operations_started,
+        "rewrite_reuse_scope": "current_graph_run",
+        "planned_unique_rewrites": total_rows * len(ordered_node_ids),
+        "planned_linear_rewrites": total_rows * sum(len(path) for path in graph_paths),
+        "planned_rewrites_saved": total_rows
+        * (sum(len(path) for path in graph_paths) - len(ordered_node_ids)),
         "vad_model": vad_model_name,
         "stdi_comparison_method": stdi_comparison_method,
         "stdi_comparison_version": comparison_version,
@@ -1026,10 +1129,21 @@ def run_news_interaction_graph(
             "start_node_id": resolved_start_node,
             "ordered_node_ids": ordered_node_ids,
             "edges": [asdict(edge) for edge in normalized_edges],
+            "paths": graph_paths,
         },
         "nodes": [asdict(node) for node in nodes],
     }
     result = SimulationResult(summary=summary, step_results=step_results)
+    if branching:
+        result.path_results = project_graph_paths(result)
+        summary["path_results"] = [
+            {
+                "path_id": path.summary["path_id"],
+                "chain_code": path.summary["chain_code"],
+                "node_ids": path.summary["graph"]["ordered_node_ids"],
+            }
+            for path in result.path_results
+        ]
 
     if persist_results:
         resolved_output_dir = (

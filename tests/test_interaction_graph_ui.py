@@ -242,7 +242,7 @@ def test_graph_nodes_to_forms_orders_nodes_from_edges() -> None:
     assert [node["node_id"] for node in forms] == ["node_b", "node_c", "node_a"]
 
 
-def test_graph_nodes_to_forms_rejects_branching_graphs() -> None:
+def test_graph_nodes_to_forms_preserves_branching_graphs() -> None:
     nodes = [
         SimulationNode(
             node_id="node_a",
@@ -268,8 +268,10 @@ def test_graph_nodes_to_forms_rejects_branching_graphs() -> None:
         SimulationEdge(source="node_a", target="node_c"),
     ]
 
-    with pytest.raises(ValueError, match="single chain path"):
-        graph_nodes_to_forms(nodes, edges, start_node_id="node_a")
+    forms = graph_nodes_to_forms(nodes, edges, start_node_id="node_a")
+    assert [form["node_id"] for form in forms] == ["node_a", "node_b", "node_c"]
+    assert forms[0]["parent_uid"] == ""
+    assert forms[1]["parent_uid"] == forms[2]["parent_uid"] == forms[0]["uid"]
 
 
 def test_result_summaries_group_steps() -> None:

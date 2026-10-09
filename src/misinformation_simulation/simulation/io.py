@@ -13,6 +13,13 @@ from misinformation_simulation.simulation.types import SimulationEdge, Simulatio
 DEFAULT_PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
+def resolve_result_reference(reference: str, summary_path: Path | str) -> Path:
+    path = Path(reference)
+    if not path.is_absolute():
+        path = Path(summary_path).parent / path
+    return path.resolve()
+
+
 def resolve_project_path(path: Path | str, project_root: Path | None = None) -> Path:
     candidate = Path(path)
     if candidate.is_absolute():

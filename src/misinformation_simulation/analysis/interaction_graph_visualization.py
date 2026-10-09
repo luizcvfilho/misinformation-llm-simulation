@@ -12,6 +12,7 @@ from shutil import which
 import pandas as pd
 
 from misinformation_simulation.analysis.stdi_evaluation import BRANCH_ANALYSIS_COLUMNS
+from misinformation_simulation.simulation.io import resolve_result_reference
 from misinformation_simulation.simulation.types import expand_dual_evaluation_record
 
 # Accept compact prefixes and historical run names used by VAD analysis.
@@ -60,6 +61,10 @@ ANALYSIS_STEP_COLUMNS = {
     "metadata_category",
     "metadata_rewrite_mode",
     "metadata_stdi_comparison_version",
+    "metadata_graph_step_id",
+    "metadata_graph_shared_node",
+    "metadata_graph_step_reused",
+    "metadata_rewrite_operation_attributed",
     "theme_drift_incremental",
     "subtopic_drift_incremental",
     "entity_drift_incremental",
@@ -90,7 +95,16 @@ def discover_step_paths(runs_dir: Path) -> list[Path]:
         path
         for path in runs_dir.rglob("*_steps.jsonl")
         if "old_runs" not in {part.casefold() for part in path.relative_to(runs_dir).parts}
+        and not _is_tree_overview(path)
     )
+
+
+def _is_tree_overview(path: Path) -> bool:
+    summary_path = path.with_name(path.name.removesuffix("_steps.jsonl") + "_summary.json")
+    if not summary_path.is_file():
+        return False
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    return isinstance(summary, dict) and summary.get("result_kind") == "branching_graph"
 
 
 def load_interaction_graph_runs(runs_dir: Path | Sequence[Path]) -> InteractionGraphRuns:
@@ -385,6 +399,7 @@ def _run_metadata(path: Path) -> dict[str, str | None]:
     run_id = path.stem.removesuffix("_steps")
     summary_path = path.with_name(f"{run_id}_summary.json")
     graph_name = None
+    summary = {}
     if summary_path.is_file():
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         if isinstance(summary, dict):
@@ -392,11 +407,32 @@ def _run_metadata(path: Path) -> dict[str, str | None]:
             comparison_method = summary.get("stdi_comparison_method")
         else:
             comparison_method = None
+            summary = {}
     else:
         comparison_method = None
     execution_dir = path.parent
     if execution_dir.name == run_id:
         execution_dir = execution_dir.parent
+    if summary.get("result_kind") == "graph_path":
+        parent_summary = resolve_result_reference(
+            summary["parent_graph_summary_path"], summary_path
+        )
+        execution_dir = parent_summary.parent
+        parent_run_id = parent_summary.name.removesuffix("_summary.json")
+        if execution_dir.name == parent_run_id:
+            execution_dir = execution_dir.parent
+        graph_id = f"{parent_run_id}:{summary['path_id']}"
+        return {
+            "execution_id": str(execution_dir),
+            "execution_label": summary.get("execution_name", execution_dir.name),
+            "source_path": str(path),
+            "metadata_stdi_comparison_method": comparison_method,
+            "run_id": graph_id,
+            "batch_id": "unknown",
+            "graph_id": graph_id,
+            "chain_code": summary["chain_code"],
+            "chain_label": f"{summary['chain_code']} · {graph_id}",
+        }
     execution_metadata = {
         "execution_id": str(execution_dir),
         "execution_label": execution_dir.name,
