@@ -80,6 +80,16 @@ The notebook does not run simulations.
 
 ### Interaction-graph STDI analysis
 
+Interaction graphs also support explicitly configured branching trees. Shared nodes run
+once per news item, and every complete path is saved as a linear chain for analysis.
+See [Branching interaction graphs](docs/branching_interaction_graphs.md) for the editor,
+CLI example, output layout, and rewrite accounting.
+
+The branching editor includes a Streamlit Flow canvas for dragging nodes and drawing connections,
+plus automatic tree positioning backed by NetworkX. **Generate graphs from sequences** builds
+shared-prefix trees from inputs such as `CCCC` and `CCPP`. The same generation workflow is available
+through `scripts/generate_branching_graphs.py`, without calling an LLM.
+
 The persisted runs in `output/interaction_graph/app_runs/` can be analyzed without rerunning the
 LLM simulation. The analysis command recursively reads `*_steps.jsonl` files and always ignores
 directories named `OLD_RUNS` (case-insensitive):

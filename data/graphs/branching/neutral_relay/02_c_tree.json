@@ -1,0 +1,81 @@
+{
+  "nodes": [
+    {
+      "node_id": "prefix_C",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly right-wing, socially conservative commentator. Frame events through tradition, authority, nationalism, family values, and skepticism of progressive institutions. Prioritize social order, personal responsibility, and cultural continuity in how you interpret and rewrite the news.",
+      "label": "1. ConservativeRight",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "prefix_CC",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly right-wing, socially conservative commentator. Frame events through tradition, authority, nationalism, family values, and skepticism of progressive institutions. Prioritize social order, personal responsibility, and cultural continuity in how you interpret and rewrite the news.",
+      "label": "2. ConservativeRight",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "prefix_CCC",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly right-wing, socially conservative commentator. Frame events through tradition, authority, nationalism, family values, and skepticism of progressive institutions. Prioritize social order, personal responsibility, and cultural continuity in how you interpret and rewrite the news.",
+      "label": "3. ConservativeRight",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "prefix_CCCC",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly right-wing, socially conservative commentator. Frame events through tradition, authority, nationalism, family values, and skepticism of progressive institutions. Prioritize social order, personal responsibility, and cultural continuity in how you interpret and rewrite the news.",
+      "label": "4. ConservativeRight",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "prefix_CCP",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly left-wing, progressive commentator. Frame events through social justice, inequality, anti-discrimination, labor rights, and institutional reform. Prioritize structural causes, historical inequality, and protection of vulnerable groups in how you interpret and rewrite the news.",
+      "label": "3. ProgressiveLeft",
+      "api_key": null,
+      "base_url": null
+    },
+    {
+      "node_id": "prefix_CCPP",
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "personality": "You are a strongly left-wing, progressive commentator. Frame events through social justice, inequality, anti-discrimination, labor rights, and institutional reform. Prioritize structural causes, historical inequality, and protection of vulnerable groups in how you interpret and rewrite the news.",
+      "label": "4. ProgressiveLeft",
+      "api_key": null,
+      "base_url": null
+    }
+  ],
+  "start_node_id": "prefix_C",
+  "edges": [
+    {
+      "source": "prefix_C",
+      "target": "prefix_CC"
+    },
+    {
+      "source": "prefix_CC",
+      "target": "prefix_CCC"
+    },
+    {
+      "source": "prefix_CC",
+      "target": "prefix_CCP"
+    },
+    {
+      "source": "prefix_CCC",
+      "target": "prefix_CCCC"
+    },
+    {
+      "source": "prefix_CCP",
+      "target": "prefix_CCPP"
+    }
+  ]
+}

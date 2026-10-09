@@ -15,6 +15,12 @@ files directly inside the selected folder and does not combine the two sets.
 - [Current eight-chain set](neutral_relay/README.md)
 - [Previous 16-chain set](legacy/README.md)
 
+Equivalent prefix-sharing trees for both sets are available in
+[`../branching/`](../branching/README.md). Import `data/graphs/branching/neutral_relay`
+or `data/graphs/branching/legacy` directly to add the four trees of that set to
+the queue. They retain every original persona sequence while sharing identical
+prefixes within each tree.
+
 To regenerate only the current set from the current project defaults:
 
 ```powershell
