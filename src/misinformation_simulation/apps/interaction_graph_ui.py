@@ -12,8 +12,18 @@ from misinformation_simulation.enums import (
     Models,
     Provider,
 )
-from misinformation_simulation.simulation import SimulationNode, SimulationStepResult
+from misinformation_simulation.simulation import (
+    SimulationEdge,
+    SimulationNode,
+    SimulationStepResult,
+)
 from misinformation_simulation.simulation.io import build_graph_config_payload
+from misinformation_simulation.simulation.topology import (
+    _normalize_edges,
+    _normalize_nodes,
+    _resolve_start_node,
+    _topological_path,
+)
 
 CUSTOM_OPTION = "__custom__"
 PREDEFINED_PERSONALITIES = {
@@ -48,6 +58,24 @@ def create_default_node_form(position: int) -> dict[str, str]:
         "personality_preset": preset_name,
         "personality_custom": "",
     }
+
+
+def append_editor_node(
+    forms: list[dict[str, str]],
+    *,
+    parent_uid: str | None = None,
+) -> dict[str, str]:
+    position = len(forms) + 1
+    used_ids = {form["node_id"] for form in forms}
+    while f"node_{position}" in used_ids:
+        position += 1
+    form = create_default_node_form(position)
+    if parent_uid is not None or any("parent_uid" in item for item in forms):
+        form["parent_uid"] = (
+            parent_uid if parent_uid is not None else (forms[-1]["uid"] if forms else "")
+        )
+    forms.append(form)
+    return form
 
 
 def normalize_node_form(node: SimulationNode, position: int) -> dict[str, str]:
@@ -115,6 +143,57 @@ def build_linear_graph_payload(node_forms: list[dict[str, str]]) -> dict[str, An
     return build_graph_config_payload(nodes, start_node_id=start_node_id)
 
 
+def build_editor_graph_payload(node_forms: list[dict[str, str]]) -> dict[str, Any]:
+    if not any("parent_uid" in form for form in node_forms):
+        return build_linear_graph_payload(node_forms)
+    nodes = build_simulation_nodes(node_forms)
+    ids_by_uid = {form["uid"]: node.node_id for form, node in zip(node_forms, nodes, strict=True)}
+    edges = [
+        SimulationEdge(ids_by_uid[form["parent_uid"]], node.node_id)
+        for form, node in zip(node_forms, nodes, strict=True)
+        if form.get("parent_uid")
+    ]
+    roots = [
+        node.node_id
+        for form, node in zip(node_forms, nodes, strict=True)
+        if not form.get("parent_uid")
+    ]
+    payload = build_graph_config_payload(
+        nodes,
+        start_node_id=roots[0] if len(roots) == 1 else None,
+        edges=edges,
+    )
+    positions = {
+        form["node_id"]: {"x": float(form["flow_x"]), "y": float(form["flow_y"])}
+        for form in node_forms
+        if "flow_x" in form and "flow_y" in form
+    }
+    if positions:
+        payload["layout"] = {"positions": positions}
+    return payload
+
+
+def restore_editor_layout(forms: list[dict[str, str]], payload: dict[str, Any]) -> None:
+    from math import isfinite
+
+    positions = payload.get("layout", {}).get("positions", {})
+    for form in forms:
+        position = positions.get(form["node_id"])
+        if position is not None:
+            x, y = float(position["x"]), float(position["y"])
+            if not isfinite(x) or not isfinite(y):
+                raise ValueError("Graph layout coordinates must be finite numbers.")
+            form.update(flow_x=str(x), flow_y=str(y))
+
+
+def set_tree_mode(node_forms: list[dict[str, str]], enabled: bool) -> None:
+    for index, form in enumerate(node_forms):
+        if enabled:
+            form.setdefault("parent_uid", node_forms[index - 1]["uid"] if index else "")
+        else:
+            form.pop("parent_uid", None)
+
+
 def validate_node_forms(node_forms: list[dict[str, str]]) -> list[str]:
     errors: list[str] = []
     if not node_forms:
@@ -142,6 +221,17 @@ def validate_node_forms(node_forms: list[dict[str, str]]) -> list[str]:
             errors.append(f"Node {index} must define a model.")
         if not personality:
             errors.append(f"Node {index} must define a personality.")
+    if not errors:
+        try:
+            payload = build_editor_graph_payload(node_forms)
+            nodes_by_id = _normalize_nodes(build_simulation_nodes(node_forms))
+            edges = _normalize_edges(
+                nodes_by_id, [SimulationEdge(**edge) for edge in payload.get("edges", [])]
+            )
+            start = _resolve_start_node(nodes_by_id, edges, payload.get("start_node_id"))
+            _topological_path(nodes_by_id, edges, start)
+        except (ValueError, KeyError) as exc:
+            errors.append(f"Invalid graph topology: {exc}")
     return errors
 
 

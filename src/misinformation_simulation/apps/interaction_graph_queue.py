@@ -10,7 +10,9 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
 from misinformation_simulation.apps.interaction_graph_ui import (
-    build_linear_graph_payload,
+    build_editor_graph_payload,
+    restore_editor_layout,
+    set_tree_mode,
     validate_node_forms,
 )
 from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
@@ -67,6 +69,9 @@ def add_graphs_from_directory(
             if not nodes:
                 raise ValueError("Graph config does not contain nodes.")
             forms = graph_nodes_to_forms(nodes, edges, start_node_id)
+            restore_editor_layout(forms, payload)
+            if payload.get("layout"):
+                set_tree_mode(forms, True)
             add_graph(queue, path.stem, forms)
         except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
             errors.append(f"{path.name}: {exc}")
@@ -84,7 +89,7 @@ def build_graph_queue_archive(queue: list[dict[str, Any]]) -> bytes:
                 "_", 1
             )[1]
             file_name = f"{index:0{position_width}d}_{slug}.json"
-            payload = build_linear_graph_payload(graph["nodes"])
+            payload = build_editor_graph_payload(graph["nodes"])
             archive.writestr(
                 file_name, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
             )

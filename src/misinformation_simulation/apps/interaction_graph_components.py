@@ -10,13 +10,25 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     EVALUATION_LABELS,
     available_evaluations,
 )
-from misinformation_simulation.apps.interaction_graph_results import evaluation_result_bundle
-from misinformation_simulation.apps.interaction_graph_state import move_node, remove_node
+from misinformation_simulation.apps.interaction_graph_preview import render_graph_preview
+from misinformation_simulation.apps.interaction_graph_results import (
+    evaluation_result_bundle,
+    load_saved_result,
+)
+from misinformation_simulation.apps.interaction_graph_state import (
+    graph_nodes_to_forms,
+    move_node,
+    remove_node,
+)
 from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
+)
+from misinformation_simulation.simulation.io import (
+    graph_config_from_payload,
+    resolve_result_reference,
 )
 
 
@@ -37,9 +49,10 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             move_node(index, 1)
             st.rerun()
         if action_cols[3].button(
-            "Remove",
+            "Remove subtree" if "parent_uid" in node_form else "Remove",
             key=f"remove_{uid}",
-            disabled=len(st.session_state.graph_nodes) == 1,
+            disabled=len(st.session_state.graph_nodes) == 1
+            or ("parent_uid" in node_form and not node_form["parent_uid"]),
             width="stretch",
         ):
             remove_node(index)
@@ -68,6 +81,23 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             index=provider_index,
             key=f"provider_{uid}",
         )
+
+        if "parent_uid" in node_form:
+            forms_by_uid = {form["uid"]: form for form in st.session_state.graph_nodes}
+            options = [""] + [candidate for candidate in forms_by_uid if candidate != uid]
+            current_parent = node_form.get("parent_uid", "")
+            node_form["parent_uid"] = st.selectbox(
+                "Receive text from",
+                options,
+                index=options.index(current_parent) if current_parent in options else 0,
+                format_func=lambda value: (
+                    "Source news (root)"
+                    if not value
+                    else f"{forms_by_uid[value]['label']} ({forms_by_uid[value]['node_id']})"
+                ),
+                key=f"parent_uid_{uid}",
+                help="Select the parent. Several children can receive the same parent's output.",
+            )
 
         model_default = node_form.get("model", "")
         model_options = AVAILABLE_MODELS + [CUSTOM_OPTION]
@@ -128,6 +158,25 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
 
 
 def render_result_bundle(run_bundle: dict[str, Any]) -> None:
+    path_results = run_bundle["summary"].get("path_results", [])
+    if path_results:
+        labels = {
+            path["path_id"]: f"{path['chain_code']} ({path['path_id']})" for path in path_results
+        }
+        selected_path = st.selectbox(
+            "Result view",
+            [""] + list(labels),
+            format_func=lambda value: labels[value] if value else "Graph overview (unique nodes)",
+            key=f"result_path_{run_bundle['output_prefix']}",
+        )
+        if selected_path:
+            descriptor = next(path for path in path_results if path["path_id"] == selected_path)
+            path_bundle = load_saved_result(
+                resolve_result_reference(descriptor["summary_path"], run_bundle["summary_path"])
+            )
+            if run_bundle.get("stdi_evaluation"):
+                path_bundle = evaluation_result_bundle(path_bundle, run_bundle["stdi_evaluation"])
+            run_bundle = path_bundle
     if "stdi_evaluation" not in run_bundle:
         evaluations = available_evaluations(
             run_bundle["steps_df"], run_bundle["summary"].get("stdi_comparison_method")
@@ -194,6 +243,23 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
 
     if steps_df.empty:
         st.info("This simulation has no completed step records.")
+        return
+
+    if summary.get("result_kind") == "branching_graph":
+        graph = summary["graph"]
+        payload = {
+            "nodes": summary["nodes"],
+            "edges": graph["edges"],
+            "start_node_id": graph["start_node_id"],
+        }
+        nodes, edges, start = graph_config_from_payload(payload)
+        render_graph_preview(graph_nodes_to_forms(nodes, edges, start))
+        st.caption(
+            f"Rewrite operations started: {summary['rewrite_operations_started']} · "
+            f"Planned rewrites saved: {summary['planned_rewrites_saved']}"
+        )
+        st.dataframe(node_summary_df, width="stretch")
+        st.dataframe(steps_df, width="stretch")
         return
 
     st.subheader("Node performance")

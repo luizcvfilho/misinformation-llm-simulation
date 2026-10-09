@@ -16,6 +16,7 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     EVALUATION_LABELS,
     available_evaluations,
 )
+from misinformation_simulation.apps.interaction_graph_canvas import render_graph_canvas
 from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_comparison_dataframe,
 )
@@ -23,8 +24,8 @@ from misinformation_simulation.apps.interaction_graph_components import (
     render_node_editor,
     render_result_bundle,
 )
+from misinformation_simulation.apps.interaction_graph_generator import render_graph_generator
 from misinformation_simulation.apps.interaction_graph_io import select_local_directory
-from misinformation_simulation.apps.interaction_graph_preview import render_graph_preview
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
     add_graphs_from_directory,
@@ -44,7 +45,8 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
-    build_linear_graph_payload,
+    build_editor_graph_payload,
+    set_tree_mode,
     validate_node_forms,
 )
 from misinformation_simulation.apps.interaction_graph_workspace import open_run_analysis
@@ -55,12 +57,13 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 15
+GRAPH_OUTPUT_LAYOUT_VERSION = 20
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
 
 def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> None:
+    render_graph_generator()
     dataset_info_col, execution_col = st.columns([1.2, 1])
 
     with dataset_info_col:
@@ -72,15 +75,25 @@ def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> Non
     editor_header_cols = st.columns([3, 1], vertical_alignment="center")
     editor_header_cols[0].subheader("Graph editor")
     export_placeholder = editor_header_cols[1].empty()
-    for index, node_form in enumerate(st.session_state.graph_nodes):
-        render_node_editor(index, node_form)
+    set_tree_mode(st.session_state.graph_nodes, True)
+    editor = st.radio(
+        "Graph editing",
+        ["Visual canvas", "Node forms"],
+        horizontal=True,
+        key="graph_editing_mode",
+    )
+    if editor == "Visual canvas":
+        render_graph_canvas()
+    else:
+        for index, node_form in enumerate(st.session_state.graph_nodes):
+            render_node_editor(index, node_form)
 
-    graph_payload = build_linear_graph_payload(st.session_state.graph_nodes)
+    graph_payload = build_editor_graph_payload(st.session_state.graph_nodes)
     with export_placeholder.container():
         _render_graph_export(graph_payload)
 
-    st.subheader("Graph preview")
-    render_graph_preview(st.session_state.graph_nodes)
+    for error in validate_node_forms(st.session_state.graph_nodes):
+        st.error(error)
     st.caption(f"Start node: `{graph_payload.get('start_node_id', '-')}`")
 
     _render_graph_queue()

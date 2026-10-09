@@ -1,20 +1,36 @@
 from __future__ import annotations
 
+import json
+from io import BytesIO
 from shutil import copytree
 from threading import Event
+from zipfile import ZipFile
 
 import numpy as np
 import pandas as pd
 import pytest
+from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.analysis.interaction_graph_visualization import (
     discover_step_paths,
     load_interaction_graph_runs,
 )
+from misinformation_simulation.apps import interaction_graph_analysis as analysis
+from misinformation_simulation.apps import interaction_graph_sections as sections
+from misinformation_simulation.apps.interaction_graph_queue import (
+    add_graph,
+    build_graph_queue_archive,
+)
 from misinformation_simulation.apps.interaction_graph_results import load_saved_result
+from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
+from misinformation_simulation.apps.interaction_graph_ui import (
+    build_editor_graph_payload,
+    validate_node_forms,
+)
 from misinformation_simulation.enums import DefaultPersonality as Persona
 from misinformation_simulation.simulation import graph
 from misinformation_simulation.simulation.io import (
+    graph_config_from_payload,
     resolve_result_reference,
 )
 from misinformation_simulation.simulation.topology import (
@@ -233,6 +249,23 @@ def test_copied_result_folder_preserves_path_references_and_execution_grouping(
     assert runs.steps.execution_id.unique().tolist() == [str(copied.resolve())]
 
 
+def test_editor_import_export_and_queue_archive_preserve_explicit_branches():
+    nodes, edges = tree()
+    forms = graph_nodes_to_forms(list(reversed(nodes)), edges, "c1")
+    assert validate_node_forms(forms) == []
+    payload = build_editor_graph_payload(forms)
+    assert payload["edges"] == [{"source": edge.source, "target": edge.target} for edge in edges]
+    forms[0]["node_id"] = "renamed-root"
+    assert build_editor_graph_payload(forms)["edges"][0]["source"] == "renamed-root"
+    queue = []
+    add_graph(queue, "Tree", forms)
+    with ZipFile(BytesIO(build_graph_queue_archive(queue))) as archive:
+        saved = json.loads(archive.read(archive.namelist()[0]))
+    restored_nodes, restored_edges, start = graph_config_from_payload(saved)
+    restored_forms = graph_nodes_to_forms(restored_nodes, restored_edges, start)
+    assert build_editor_graph_payload(restored_forms) == saved
+
+
 def test_arbitrary_fanout_nested_branches_and_different_depths():
     nodes, edges = tree()
     for node, parent in [("extra", "c2"), ("nested-a", "p3"), ("nested-b", "nested-a")]:
@@ -264,3 +297,71 @@ def test_invalid_topology_fails_before_creating_model_clients(monkeypatch, kind)
             edges=edges,
             start_node_id="c1",
         )
+
+
+def test_tree_editor_can_reconnect_nodes_and_report_cycles(monkeypatch):
+    nodes, edges = tree()
+    forms = graph_nodes_to_forms(nodes, edges, "c1")
+    monkeypatch.setattr(sections, "_render_execution_settings", lambda *_args: {})
+    monkeypatch.setattr(sections, "_render_graph_queue", lambda: None)
+    monkeypatch.setattr(sections, "_render_run_controls", lambda *_args: None)
+    monkeypatch.setattr(sections, "_render_graph_export", lambda *_args: None)
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_sections import "
+        "render_configuration_tab\nrender_configuration_tab(None, 'test')"
+    )
+    app.session_state["graph_nodes"] = forms
+    app.run(timeout=45)
+    assert not app.exception
+    app.radio(key="graph_editing_mode").set_value("Node forms").run(timeout=45)
+    assert app.session_state["graph_nodes"][4]["parent_uid"] == forms[1]["uid"]
+    app.selectbox(key=f"parent_uid_{forms[4]['uid']}").set_value(forms[2]["uid"]).run(timeout=45)
+    assert not app.exception
+    assert app.session_state["graph_nodes"][4]["parent_uid"] == forms[2]["uid"]
+    app.selectbox(key=f"parent_uid_{forms[0]['uid']}").set_value(forms[5]["uid"]).run(timeout=45)
+    assert not app.exception
+    assert app.error
+
+
+def test_result_inspector_switches_between_graph_and_linear_paths(tmp_path, stub_models):
+    result = run_tree(tmp_path)
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_results import load_saved_result\n"
+        "from misinformation_simulation.apps.interaction_graph_components "
+        "import render_result_bundle\n"
+        "from pathlib import Path\n"
+        "render_result_bundle(load_saved_result(Path(st.session_state['summary_path'])))"
+    )
+    app.session_state["summary_path"] = str(result.summary_path)
+    app.run(timeout=45)
+    assert not app.exception
+    assert next(metric for metric in app.metric if metric.label == "Total steps").value == "6"
+    app.selectbox(key="result_path_simulation").set_value("02_ccpp").run(timeout=45)
+    assert not app.exception
+    assert next(metric for metric in app.metric if metric.label == "Total steps").value == "4"
+    assert any("02_ccpp_summary.json" in caption.value for caption in app.caption)
+
+
+def test_analyze_graph_opens_all_paths_in_one_execution(tmp_path, stub_models, monkeypatch):
+    result = run_tree(tmp_path)
+    for name in (
+        "_render_overview",
+        "_render_news_group_analysis",
+        "_render_persona_analysis",
+        "_render_transition_analysis",
+        "_render_scenario_contrasts",
+        "_render_case_explorer",
+    ):
+        monkeypatch.setattr(analysis, name, lambda *_args: None)
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_analysis import render_analysis\n"
+        "render_analysis()"
+    )
+    app.session_state["_analysis_requested_steps"] = str(
+        result.path_results[0].steps_path.resolve()
+    )
+    app.run(timeout=45)
+    assert not app.exception
+    assert len(app.multiselect(key="analysis_main_chains").value) == 2
+    assert app.selectbox(key="analysis_main_active_execution").value == str(tmp_path.resolve())

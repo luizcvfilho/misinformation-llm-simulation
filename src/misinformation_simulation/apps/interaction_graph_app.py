@@ -21,6 +21,7 @@ from misinformation_simulation.apps import (  # noqa: E402
     interaction_graph_components,
     interaction_graph_dataset_builder,
     interaction_graph_io,
+    interaction_graph_preview,
     interaction_graph_queue,
     interaction_graph_results,
     interaction_graph_run_job,
@@ -28,9 +29,7 @@ from misinformation_simulation.apps import (  # noqa: E402
     interaction_graph_sidebar,
     interaction_graph_state,
     interaction_graph_ui,
-)
-from misinformation_simulation.apps.interaction_graph_workspace import (  # noqa: E402
-    retain_workspace_widgets,
+    interaction_graph_workspace,
 )
 from misinformation_simulation.simulation import graph as simulation_graph  # noqa: E402
 
@@ -48,25 +47,40 @@ def _refresh_graph_backend_if_stale() -> None:
     backend_module = simulation_graph
     if getattr(
         simulation_graph, "GRAPH_STEP_SCHEMA_VERSION", 0
-    ) < 5 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
+    ) < 6 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
         importlib.reload(sys.modules["misinformation_simulation.simulation.types"])
+        importlib.reload(sys.modules["misinformation_simulation.simulation.io"])
+        importlib.reload(sys.modules["misinformation_simulation.simulation.topology"])
+        importlib.reload(sys.modules["misinformation_simulation.simulation.paths"])
+        importlib.reload(sys.modules["misinformation_simulation.simulation.persistence"])
         importlib.reload(sys.modules["misinformation_simulation.topic_drift.structured_comparison"])
         backend_module = importlib.reload(simulation_graph)
     current_runner = backend_module.run_news_interaction_graph
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 15:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 20:
         importlib.reload(interaction_graph_ui)
+        importlib.reload(interaction_graph_workspace)
+        importlib.reload(interaction_graph_dataset_builder)
+        importlib.reload(interaction_graph_preview)
         importlib.reload(interaction_graph_results)
         importlib.reload(interaction_graph_categories)
         importlib.reload(interaction_graph_components)
         importlib.reload(interaction_graph_io)
         importlib.reload(interaction_graph_state)
         importlib.reload(interaction_graph_queue)
+        for module_name in ("interaction_graph_canvas", "interaction_graph_generator"):
+            module = importlib.import_module(f"misinformation_simulation.apps.{module_name}")
+            importlib.reload(module)
         importlib.reload(interaction_graph_run_job)
         importlib.reload(interaction_graph_sidebar)
         importlib.reload(interaction_graph_sections)
+        analysis_module = sys.modules.get(
+            "misinformation_simulation.apps.interaction_graph_analysis"
+        )
+        if analysis_module is not None:
+            importlib.reload(analysis_module)
     interaction_graph_sections.run_news_interaction_graph = current_runner
 
 
@@ -79,7 +93,8 @@ def main() -> None:
     )
     interaction_graph_state.initialize_state()
 
-    retain_workspace_widgets()
+    interaction_graph_workspace.retain_workspace_widgets()
+
     simulation_page = st.Page(
         render_simulation_page,
         title="Simulation",
@@ -113,11 +128,6 @@ def render_simulation_page() -> None:
         "Configure a chain of personas, run the graph simulation over a news dataset, "
         "and inspect topic drift and rewrite quality without leaving the browser."
     )
-    st.info(
-        "The current backend supports a single connected chain of nodes. The UI reflects that "
-        "constraint while still letting you add, reorder, and compare as many nodes as you need."
-    )
-
     df, dataset_label = interaction_graph_sections.render_sidebar()
     config_tab, dataset_tab, results_tab = st.tabs(["Configuration", "Dataset builder", "Results"])
 

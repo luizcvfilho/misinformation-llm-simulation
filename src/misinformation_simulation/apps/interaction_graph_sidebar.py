@@ -16,7 +16,6 @@ from misinformation_simulation.apps.interaction_graph_state import (
     import_graph_payload,
     reset_graph,
 )
-from misinformation_simulation.apps.interaction_graph_ui import create_default_node_form
 
 
 def render_sidebar() -> tuple[pd.DataFrame | None, str]:
@@ -155,11 +154,13 @@ def _render_graph_importer() -> None:
 
 
 def _render_graph_actions() -> None:
+    from misinformation_simulation.apps.interaction_graph_ui import append_editor_node
+
     sidebar_action_cols = st.columns(2)
     if sidebar_action_cols[0].button("Add node", width="stretch"):
-        st.session_state.graph_nodes.append(
-            create_default_node_form(len(st.session_state.graph_nodes) + 1)
-        )
+        forms = st.session_state.graph_nodes
+        selected = st.session_state.get("graph_canvas_selected")
+        append_editor_node(forms, parent_uid=selected)
         st.rerun()
     if sidebar_action_cols[1].button("Reset graph", width="stretch"):
         reset_graph()

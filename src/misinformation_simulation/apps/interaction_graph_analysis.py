@@ -48,6 +48,7 @@ from misinformation_simulation.analysis.interaction_graph_plotly import (
 from misinformation_simulation.analysis.interaction_graph_visualization import (
     METRIC_LABELS,
     STDI_COMPONENT_COLUMNS,
+    _run_metadata,
     available_metrics,
     discover_step_paths,
     load_interaction_graph_runs,
@@ -72,7 +73,7 @@ from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
-ANALYSIS_CACHE_SCHEMA_VERSION = 8
+ANALYSIS_CACHE_SCHEMA_VERSION = 9
 PERSONA_METRIC_LABELS = {
     "stdi_incremental": "STDI incremental",
     **INCREMENTAL_COMPONENT_COLUMNS,
@@ -154,9 +155,7 @@ def render_analysis() -> None:
     requested_evaluation = st.session_state.pop("_analysis_requested_evaluation", None)
     if requested_path:
         path = Path(requested_path)
-        execution_dir = path.parent
-        if execution_dir.name == path.stem.removesuffix("_steps"):
-            execution_dir = execution_dir.parent
+        execution_dir = Path(_run_metadata(path)["execution_id"])
         st.session_state.analysis_runs_folders = str(execution_dir)
     runs_dirs = _render_run_folder_input()
     if not runs_dirs:

@@ -14,12 +14,12 @@ import pandas as pd
 
 from misinformation_simulation.apps.interaction_graph_queue import output_prefix_for_graph
 from misinformation_simulation.apps.interaction_graph_ui import (
-    build_linear_graph_payload,
+    build_editor_graph_payload,
     build_news_summary_dataframe,
     build_node_summary_dataframe,
-    build_simulation_nodes,
     steps_to_dataframe,
 )
+from misinformation_simulation.simulation.io import graph_config_from_payload
 from misinformation_simulation.simulation.types import SimulationResult
 
 GraphRunner = Callable[..., SimulationResult]
@@ -132,11 +132,13 @@ def _run_graph_queue(
             report_work(index, 0, 0)
             try:
                 run_dir, _ = _reserve_output_directory(batch_dir, prefix)
-                nodes = build_simulation_nodes(graph["nodes"])
+                graph_payload = build_editor_graph_payload(graph["nodes"])
+                nodes, edges, start_node_id = graph_config_from_payload(graph_payload)
                 result = runner(
                     df=df,
                     nodes=nodes,
-                    start_node_id=nodes[0].node_id,
+                    edges=edges,
+                    start_node_id=start_node_id,
                     text_column=settings["text_column"],
                     title_column=settings["title_column"],
                     news_id_column=settings["news_id_column"] or None,
@@ -166,6 +168,13 @@ def _run_graph_queue(
                 )
                 result.summary["graph_name"] = name
                 result.summary["execution_name"] = batch_dir.name
+                for path_result in getattr(result, "path_results", []):
+                    path_result.summary["execution_name"] = batch_dir.name
+                    if path_result.summary_path is not None:
+                        path_result.summary_path.write_text(
+                            json.dumps(path_result.summary, ensure_ascii=False, indent=2),
+                            encoding="utf-8",
+                        )
                 if result.summary_path is not None:
                     result.summary_path.write_text(
                         json.dumps(result.summary, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -185,7 +194,7 @@ def _run_graph_queue(
                     "node_summary_df": build_node_summary_dataframe(steps_df),
                     "news_summary_df": build_news_summary_dataframe(steps_df),
                     "output_prefix": prefix,
-                    "graph_payload": build_linear_graph_payload(graph["nodes"]),
+                    "graph_payload": graph_payload,
                 }
                 job.events.put(("bundle", bundle))
                 if status == "cancelled":

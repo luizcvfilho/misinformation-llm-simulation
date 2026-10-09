@@ -1,13 +1,28 @@
 from __future__ import annotations
 
+import json
 from html import escape
 
 import streamlit as st
+
+from misinformation_simulation.apps.interaction_graph_ui import build_editor_graph_payload
+from misinformation_simulation.simulation.io import graph_config_from_payload
+from misinformation_simulation.simulation.paths import PERSONALITY_CODES
+from misinformation_simulation.simulation.topology import (
+    _normalize_edges,
+    _normalize_nodes,
+    _resolve_start_node,
+    _root_to_leaf_paths,
+    _topological_path,
+)
 
 
 def render_graph_preview(node_forms: list[dict[str, str]]) -> None:
     if not node_forms:
         st.info("Add nodes to preview the interaction chain.")
+        return
+    if any("parent_uid" in form for form in node_forms):
+        render_tree_preview(node_forms)
         return
 
     preview_parts = [
@@ -295,3 +310,34 @@ def render_graph_preview(node_forms: list[dict[str, str]]) -> None:
         """
     )
     st.html("".join(preview_parts))
+
+
+def render_tree_preview(node_forms: list[dict[str, str]]) -> None:
+    payload = build_editor_graph_payload(node_forms)
+    nodes, raw_edges, start = graph_config_from_payload(payload)
+    try:
+        nodes_by_id = _normalize_nodes(nodes)
+        edges = _normalize_edges(nodes_by_id, raw_edges)
+        start = _resolve_start_node(nodes_by_id, edges, start)
+        order = _topological_path(nodes_by_id, edges, start)
+    except ValueError as exc:
+        st.info(f"Complete the tree connections to preview the graph: {exc}")
+        return
+    dot = ["digraph relay {", "rankdir=LR;", "node [shape=box];"]
+    for node in nodes:
+        label = f"{node.label or node.node_id}\n{node.node_id}\n{node.model}"
+        dot.append(f"{json.dumps(node.node_id)} [label={json.dumps(label)}];")
+    for edge in edges:
+        dot.append(f"{json.dumps(edge.source)} -> {json.dumps(edge.target)};")
+    dot.append("}")
+    st.graphviz_chart("\n".join(dot), width="stretch")
+    paths = _root_to_leaf_paths(order, edges)
+    for index, path in enumerate(paths, start=1):
+        code = "".join(PERSONALITY_CODES.get(nodes_by_id[node].personality, "X") for node in path)
+        labels = " → ".join(nodes_by_id[node].label or node for node in path)
+        st.caption(f"Path {index}: {code} · {labels}")
+    saved = sum(len(path) for path in paths) - len(nodes)
+    st.caption(
+        f"{len(nodes)} rewrites per news item · {len(paths)} complete paths · "
+        f"{saved} rewrites saved compared with running the paths separately."
+    )

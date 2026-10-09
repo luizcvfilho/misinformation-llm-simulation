@@ -14,6 +14,8 @@ from misinformation_simulation.apps.interaction_graph_io import (
 from misinformation_simulation.apps.interaction_graph_ui import (
     create_default_node_form,
     normalize_node_form,
+    restore_editor_layout,
+    set_tree_mode,
 )
 from misinformation_simulation.config.interaction_chains import (
     DEFAULT_INTERACTION_CHAINS_PATH,
@@ -99,15 +101,45 @@ def move_node(index: int, direction: int) -> None:
 def remove_node(index: int) -> None:
     if len(st.session_state.graph_nodes) == 1:
         return
-    st.session_state.graph_nodes.pop(index)
+    forms = st.session_state.graph_nodes
+    node = forms[index]
+    if "parent_uid" in node:
+        if not node["parent_uid"]:
+            return
+        removed = {node["uid"]}
+        while True:
+            descendants = {form["uid"] for form in forms if form.get("parent_uid") in removed}
+            if descendants <= removed:
+                break
+            removed.update(descendants)
+        st.session_state.graph_nodes = [form for form in forms if form["uid"] not in removed]
+    else:
+        forms.pop(index)
 
 
 def reset_graph() -> None:
     st.session_state.graph_nodes = load_initial_graph_nodes()
+    clear_graph_canvas()
 
 
 def import_graph_payload(payload: dict[str, Any]) -> None:
     nodes, edges, start_node_id = graph_config_from_payload(payload)
     if not nodes:
         raise ValueError("The selected graph config does not contain nodes.")
-    st.session_state.graph_nodes = graph_nodes_to_forms(nodes, edges, start_node_id)
+    forms = graph_nodes_to_forms(nodes, edges, start_node_id)
+    restore_editor_layout(forms, payload)
+    if payload.get("layout"):
+        set_tree_mode(forms, True)
+    st.session_state.graph_nodes = forms
+    clear_graph_canvas()
+
+
+def clear_graph_canvas() -> None:
+    for key in (
+        "_graph_flow_state",
+        "_graph_flow_source",
+        "_graph_flow_error",
+        "_graph_flow_clicked",
+        "graph_canvas_selected",
+    ):
+        st.session_state.pop(key, None)

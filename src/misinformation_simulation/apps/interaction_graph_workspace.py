@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import streamlit as st
+
+from misinformation_simulation.simulation.io import resolve_result_reference
 
 # Keep page widgets alive when Streamlit removes the inactive page's widgets.
 PERSISTENT_WIDGET_KEYS = (
@@ -40,6 +43,12 @@ PERSISTENT_WIDGET_KEYS = (
     "graph_config_path",
     "graph_queue_folder_path",
     "graph_rewrite_mode",
+    "graph_editing_mode",
+    "graph_canvas_new_persona",
+    "graph_canvas_selected",
+    "graph_generator_sequences",
+    "graph_generator_model",
+    "graph_generator_provider",
     "news_group_case_order",
     "news_group_metric",
     "news_group_proximity_measure",
@@ -82,6 +91,7 @@ PERSISTENT_WIDGET_KEYS = (
     "vad_method",
 )
 PERSISTENT_WIDGET_PREFIXES = (
+    "result_path_",
     "label_",
     "model_custom_",
     "model_option_",
@@ -91,6 +101,7 @@ PERSISTENT_WIDGET_PREFIXES = (
     "personality_mode_",
     "personality_preset_",
     "provider_",
+    "parent_uid_",
 )
 
 
@@ -102,6 +113,11 @@ def retain_workspace_widgets() -> None:
 
 def open_run_analysis(summary_path: str, evaluation: str | None = None) -> None:
     path = Path(summary_path).expanduser().resolve()
+    if path.is_file():
+        summary = json.loads(path.read_text(encoding="utf-8"))
+        paths = summary.get("path_results", [])
+        if paths:
+            path = resolve_result_reference(paths[0]["summary_path"], path)
     st.session_state["_analysis_requested_steps"] = str(
         path.with_name(path.name.removesuffix("_summary.json") + "_steps.jsonl")
     )
