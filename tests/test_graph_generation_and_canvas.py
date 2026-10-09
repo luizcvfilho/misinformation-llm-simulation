@@ -151,6 +151,26 @@ def test_visual_canvas_node_label_edits_update_configuration():
     assert updated[1]["personality_preset"] == forms[1]["personality_preset"]
 
 
+def test_idle_canvas_reruns_do_not_resend_graph_or_reset_positions():
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_state import initialize_state\n"
+        "from misinformation_simulation.apps.interaction_graph_canvas import render_graph_canvas\n"
+        "initialize_state()\nrender_graph_canvas()"
+    ).run(timeout=45)
+    assert not app.exception
+    state = app.session_state["_graph_flow_state"]
+    state.nodes[1].position = {"x": 912.5, "y": 401.0}
+    state.selected_id = state.nodes[1].id
+    timestamp = state.timestamp
+    for _ in range(3):
+        app.run(timeout=45)
+        assert not app.exception
+        returned = app.session_state["_graph_flow_state"]
+        assert returned.timestamp == timestamp
+        assert returned.nodes[1].position == {"x": 912.5, "y": 401.0}
+        assert returned.selected_id == state.nodes[1].id
+
+
 def test_generator_and_canvas_controls_work_in_configuration_page(monkeypatch):
     monkeypatch.setattr(sections, "_render_graph_queue", lambda: None)
     monkeypatch.setattr(sections, "_render_run_controls", lambda *_args: None)

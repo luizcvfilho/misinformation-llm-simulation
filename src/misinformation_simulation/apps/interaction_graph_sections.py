@@ -60,7 +60,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 21
+GRAPH_OUTPUT_LAYOUT_VERSION = 23
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 

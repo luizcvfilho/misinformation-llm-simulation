@@ -20,6 +20,14 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 from misinformation_simulation.simulation.paths import PERSONALITY_CODES
 from misinformation_simulation.topic_drift.provenance import input_hash
 
+NODE_STYLE = {
+    "width": 230,
+    "borderRadius": "8px",
+    "background": "var(--secondary-background-color, #262730)",
+    "color": "var(--text-color, #fafafa)",
+    "borderColor": "color-mix(in srgb, var(--text-color, #fafafa) 25%, transparent)",
+}
+
 
 def forms_fingerprint(forms: list[dict[str, str]]) -> str:
     return input_hash(
@@ -100,7 +108,7 @@ def synchronize_flow_state(
                 connectable=True,
                 selectable=True,
                 deletable=uid != root,
-                style={"width": 230, "borderRadius": "8px"},
+                style=NODE_STYLE.copy(),
             )
         )
     state.nodes = nodes
@@ -168,7 +176,15 @@ def render_graph_canvas() -> None:
     forms = st.session_state.graph_nodes
     fingerprint = forms_fingerprint(forms)
     state = st.session_state.get("_graph_flow_state")
-    if state is None or st.session_state.get("_graph_flow_source") != fingerprint:
+    if (
+        state is None
+        or st.session_state.get("_graph_flow_source") != fingerprint
+        or any(
+            node.style.get(key) != value
+            for node in state.nodes
+            for key, value in NODE_STYLE.items()
+        )
+    ):
         try:
             state = synchronize_flow_state(forms, state)
         except ValueError as exc:
