@@ -49,7 +49,10 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     set_tree_mode,
     validate_node_forms,
 )
-from misinformation_simulation.apps.interaction_graph_workspace import open_run_analysis
+from misinformation_simulation.apps.interaction_graph_workspace import (
+    open_run_analysis,
+    widget_default,
+)
 from misinformation_simulation.config.prompts import (
     GRAPH_REWRITE_MODE_LABELS,
     GRAPH_REWRITE_MODES,
@@ -57,7 +60,7 @@ from misinformation_simulation.config.prompts import (
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 20
+GRAPH_OUTPUT_LAYOUT_VERSION = 21
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -133,14 +136,22 @@ def _render_execution_settings(
     text_column = st.selectbox(
         "Text column",
         available_columns or [""],
-        index=_option_index(available_columns, default_text_column),
+        index=widget_default(
+            "simulation_execution_settings_text_column",
+            _option_index(available_columns, default_text_column),
+            0,
+        ),
         help="Column containing the source text that will be rewritten by the graph nodes.",
         key="simulation_execution_settings_text_column",
     )
     title_column = st.selectbox(
         "Title column",
         available_columns or [""],
-        index=_option_index(available_columns, default_title_column),
+        index=widget_default(
+            "simulation_execution_settings_title_column",
+            _option_index(available_columns, default_title_column),
+            0,
+        ),
         help=(
             "Article title used in topic drift extraction and faithful rewrite prompts. "
             "Interpretive relay does not supply the original title to the rewriting nodes."
@@ -151,7 +162,11 @@ def _render_execution_settings(
     news_id_column = st.selectbox(
         "News ID column",
         news_id_options,
-        index=_option_index(news_id_options, default_news_id_column),
+        index=widget_default(
+            "simulation_execution_settings_news_id_column",
+            _option_index(news_id_options, default_news_id_column),
+            0,
+        ),
         format_func=lambda value: "Use row index" if value == "" else value,
         help="Optional stable identifier for grouping results by news item.",
         key="simulation_execution_settings_news_id_column",
@@ -159,14 +174,22 @@ def _render_execution_settings(
     max_rows = st.number_input(
         "Max rows",
         min_value=1,
-        value=min(len(df), 5) if df is not None and not df.empty else 1,
+        value=widget_default(
+            "simulation_execution_settings_max_rows",
+            min(len(df), 5) if df is not None and not df.empty else 1,
+            "min",
+        ),
         step=1,
         help="Maximum number of dataset rows to process in this run.",
         key="simulation_execution_settings_max_rows",
     )
     allow_title_fallback = st.checkbox(
         "Allow title fallback when the text column is empty",
-        value=True,
+        value=widget_default(
+            "simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
+            True,
+            False,
+        ),
         help=(
             "When enabled, the simulation can use the title if the selected text column is empty."
         ),
@@ -196,7 +219,7 @@ def _render_execution_settings(
 
     evaluate_dual_stdi = st.checkbox(
         "Dual STDI (embeddings + LLM judge)",
-        value=True,
+        value=widget_default("evaluate_dual_stdi", True, False),
         key="evaluate_dual_stdi",
         help=(
             "Calculate both structural evaluations and average their complete scores "
@@ -214,7 +237,7 @@ def _render_execution_settings(
     judge_requested = evaluate_dual_stdi or single_stdi_method == "llm"
     repeat_judge = st.checkbox(
         "Repeat LLM judge evaluation",
-        value=True,
+        value=widget_default("repeat_stdi_judge", True, False),
         key="repeat_stdi_judge",
         disabled=not judge_requested,
         help="Evaluate each text pair multiple times with the same model and rubric.",
@@ -222,7 +245,7 @@ def _render_execution_settings(
     judge_repeats = st.number_input(
         "LLM judge evaluations per pair",
         min_value=2,
-        value=3,
+        value=widget_default("stdi_judge_repeats", 3, "min"),
         step=1,
         key="stdi_judge_repeats",
         disabled=not judge_requested or not repeat_judge,
@@ -248,7 +271,7 @@ def _render_execution_settings(
     )
     vad_llm_model = st.text_input(
         "VAD evaluator model",
-        value=str(advanced_settings["topic_drift_model"]),
+        value=widget_default("vad_llm_model", str(advanced_settings["topic_drift_model"]), ""),
         key="vad_llm_model",
         disabled=vad_method == "model",
     )
@@ -257,7 +280,11 @@ def _render_execution_settings(
         options=AVAILABLE_PROVIDERS,
         key="vad_llm_provider",
         disabled=vad_method == "model",
-        index=AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
+        index=widget_default(
+            "vad_llm_provider",
+            AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
+            0,
+        ),
     )
     return {
         "graph_name": graph_name,
@@ -282,7 +309,9 @@ def _render_advanced_settings() -> dict[str, Any]:
         sleep_seconds = st.number_input(
             "Sleep between requests (seconds)",
             min_value=0.0,
-            value=0.0,
+            value=widget_default(
+                "simulation_advanced_settings_sleep_between_requests_seconds", 0.0, "min"
+            ),
             step=0.25,
             help="Delay inserted between simulation steps to reduce API pressure.",
             key="simulation_advanced_settings_sleep_between_requests_seconds",
@@ -290,7 +319,7 @@ def _render_advanced_settings() -> dict[str, Any]:
         max_requests_per_minute = st.number_input(
             "Max requests per minute",
             min_value=0,
-            value=0,
+            value=widget_default("simulation_advanced_settings_max_requests_per_minute", 0, "min"),
             step=1,
             help="Use 0 to disable rate limiting.",
             key="simulation_advanced_settings_max_requests_per_minute",
@@ -298,7 +327,7 @@ def _render_advanced_settings() -> dict[str, Any]:
         retry_attempts = st.number_input(
             "Retry attempts",
             min_value=1,
-            value=5,
+            value=widget_default("simulation_advanced_settings_retry_attempts", 5, "min"),
             step=1,
             help="Number of retry attempts when a provider request fails temporarily.",
             key="simulation_advanced_settings_retry_attempts",
@@ -307,9 +336,13 @@ def _render_advanced_settings() -> dict[str, Any]:
             "Topic drift provider",
             AVAILABLE_PROVIDERS,
             index=(
-                AVAILABLE_PROVIDERS.index(DEFAULT_LLM_PROVIDER.value)
-                if DEFAULT_LLM_PROVIDER.value in AVAILABLE_PROVIDERS
-                else 0
+                widget_default(
+                    "simulation_advanced_settings_topic_drift_provider",
+                    AVAILABLE_PROVIDERS.index(DEFAULT_LLM_PROVIDER.value)
+                    if DEFAULT_LLM_PROVIDER.value in AVAILABLE_PROVIDERS
+                    else 0,
+                    0,
+                )
             ),
             help="Provider used for topic extraction and the dual STDI judge.",
             key="simulation_advanced_settings_topic_drift_provider",
@@ -317,7 +350,11 @@ def _render_advanced_settings() -> dict[str, Any]:
         topic_drift_model = _render_topic_drift_model_selector()
         output_dir = st.text_input(
             "Output directory",
-            value="output/interaction_graph/app_runs",
+            value=widget_default(
+                "simulation_advanced_settings_output_directory",
+                "output/interaction_graph/app_runs",
+                "",
+            ),
             help=(
                 "Each execution gets a folder containing one subfolder per graph, "
                 "including executions with a single graph."
@@ -326,7 +363,7 @@ def _render_advanced_settings() -> dict[str, Any]:
         )
         output_prefix = st.text_input(
             "Output prefix",
-            value=advanced_label,
+            value=widget_default("simulation_advanced_settings_output_prefix", advanced_label, ""),
             help=(
                 "Date and time prefix for the execution folder. Graph folders and files "
                 "use the queue position and up to 32 characters of the graph name."
@@ -356,7 +393,11 @@ def _render_topic_drift_model_selector() -> str:
     selected_topic_drift_model_option = st.selectbox(
         "Topic drift model preset",
         topic_drift_model_options,
-        index=topic_drift_model_options.index(selected_topic_drift_model_option),
+        index=widget_default(
+            "topic_drift_model_option",
+            topic_drift_model_options.index(selected_topic_drift_model_option),
+            0,
+        ),
         key="topic_drift_model_option",
         format_func=lambda value: "Custom model" if value == CUSTOM_OPTION else value,
         help="Model used for topic structure extraction before calculating topic drift.",
@@ -364,7 +405,7 @@ def _render_topic_drift_model_selector() -> str:
     if selected_topic_drift_model_option == CUSTOM_OPTION:
         return st.text_input(
             "Custom topic drift model",
-            value=topic_drift_model_default,
+            value=widget_default("topic_drift_model_custom", topic_drift_model_default, ""),
             key="topic_drift_model_custom",
             help="Provider-specific model id for topic drift extraction.",
         )
@@ -807,7 +848,7 @@ def _render_category_comparison(bundles: list[dict[str, Any]]) -> None:
     selected_categories = st.multiselect(
         "News categories",
         categories,
-        default=categories,
+        default=widget_default("category_comparison_categories", categories, None),
         key="category_comparison_categories",
     )
     if not selected_categories:

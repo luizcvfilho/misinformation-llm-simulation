@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+import pandas as pd
 import pytest
+from streamlit.elements.lib import policies
 from streamlit.testing.v1 import AppTest
 from streamlit_flow.elements import StreamlitFlowEdge, StreamlitFlowNode
 
+from misinformation_simulation.apps import interaction_graph_app as studio
 from misinformation_simulation.apps import interaction_graph_sections as sections
 from misinformation_simulation.apps.interaction_graph_canvas import (
     automatic_positions,
@@ -196,3 +199,44 @@ def test_generator_can_queue_all_eight_scenarios():
     assert not app.exception
     assert len(app.session_state["graph_queue"]) == 4
     assert sum(len(item["nodes"]) for item in app.session_state["graph_queue"]) == 24
+
+
+def test_generator_preserves_restored_values_without_duplicate_default_warning(monkeypatch, caplog):
+    monkeypatch.setattr(policies, "_shown_default_value_warning", False)
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_generator "
+        "import render_graph_generator\nrender_graph_generator()"
+    )
+    app.session_state["graph_generator_sequences"] = "PPPP\nPPCC"
+    app.session_state["graph_generator_model"] = "custom-model"
+    app.session_state["graph_generator_provider"] = "gemini"
+    app.run(timeout=45)
+    assert not app.exception
+    assert app.text_area(key="graph_generator_sequences").value == "PPPP\nPPCC"
+    assert app.text_input(key="graph_generator_model").value == "custom-model"
+    assert app.selectbox(key="graph_generator_provider").value == "gemini"
+    assert not any("default value but also" in record.getMessage() for record in caplog.records)
+
+
+def test_workspace_reruns_preserve_widget_values_without_duplicate_default_warning(
+    monkeypatch,
+    caplog,
+):
+    monkeypatch.setattr(studio, "_refresh_graph_backend_if_stale", lambda: None)
+    monkeypatch.setattr(
+        studio.interaction_graph_sections,
+        "render_sidebar",
+        lambda: (pd.DataFrame({"description": ["News"], "title": ["Title"]}), "test.csv"),
+    )
+    monkeypatch.setattr(policies, "_shown_default_value_warning", False)
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps.interaction_graph_app import main\nmain()"
+    ).run(timeout=45)
+    assert not app.exception
+    app.text_area(key="graph_generator_sequences").set_value("NNNN\nNNDD").run(timeout=45)
+    app.number_input(key="simulation_execution_settings_max_rows").set_value(7).run(timeout=45)
+    app.run(timeout=45)
+    assert not app.exception
+    assert app.text_area(key="graph_generator_sequences").value == "NNNN\nNNDD"
+    assert app.number_input(key="simulation_execution_settings_max_rows").value == 7
+    assert not any("default value but also" in record.getMessage() for record in caplog.records)

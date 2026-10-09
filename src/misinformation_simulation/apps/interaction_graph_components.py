@@ -26,6 +26,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
 )
+from misinformation_simulation.apps.interaction_graph_workspace import widget_default
 from misinformation_simulation.simulation.io import (
     graph_config_from_payload,
     resolve_result_reference,
@@ -61,12 +62,12 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
         identity_cols = st.columns(3)
         node_form["label"] = identity_cols[0].text_input(
             "Label",
-            value=node_form.get("label", ""),
+            value=widget_default(f"label_{uid}", node_form.get("label", ""), ""),
             key=f"label_{uid}",
         )
         node_form["node_id"] = identity_cols[1].text_input(
             "Node ID",
-            value=node_form.get("node_id", ""),
+            value=widget_default(f"node_id_{uid}", node_form.get("node_id", ""), ""),
             key=f"node_id_{uid}",
             help="Unique identifier used internally by the simulation.",
         )
@@ -78,7 +79,7 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
         node_form["provider"] = identity_cols[2].selectbox(
             "Provider",
             AVAILABLE_PROVIDERS,
-            index=provider_index,
+            index=widget_default(f"provider_{uid}", provider_index, 0),
             key=f"provider_{uid}",
         )
 
@@ -89,7 +90,11 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             node_form["parent_uid"] = st.selectbox(
                 "Receive text from",
                 options,
-                index=options.index(current_parent) if current_parent in options else 0,
+                index=widget_default(
+                    f"parent_uid_{uid}",
+                    options.index(current_parent) if current_parent in options else 0,
+                    0,
+                ),
                 format_func=lambda value: (
                     "Source news (root)"
                     if not value
@@ -108,21 +113,23 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
         selected_model_option = model_cols[0].selectbox(
             "Model preset",
             model_options,
-            index=model_options.index(selected_model_option),
+            index=widget_default(
+                f"model_option_{uid}", model_options.index(selected_model_option), 0
+            ),
             key=f"model_option_{uid}",
             format_func=lambda value: "Custom model" if value == CUSTOM_OPTION else value,
         )
         if selected_model_option == CUSTOM_OPTION:
             node_form["model"] = model_cols[1].text_input(
                 "Custom model",
-                value=model_default,
+                value=widget_default(f"model_custom_{uid}", model_default, ""),
                 key=f"model_custom_{uid}",
             )
         else:
             node_form["model"] = selected_model_option
             model_cols[1].text_input(
                 "Resolved model",
-                value=node_form["model"],
+                value=widget_default(f"model_resolved_{uid}", node_form["model"], ""),
                 key=f"model_resolved_{uid}",
                 disabled=True,
             )
@@ -130,7 +137,11 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
         personality_mode = st.radio(
             "Personality source",
             ["Predefined", "Custom"],
-            index=0 if node_form.get("personality_mode") == "preset" else 1,
+            index=widget_default(
+                f"personality_mode_{uid}",
+                0 if node_form.get("personality_mode") == "preset" else 1,
+                0,
+            ),
             horizontal=True,
             key=f"personality_mode_{uid}",
         )
@@ -144,14 +155,18 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             node_form["personality_preset"] = st.selectbox(
                 "Preset personality",
                 preset_names,
-                index=preset_names.index(current_preset),
+                index=widget_default(
+                    f"personality_preset_{uid}", preset_names.index(current_preset), 0
+                ),
                 key=f"personality_preset_{uid}",
             )
             st.caption(PREDEFINED_PERSONALITIES[node_form["personality_preset"]])
         else:
             node_form["personality_custom"] = st.text_area(
                 "Custom personality prompt",
-                value=node_form.get("personality_custom", ""),
+                value=widget_default(
+                    f"personality_custom_{uid}", node_form.get("personality_custom", ""), ""
+                ),
                 key=f"personality_custom_{uid}",
                 height=130,
             )

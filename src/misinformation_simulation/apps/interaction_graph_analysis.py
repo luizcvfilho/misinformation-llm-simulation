@@ -69,6 +69,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_news_summary_dataframe,
     build_node_summary_dataframe,
 )
+from misinformation_simulation.apps.interaction_graph_workspace import widget_default
 from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -191,7 +192,7 @@ def render_analysis() -> None:
     selected_executions = st.sidebar.multiselect(
         "Executions",
         execution_options,
-        default=execution_options,
+        default=widget_default("analysis_main_executions", execution_options, None),
         format_func=lambda value: f"{execution_labels[value]} — {value}",
         key="analysis_main_executions",
     )
@@ -241,7 +242,7 @@ def render_analysis() -> None:
     selected_chains = st.sidebar.multiselect(
         "Chains",
         chains,
-        default=chains,
+        default=widget_default("analysis_main_chains", chains, None),
         key="analysis_main_chains",
     )
     if not selected_chains:
@@ -390,7 +391,7 @@ def _render_overview(
     selected_components = st.multiselect(
         "Displayed components",
         component_options,
-        default=component_options,
+        default=widget_default("analysis_overview_displayed_components", component_options, None),
         format_func=STDI_COMPONENT_COLUMNS.__getitem__,
         key="analysis_overview_displayed_components",
     )
@@ -529,7 +530,7 @@ def _render_news_group_analysis(
     selected_groups = st.multiselect(
         "Displayed groups",
         group_options,
-        default=group_options,
+        default=widget_default("news_groups_displayed", group_options, None),
         format_func=lambda value: group_labels.get(value, value),
         key="news_groups_displayed",
     )
@@ -1002,7 +1003,7 @@ def _select_scenario_contrasts(
     comparison_mode = st.radio(
         "Chain comparisons",
         ("Custom pairs", "Preset contrasts") if presets else ("Custom pairs",),
-        index=1 if presets else 0,
+        index=widget_default(f"{key_prefix}_comparison_mode", 1 if presets else 0, 0),
         horizontal=True,
         key=f"{key_prefix}_comparison_mode",
     )
@@ -1013,7 +1014,7 @@ def _select_scenario_contrasts(
     chains_b = st.multiselect(
         "Compare A with chains B",
         other_chains,
-        default=other_chains,
+        default=widget_default(f"{key_prefix}_chains_b", other_chains, None),
         key=f"{key_prefix}_chains_b",
     )
     return tuple((chain_a, chain_b, "Custom chain comparison") for chain_b in chains_b)

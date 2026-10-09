@@ -9,6 +9,8 @@ from datetime import UTC, datetime
 import pandas as pd
 import streamlit as st
 
+from misinformation_simulation.apps.interaction_graph_workspace import widget_default
+
 UNCLASSIFIED_TOPIC = "Unclassified"
 
 
@@ -153,13 +155,17 @@ def render_dataset_builder_tab(df: pd.DataFrame | None, dataset_label: str) -> N
     topic_column = st.selectbox(
         "Topic column",
         options=text_columns,
-        index=text_columns.index(default_topic_column),
+        index=widget_default(
+            "simulation_dataset_builder_tab_topic_column",
+            text_columns.index(default_topic_column),
+            0,
+        ),
         help="Column used to identify the main topic of each news item.",
         key="simulation_dataset_builder_tab_topic_column",
     )
     separator = st.text_input(
         "Multi-topic separator",
-        value=";",
+        value=widget_default("simulation_dataset_builder_tab_multi_topic_separator", ";", ""),
         max_chars=1,
         help=(
             "Only the first label is used as the main topic. "
@@ -252,14 +258,18 @@ def _render_dataset_builder_options(dataset_label: str) -> tuple[int, str]:
     seed = options[0].number_input(
         "Sampling seed",
         min_value=0,
-        value=42,
+        value=widget_default("simulation_dataset_builder_options_sampling_seed", 42, "min"),
         step=1,
         help="Use the same seed and quantities to reproduce the exact sampled dataset.",
         key="simulation_dataset_builder_options_sampling_seed",
     )
     output_name = options[1].text_input(
         "Output CSV filename",
-        value=_default_output_name(dataset_label),
+        value=widget_default(
+            "simulation_dataset_builder_options_output_csv_filename",
+            _default_output_name(dataset_label),
+            "",
+        ),
         key="simulation_dataset_builder_options_output_csv_filename",
     )
     if not output_name.lower().endswith(".csv"):

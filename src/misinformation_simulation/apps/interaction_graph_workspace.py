@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 import streamlit as st
 
@@ -109,6 +110,11 @@ def retain_workspace_widgets() -> None:
     for key in list(st.session_state):
         if key in PERSISTENT_WIDGET_KEYS or key.startswith(PERSISTENT_WIDGET_PREFIXES):
             st.session_state[key] = st.session_state[key]
+
+
+def widget_default(key: str, initial: Any, restored_default: Any) -> Any:
+    """Let existing session state supply the value without a competing widget default."""
+    return restored_default if key in st.session_state else initial
 
 
 def open_run_analysis(summary_path: str, evaluation: str | None = None) -> None:

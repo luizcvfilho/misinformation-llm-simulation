@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from streamlit.elements.lib import policies
 from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.apps import interaction_graph_analysis as analysis
@@ -121,7 +122,8 @@ def test_analysis_details_keep_errors_outside_analytical_charts(tmp_path, monkey
     assert any(error.value == "Example failure" for error in app.error)
 
 
-def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, monkeypatch):
+def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, monkeypatch, caplog):
+    monkeypatch.setattr(policies, "_shown_default_value_warning", False)
     summary = _saved_run(tmp_path)
     monkeypatch.setattr(analysis, "DEFAULT_RUNS_DIR", tmp_path)
     monkeypatch.setattr(studio, "_refresh_graph_backend_if_stale", lambda: None)
@@ -166,6 +168,7 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     assert app.text_input(key="current_graph_name").value == "Edited graph"
     assert app.number_input(key="simulation_execution_settings_max_rows").value == 7
     assert app.session_state[counts_key] == {"News": 1}
+    assert not any("default value but also" in record.getMessage() for record in caplog.records)
 
 
 def test_analysis_keeps_details_when_every_step_failed(tmp_path, monkeypatch):
