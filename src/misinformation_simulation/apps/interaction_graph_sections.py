@@ -59,8 +59,10 @@ from misinformation_simulation.config.prompts import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
+from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
+from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 23
+GRAPH_OUTPUT_LAYOUT_VERSION = 25
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -111,7 +113,7 @@ def _render_dataset_preview(df: pd.DataFrame | None, dataset_label: str) -> list
 
     st.caption(f"Source: `{dataset_label}`")
     preview_cols = [column for column in df.columns[:8]]
-    st.dataframe(df[preview_cols].head(8), width="stretch")
+    st.dataframe(df[preview_cols].head(10), width="stretch", height="content")
     return df.columns.tolist()
 
 
@@ -125,52 +127,6 @@ def _render_execution_settings(
         key="current_graph_name",
         help="Name used for this graph in the results folder and filenames.",
     )
-    default_text_column = (
-        "description" if "description" in available_columns else _first_column(available_columns)
-    )
-    default_title_column = (
-        "title" if "title" in available_columns else _first_column(available_columns)
-    )
-    default_news_id_column = "article_id" if "article_id" in available_columns else ""
-
-    text_column = st.selectbox(
-        "Text column",
-        available_columns or [""],
-        index=widget_default(
-            "simulation_execution_settings_text_column",
-            _option_index(available_columns, default_text_column),
-            0,
-        ),
-        help="Column containing the source text that will be rewritten by the graph nodes.",
-        key="simulation_execution_settings_text_column",
-    )
-    title_column = st.selectbox(
-        "Title column",
-        available_columns or [""],
-        index=widget_default(
-            "simulation_execution_settings_title_column",
-            _option_index(available_columns, default_title_column),
-            0,
-        ),
-        help=(
-            "Article title used in topic drift extraction and faithful rewrite prompts. "
-            "Interpretive relay does not supply the original title to the rewriting nodes."
-        ),
-        key="simulation_execution_settings_title_column",
-    )
-    news_id_options = [""] + available_columns if available_columns else [""]
-    news_id_column = st.selectbox(
-        "News ID column",
-        news_id_options,
-        index=widget_default(
-            "simulation_execution_settings_news_id_column",
-            _option_index(news_id_options, default_news_id_column),
-            0,
-        ),
-        format_func=lambda value: "Use row index" if value == "" else value,
-        help="Optional stable identifier for grouping results by news item.",
-        key="simulation_execution_settings_news_id_column",
-    )
     max_rows = st.number_input(
         "Max rows",
         min_value=1,
@@ -183,21 +139,10 @@ def _render_execution_settings(
         help="Maximum number of dataset rows to process in this run.",
         key="simulation_execution_settings_max_rows",
     )
-    allow_title_fallback = st.checkbox(
-        "Allow title fallback when the text column is empty",
-        value=widget_default(
-            "simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
-            True,
-            False,
-        ),
-        help=(
-            "When enabled, the simulation can use the title if the selected text column is empty."
-        ),
-        key="simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
-    )
     rewrite_mode = st.selectbox(
         "Transmission mode",
         GRAPH_REWRITE_MODES,
+        index=widget_default("graph_rewrite_mode", GRAPH_REWRITE_MODES.index("interpretive"), 0),
         format_func=GRAPH_REWRITE_MODE_LABELS.__getitem__,
         key="graph_rewrite_mode",
         help=(
@@ -212,80 +157,155 @@ def _render_execution_settings(
             "may change, while retained names, numbers, dates, and quotes must remain accurate. "
             "Greater STDI measures drift; it does not establish realism or factual falsity."
         )
-    st.caption(
-        "STDI compares topic structures with local MiniLM embeddings after all graph steps "
-        "are generated. The first run may download the model."
-    )
+    with st.expander("Dataset columns"):
+        default_text_column = (
+            "description"
+            if "description" in available_columns
+            else _first_column(available_columns)
+        )
+        default_title_column = (
+            "title" if "title" in available_columns else _first_column(available_columns)
+        )
+        default_news_id_column = "article_id" if "article_id" in available_columns else ""
 
-    evaluate_dual_stdi = st.checkbox(
-        "Dual STDI (embeddings + LLM judge)",
-        value=widget_default("evaluate_dual_stdi", True, False),
-        key="evaluate_dual_stdi",
-        help=(
-            "Calculate both structural evaluations and average their complete scores "
-            "using the selected VAD. Disable to choose Cluster or LLM alone."
-        ),
-    )
-    single_stdi_method = "cluster"
-    if not evaluate_dual_stdi:
-        single_stdi_method = st.selectbox(
-            "STDI method",
-            options=["cluster", "llm"],
-            format_func=lambda method: {"cluster": "Cluster", "llm": "LLM"}[method],
-            key="single_stdi_method",
+        text_column = st.selectbox(
+            "Text column",
+            available_columns or [""],
+            index=widget_default(
+                "simulation_execution_settings_text_column",
+                _option_index(available_columns, default_text_column),
+                0,
+            ),
+            help="Column containing the source text that will be rewritten by the graph nodes.",
+            key="simulation_execution_settings_text_column",
         )
-    judge_requested = evaluate_dual_stdi or single_stdi_method == "llm"
-    repeat_judge = st.checkbox(
-        "Repeat LLM judge evaluation",
-        value=widget_default("repeat_stdi_judge", True, False),
-        key="repeat_stdi_judge",
-        disabled=not judge_requested,
-        help="Evaluate each text pair multiple times with the same model and rubric.",
-    )
-    judge_repeats = st.number_input(
-        "LLM judge evaluations per pair",
-        min_value=2,
-        value=widget_default("stdi_judge_repeats", 3, "min"),
-        step=1,
-        key="stdi_judge_repeats",
-        disabled=not judge_requested or not repeat_judge,
-        help=(
-            "Total evaluations per pair, including the first. "
-            "Disable repetition for one evaluation."
-        ),
-    )
-    if judge_requested:
-        effective_repeats = int(judge_repeats) if repeat_judge else 1
+        title_column = st.selectbox(
+            "Title column",
+            available_columns or [""],
+            index=widget_default(
+                "simulation_execution_settings_title_column",
+                _option_index(available_columns, default_title_column),
+                0,
+            ),
+            help=(
+                "Article title used in topic drift extraction and faithful rewrite prompts. "
+                "Interpretive relay does not supply the original title to the rewriting nodes."
+            ),
+            key="simulation_execution_settings_title_column",
+        )
+        news_id_options = [""] + available_columns if available_columns else [""]
+        news_id_column = st.selectbox(
+            "News ID column",
+            news_id_options,
+            index=widget_default(
+                "simulation_execution_settings_news_id_column",
+                _option_index(news_id_options, default_news_id_column),
+                0,
+            ),
+            format_func=lambda value: "Use row index" if value == "" else value,
+            help="Optional stable identifier for grouping results by news item.",
+            key="simulation_execution_settings_news_id_column",
+        )
+        allow_title_fallback = st.checkbox(
+            "Allow title fallback when the text column is empty",
+            value=widget_default(
+                "simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
+                True,
+                False,
+            ),
+            help=(
+                "When enabled, the simulation can use the title "
+                "if the selected text column is empty."
+            ),
+            key="simulation_execution_settings_allow_title_fallback_when_the_text_column_is_empty",
+        )
+
+    with st.expander("STDI evaluation"):
         st.caption(
-            f"Each pair uses {effective_repeats} judge evaluation(s). Scores are averaged; "
-            "individual judgments and variability are saved. Additional evaluations increase "
-            "judge API cost approximately in proportion to their count."
+            "STDI compares topic structures with local MiniLM embeddings after all graph steps "
+            "are generated. The first run may download the model."
         )
+
+        evaluate_dual_stdi = st.checkbox(
+            "Dual STDI (embeddings + LLM judge)",
+            value=widget_default("evaluate_dual_stdi", True, False),
+            key="evaluate_dual_stdi",
+            help=(
+                "Calculate both structural evaluations and average their complete scores "
+                "using the selected VAD. Disable to choose Cluster or LLM alone."
+            ),
+        )
+        single_stdi_method = "cluster"
+        if not evaluate_dual_stdi:
+            single_stdi_method = st.selectbox(
+                "STDI method",
+                options=["cluster", "llm"],
+                format_func=lambda method: {"cluster": "Cluster", "llm": "LLM"}[method],
+                key="single_stdi_method",
+            )
+        judge_requested = evaluate_dual_stdi or single_stdi_method == "llm"
+        repeat_judge = st.checkbox(
+            "Repeat LLM judge evaluation",
+            value=widget_default("repeat_stdi_judge", True, False),
+            key="repeat_stdi_judge",
+            disabled=not judge_requested,
+            help="Evaluate each text pair multiple times with the same model and rubric.",
+        )
+        judge_repeats = st.number_input(
+            "LLM judge evaluations per pair",
+            min_value=2,
+            value=widget_default("stdi_judge_repeats", 3, "min"),
+            step=1,
+            key="stdi_judge_repeats",
+            disabled=not judge_requested or not repeat_judge,
+            help=(
+                "Total evaluations per pair, including the first. "
+                "Disable repetition for one evaluation."
+            ),
+        )
+        if judge_requested:
+            effective_repeats = int(judge_repeats) if repeat_judge else 1
+            st.caption(
+                f"Each pair uses {effective_repeats} judge evaluation(s). Scores are averaged; "
+                "individual judgments and variability are saved. Additional evaluations increase "
+                "judge API cost approximately in proportion to their count."
+            )
+
+    vad_expander = st.expander("VAD evaluation")
     advanced_settings = _render_advanced_settings()
-    vad_method = st.selectbox(
-        "VAD method",
-        options=["model", "llm", "dual"],
-        format_func=lambda method: {"model": "Current model", "llm": "LLM", "dual": "Dual"}[method],
-        key="vad_method",
-        help="Dual averages VAD drifts. With Dual STDI, each branch uses its corresponding VAD.",
-    )
-    vad_llm_model = st.text_input(
-        "VAD evaluator model",
-        value=widget_default("vad_llm_model", str(advanced_settings["topic_drift_model"]), ""),
-        key="vad_llm_model",
-        disabled=vad_method == "model",
-    )
-    vad_llm_provider = st.selectbox(
-        "VAD evaluator provider",
-        options=AVAILABLE_PROVIDERS,
-        key="vad_llm_provider",
-        disabled=vad_method == "model",
-        index=widget_default(
-            "vad_llm_provider",
-            AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
-            0,
-        ),
-    )
+    with vad_expander:
+        vad_method = st.selectbox(
+            "VAD method",
+            options=VAD_METHODS,
+            index=widget_default("vad_method", VAD_METHODS.index("dual"), 0),
+            format_func=lambda method: {
+                "model": DEFAULT_VAD_MODEL_NAME,
+                "llm": "LLM",
+                "dual": "Dual",
+            }[method],
+            key="vad_method",
+            help=(
+                "Dual averages VAD drifts. With Dual STDI, each branch uses its corresponding VAD."
+            ),
+        )
+        vad_llm_model = st.text_input(
+            "VAD evaluator model",
+            value=widget_default("vad_llm_model", str(advanced_settings["topic_drift_model"]), ""),
+            key="vad_llm_model",
+            disabled=vad_method == "model",
+        )
+        vad_llm_provider = st.selectbox(
+            "VAD evaluator provider",
+            options=AVAILABLE_PROVIDERS,
+            key="vad_llm_provider",
+            disabled=vad_method == "model",
+            index=widget_default(
+                "vad_llm_provider",
+                AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
+                0,
+            ),
+        )
+
     return {
         "graph_name": graph_name,
         "text_column": text_column,

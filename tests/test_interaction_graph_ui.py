@@ -24,6 +24,7 @@ from misinformation_simulation.simulation.graph import (
     SimulationNode,
     SimulationStepResult,
 )
+from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 
 
 def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch) -> None:
@@ -107,11 +108,14 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
 """
     ).run(timeout=30)
     assert not app.exception
-    assert app.session_state.test_settings["rewrite_mode"] == "faithful"
+    assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
     mode_control = next(
         control for control in app.selectbox if control.label == "Transmission mode"
     )
-    mode_control.set_value("interpretive").run(timeout=30)
+    mode_control.set_value("faithful").run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["rewrite_mode"] == "faithful"
+    app.selectbox(key="graph_rewrite_mode").set_value("interpretive").run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
     dual_control = next(control for control in app.checkbox if control.key == "evaluate_dual_stdi")
@@ -159,6 +163,16 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
 """
     ).run(timeout=30)
     assert not app.exception
+    assert app.session_state.test_settings["vad_method"] == "dual"
+    assert not app.text_input(key="vad_llm_model").disabled
+    assert app.selectbox(key="vad_method").options == [DEFAULT_VAD_MODEL_NAME, "LLM", "Dual"]
+    assert [expander.label for expander in app.expander] == [
+        "Dataset columns",
+        "STDI evaluation",
+        "VAD evaluation",
+        "Advanced options",
+    ]
+    app.selectbox(key="vad_method").set_value("model").run(timeout=30)
     assert app.session_state.test_settings["vad_method"] == "model"
     assert app.text_input(key="vad_llm_model").disabled
     app.selectbox(key="vad_method").set_value("dual").run(timeout=30)

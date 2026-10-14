@@ -759,13 +759,19 @@ the faithful and interpretive modes, personality presets, topic extraction and c
 controlled rewrites, semantic comparison, and false-to-true rewriting. Other modules import these
 definitions; graph JSON files can still supply custom personality text for a particular execution.
 
-The graph keeps **Faithful rewrite (preserve facts)** as its default and control condition.
-Its original system instruction, prompt, title context, and generation settings are preserved.
-This condition explicitly instructs the model to preserve facts while changing framing and tone.
+The app defaults to **Interpretive relay (experimental)** under **Execution settings →
+Transmission mode**. The dataset preview shows up to 10 news items. Dataset columns, STDI
+evaluation, VAD evaluation, and advanced options are available in collapsed expandable sections.
+VAD defaults to **Dual**; its **RobroKools/vad-bert** option uses the current model identifier.
+The VAD evaluation section appears immediately after STDI evaluation.
 
-Select **Interpretive relay (experimental)** under **Execution settings → Transmission mode**
-to simulate interpreting a received message and passing it onward. Every node receives only the
-preceding message, without a separate copy of the original title. The prompt allows selective
+The command-line workflow keeps **Faithful rewrite (preserve facts)** as its default and control
+condition. This condition explicitly instructs the model to preserve facts while changing
+framing and tone.
+
+**Interpretive relay (experimental)** simulates interpreting a received message and passing it
+onward. Every node receives only the preceding message, without a separate copy of the original
+title. The prompt allows selective
 omission, changes in the central issue, and unsupported interpretations of motives, responsibility,
 and causality when consistent with the assigned personality. A conspiratorial persona may infer
 hidden coordination or invert an official explanation; an evidence-focused skeptic is instead
