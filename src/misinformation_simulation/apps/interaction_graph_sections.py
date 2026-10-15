@@ -61,12 +61,16 @@ from misinformation_simulation.config.prompts import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.llm.recovery import PermissionStore
+from misinformation_simulation.llm.service_tier import (
+    OPENAI_SERVICE_TIERS,
+    configured_openai_service_tier,
+)
 from misinformation_simulation.simulation import run_news_interaction_graph
 from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 28
+GRAPH_OUTPUT_LAYOUT_VERSION = 29
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -330,6 +334,29 @@ def _render_execution_settings(
 def _render_advanced_settings() -> dict[str, Any]:
     advanced_label = datetime.now().strftime("simulation_ui_%Y%m%d_%H%M%S")
     with st.expander("Advanced options"):
+        openai_service_tier = st.selectbox(
+            "OpenAI processing mode",
+            options=OPENAI_SERVICE_TIERS,
+            index=OPENAI_SERVICE_TIERS.index(configured_openai_service_tier()),
+            format_func=lambda tier: {
+                "auto": "Project default (Auto)",
+                "default": "Standard",
+                "flex": "Flex (lower cost, slower)",
+            }[tier],
+            key="openai_service_tier",
+            disabled=st.session_state.get("run_job") is not None,
+            help=(
+                "Applies to all official OpenAI calls in this execution: rewrites, topic "
+                "extraction, STDI judge and LLM VAD. Other providers are unaffected. "
+                "GPT-6 Luna supports Flex; check compatibility when mixing other models."
+            ),
+        )
+        if openai_service_tier == "flex":
+            st.caption(
+                "Flex uses a 15-minute timeout per request and may return resource unavailable "
+                "errors. Retries keep Flex; there is no automatic switch to Standard. "
+                "Reused results do not make new API calls."
+            )
         reuse_previous_results = st.checkbox(
             "Reuse compatible results from previous executions",
             value=True,
@@ -412,6 +439,7 @@ def _render_advanced_settings() -> dict[str, Any]:
 
     return {
         "sleep_seconds": sleep_seconds,
+        "openai_service_tier": openai_service_tier,
         "reuse_previous_results": reuse_previous_results,
         "api_pricing_path": api_pricing_path,
         "max_requests_per_minute": max_requests_per_minute,

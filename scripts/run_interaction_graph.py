@@ -20,6 +20,7 @@ from misinformation_simulation.enums import (  # noqa: E402
     DEFAULT_LLM_PROVIDER,
 )
 from misinformation_simulation.llm.pricing import load_pricing  # noqa: E402
+from misinformation_simulation.llm.service_tier import OPENAI_SERVICE_TIERS  # noqa: E402
 from misinformation_simulation.simulation import run_news_interaction_graph  # noqa: E402
 from misinformation_simulation.simulation.io import (  # noqa: E402
     load_graph_config,
@@ -44,6 +45,11 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--sleep-seconds", type=float, default=0.0)
     parser.add_argument("--max-requests-per-minute", type=int)
     parser.add_argument("--retry-attempts", type=int, default=5)
+    parser.add_argument(
+        "--openai-service-tier",
+        choices=OPENAI_SERVICE_TIERS,
+        help="OpenAI processing mode; defaults to OPENAI_SERVICE_TIER or auto. Flex is slower.",
+    )
     parser.add_argument("--allow-title-fallback", action="store_true")
     parser.add_argument(
         "--rewrite-mode",
@@ -110,6 +116,7 @@ def main() -> None:
         sleep_seconds=args.sleep_seconds,
         max_requests_per_minute=args.max_requests_per_minute,
         retry_attempts=args.retry_attempts,
+        openai_service_tier=args.openai_service_tier,
         allow_title_fallback=args.allow_title_fallback,
         rewrite_mode=args.rewrite_mode,
         topic_drift_model=args.topic_drift_model,

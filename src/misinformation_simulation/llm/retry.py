@@ -17,6 +17,7 @@ from misinformation_simulation.llm.recovery import (
     get_recovery,
     set_request_context,
 )
+from misinformation_simulation.llm.service_tier import openai_request_options
 from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
 
 MAX_EVALUATION_ATTEMPTS = 4
@@ -181,7 +182,8 @@ def generate_openai_text_with_retry(
                     prompt=prompt,
                     system_instruction=system_instruction,
                     temperature=temperature,
-                )
+                ),
+                **openai_request_options(provider),
             )
             _raise_response_error(response)
         record_response(response, provider=provider, model=model)

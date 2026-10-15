@@ -40,6 +40,10 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.llm.service_tier import (
+    configured_openai_service_tier,
+    with_openai_service_tier,
+)
 from misinformation_simulation.llm.usage import track_run_usage, usage_stage
 from misinformation_simulation.simulation.paths import project_graph_paths
 from misinformation_simulation.simulation.persistence import _persist_results
@@ -259,6 +263,7 @@ def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[s
                 setattr(step, f"{component}_{suffix}", embedding[component])
 
 
+@with_openai_service_tier
 @track_run_progress
 @track_run_usage
 def run_news_interaction_graph(
@@ -287,6 +292,7 @@ def run_news_interaction_graph(
     shared_cache_dir: Path | str | None = None,
     reuse_rewrites: bool = False,
     api_pricing: dict | None = None,
+    openai_service_tier: str | None = None,
     stdi_judge_fn: Callable[..., Any] | None = None,
     stdi_judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     vad_model_bundle: VADModelBundle | None = None,
@@ -469,6 +475,7 @@ def run_news_interaction_graph(
             limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
     evaluation_metadata = {
+        "openai_service_tier": configured_openai_service_tier(),
         "vad_method": vad_method,
         "vad_evaluation_version": "vad_evaluation_v1",
         "vad_llm_model": str(vad_llm_model or topic_drift_model) if vad_method != "model" else None,

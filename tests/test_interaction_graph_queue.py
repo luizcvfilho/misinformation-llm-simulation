@@ -113,6 +113,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> N
     comparison_methods = []
     rewrite_modes = []
     judge_counts = []
+    processing_modes = []
     output_dirs = []
 
     def fake_run(**kwargs):
@@ -120,6 +121,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> N
         comparison_methods.append(kwargs["stdi_comparison_method"])
         rewrite_modes.append(kwargs["rewrite_mode"])
         judge_counts.append(kwargs["stdi_judge_repeats"])
+        processing_modes.append(kwargs["openai_service_tier"])
         output_dirs.append(kwargs["output_dir"])
         if len(calls) == 1:
             raise RuntimeError("provider unavailable")
@@ -140,6 +142,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> N
         "retry_attempts": 1,
         "allow_title_fallback": True,
         "rewrite_mode": "interpretive",
+        "openai_service_tier": "flex",
         "topic_drift_model": "model",
         "topic_drift_provider": "gemini",
         "output_dir": str(tmp_path),
@@ -165,6 +168,7 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> N
     assert comparison_methods == ["dual", "dual"]
     assert rewrite_modes == ["interpretive", "interpretive"]
     assert judge_counts == [judge_repeats or 3, judge_repeats or 3]
+    assert processing_modes == ["flex", "flex"]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
     assert sorted(path.name for path in (tmp_path / "batch").iterdir() if path.is_dir()) == sorted(

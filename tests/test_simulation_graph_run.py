@@ -74,6 +74,9 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     outputs = iter(["First person's interpretation", "Second person's interpretation"])
 
     def rewrite(**kwargs):
+        from misinformation_simulation.llm.service_tier import configured_openai_service_tier
+
+        assert configured_openai_service_tier() == "flex"
         calls.append(kwargs)
         return next(outputs)
 
@@ -87,6 +90,7 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     result = run_news_interaction_graph(
         pd.DataFrame([{"title": title, "description": original, "language": "en"}]),
         stdi_comparison_method="cluster",
+        openai_service_tier="flex",
         nodes=nodes,
         **({"rewrite_mode": mode} if mode != "faithful" else {}),
         stdi_embedder=KeywordEmbedder(),
@@ -106,6 +110,7 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     ]
     assert result.step_results[1].source_text == "First person's interpretation"
     assert result.summary["rewrite_mode"] == mode
+    assert result.summary["openai_service_tier"] == "flex"
     assert result.summary["rewrite_prompt_version"] == prompt_config.version
     assert result.summary["rewrite_original_title_context"] == (mode == "faithful")
     assert result.summary["topic_extraction_original_title_context"] == (mode == "faithful")

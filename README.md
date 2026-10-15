@@ -771,6 +771,56 @@ Main variables:
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
+### OpenAI Flex processing
+
+In the graph app, select **Execution settings → Advanced options → OpenAI processing mode →
+Flex (lower cost, slower)**. The selection applies to every official OpenAI (`chatgpt`) call
+in that execution, including node rewrites, topic extraction, STDI judgments, and LLM VAD.
+Other providers are unaffected. **Project default (Auto)** preserves the existing behavior;
+**Standard** explicitly requests standard processing. No Fast mode is enabled by this setting.
+
+For the CLI, add `--openai-service-tier flex` to `scripts/run_interaction_graph.py`.
+For Python graph runs, pass `openai_service_tier="flex"` to `run_news_interaction_graph`.
+For other scripts and notebooks, set `OPENAI_SERVICE_TIER=flex` in `.env` before loading it,
+or scope the setting explicitly:
+
+```python
+from misinformation_simulation.llm.service_tier import use_openai_service_tier
+
+with use_openai_service_tier("flex"):
+    result = run_news_interaction_graph(df, nodes=nodes)
+```
+
+Explicit UI/CLI/Python settings override the environment for that run and are isolated from
+concurrent runs. The selected mode is saved as `openai_service_tier` in graph summaries;
+API usage records distinguish `requested_service_tier` from the provider's returned
+`service_tier`. Cost estimation uses the returned tier, leaving missing pricing or tier
+information unknown rather than assuming a discount.
+
+Operational considerations (official documentation checked October 15, 2026):
+
+- GPT-6 Luna supports Flex. Its Flex text-token rates are 50% of Standard rates. Check every
+  OpenAI model's compatibility when running a graph with mixed models, and ensure the API
+  project permits Flex. Fast is a different, more expensive processing mode.
+- Flex can be slower and return `429 Resource Unavailable`. Requests returning this specific
+  capacity error are not charged. The existing retry/recovery flow remains in use and always
+  retains the selected tier, including credential failover; it never switches to Standard
+  automatically. Exhausted retries can require recovery or leave a failed evaluation.
+- Flex requests use a 900-second timeout per API attempt. Retries can make the total wait
+  longer, and cancellation may wait for an in-flight synchronous API call to return. A client
+  timeout does not establish that the server did no work or that the request was free.
+- Reused rewrites and evaluations do not make new API calls. Disable **Reuse compatible
+  results from previous executions** for an independent pilot or model comparison. Keep the
+  model, prompts, transmission mode, and evaluation configuration fixed when comparing tiers;
+  Flex changes processing, and does not validate factual accuracy or guarantee identical text.
+- Pilot a small dataset before a long run. Inspect structured-output failures, evaluation
+  status, completed rows, actual token usage, and API costs before scaling up. Do not treat
+  failed evaluations as zero drift or factual-veracity measurements.
+
+Sources: [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna),
+[Flex processing](https://developers.openai.com/api/docs/guides/flex-processing), and
+[project service-tier restrictions](https://developers.openai.com/api/docs/guides/error-codes).
+
 ### Transmission modes
 
 All application prompt definitions live in `src/misinformation_simulation/config/prompts.py`:

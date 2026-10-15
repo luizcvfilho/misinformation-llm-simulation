@@ -271,6 +271,7 @@ def _run_graph_queue(
                             if settings.get("api_pricing_path")
                             else None
                         ),
+                        openai_service_tier=settings.get("openai_service_tier"),
                         output_dir=run_dir,
                         output_prefix=prefix,
                         progress_callback=lambda message, label=label: log(f"{label}: {message}"),

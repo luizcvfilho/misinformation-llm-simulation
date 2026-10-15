@@ -13,6 +13,7 @@ from uuid import uuid4
 
 from misinformation_simulation.llm.pricing import default_pricing, estimate_cost, validate_pricing
 from misinformation_simulation.llm.progress import emit_event
+from misinformation_simulation.llm.service_tier import configured_openai_service_tier
 
 _tracker: ContextVar[UsageTracker | None] = ContextVar("llm_usage_tracker", default=None)
 _stage: ContextVar[str] = ContextVar("llm_usage_stage", default="other")
@@ -96,6 +97,9 @@ class UsageTracker:
             "returned_model": getattr(response, "model", getattr(response, "model_version", None)),
             "response_id": getattr(response, "id", None) or getattr(response, "response_id", None),
             "service_tier": response_tier(response, usage, provider),
+            "requested_service_tier": configured_openai_service_tier()
+            if provider == "chatgpt"
+            else None,
             "input_tokens": usage.get("prompt_token_count")
             if provider == "gemini"
             else (

@@ -37,6 +37,7 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
         shared_cache_dir=None,
         reuse_rewrites=False,
         api_pricing=None,
+        openai_service_tier=None,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -81,6 +82,7 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         shared_cache_dir=None,
         reuse_rewrites=False,
         api_pricing=None,
+        openai_service_tier=None,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -103,6 +105,23 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
 
     assert interaction_graph_sections.run_news_interaction_graph is updated_runner
     assert simulation.run_news_interaction_graph is updated_runner
+
+
+def test_execution_settings_offer_flex_processing(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_SERVICE_TIER", "auto")
+    app = AppTest.from_string(
+        """
+import streamlit as st
+from misinformation_simulation.apps.interaction_graph_sections import _render_advanced_settings
+st.session_state.test_settings = _render_advanced_settings()
+"""
+    ).run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["openai_service_tier"] == "auto"
+    app.selectbox(key="openai_service_tier").set_value("flex").run(timeout=30)
+    assert not app.exception
+    assert app.session_state.test_settings["openai_service_tier"] == "flex"
+    assert any("15-minute timeout" in caption.value for caption in app.caption)
 
 
 def test_execution_settings_offer_interpretive_transmission_mode() -> None:
