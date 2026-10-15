@@ -1,0 +1,138 @@
+{
+  "inputs": {
+    "text": "Organisers of the “No Kings” protests claim 8 million people attended more than 3,300 events across all 50 states, but authorities have provided no official count. That is a sizeable claim from the people promoting the demonstrations, not proof of a national consensus. Organisers say turnout was about one million higher, with 600 more events, than at the last demonstrations in October. Even so, noisy rallies are not a substitute for lawful authority or a mandate from the whole country. A nation cannot be governed by whichever political faction can organize the biggest protest.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "base_url": null,
+    "version": "structured_extraction_v5"
+  },
+  "output": {
+    "main_topic": "Organisers' turnout claims about the “No Kings” protests and whether protest size represents a national mandate",
+    "subtopics": [
+      "Claimed attendance and number of events",
+      "Comparison with demonstrations in October",
+      "Absence of an official count",
+      "Protest turnout and political authority"
+    ],
+    "central_entities": [
+      "No Kings",
+      "organisers",
+      "authorities"
+    ],
+    "central_relations": [
+      {
+        "subject": "organisers",
+        "action": "claim people attended",
+        "object": "events across all 50 states",
+        "polarity": "affirmed",
+        "predicate": "claim_attendance",
+        "negation_scope": null,
+        "signed_action": "claim people attended",
+        "base_action": "claim people attended",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendance_count",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "8 million"
+          },
+          {
+            "role": "event_count_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "unknown",
+            "expression": "more than 3,300"
+          },
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50"
+          }
+        ]
+      },
+      {
+        "subject": "authorities",
+        "action": "have provided no official count",
+        "object": "official count",
+        "polarity": "negated",
+        "predicate": "provide_count",
+        "negation_scope": "official count",
+        "signed_action": "have provided no official count",
+        "base_action": "have provided official count",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "organisers",
+        "action": "say turnout was higher than",
+        "object": "turnout at the last demonstrations in October",
+        "polarity": "affirmed",
+        "predicate": "say_turnout_higher_than",
+        "negation_scope": null,
+        "signed_action": "say turnout was about one million higher, with 600 more events, than at the last demonstrations in October",
+        "base_action": "say turnout was about one million higher, with 600 more events, than at the last demonstrations in October",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "turnout_increase",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million"
+          },
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 more events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Skeptical framing that large protest turnout does not establish national consensus or lawful political authority.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The turnout figure is a sizeable claim, not proof of a national consensus.",
+      "Noisy rallies are not a substitute for lawful authority or a mandate from the whole country.",
+      "A nation cannot be governed by whichever political faction can organize the biggest protest."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "6a2c047feb511cd81d47d6d39a85c50454804210fa3d15984eface5550ed155f",
+      "input_sha256": "12e1a98a30f5eb69ba009e3b2cc89bd70a48461b7d33662f9e606cc177536317",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Organisers' turnout claims about the “No Kings” protests and whether protest size represents a national mandate\",\n  \"subtopics\": [\n    \"Claimed attendance and number of events\",\n    \"Comparison with demonstrations in October\",\n    \"Absence of an official count\",\n    \"Protest turnout and political authority\"\n  ],\n  \"central_entities\": [\n    \"No Kings\",\n    \"organisers\",\n    \"authorities\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The turnout figure is a sizeable claim, not proof of a national consensus.\",\n    \"Noisy rallies are not a substitute for lawful authority or a mandate from the whole country.\",\n    \"A nation cannot be governed by whichever political faction can organize the biggest protest.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"organisers\",\n      \"action\": \"claim people attended\",\n      \"object\": \"events across all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim_attendance\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claim people attended\",\n      \"base_action\": \"claim people attended\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendance_count\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"8 million\"\n        },\n        {\n          \"role\": \"event_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"unknown\",\n          \"expression\": \"more than 3,300\"\n        },\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"authorities\",\n      \"action\": \"have provided no official count\",\n      \"object\": \"official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provide_count\",\n      \"negation_scope\": \"official count\",\n      \"signed_action\": \"have provided no official count\",\n      \"base_action\": \"have provided official count\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"organisers\",\n      \"action\": \"say turnout was higher than\",\n      \"object\": \"turnout at the last demonstrations in October\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say_turnout_higher_than\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say turnout was about one million higher, with 600 more events, than at the last demonstrations in October\",\n      \"base_action\": \"say turnout was about one million higher, with 600 more events, than at the last demonstrations in October\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"turnout_increase\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million\"\n        },\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 more events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Skeptical framing that large protest turnout does not establish national consensus or lawful political authority.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}

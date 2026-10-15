@@ -1,0 +1,146 @@
+{
+  "inputs": {
+    "text": "This looks deliberate: the delay over renegotiating the 2009 agreement keeps SSANU weakened, while the government lets the dispute fester and then points to the one-month ultimatum as the problem. The blame is being redirected onto workers so the people prolonging the standoff can evade scrutiny. This isn’t about resolving the dispute—it’s about managing pressure and discrediting the union.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "base_url": null,
+    "version": "structured_extraction_v5"
+  },
+  "output": {
+    "main_topic": "Allegation that the government is using the delayed renegotiation of the 2009 agreement to weaken SSANU and redirect blame",
+    "subtopics": [
+      "The government’s handling of the dispute",
+      "The one-month ultimatum",
+      "Blame directed at workers",
+      "Alleged pressure management and union discrediting"
+    ],
+    "central_entities": [
+      "SSANU",
+      "the government",
+      "workers",
+      "the union"
+    ],
+    "central_relations": [
+      {
+        "subject": "the delay over renegotiating the 2009 agreement",
+        "action": "keeps weakened",
+        "object": "SSANU",
+        "polarity": "affirmed",
+        "predicate": "keep",
+        "negation_scope": null,
+        "signed_action": "keeps SSANU weakened",
+        "base_action": "keeps SSANU weakened",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "agreement_year",
+            "value": 2009.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2009"
+          }
+        ]
+      },
+      {
+        "subject": "the government",
+        "action": "lets the dispute fester",
+        "object": "the dispute",
+        "polarity": "affirmed",
+        "predicate": "let fester",
+        "negation_scope": null,
+        "signed_action": "lets the dispute fester",
+        "base_action": "lets the dispute fester",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "the government",
+        "action": "points to the one-month ultimatum as the problem",
+        "object": "the one-month ultimatum",
+        "polarity": "affirmed",
+        "predicate": "point to",
+        "negation_scope": null,
+        "signed_action": "points to the one-month ultimatum as the problem",
+        "base_action": "points to the one-month ultimatum as the problem",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": "month",
+        "duration_expression": "one-month",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "ultimatum_duration",
+            "value": 1.0,
+            "unit": "month",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "one-month"
+          }
+        ]
+      },
+      {
+        "subject": "the blame",
+        "action": "is being redirected onto",
+        "object": "workers",
+        "polarity": "affirmed",
+        "predicate": "redirect",
+        "negation_scope": null,
+        "signed_action": "is being redirected onto workers",
+        "base_action": "is being redirected onto workers",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "the people prolonging the standoff",
+        "action": "can evade scrutiny",
+        "object": "scrutiny",
+        "polarity": "affirmed",
+        "predicate": "evade",
+        "negation_scope": null,
+        "signed_action": "can evade scrutiny",
+        "base_action": "can evade scrutiny",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The text frames the government’s handling of the dispute as a deliberate effort to weaken SSANU, shift blame to workers, and discredit the union.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The delay looks deliberate.",
+      "The dispute is about managing pressure and discrediting the union, not resolving it."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "56a0ff43818b964068a8e6091bf466c0f360fc209b47788b02d487a99112cee3",
+      "input_sha256": "b7a8bf06ddedd37988159047c7b1f253c355f503281797fc8e85519e1512527f",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Allegation that the government is using the delayed renegotiation of the 2009 agreement to weaken SSANU and redirect blame\",\n  \"subtopics\": [\n    \"The government’s handling of the dispute\",\n    \"The one-month ultimatum\",\n    \"Blame directed at workers\",\n    \"Alleged pressure management and union discrediting\"\n  ],\n  \"central_entities\": [\n    \"SSANU\",\n    \"the government\",\n    \"workers\",\n    \"the union\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The delay looks deliberate.\",\n    \"The dispute is about managing pressure and discrediting the union, not resolving it.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"the delay over renegotiating the 2009 agreement\",\n      \"action\": \"keeps weakened\",\n      \"object\": \"SSANU\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"keep\",\n      \"negation_scope\": null,\n      \"signed_action\": \"keeps SSANU weakened\",\n      \"base_action\": \"keeps SSANU weakened\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"agreement_year\",\n          \"kind\": \"year\",\n          \"value\": 2009,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2009\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"the government\",\n      \"action\": \"lets the dispute fester\",\n      \"object\": \"the dispute\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"let fester\",\n      \"negation_scope\": null,\n      \"signed_action\": \"lets the dispute fester\",\n      \"base_action\": \"lets the dispute fester\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"the government\",\n      \"action\": \"points to the one-month ultimatum as the problem\",\n      \"object\": \"the one-month ultimatum\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"point to\",\n      \"negation_scope\": null,\n      \"signed_action\": \"points to the one-month ultimatum as the problem\",\n      \"base_action\": \"points to the one-month ultimatum as the problem\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": \"month\",\n      \"duration_expression\": \"one-month\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"ultimatum_duration\",\n          \"kind\": \"duration\",\n          \"value\": 1,\n          \"unit\": \"month\",\n          \"status\": \"exact\",\n          \"expression\": \"one-month\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"the blame\",\n      \"action\": \"is being redirected onto\",\n      \"object\": \"workers\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"redirect\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is being redirected onto workers\",\n      \"base_action\": \"is being redirected onto workers\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"the people prolonging the standoff\",\n      \"action\": \"can evade scrutiny\",\n      \"object\": \"scrutiny\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"evade\",\n      \"negation_scope\": null,\n      \"signed_action\": \"can evade scrutiny\",\n      \"base_action\": \"can evade scrutiny\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The text frames the government’s handling of the dispute as a deliberate effort to weaken SSANU, shift blame to workers, and discredit the union.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}

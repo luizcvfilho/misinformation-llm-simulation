@@ -1,0 +1,121 @@
+{
+  "inputs": {
+    "text": "This looks less like a spontaneous uprising and more like a numbers game designed to make one seem inevitable. Organizers are touting 8 million across more than 3,300 events in all 50 states, while the “about one million” figure and the claimed 600-event increase from October go largely untested. That convenient silence isn’t neutral: it lets a disputed estimate harden into apparent proof, serving whoever wants to dictate what the public supposedly believes. The real operation is shaping the story before anyone can question it.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "base_url": null,
+    "version": "structured_extraction_v5"
+  },
+  "output": {
+    "main_topic": "Critical scrutiny of protest turnout estimates and their role in shaping public perception",
+    "subtopics": [
+      "Organizers' turnout claims",
+      "Untested attendance and event-count figures",
+      "Framing and public perception"
+    ],
+    "central_entities": [
+      "Organizers",
+      "all 50 states",
+      "the public"
+    ],
+    "central_relations": [
+      {
+        "subject": "Organizers",
+        "action": "are touting",
+        "object": "8 million across more than 3,300 events in all 50 states",
+        "polarity": "affirmed",
+        "predicate": "tout",
+        "negation_scope": null,
+        "signed_action": "are touting",
+        "base_action": "are touting",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "touted_turnout",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "8 million"
+          },
+          {
+            "role": "event_count_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "more than 3,300"
+          },
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "the “about one million” figure and the claimed 600-event increase from October",
+        "action": "go largely untested",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "go untested",
+        "negation_scope": null,
+        "signed_action": "go largely untested",
+        "base_action": "go largely untested",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "reported_figure",
+            "value": 1000000.0,
+            "unit": null,
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million"
+          },
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600-event increase"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The report questions whether disputed turnout figures are being used to make an event appear inevitable and shape public belief.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The event looks more like a numbers game designed to make an uprising seem inevitable than a spontaneous uprising.",
+      "Silence around disputed estimates is not neutral and can let an estimate appear to be proof.",
+      "The operation is characterized as shaping the story before anyone can question it."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "ef9a8aa2c65c8e03223449e529d697a8970a21462534ec8442a4f23f4c699b75",
+      "input_sha256": "fa352fe2dea27e15c5bbd23bdf720be3487215875b3b67c7fb89aa5232eadd70",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Critical scrutiny of protest turnout estimates and their role in shaping public perception\",\n  \"subtopics\": [\n    \"Organizers' turnout claims\",\n    \"Untested attendance and event-count figures\",\n    \"Framing and public perception\"\n  ],\n  \"central_entities\": [\n    \"Organizers\",\n    \"all 50 states\",\n    \"the public\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The event looks more like a numbers game designed to make an uprising seem inevitable than a spontaneous uprising.\",\n    \"Silence around disputed estimates is not neutral and can let an estimate appear to be proof.\",\n    \"The operation is characterized as shaping the story before anyone can question it.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Organizers\",\n      \"action\": \"are touting\",\n      \"object\": \"8 million across more than 3,300 events in all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tout\",\n      \"negation_scope\": null,\n      \"signed_action\": \"are touting\",\n      \"base_action\": \"are touting\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"touted_turnout\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"8 million\"\n        },\n        {\n          \"role\": \"event_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"more than 3,300\"\n        },\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"the “about one million” figure and the claimed 600-event increase from October\",\n      \"action\": \"go largely untested\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"go untested\",\n      \"negation_scope\": null,\n      \"signed_action\": \"go largely untested\",\n      \"base_action\": \"go largely untested\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"reported_figure\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": null,\n          \"status\": \"approximate\",\n          \"expression\": \"about one million\"\n        },\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600-event increase\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The report questions whether disputed turnout figures are being used to make an event appear inevitable and shape public belief.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}

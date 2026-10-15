@@ -1,0 +1,165 @@
+{
+  "inputs": {
+    "text": "They’re making an example of someone who probed the machinery: people focus on the charges, then dismiss the group as purveyors of “false election claims.” Harry Wait requested ballots for Robin Vos and Cory Mason without consent. The jury convicted him of two misdemeanor election fraud charges and one felony identity theft charge, while acquitting him of another identity theft count. That split outcome doesn’t erase the bigger issue: he said he was demonstrating that the registration system could be exploited. The institutions benefit when people see that testing the system can bring serious consequences, and when scrutiny itself is treated as the threat.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "base_url": null,
+    "version": "structured_extraction_v5"
+  },
+  "output": {
+    "main_topic": "Harry Wait’s conviction after testing the voter registration system",
+    "subtopics": [
+      "Ballot requests made without consent",
+      "Split jury verdict",
+      "Claims that the registration system could be exploited",
+      "Consequences of scrutiny"
+    ],
+    "central_entities": [
+      "Harry Wait",
+      "Robin Vos",
+      "Cory Mason",
+      "jury",
+      "the group",
+      "the registration system",
+      "The institutions"
+    ],
+    "central_relations": [
+      {
+        "subject": "Harry Wait",
+        "action": "requested without consent",
+        "object": "ballots for Robin Vos and Cory Mason",
+        "polarity": "affirmed",
+        "predicate": "request",
+        "negation_scope": null,
+        "signed_action": "requested without consent",
+        "base_action": "requested without consent",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "jury",
+        "action": "convicted",
+        "object": "Harry Wait of misdemeanor election fraud charges and a felony identity theft charge",
+        "polarity": "affirmed",
+        "predicate": "convict",
+        "negation_scope": null,
+        "signed_action": "convicted",
+        "base_action": "convicted",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_fraud_charges",
+            "value": 2.0,
+            "unit": "charge",
+            "kind": "count",
+            "status": "exact",
+            "expression": "two misdemeanor election fraud charges"
+          },
+          {
+            "role": "identity_theft_charges",
+            "value": 1.0,
+            "unit": "charge",
+            "kind": "count",
+            "status": "exact",
+            "expression": "one felony identity theft charge"
+          }
+        ]
+      },
+      {
+        "subject": "jury",
+        "action": "acquitted",
+        "object": "Harry Wait of another identity theft count",
+        "polarity": "affirmed",
+        "predicate": "acquit",
+        "negation_scope": null,
+        "signed_action": "acquitted",
+        "base_action": "acquitted",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Harry Wait",
+        "action": "said he was demonstrating",
+        "object": "that the registration system could be exploited",
+        "polarity": "affirmed",
+        "predicate": "say",
+        "negation_scope": null,
+        "signed_action": "said he was demonstrating",
+        "base_action": "said he was demonstrating",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "The institutions",
+        "action": "benefit",
+        "object": "when people see that testing the system can bring serious consequences",
+        "polarity": "affirmed",
+        "predicate": "benefit",
+        "negation_scope": null,
+        "signed_action": "benefit",
+        "base_action": "benefit",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "scrutiny itself",
+        "action": "is treated as",
+        "object": "the threat",
+        "polarity": "affirmed",
+        "predicate": "treat",
+        "negation_scope": null,
+        "signed_action": "is treated as",
+        "base_action": "is treated as",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The report frames scrutiny of the registration system as being recast as a threat and met with serious consequences.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "They’re making an example of someone who probed the machinery.",
+      "That split outcome doesn’t erase the bigger issue.",
+      "The institutions benefit when people see that testing the system can bring serious consequences, and when scrutiny itself is treated as the threat."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "e8e4c26fd4c641922ff14c93d1380c582bb78ee597e5a505a33cf092caf8a7bd",
+      "input_sha256": "d24848f24cf34b911ffe54a70d0756536605bea7dabecbf929d9ab39d3e54af5",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Harry Wait’s conviction after testing the voter registration system\",\n  \"subtopics\": [\n    \"Ballot requests made without consent\",\n    \"Split jury verdict\",\n    \"Claims that the registration system could be exploited\",\n    \"Consequences of scrutiny\"\n  ],\n  \"central_entities\": [\n    \"Harry Wait\",\n    \"Robin Vos\",\n    \"Cory Mason\",\n    \"jury\",\n    \"the group\",\n    \"the registration system\",\n    \"The institutions\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"They’re making an example of someone who probed the machinery.\",\n    \"That split outcome doesn’t erase the bigger issue.\",\n    \"The institutions benefit when people see that testing the system can bring serious consequences, and when scrutiny itself is treated as the threat.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Harry Wait\",\n      \"action\": \"requested without consent\",\n      \"object\": \"ballots for Robin Vos and Cory Mason\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"request\",\n      \"negation_scope\": null,\n      \"signed_action\": \"requested without consent\",\n      \"base_action\": \"requested without consent\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"jury\",\n      \"action\": \"convicted\",\n      \"object\": \"Harry Wait of misdemeanor election fraud charges and a felony identity theft charge\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"convict\",\n      \"negation_scope\": null,\n      \"signed_action\": \"convicted\",\n      \"base_action\": \"convicted\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_fraud_charges\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"charge\",\n          \"status\": \"exact\",\n          \"expression\": \"two misdemeanor election fraud charges\"\n        },\n        {\n          \"role\": \"identity_theft_charges\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"charge\",\n          \"status\": \"exact\",\n          \"expression\": \"one felony identity theft charge\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"jury\",\n      \"action\": \"acquitted\",\n      \"object\": \"Harry Wait of another identity theft count\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acquit\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acquitted\",\n      \"base_action\": \"acquitted\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Harry Wait\",\n      \"action\": \"said he was demonstrating\",\n      \"object\": \"that the registration system could be exploited\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said he was demonstrating\",\n      \"base_action\": \"said he was demonstrating\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"The institutions\",\n      \"action\": \"benefit\",\n      \"object\": \"when people see that testing the system can bring serious consequences\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"benefit\",\n      \"negation_scope\": null,\n      \"signed_action\": \"benefit\",\n      \"base_action\": \"benefit\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"scrutiny itself\",\n      \"action\": \"is treated as\",\n      \"object\": \"the threat\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"treat\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is treated as\",\n      \"base_action\": \"is treated as\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The report frames scrutiny of the registration system as being recast as a threat and met with serious consequences.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}

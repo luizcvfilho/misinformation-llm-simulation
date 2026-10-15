@@ -1,0 +1,169 @@
+{
+  "inputs": {
+    "text": "The numbers are doing the work here: organizers tout 8 million across more than 3,300 events in all 50 states, while “about one million” and the claimed 600-event increase from October go largely untested. That gap isn’t just sloppy reporting—it’s useful. Let a disputed estimate circulate without scrutiny, and it starts to look like proof that everyone agrees. The real play is to manufacture inevitability, then use the public story they built to pressure people into accepting it.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "base_url": null,
+    "version": "structured_extraction_v5"
+  },
+  "output": {
+    "main_topic": "Untested estimates of event attendance and their use to suggest public consensus",
+    "subtopics": [
+      "Organizers' attendance figures",
+      "Limited scrutiny of estimates",
+      "Alleged efforts to manufacture inevitability"
+    ],
+    "central_entities": [
+      "organizers",
+      "50 states",
+      "people"
+    ],
+    "central_relations": [
+      {
+        "subject": "organizers",
+        "action": "tout",
+        "object": "8 million across more than 3,300 events in all 50 states",
+        "polarity": "affirmed",
+        "predicate": "tout",
+        "negation_scope": null,
+        "signed_action": "tout",
+        "base_action": "tout",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendance_count",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "8 million"
+          },
+          {
+            "role": "event_count_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 3,300"
+          },
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "about one million",
+        "action": "go largely untested",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "go untested",
+        "negation_scope": null,
+        "signed_action": "go largely untested",
+        "base_action": "go largely untested",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendance_count",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million"
+          }
+        ]
+      },
+      {
+        "subject": "claimed 600-event increase from October",
+        "action": "go largely untested",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "go untested",
+        "negation_scope": null,
+        "signed_action": "go largely untested",
+        "base_action": "go largely untested",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600-event increase"
+          }
+        ]
+      },
+      {
+        "subject": "disputed estimate",
+        "action": "circulate without scrutiny",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "circulate",
+        "negation_scope": null,
+        "signed_action": "circulate without scrutiny",
+        "base_action": "circulate without scrutiny",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "they",
+        "action": "use the public story they built to pressure people into accepting it",
+        "object": "people",
+        "polarity": "affirmed",
+        "predicate": "use",
+        "negation_scope": null,
+        "signed_action": "use the public story they built to pressure people into accepting it",
+        "base_action": "use the public story they built to pressure people into accepting it",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Skeptical framing of untested attendance estimates as a means of suggesting consensus and manufacturing inevitability.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The gap is useful, not merely sloppy reporting.",
+      "The alleged strategy is to manufacture inevitability and pressure people to accept the resulting public story."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "aee4f5553667386432c6b28da23c5c3a5b8c1a31f7abed9e0f38b5d0edbfd90f",
+      "input_sha256": "14c6bc8fe275b2fa6b02285bebbb1e973f706c7e1b6cc12a41d85426a228108a",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Untested estimates of event attendance and their use to suggest public consensus\",\n  \"subtopics\": [\n    \"Organizers' attendance figures\",\n    \"Limited scrutiny of estimates\",\n    \"Alleged efforts to manufacture inevitability\"\n  ],\n  \"central_entities\": [\n    \"organizers\",\n    \"50 states\",\n    \"people\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The gap is useful, not merely sloppy reporting.\",\n    \"The alleged strategy is to manufacture inevitability and pressure people to accept the resulting public story.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"tout\",\n      \"object\": \"8 million across more than 3,300 events in all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tout\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tout\",\n      \"base_action\": \"tout\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendance_count\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"8 million\"\n        },\n        {\n          \"role\": \"event_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 3,300\"\n        },\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"about one million\",\n      \"action\": \"go largely untested\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"go untested\",\n      \"negation_scope\": null,\n      \"signed_action\": \"go largely untested\",\n      \"base_action\": \"go largely untested\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendance_count\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"claimed 600-event increase from October\",\n      \"action\": \"go largely untested\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"go untested\",\n      \"negation_scope\": null,\n      \"signed_action\": \"go largely untested\",\n      \"base_action\": \"go largely untested\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600-event increase\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"disputed estimate\",\n      \"action\": \"circulate without scrutiny\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"circulate\",\n      \"negation_scope\": null,\n      \"signed_action\": \"circulate without scrutiny\",\n      \"base_action\": \"circulate without scrutiny\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"they\",\n      \"action\": \"use the public story they built to pressure people into accepting it\",\n      \"object\": \"people\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"use\",\n      \"negation_scope\": null,\n      \"signed_action\": \"use the public story they built to pressure people into accepting it\",\n      \"base_action\": \"use the public story they built to pressure people into accepting it\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Skeptical framing of untested attendance estimates as a means of suggesting consensus and manufacturing inevitability.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  }
+}
