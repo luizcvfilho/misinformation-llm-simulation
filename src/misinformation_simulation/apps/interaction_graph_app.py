@@ -43,6 +43,9 @@ def _refresh_graph_backend_if_stale() -> None:
         "cancel_check",
         "rewrite_mode",
         "vad_method",
+        "shared_cache_dir",
+        "reuse_rewrites",
+        "api_pricing",
     }
     backend_module = simulation_graph
     if getattr(
@@ -59,7 +62,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 25:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 26:
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_workspace)
         importlib.reload(interaction_graph_dataset_builder)

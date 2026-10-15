@@ -19,6 +19,7 @@ from misinformation_simulation.enums import (  # noqa: E402
     DEFAULT_LLM_MODEL,
     DEFAULT_LLM_PROVIDER,
 )
+from misinformation_simulation.llm.pricing import load_pricing  # noqa: E402
 from misinformation_simulation.simulation import run_news_interaction_graph  # noqa: E402
 from misinformation_simulation.simulation.io import (  # noqa: E402
     load_graph_config,
@@ -68,6 +69,15 @@ def _parse_args() -> argparse.Namespace:
         default="sentence-transformers/all-MiniLM-L6-v2",
     )
     parser.add_argument("--output-dir", default="output/interaction_graph")
+    parser.add_argument(
+        "--shared-cache-dir", help="Shared cache directory for compatible evaluations."
+    )
+    parser.add_argument(
+        "--reuse-rewrites",
+        action="store_true",
+        help="Reuse compatible saved rewrites; omit for an independent simulation replicate.",
+    )
+    parser.add_argument("--api-pricing", help="Optional JSON file overriding API token rates.")
     parser.add_argument("--vad-method", choices=("model", "llm", "dual"), default="model")
     parser.add_argument("--vad-llm-model", default=None)
     parser.add_argument("--vad-llm-provider", default=None)
@@ -110,6 +120,9 @@ def main() -> None:
         vad_llm_model=args.vad_llm_model,
         vad_llm_provider=args.vad_llm_provider,
         stdi_embedding_model=args.stdi_embedding_model,
+        shared_cache_dir=args.shared_cache_dir,
+        reuse_rewrites=args.reuse_rewrites,
+        api_pricing=load_pricing(args.api_pricing),
         output_dir=args.output_dir,
         output_prefix=args.output_prefix,
         progress_callback=progress_callback,

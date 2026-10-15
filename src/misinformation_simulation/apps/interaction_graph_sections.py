@@ -62,7 +62,7 @@ from misinformation_simulation.simulation import run_news_interaction_graph
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 25
+GRAPH_OUTPUT_LAYOUT_VERSION = 26
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -326,6 +326,21 @@ def _render_execution_settings(
 def _render_advanced_settings() -> dict[str, Any]:
     advanced_label = datetime.now().strftime("simulation_ui_%Y%m%d_%H%M%S")
     with st.expander("Advanced options"):
+        reuse_previous_results = st.checkbox(
+            "Reuse compatible results from previous executions",
+            value=True,
+            key="reuse_previous_results",
+            help=(
+                "Reuse saved rewrites and evaluations when inputs, model, prompts and stage "
+                "implementation match. Incompatible stages are recalculated automatically. "
+                "Disable for a new independent simulation replicate."
+            ),
+        )
+        api_pricing_path = st.text_input(
+            "API pricing JSON (optional)",
+            key="api_pricing_path",
+            help="Override dated USD-per-million-token rates; unpriced requests remain unknown.",
+        )
         sleep_seconds = st.number_input(
             "Sleep between requests (seconds)",
             min_value=0.0,
@@ -393,6 +408,8 @@ def _render_advanced_settings() -> dict[str, Any]:
 
     return {
         "sleep_seconds": sleep_seconds,
+        "reuse_previous_results": reuse_previous_results,
+        "api_pricing_path": api_pricing_path,
         "max_requests_per_minute": max_requests_per_minute,
         "retry_attempts": retry_attempts,
         "topic_drift_provider": topic_drift_provider,
@@ -748,6 +765,9 @@ def render_results_tab() -> None:
                     "rows": summary.get("rows_processed"),
                     "steps": summary.get("steps_total"),
                     "errors": summary.get("steps_error"),
+                    "api_requests": summary.get("api_usage", {}).get("requests"),
+                    "cache_hits": summary.get("api_usage", {}).get("cache_hits"),
+                    "estimated_cost_usd": summary.get("api_usage", {}).get("estimated_cost_usd"),
                     "output_prefix": bundle["output_prefix"],
                     "failure": bundle.get("error", ""),
                 }
@@ -791,6 +811,21 @@ def render_results_tab() -> None:
             key="simulation_results_tab_inspect_graph_result",
         )
         selected = bundles[selected_index]
+        usage = selected.get("summary", {}).get("api_usage")
+        if usage:
+            st.subheader("API usage and estimated cost")
+            st.caption(usage["note"])
+            st.dataframe(
+                pd.DataFrame.from_dict(usage["stages"], orient="index").rename_axis("stage"),
+                width="stretch",
+            )
+            if usage["estimated_cost_usd"] is None:
+                st.info(
+                    f"Total cost is unavailable for {usage['unpriced_requests']} request(s). "
+                    f"Known estimated subtotal: USD {usage['known_estimated_cost_usd']:.6f}."
+                )
+            else:
+                st.caption(f"Estimated total: USD {usage['estimated_cost_usd']:.6f}")
         if selected.get("summary_path") and "_studio_analysis_page" in st.session_state:
             if st.button(
                 "Analyze this run",

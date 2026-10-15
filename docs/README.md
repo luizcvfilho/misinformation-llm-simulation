@@ -9,6 +9,11 @@ This directory uses a purpose-based language policy.
 - The canonical institutional template must be preserved in its original language.
 - Code, identifiers, and code comments must remain in English.
 
+## Software Documentation
+
+- [API costs and compatible result reuse](api_costs_and_cache.md): stage compatibility,
+  shared cache configuration, recorded token usage and dated USD cost estimates.
+
 ## TCC Documents
 
 - `base_bibliografica_tcc.md`: annotated and verified literature base.

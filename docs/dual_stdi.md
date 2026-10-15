@@ -1,5 +1,8 @@
 # Dual STDI evaluation
 
+See [API costs and compatible result reuse](api_costs_and_cache.md) for cross-execution
+cache compatibility, stage invalidation and token/cost accounting in graph runs.
+
 Interaction-graph runs now default to `dual`. The **Dual STDI (embeddings + LLM judge)**
 checkbox is enabled by default in execution settings. Uncheck it to run the structured
 `cluster` or `llm` alone. Cluster includes polarity/numeric adjustments without judge requests.

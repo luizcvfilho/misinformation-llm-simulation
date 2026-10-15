@@ -19,6 +19,8 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_node_summary_dataframe,
     steps_to_dataframe,
 )
+from misinformation_simulation.llm.pricing import load_pricing
+from misinformation_simulation.llm.usage import combine_usage
 from misinformation_simulation.simulation.io import graph_config_from_payload
 from misinformation_simulation.simulation.types import SimulationResult
 
@@ -94,6 +96,7 @@ def _run_graph_queue(
     finished_units = 0
     runs_dir = Path(settings["output_dir"])
     batch_dir = runs_dir
+    batch_usage = []
 
     def report_work(index: int, row: int, steps: int) -> None:
         units_per_row = len(graphs[index - 1]["nodes"]) + 1
@@ -118,6 +121,7 @@ def _run_graph_queue(
         if not batch_prefix or batch_prefix in {".", ".."}:
             raise ValueError("Enter an output prefix before running.")
         batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
+        reuse = bool(settings.get("reuse_previous_results", False))
 
         for index, graph in enumerate(graphs, start=1):
             if job.cancel_event.is_set():
@@ -130,6 +134,7 @@ def _run_graph_queue(
             label = f"Graph {index}/{len(graphs)}: {name}"
             job.events.put(("progress", f"{label} — starting"))
             report_work(index, 0, 0)
+            run_dir = None
             try:
                 run_dir, _ = _reserve_output_directory(batch_dir, prefix)
                 graph_payload = build_editor_graph_payload(graph["nodes"])
@@ -156,6 +161,9 @@ def _run_graph_queue(
                     vad_llm_model=settings.get("vad_llm_model"),
                     vad_llm_provider=settings.get("vad_llm_provider"),
                     stdi_cache_dir=batch_dir / "evaluation_cache",
+                    shared_cache_dir=runs_dir / "shared_cache" if reuse else None,
+                    reuse_rewrites=reuse,
+                    api_pricing=load_pricing(settings.get("api_pricing_path", "")),
                     output_dir=run_dir,
                     output_prefix=prefix,
                     progress_callback=lambda message, label=label: job.events.put(
@@ -229,6 +237,14 @@ def _run_graph_queue(
                     )
                 )
                 job.events.put(("progress", f"{label} — failed: {exc}"))
+            finally:
+                cost_path = run_dir / f"{prefix}_api_costs.json" if run_dir else None
+                if cost_path is not None and cost_path.is_file():
+                    batch_usage.append(json.loads(cost_path.read_text(encoding="utf-8")))
+                    (batch_dir / "api_costs.json").write_text(
+                        json.dumps(combine_usage(batch_usage), indent=2, allow_nan=False),
+                        encoding="utf-8",
+                    )
     finally:
         job.events.put(
             (

@@ -7,6 +7,7 @@ from dataclasses import asdict
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import pandas as pd
 
@@ -29,6 +30,7 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.llm.usage import track_run_usage, usage_stage
 from misinformation_simulation.simulation.paths import project_graph_paths
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.topology import (
@@ -63,6 +65,7 @@ from misinformation_simulation.topic_drift import (
     extract_topic_structure,
     flatten_topic_structure,
 )
+from misinformation_simulation.topic_drift.cache_versions import runtime_cache_contracts
 from misinformation_simulation.topic_drift.cluster_comparison import (
     CLUSTER_STDI_COMPARISON_VERSION,
     TextEmbedder,
@@ -106,6 +109,7 @@ STDI_COMPONENTS = (
 )
 
 
+@usage_stage("rewrite")
 def _generate_rewrite(
     *,
     provider_normalized: str,
@@ -244,6 +248,7 @@ def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[s
                 setattr(step, f"{component}_{suffix}", embedding[component])
 
 
+@track_run_usage
 def run_news_interaction_graph(
     df: pd.DataFrame,
     *,
@@ -267,6 +272,9 @@ def run_news_interaction_graph(
     stdi_embedding_model: str = DEFAULT_STDI_EMBEDDING_MODEL,
     stdi_embedder: TextEmbedder | None = None,
     stdi_cache_dir: Path | str | None = None,
+    shared_cache_dir: Path | str | None = None,
+    reuse_rewrites: bool = False,
+    api_pricing: dict | None = None,
     stdi_judge_fn: Callable[..., Any] | None = None,
     stdi_judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     vad_model_bundle: VADModelBundle | None = None,
@@ -301,7 +309,14 @@ def run_news_interaction_graph(
         and (stdi_comparison_method in {"dual", "llm"} or vad_method != "model")
     ):
         cache_directory = Path(output_dir or DEFAULT_SIMULATION_OUTPUT_DIR) / "evaluation_cache"
-    evaluation_cache = EvaluationCache(cache_directory)
+    cache_contracts = runtime_cache_contracts()
+    if stdi_judge_fn is not None:
+        cache_contracts["judge"]["custom_judge_session"] = uuid4().hex
+    evaluation_cache = EvaluationCache(
+        cache_directory,
+        shared_directory=shared_cache_dir,
+        compatibility=cache_contracts,
+    )
     vad_cache: dict[str, VADScore] = {}
     vad_errors: dict[str, str] = {}
     judge_limiter = MinuteRateLimiter(max_requests_per_minute)
@@ -347,7 +362,8 @@ def run_news_interaction_graph(
             structure.extraction_issues = [str(exc)]
             structure.provenance = getattr(exc, "provenance", {})
             return structure
-        evaluation_cache.put("extraction", inputs, topic_structure_to_dict(structure))
+        if structure.extraction_status == "valid":
+            evaluation_cache.put("extraction", inputs, topic_structure_to_dict(structure))
         return structure
 
     def score_vad(text: str) -> VADScore:
@@ -689,17 +705,44 @@ def run_news_interaction_graph(
                     )
                 continue
             try:
-                rewrite_operations_started += 1
-                step_result.metadata["rewrite_operation_started"] = True
-                rewritten_text = _generate_rewrite(
-                    provider_normalized=provider_normalized,
-                    client=client,
-                    model=node.model,
-                    prompt=prompt,
-                    system_instruction=rewrite_prompt.system_instruction,
-                    retry_attempts=retry_attempts,
-                    limiter=limiters_by_node_id[node.node_id],
+                lineage = [node_id]
+                while lineage[-1] in parents_by_node:
+                    lineage.append(parents_by_node[lineage[-1]])
+                rewrite_inputs = {
+                    "news_id": news_id,
+                    "row_position": row_position,
+                    "original_text": original_text,
+                    "lineage": list(reversed(lineage)),
+                    "prompt": prompt,
+                    "system_instruction": rewrite_prompt.system_instruction,
+                    "version": rewrite_prompt.version,
+                    "temperature": GRAPH_REWRITE_TEMPERATURE,
+                    "provider": provider_normalized,
+                    "model": str(node.model),
+                    "base_url": str(client.base_url)
+                    if getattr(client, "base_url", None)
+                    else node.base_url,
+                }
+                saved_rewrite = (
+                    evaluation_cache.get("rewrite", rewrite_inputs) if reuse_rewrites else None
                 )
+                step_result.metadata["rewrite_cache_hit"] = saved_rewrite is not None
+                if saved_rewrite is not None:
+                    rewritten_text = saved_rewrite["text"]
+                else:
+                    rewrite_operations_started += 1
+                    step_result.metadata["rewrite_operation_started"] = True
+                    rewritten_text = _generate_rewrite(
+                        provider_normalized=provider_normalized,
+                        client=client,
+                        model=node.model,
+                        prompt=prompt,
+                        system_instruction=rewrite_prompt.system_instruction,
+                        retry_attempts=retry_attempts,
+                        limiter=limiters_by_node_id[node.node_id],
+                    )
+                    if reuse_rewrites:
+                        evaluation_cache.put("rewrite", rewrite_inputs, {"text": rewritten_text})
                 step_result.rewritten_text = rewritten_text
                 step_result.rewrite_status = "success"
                 if _cancel_requested(cancel_check):
@@ -1099,6 +1142,9 @@ def run_news_interaction_graph(
         )
     summary = {
         "schema_version": GRAPH_STEP_SCHEMA_VERSION,
+        "cache_contracts": cache_contracts,
+        "shared_cache_dir": str(shared_cache_dir) if shared_cache_dir is not None else None,
+        "reuse_rewrites": reuse_rewrites,
         **evaluation_metadata,
         "rewrite_system_instruction": rewrite_prompt.system_instruction,
         "rewrite_prompt_template": rewrite_prompt.template,

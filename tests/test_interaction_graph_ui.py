@@ -34,6 +34,9 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
     def updated_runner(
         df,
         *,
+        shared_cache_dir=None,
+        reuse_rewrites=False,
+        api_pricing=None,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -73,6 +76,9 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
     def updated_runner(
         df,
         *,
+        shared_cache_dir=None,
+        reuse_rewrites=False,
+        api_pricing=None,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -109,6 +115,9 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     ).run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
+    assert app.session_state.test_settings["reuse_previous_results"] is True
+    app.checkbox(key="reuse_previous_results").uncheck().run(timeout=30)
+    assert app.session_state.test_settings["reuse_previous_results"] is False
     mode_control = next(
         control for control in app.selectbox if control.label == "Transmission mode"
     )
@@ -229,7 +238,7 @@ def test_graph_nodes_to_forms_orders_nodes_from_edges() -> None:
     nodes = [
         SimulationNode(
             node_id="node_a",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             provider=Provider.GEMINI,
             personality="persona-a",
         ),
@@ -241,7 +250,7 @@ def test_graph_nodes_to_forms_orders_nodes_from_edges() -> None:
         ),
         SimulationNode(
             node_id="node_c",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             provider=Provider.GEMINI,
             personality="persona-c",
         ),
@@ -260,7 +269,7 @@ def test_graph_nodes_to_forms_preserves_branching_graphs() -> None:
     nodes = [
         SimulationNode(
             node_id="node_a",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             provider=Provider.GEMINI,
             personality="persona-a",
         ),
@@ -272,7 +281,7 @@ def test_graph_nodes_to_forms_preserves_branching_graphs() -> None:
         ),
         SimulationNode(
             node_id="node_c",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             provider=Provider.GEMINI,
             personality="persona-c",
         ),
@@ -298,7 +307,7 @@ def test_result_summaries_group_steps() -> None:
             source_node_id="original",
             source_node_label="description",
             provider="gemini",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             personality="persona",
             source_text="source",
             rewritten_text="rewrite",

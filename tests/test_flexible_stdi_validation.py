@@ -11,6 +11,7 @@ from misinformation_simulation.config.prompts import (
     STRUCTURED_JUDGE_PROMPT_TEMPLATE,
     STRUCTURED_TOPIC_PROMPT_TEMPLATE,
 )
+from misinformation_simulation.text_metrics.vad import VADScore
 from misinformation_simulation.topic_drift.cluster_comparison import TopicStructurePair
 from misinformation_simulation.topic_drift.comparison_workflow import run_comparison_workflow
 from misinformation_simulation.topic_drift.extraction import _build_topic_structure
@@ -167,6 +168,7 @@ def test_standalone_cluster_uses_binary_polarity_without_a_judge():
         llm_comparison_fn=judge,
         embedder=ConstantEmbedder(),
         reuse_structures=False,
+        vad_scorer=lambda _text: VADScore(3, 3, 3),
     )
     assert all(call["structured"] for call in calls)
     assert result.results.iloc[0]["relation_drift"] == pytest.approx(0.2)
