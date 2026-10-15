@@ -8,6 +8,8 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
+
 MAX_EVALUATION_ATTEMPTS = 4
 
 
@@ -72,14 +74,16 @@ def generate_gemini_text_with_retry(
             if before_request_hook is not None:
                 before_request_hook()
 
-            response = client.models.generate_content(
-                model=model,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    temperature=temperature,
-                ),
-                contents=prompt,
-            )
+            with api_request(provider="gemini", model=model):
+                response = client.models.generate_content(
+                    model=model,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction,
+                        temperature=temperature,
+                    ),
+                    contents=prompt,
+                )
+            record_response(response, provider="gemini", model=model)
             text = (response.text or "").strip()
             if not text:
                 raise ValueError("The API response was empty.")
@@ -119,14 +123,17 @@ def generate_openai_text_with_retry(
             if before_request_hook is not None:
                 before_request_hook()
 
-            response = client.chat.completions.create(
-                **_openai_chat_completion_kwargs(
-                    model=model,
-                    prompt=prompt,
-                    system_instruction=system_instruction,
-                    temperature=temperature,
+            provider = provider_for_client(client)
+            with api_request(provider=provider, model=model):
+                response = client.chat.completions.create(
+                    **_openai_chat_completion_kwargs(
+                        model=model,
+                        prompt=prompt,
+                        system_instruction=system_instruction,
+                        temperature=temperature,
+                    )
                 )
-            )
+            record_response(response, provider=provider, model=model)
             text = (response.choices[0].message.content or "").strip()
             if not text:
                 raise ValueError("The API response was empty.")

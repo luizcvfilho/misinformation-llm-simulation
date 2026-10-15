@@ -25,6 +25,7 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.llm.usage import usage_stage
 from misinformation_simulation.topic_drift.models import NumericValue, TopicRelation, TopicStructure
 from misinformation_simulation.topic_drift.qualifiers import resolve_polarity
 
@@ -307,6 +308,7 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
     )
 
 
+@usage_stage("extraction")
 def extract_topic_structure(
     *,
     text: str,

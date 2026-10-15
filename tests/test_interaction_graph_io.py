@@ -60,7 +60,7 @@ def test_build_and_load_graph_config_payload_round_trip(tmp_path: Path) -> None:
             node_id="node-a",
             label="Node A",
             provider="gemini",
-            model="gemini-3.1-flash-lite-preview",
+            model="gemini-3.5-flash-lite",
             personality="persona a",
         ),
         SimulationNode(

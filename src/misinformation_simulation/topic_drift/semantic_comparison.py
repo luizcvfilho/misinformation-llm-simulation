@@ -18,6 +18,7 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.llm.usage import usage_stage
 from misinformation_simulation.topic_drift.manual_evaluation_definitions import (
     SEMANTIC_COMPONENT_COLUMNS,
     SEMANTIC_DRIFT_LEVELS,
@@ -114,6 +115,7 @@ def _structure_for_judge(structure: TopicStructure) -> dict[str, Any]:
     return payload
 
 
+@usage_stage("judge")
 def compare_stdi_components_semantically(
     *,
     original_text: str,

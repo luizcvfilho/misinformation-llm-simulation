@@ -11,6 +11,7 @@ from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
     generate_openai_text_with_retry,
 )
+from misinformation_simulation.llm.usage import usage_stage
 from misinformation_simulation.text_metrics.vad import VAD_DIMENSIONS, VADScore
 
 LLM_VAD_VERSION = "llm_vad_expressed_tone_v1"
@@ -127,6 +128,7 @@ class LLMVADScorer:
         self.retry_attempts = retry_attempts
         self.last_attempts: list[dict] = []
 
+    @usage_stage("vad_llm")
     def assess(self, text: str) -> LLMVADAssessment:
         prompt = build_llm_vad_prompt(text)
         self.last_attempts = []
