@@ -7,6 +7,7 @@ from google.genai import types
 from openai import OpenAI
 
 from misinformation_simulation.enums import Provider
+from misinformation_simulation.llm.recovery import RequestContext, get_recovery, register_secret
 
 
 def normalize_provider(provider: Provider | str) -> str:
@@ -26,6 +27,75 @@ def create_llm_client(
     api_key: str | None = None,
     base_url: str | None = None,
     max_retries: int | None = None,
+) -> tuple[str, genai.Client | OpenAI]:
+    provider_name = normalize_provider(provider)
+    register_secret(api_key)
+    session = get_recovery() if provider_name != "local" else None
+
+    def create():
+        result = _create_llm_client(
+            provider=provider_name,
+            api_key=api_key,
+            base_url=base_url,
+            max_retries=0 if session else max_retries,
+        )
+        result[1]._recovery_configuration = {
+            "provider": provider_name,
+            "api_key": api_key,
+            "base_url": base_url,
+        }
+        result[1]._recovery_resolved_key = api_key or environment_api_key(provider_name)
+        register_secret(result[1]._recovery_resolved_key)
+        return result
+
+    if session:
+        return session.run(create, context=RequestContext(provider=provider_name))
+    return create()
+
+
+def environment_api_key(provider: str) -> str | None:
+    names = {
+        "chatgpt": ("CHATGPT_API_KEY", "OPENAI_API_KEY"),
+        "gemini": ("GEMINI_API_KEY",),
+        "openrouter": ("OPENROUTER_API_KEY",),
+        "deepseek": ("DEEPSEEK_API_KEY",),
+        "grok": ("GROK_API_KEY", "XAI_API_KEY"),
+        "local": ("LOCAL_OPENAI_API_KEY",),
+    }
+    return next((os.getenv(name) for name in names[provider] if os.getenv(name)), None)
+
+
+def refresh_llm_client(client):
+    current = getattr(client, "_recovery_replacement", client)
+    config = getattr(current, "_recovery_configuration", None)
+    if config and config["api_key"] is None:
+        key = environment_api_key(config["provider"])
+        if key != current._recovery_resolved_key:
+            _, current = create_llm_client(**config, max_retries=0)
+            client._recovery_replacement = current
+    return current
+
+
+def openai_credentials(client: OpenAI) -> dict[str, str]:
+    if hasattr(client, "_recovery_explicit_key"):
+        primary = client._recovery_explicit_key or (
+            os.getenv("CHATGPT_API_KEY") or os.getenv("OPENAI_API_KEY") or client.api_key
+        )
+    else:
+        primary = client.api_key
+    secondary = os.getenv("CHATGPT_API_KEY_FALLBACK") or os.getenv("OPENAI_API_KEY_FALLBACK")
+    keys = {"primary": primary}
+    if secondary and secondary != primary:
+        keys["secondary"] = secondary
+    return keys
+
+
+def _create_llm_client(
+    *,
+    provider: Provider | str,
+    api_key: str | None,
+    base_url: str | None,
+    max_retries: int | None,
 ) -> tuple[str, genai.Client | OpenAI]:
     provider_normalized = normalize_provider(provider)
     retry_kwargs = {} if max_retries is None else {"max_retries": max_retries}
@@ -80,11 +150,13 @@ def create_llm_client(
             ),
         )
     if provider_normalized == "chatgpt":
-        return provider_normalized, OpenAI(
+        client = OpenAI(
             api_key=resolved_api_key,
             base_url=base_url or "https://api.openai.com/v1",
             **retry_kwargs,
         )
+        client._recovery_explicit_key = api_key
+        return provider_normalized, client
     if provider_normalized == "openrouter":
         return provider_normalized, OpenAI(
             api_key=resolved_api_key,

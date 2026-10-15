@@ -4,6 +4,7 @@ import json
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
+from functools import partial
 from pathlib import Path
 from queue import Queue
 from threading import Event, Lock, Thread
@@ -13,6 +14,7 @@ from typing import Any
 import pandas as pd
 
 from misinformation_simulation.apps.interaction_graph_queue import output_prefix_for_graph
+from misinformation_simulation.apps.interaction_graph_recovery import RecoveryBroker
 from misinformation_simulation.apps.interaction_graph_ui import (
     build_editor_graph_payload,
     build_news_summary_dataframe,
@@ -22,6 +24,12 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 )
 from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.llm.pricing import load_pricing
+from misinformation_simulation.llm.recovery import (
+    RecoverySession,
+    RequestContext,
+    get_recovery,
+    use_recovery,
+)
 from misinformation_simulation.llm.usage import combine_usage
 from misinformation_simulation.simulation.graph import DEFAULT_STDI_EMBEDDING_MODEL
 from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
@@ -46,6 +54,15 @@ class GraphRunJob:
     latest_progress: dict[str, Any] | None = None
     tracker: ProgressTracker | None = None
     observing: bool = False
+    recovery: RecoveryBroker = field(init=False)
+    recovery_session: RecoverySession = field(init=False)
+
+    def __post_init__(self):
+        self.recovery = RecoveryBroker(self.cancel_event)
+        self.recovery_session = RecoverySession(
+            self.recovery.ask,
+            cancel_check=self.cancel_event.is_set,
+        )
 
 
 def start_graph_run_job(
@@ -58,7 +75,7 @@ def start_graph_run_job(
 ) -> GraphRunJob:
     job = GraphRunJob()
     thread = Thread(
-        target=_run_graph_queue,
+        target=_run_with_recovery,
         kwargs={
             "job": job,
             "df": df.copy(),
@@ -73,6 +90,17 @@ def start_graph_run_job(
     job.thread = thread
     thread.start()
     return job
+
+
+def _run_with_recovery(*, job: GraphRunJob, **kwargs) -> None:
+    with use_recovery(job.recovery_session):
+        _run_graph_queue(job=job, **kwargs)
+
+
+def _execute_graph(job: GraphRunJob, function: Callable):
+    if get_recovery() is job.recovery_session:
+        return job.recovery_session.run(function, context=RequestContext(), isolated=True)
+    return function()
 
 
 def _reserve_output_directory(base_dir: Path, prefix: str) -> tuple[Path, str]:
@@ -203,43 +231,47 @@ def _run_graph_queue(
                 run_dir, _ = _reserve_output_directory(batch_dir, prefix)
                 graph_payload = build_editor_graph_payload(graph["nodes"])
                 nodes, edges, start_node_id = graph_config_from_payload(graph_payload)
-                result = runner(
-                    df=df,
-                    nodes=nodes,
-                    edges=edges,
-                    start_node_id=start_node_id,
-                    text_column=settings["text_column"],
-                    title_column=settings["title_column"],
-                    news_id_column=settings["news_id_column"] or None,
-                    max_rows=int(settings["max_rows"]),
-                    sleep_seconds=float(settings["sleep_seconds"]),
-                    max_requests_per_minute=(int(settings["max_requests_per_minute"]) or None),
-                    retry_attempts=int(settings["retry_attempts"]),
-                    allow_title_fallback=settings["allow_title_fallback"],
-                    rewrite_mode=settings.get("rewrite_mode", "faithful"),
-                    topic_drift_model=settings["topic_drift_model"],
-                    topic_drift_provider=settings["topic_drift_provider"],
-                    stdi_comparison_method=settings.get("stdi_comparison_method", "dual"),
-                    stdi_judge_repeats=int(settings.get("stdi_judge_repeats", 3)),
-                    vad_method=settings.get("vad_method", "model"),
-                    vad_llm_model=settings.get("vad_llm_model"),
-                    vad_llm_provider=settings.get("vad_llm_provider"),
-                    stdi_cache_dir=batch_dir / "evaluation_cache",
-                    shared_cache_dir=runs_dir / "shared_cache" if reuse else None,
-                    reuse_rewrites=reuse,
-                    api_pricing=load_pricing(
-                        resolve_project_path(settings["api_pricing_path"])
-                        if settings.get("api_pricing_path")
-                        else None
+                result = _execute_graph(
+                    job,
+                    partial(
+                        runner,
+                        df=df,
+                        nodes=nodes,
+                        edges=edges,
+                        start_node_id=start_node_id,
+                        text_column=settings["text_column"],
+                        title_column=settings["title_column"],
+                        news_id_column=settings["news_id_column"] or None,
+                        max_rows=int(settings["max_rows"]),
+                        sleep_seconds=float(settings["sleep_seconds"]),
+                        max_requests_per_minute=(int(settings["max_requests_per_minute"]) or None),
+                        retry_attempts=int(settings["retry_attempts"]),
+                        allow_title_fallback=settings["allow_title_fallback"],
+                        rewrite_mode=settings.get("rewrite_mode", "faithful"),
+                        topic_drift_model=settings["topic_drift_model"],
+                        topic_drift_provider=settings["topic_drift_provider"],
+                        stdi_comparison_method=settings.get("stdi_comparison_method", "dual"),
+                        stdi_judge_repeats=int(settings.get("stdi_judge_repeats", 3)),
+                        vad_method=settings.get("vad_method", "model"),
+                        vad_llm_model=settings.get("vad_llm_model"),
+                        vad_llm_provider=settings.get("vad_llm_provider"),
+                        stdi_cache_dir=batch_dir / "evaluation_cache",
+                        shared_cache_dir=runs_dir / "shared_cache" if reuse else None,
+                        reuse_rewrites=reuse,
+                        api_pricing=load_pricing(
+                            resolve_project_path(settings["api_pricing_path"])
+                            if settings.get("api_pricing_path")
+                            else None
+                        ),
+                        output_dir=run_dir,
+                        output_prefix=prefix,
+                        progress_callback=lambda message, label=label: log(f"{label}: {message}"),
+                        operation_callback=lambda event, index=index: observe(index, event),
+                        work_progress_callback=lambda row, _total, steps, _nodes, index=index: (
+                            report_work(index, row, steps)
+                        ),
+                        cancel_check=job.cancel_event.is_set,
                     ),
-                    output_dir=run_dir,
-                    output_prefix=prefix,
-                    progress_callback=lambda message, label=label: log(f"{label}: {message}"),
-                    operation_callback=lambda event, index=index: observe(index, event),
-                    work_progress_callback=lambda row, _total, steps, _nodes, index=index: (
-                        report_work(index, row, steps)
-                    ),
-                    cancel_check=job.cancel_event.is_set,
                 )
                 result.summary["graph_name"] = name
                 result.summary["execution_name"] = batch_dir.name

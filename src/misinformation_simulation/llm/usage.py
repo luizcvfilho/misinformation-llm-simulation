@@ -27,6 +27,9 @@ def _as_dict(value: Any) -> dict:
 
 
 def provider_for_client(client: Any) -> str:
+    configuration = getattr(client, "_recovery_configuration", None)
+    if isinstance(configuration, dict) and configuration.get("provider"):
+        return configuration["provider"]
     host = urlparse(str(getattr(client, "base_url", ""))).hostname
     return {
         "api.openai.com": "chatgpt",

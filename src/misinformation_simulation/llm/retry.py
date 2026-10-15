@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import random
 import time
 from collections.abc import Callable
@@ -8,7 +9,14 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+from misinformation_simulation.llm.clients import refresh_llm_client
 from misinformation_simulation.llm.progress import retry_wait
+from misinformation_simulation.llm.recovery import (
+    RequestContext,
+    automatic_openai_call,
+    get_recovery,
+    set_request_context,
+)
 from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
 
 MAX_EVALUATION_ATTEMPTS = 4
@@ -25,6 +33,15 @@ def generate_and_parse_with_retry[T](
     """Share one budget across API and validation failures: initial call plus three retries."""
     if max_attempts <= 0:
         raise ValueError("'retry_attempts' must be greater than zero.")
+    if session := get_recovery():
+
+        def evaluate():
+            result = parse(generate())
+            if should_retry is not None and should_retry(result):
+                raise ValueError("The response did not meet validation requirements.")
+            return result
+
+        return session.run(evaluate)
     max_attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS)
     for attempt in range(1, max_attempts + 1):
         reason = "response did not meet validation requirements"
@@ -72,6 +89,29 @@ def generate_gemini_text_with_retry(
     base_delay: float = 2.0,
     before_request_hook: Callable[[], None] | None = None,
 ) -> str:
+    if session := get_recovery():
+
+        def generate():
+            set_request_context(RequestContext("gemini", model))
+            request_client = refresh_llm_client(client)
+            if before_request_hook is not None:
+                before_request_hook()
+            with api_request(provider="gemini", model=model):
+                response = request_client.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction,
+                        temperature=temperature,
+                    ),
+                )
+            record_response(response, provider="gemini", model=model)
+            text = (response.text or "").strip()
+            if not text:
+                raise ValueError("The API response was empty.")
+            return text
+
+        return session.run(generate, context=RequestContext("gemini", model))
     last_error = None
 
     for attempt in range(1, max_attempts + 1):
@@ -128,28 +168,45 @@ def generate_openai_text_with_retry(
     base_delay: float = 2.0,
     before_request_hook: Callable[[], None] | None = None,
 ) -> str:
+    provider = provider_for_client(client)
+    session = get_recovery() if provider != "local" else None
+
+    def generate(request_client):
+        if before_request_hook is not None:
+            before_request_hook()
+        with api_request(provider=provider, model=model):
+            response = request_client.chat.completions.create(
+                **_openai_chat_completion_kwargs(
+                    model=model,
+                    prompt=prompt,
+                    system_instruction=system_instruction,
+                    temperature=temperature,
+                )
+            )
+            _raise_response_error(response)
+        record_response(response, provider=provider, model=model)
+        text = (response.choices[0].message.content or "").strip()
+        if not text:
+            raise ValueError("The API response was empty.")
+        return text
+
+    if session:
+        context = RequestContext(provider, model, endpoint=str(getattr(client, "base_url", "")))
+
+        def request():
+            if provider == "chatgpt":
+                return session.openai_call(client, generate, model=model)
+            set_request_context(context)
+            return generate(refresh_llm_client(client))
+
+        return session.run(request, context=context)
     last_error = None
 
     for attempt in range(1, max_attempts + 1):
         try:
-            if before_request_hook is not None:
-                before_request_hook()
-
-            provider = provider_for_client(client)
-            with api_request(provider=provider, model=model):
-                response = client.chat.completions.create(
-                    **_openai_chat_completion_kwargs(
-                        model=model,
-                        prompt=prompt,
-                        system_instruction=system_instruction,
-                        temperature=temperature,
-                    )
-                )
-            record_response(response, provider=provider, model=model)
-            text = (response.choices[0].message.content or "").strip()
-            if not text:
-                raise ValueError("The API response was empty.")
-            return text
+            if provider == "chatgpt" and os.getenv("LLM_ERROR_RECOVERY", "auto").lower() != "off":
+                return automatic_openai_call(client, generate, model=model)
+            return generate(client)
         except Exception as exc:
             last_error = exc
             error_text = str(exc).lower()
@@ -172,3 +229,22 @@ def generate_openai_text_with_retry(
             time.sleep(delay)
 
     raise last_error
+
+
+class ResponseEnvelopeError(Exception):
+    def __init__(self, error: dict):
+        self.body = error
+        self.code = error.get("code")
+        self.type = error.get("type")
+        self.message = error.get("message") or "The provider returned an error response."
+        super().__init__(self.message)
+
+
+def _raise_response_error(response) -> None:
+    error = (
+        response.get("error") if isinstance(response, dict) else getattr(response, "error", None)
+    )
+    if error:
+        if hasattr(error, "model_dump"):
+            error = error.model_dump()
+        raise ResponseEnvelopeError(error if isinstance(error, dict) else {"message": str(error)})

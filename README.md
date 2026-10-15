@@ -537,6 +537,8 @@ Example:
 ```dotenv
 # LLM providers
 GEMINI_API_KEY=your_gemini_key
+CHATGPT_API_KEY=your_primary_openai_key
+CHATGPT_API_KEY_FALLBACK=your_secondary_openai_key
 OPENROUTER_API_KEY=your_openrouter_key
 DEEPSEEK_API_KEY=your_deepseek_key
 
@@ -555,6 +557,8 @@ NEWSDATA_API_KEY=your_newsdata_key
 Variable reference:
 
 - `GEMINI_API_KEY`: Required for `Provider.GEMINI`
+- `CHATGPT_API_KEY` / `OPENAI_API_KEY`: OpenAI primary key (`Provider.CHATGPT`)
+- `CHATGPT_API_KEY_FALLBACK` / `OPENAI_API_KEY_FALLBACK`: Optional OpenAI secondary key
 - `OPENROUTER_API_KEY`: Required for `Provider.OPENROUTER`
 - `DEEPSEEK_API_KEY`: Required for `Provider.DEEPSEEK`
 - `OPENROUTER_HTTP_REFERER`: Optional OpenRouter header
@@ -564,6 +568,13 @@ Variable reference:
 - `NEWSDATA_API_KEY`: Required for `make fetch-news`
 
 Note: You can still pass `api_key=` and `base_url=` directly in `rewrite_news_with_personality`.
+
+Graph Studio pauses on LLM errors and offers **Try again** or **Allow this error in future
+executions and continue**, with a control to clear remembered permissions. OpenAI resource
+exhaustion automatically tries the other configured key in either direction. In its dialog,
+choose which key to try first; each manual retry can try both keys once. Interactive scripts
+and notebooks use a local dialog or terminal input. See
+[interactive LLM error recovery](docs/llm_error_recovery.md) for details and unattended behavior.
 
 ### Rewriting false news as truthful news
 

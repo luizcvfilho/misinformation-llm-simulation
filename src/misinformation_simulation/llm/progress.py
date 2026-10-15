@@ -18,6 +18,14 @@ _context: ContextVar[dict | None] = ContextVar("execution_context", default=None
 _operation: ContextVar[dict | None] = ContextVar("execution_operation", default=None)
 
 
+def progress_context() -> dict:
+    current = _operation.get() or {}
+    return {
+        **(_context.get() or {}),
+        **{key: current[key] for key in ("stage", "operation_id") if key in current},
+    }
+
+
 def set_progress_context(**values: Any) -> None:
     _context.set(values)
 

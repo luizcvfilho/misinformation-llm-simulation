@@ -32,6 +32,7 @@ from misinformation_simulation.apps.interaction_graph_queue import (
     build_graph_queue_archive,
     move_graph,
 )
+from misinformation_simulation.apps.interaction_graph_recovery import render_recovery_dialog
 from misinformation_simulation.apps.interaction_graph_results import (
     clear_imported_results,
     evaluation_result_bundle,
@@ -58,6 +59,7 @@ from misinformation_simulation.config.prompts import (
     GRAPH_REWRITE_MODES,
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from misinformation_simulation.llm.recovery import PermissionStore
 from misinformation_simulation.simulation import run_news_interaction_graph
 from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
@@ -548,6 +550,13 @@ def _render_run_controls(
 ) -> None:
     queue = st.session_state.graph_queue
     active_job = st.session_state.get("run_job")
+    permissions = PermissionStore()
+    permission_count = len(permissions.signatures())
+    if permission_count:
+        st.caption(f"Remembered error permissions: {permission_count}")
+        if st.button("Clear remembered error permissions"):
+            permissions.clear()
+            st.rerun()
     run_button = st.button(
         "Run graph queue" if queue else "Run simulation",
         type="primary",
@@ -641,6 +650,9 @@ def _render_run_monitor() -> None:
     elif st.button("Cancel simulation", type="secondary", width="stretch"):
         job.cancel_event.set()
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
+    if request := job.recovery.pending:
+        st.warning("Execution is paused and waiting for your error recovery decision.")
+        render_recovery_dialog(job, request)
     if st.session_state.run_messages:
         _render_run_log()
 
