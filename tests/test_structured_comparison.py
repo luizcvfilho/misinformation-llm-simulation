@@ -385,7 +385,7 @@ def test_invalid_judge_draw_is_unavailable_and_is_not_cached(tmp_path):
     result = compare(cache=EvaluationCache(tmp_path), judge_fn=lambda **kwargs: invalid)
     assert result["llm_judge"]["status"] == "failed"
     assert result["llm_judge"]["valid_repeats"] == 0
-    assert not list(tmp_path.glob("judge_*.json"))
+    assert not list(tmp_path.rglob("judge_*.json"))
     json.dumps(result, allow_nan=False)
 
 

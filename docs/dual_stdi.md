@@ -236,8 +236,12 @@ incremental scores. Each has its own `stdi_{branch}_cumulative_valid_steps` and
 Accumulations reset for every news item and retain full precision.
 Cancellation stops further judge calls; already evaluated results remain available.
 
-Canonical extraction/judge outputs are stored under `evaluation_cache/` in the execution
-directory. Queued graphs share the batch cache. The API accepts `stdi_cache_dir` to reuse a
+Canonical evaluation outputs are stored under `evaluation_cache/` in the execution
+directory, separated into `extraction/`, `judge/`, `vad_llm/`, and `vad_model/` subfolders.
+Filenames and cache keys are unchanged. Existing flat caches remain readable; when both
+layouts contain an entry, the namespace subfolder takes precedence. New writes use the
+subfolders, without automatically moving historical files. Queued graphs share the batch cache.
+The API accepts `stdi_cache_dir` to reuse a
 chosen directory. Cache keys include texts, title, relevant structures, model/provider,
 endpoint and prompt version. API keys are not stored in cache keys. Reusing saved outputs
 makes numerical aggregation reproducible; new LLM calls can still vary.

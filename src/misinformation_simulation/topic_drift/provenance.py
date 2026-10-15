@@ -37,7 +37,7 @@ def request_provenance(
 
 
 class EvaluationCache:
-    """Caches canonical saved outputs by complete input/configuration hashes."""
+    """Caches canonical outputs in namespace folders, with legacy flat-cache reads."""
 
     def __init__(self, directory: Path | str | None = None) -> None:
         self.directory = Path(directory) if directory is not None else None
@@ -48,7 +48,9 @@ class EvaluationCache:
         if key in self._records:
             return self._records[key]
         if self.directory is not None:
-            path = self.directory / f"{key}.json"
+            path = self.directory / namespace / f"{key}.json"
+            if not path.exists():
+                path = self.directory / f"{key}.json"
             if path.exists():
                 payload = json.loads(path.read_text(encoding="utf-8"))
                 if payload.get("inputs") != inputs:
@@ -61,9 +63,10 @@ class EvaluationCache:
         key = f"{namespace}_{input_hash(inputs)}"
         self._records[key] = output
         if self.directory is not None:
-            self.directory.mkdir(parents=True, exist_ok=True)
-            path = self.directory / f"{key}.json"
-            temporary = self.directory / f".{key}.{uuid4().hex}.tmp"
+            directory = self.directory / namespace
+            directory.mkdir(parents=True, exist_ok=True)
+            path = directory / f"{key}.json"
+            temporary = directory / f".{key}.{uuid4().hex}.tmp"
             temporary.write_text(
                 json.dumps(
                     {"inputs": inputs, "output": output},
