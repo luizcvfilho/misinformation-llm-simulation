@@ -21,7 +21,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 )
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.usage import combine_usage
-from misinformation_simulation.simulation.io import graph_config_from_payload
+from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
 from misinformation_simulation.simulation.types import SimulationResult
 
 GraphRunner = Callable[..., SimulationResult]
@@ -94,7 +94,7 @@ def _run_graph_queue(
     graph_units = [rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in graphs]
     total_units = sum(graph_units)
     finished_units = 0
-    runs_dir = Path(settings["output_dir"])
+    runs_dir = resolve_project_path(Path(settings["output_dir"]).expanduser())
     batch_dir = runs_dir
     batch_usage = []
 
@@ -163,7 +163,11 @@ def _run_graph_queue(
                     stdi_cache_dir=batch_dir / "evaluation_cache",
                     shared_cache_dir=runs_dir / "shared_cache" if reuse else None,
                     reuse_rewrites=reuse,
-                    api_pricing=load_pricing(settings.get("api_pricing_path", "")),
+                    api_pricing=load_pricing(
+                        resolve_project_path(settings["api_pricing_path"])
+                        if settings.get("api_pricing_path")
+                        else None
+                    ),
                     output_dir=run_dir,
                     output_prefix=prefix,
                     progress_callback=lambda message, label=label: job.events.put(

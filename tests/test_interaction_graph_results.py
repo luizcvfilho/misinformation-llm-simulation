@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from misinformation_simulation.apps import interaction_graph_sections
+from misinformation_simulation.apps import interaction_graph_io, interaction_graph_sections
 from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_comparison_dataframe,
 )
@@ -14,6 +14,7 @@ from misinformation_simulation.apps.interaction_graph_results import (
     load_saved_result,
     remove_imported_result,
 )
+from misinformation_simulation.simulation import io as simulation_io
 from misinformation_simulation.simulation.types import SimulationStepResult
 
 
@@ -107,6 +108,8 @@ def test_remove_and_clear_only_imported_results() -> None:
 
 
 def test_results_ui_imports_compact_runs_and_distinguishes_executions(tmp_path, monkeypatch):
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
     monkeypatch.chdir(tmp_path)
     graph_name = "A descriptive graph name that exceeds the filename limit"
     prefix = "01_a_descriptive_graph_name_that_exc"
@@ -131,6 +134,7 @@ def test_results_ui_imports_compact_runs_and_distinguishes_executions(tmp_path, 
         (folder / f"{prefix}_steps.jsonl").write_text("", encoding="utf-8")
         paths.append(path)
 
+    monkeypatch.chdir(tmp_path.parent)
     app = AppTest.from_string(
         "import streamlit as st\n"
         "from misinformation_simulation.apps.interaction_graph_sections "

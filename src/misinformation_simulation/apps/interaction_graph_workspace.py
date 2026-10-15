@@ -12,6 +12,7 @@ from misinformation_simulation.simulation.io import resolve_result_reference
 PERSISTENT_WIDGET_KEYS = (
     "analysis_detail_source",
     "analysis_runs_folders",
+    "api_pricing_path",
     "analysis_case_explorer_case_grouping",
     "analysis_contrast_cases_contrast",
     "analysis_contrast_cases_ordering",

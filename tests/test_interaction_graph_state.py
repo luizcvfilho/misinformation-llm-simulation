@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from misinformation_simulation.apps import interaction_graph_state as state
+from misinformation_simulation.config.interaction_chains import INTERACTION_CHAINS_ROOT
 
 
 class FakeSessionState(dict):
@@ -29,18 +30,22 @@ def test_initialize_state_sets_defaults(monkeypatch) -> None:
     assert fake_st.session_state.current_graph_name == Path(state.DEFAULT_GRAPH_CONFIG_PATH).stem
 
 
-def test_initialize_state_migrates_chain_root_but_keeps_selected_subfolders(monkeypatch) -> None:
+def test_initialize_state_keeps_selected_root_subfolders_and_empty_path(monkeypatch) -> None:
     fake_st = SimpleNamespace(
-        session_state=FakeSessionState(graph_queue_folder_path=state.INTERACTION_CHAINS_ROOT)
+        session_state=FakeSessionState(graph_queue_folder_path=INTERACTION_CHAINS_ROOT)
     )
     monkeypatch.setattr(state, "st", fake_st)
     monkeypatch.setattr(state, "load_initial_graph_nodes", lambda: [])
     state.initialize_state()
-    assert fake_st.session_state.graph_queue_folder_path == state.DEFAULT_INTERACTION_CHAINS_PATH
+    assert fake_st.session_state.graph_queue_folder_path == INTERACTION_CHAINS_ROOT
 
-    fake_st.session_state.graph_queue_folder_path = f"{state.INTERACTION_CHAINS_ROOT}/legacy"
+    fake_st.session_state.graph_queue_folder_path = f"{INTERACTION_CHAINS_ROOT}/legacy"
     state.initialize_state()
     assert fake_st.session_state.graph_queue_folder_path.endswith("/legacy")
+
+    fake_st.session_state.graph_queue_folder_path = ""
+    state.initialize_state()
+    assert fake_st.session_state.graph_queue_folder_path == ""
 
 
 def test_move_and_remove_node_update_session_state(monkeypatch) -> None:

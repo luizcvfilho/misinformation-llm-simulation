@@ -14,6 +14,7 @@ from misinformation_simulation.simulation.io import (
     filter_query_metadata_rows,
     load_graph_config_payload,
     load_news_dataframe,
+    resolve_project_path,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -56,6 +57,7 @@ def select_local_file(
     *,
     title: str,
     filetypes: list[tuple[str, str]],
+    current_path: str = "",
 ) -> str | None:
     try:
         import tkinter as tk
@@ -70,16 +72,16 @@ def select_local_file(
         root.update()
         selected_path = filedialog.askopenfilename(
             title=title,
-            initialdir=str(PROJECT_ROOT),
+            initialdir=str(browse_initial_directory(current_path)),
             filetypes=filetypes,
         )
     finally:
         root.destroy()
 
-    return selected_path or None
+    return display_project_path(selected_path) if selected_path else None
 
 
-def select_local_directory(*, title: str) -> str | None:
+def select_local_directory(*, title: str, current_path: str = "") -> str | None:
     try:
         import tkinter as tk
         from tkinter import filedialog
@@ -91,8 +93,100 @@ def select_local_directory(*, title: str) -> str | None:
     try:
         root.attributes("-topmost", True)
         root.update()
-        selected_path = filedialog.askdirectory(title=title, initialdir=str(PROJECT_ROOT))
+        selected_path = filedialog.askdirectory(
+            title=title, initialdir=str(browse_initial_directory(current_path))
+        )
     finally:
         root.destroy()
 
-    return selected_path or None
+    return display_project_path(selected_path) if selected_path else None
+
+
+def display_project_path(path: str) -> str:
+    if not path.strip():
+        return ""
+    resolved = resolve_project_path(Path(path.strip()).expanduser(), PROJECT_ROOT).resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def browse_initial_directory(current_path: str) -> Path:
+    if not current_path.strip():
+        return PROJECT_ROOT
+    parent = (
+        resolve_project_path(Path(current_path.strip()).expanduser(), PROJECT_ROOT).resolve().parent
+    )
+    while not parent.is_dir() and parent != parent.parent:
+        parent = parent.parent
+    return parent if parent.is_dir() else PROJECT_ROOT
+
+
+def _normalize_path_input(key: str, multiple: bool) -> None:
+    value = st.session_state[key]
+    paths = value.splitlines() if multiple else [value]
+    normalized = "\n".join(
+        dict.fromkeys(display_project_path(path) for path in paths if path.strip())
+    )
+    if value != normalized:
+        st.session_state[key] = normalized
+
+
+def _browse_path(
+    key: str,
+    title: str,
+    directory: bool,
+    filetypes: list[tuple[str, str]],
+    multiple: bool,
+) -> None:
+    current = st.session_state[key]
+    paths = [line for line in current.splitlines() if line.strip()]
+    current_path = paths[-1] if paths else ""
+    try:
+        if directory:
+            selected = select_local_directory(title=title, current_path=current_path)
+        else:
+            selected = select_local_file(
+                title=title, filetypes=filetypes, current_path=current_path
+            )
+    except Exception as exc:
+        st.error(str(exc))
+        return
+    if selected:
+        st.session_state[key] = f"{current}\n{selected}" if multiple and current else selected
+        _normalize_path_input(key, multiple)
+
+
+def render_path_input(
+    label: str,
+    *,
+    key: str,
+    title: str,
+    default: str = "",
+    help: str | None = None,
+    directory: bool = False,
+    filetypes: list[tuple[str, str]] | None = None,
+    browse_key: str | None = None,
+    multiple: bool = False,
+) -> str:
+    if key not in st.session_state:
+        st.session_state[key] = default
+    _normalize_path_input(key, multiple)
+    columns = st.columns([3, 1], vertical_alignment="bottom")
+    widget = columns[0].text_area if multiple else columns[0].text_input
+    value = widget(
+        label,
+        key=key,
+        help=help,
+        on_change=_normalize_path_input,
+        args=(key, multiple),
+    )
+    columns[1].button(
+        "Browse...",
+        key=browse_key or f"browse_{key}",
+        width="stretch",
+        on_click=_browse_path,
+        args=(key, title, directory, filetypes or [("All files", "*.*")], multiple),
+    )
+    return value

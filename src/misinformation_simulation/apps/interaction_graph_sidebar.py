@@ -10,7 +10,7 @@ from misinformation_simulation.apps.interaction_graph_io import (
     load_local_graph_payload_cached,
     load_uploaded_dataframe,
     load_uploaded_graph_payload,
-    select_local_file,
+    render_path_input,
 )
 from misinformation_simulation.apps.interaction_graph_state import (
     import_graph_payload,
@@ -42,30 +42,16 @@ def _render_dataset_loader() -> tuple[pd.DataFrame | None, str]:
     df: pd.DataFrame | None = None
     dataset_label = ""
     if dataset_mode == "Project file":
-        dataset_path_cols = st.columns([3, 1], vertical_alignment="bottom")
-        if dataset_path_cols[1].button(
-            "Browse...",
-            key="browse_dataset_path",
-            width="stretch",
-        ):
-            try:
-                selected_path = select_local_file(
-                    title="Select dataset file",
-                    filetypes=[
-                        ("Data files", "*.csv *.json *.jsonl"),
-                        ("CSV files", "*.csv"),
-                        ("JSON files", "*.json *.jsonl"),
-                        ("All files", "*.*"),
-                    ],
-                )
-                if selected_path is not None:
-                    st.session_state.dataset_path = selected_path
-                    st.rerun()
-            except Exception as exc:
-                st.error(str(exc))
-        dataset_path_cols[0].text_input(
+        render_path_input(
             "Dataset path",
             key="dataset_path",
+            title="Select dataset file",
+            filetypes=[
+                ("Data files", "*.csv *.json *.jsonl"),
+                ("CSV files", "*.csv"),
+                ("JSON files", "*.json *.jsonl"),
+                ("All files", "*.*"),
+            ],
             help="CSV, JSON, or JSONL file with the news rows used as simulation input.",
         )
         dataset_label = st.session_state.dataset_path
@@ -107,28 +93,11 @@ def _render_graph_importer() -> None:
         key="simulation_graph_importer_graph_source",
     )
     if graph_mode == "Project file":
-        graph_path_cols = st.columns([3, 1], vertical_alignment="bottom")
-        if graph_path_cols[1].button(
-            "Browse...",
-            key="browse_graph_config_path",
-            width="stretch",
-        ):
-            try:
-                selected_path = select_local_file(
-                    title="Select graph config file",
-                    filetypes=[
-                        ("JSON files", "*.json"),
-                        ("All files", "*.*"),
-                    ],
-                )
-                if selected_path is not None:
-                    st.session_state.graph_config_path = selected_path
-                    st.rerun()
-            except Exception as exc:
-                st.error(str(exc))
-        graph_path_cols[0].text_input(
+        render_path_input(
             "Graph config path",
             key="graph_config_path",
+            title="Select graph config file",
+            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
             help="JSON file with nodes, edges, and optional start_node_id for the graph.",
         )
         if st.button("Load graph config", width="stretch"):

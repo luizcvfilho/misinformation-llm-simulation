@@ -25,7 +25,7 @@ from misinformation_simulation.apps.interaction_graph_components import (
     render_result_bundle,
 )
 from misinformation_simulation.apps.interaction_graph_generator import render_graph_generator
-from misinformation_simulation.apps.interaction_graph_io import select_local_directory
+from misinformation_simulation.apps.interaction_graph_io import render_path_input
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
     add_graphs_from_directory,
@@ -59,10 +59,11 @@ from misinformation_simulation.config.prompts import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation import run_news_interaction_graph
+from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 26
+GRAPH_OUTPUT_LAYOUT_VERSION = 27
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -336,9 +337,11 @@ def _render_advanced_settings() -> dict[str, Any]:
                 "Disable for a new independent simulation replicate."
             ),
         )
-        api_pricing_path = st.text_input(
+        api_pricing_path = render_path_input(
             "API pricing JSON (optional)",
             key="api_pricing_path",
+            title="Select API pricing JSON",
+            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
             help="Override dated USD-per-million-token rates; unpriced requests remain unknown.",
         )
         sleep_seconds = st.number_input(
@@ -383,13 +386,11 @@ def _render_advanced_settings() -> dict[str, Any]:
             key="simulation_advanced_settings_topic_drift_provider",
         )
         topic_drift_model = _render_topic_drift_model_selector()
-        output_dir = st.text_input(
+        output_dir = render_path_input(
             "Output directory",
-            value=widget_default(
-                "simulation_advanced_settings_output_directory",
-                "output/interaction_graph/app_runs",
-                "",
-            ),
+            title="Select output directory",
+            directory=True,
+            default="output/interaction_graph/app_runs",
             help=(
                 "Each execution gets a folder containing one subfolder per graph, "
                 "including executions with a single graph."
@@ -487,18 +488,12 @@ def _render_graph_queue() -> None:
             st.error(str(exc))
 
     with st.expander("Add graphs from a folder"):
-        folder_cols = st.columns([3, 1], vertical_alignment="bottom")
-        if folder_cols[1].button("Browse...", key="browse_graph_queue_folder"):
-            try:
-                selected_folder = select_local_directory(title="Select folder with graph configs")
-                if selected_folder:
-                    st.session_state.graph_queue_folder_path = selected_folder
-                    st.rerun()
-            except Exception as exc:
-                st.error(str(exc))
-        folder_cols[0].text_input(
+        render_path_input(
             "Graph folder path",
             key="graph_queue_folder_path",
+            title="Select folder with graph configs",
+            directory=True,
+            browse_key="browse_graph_queue_folder",
             help="Adds every JSON graph config directly inside this folder, in filename order.",
         )
         if st.button("Add folder to queue", disabled=st.session_state.get("run_job") is not None):
@@ -712,7 +707,7 @@ def _validate_run_inputs(
 def render_results_tab() -> None:
     st.subheader("Simulation outputs")
     with st.expander("Import a saved simulation"):
-        output_dir = Path("output/interaction_graph/app_runs")
+        output_dir = resolve_project_path("output/interaction_graph/app_runs")
         saved_results = find_saved_results(output_dir)
         if saved_results:
             selected_path = st.selectbox(
@@ -724,14 +719,16 @@ def render_results_tab() -> None:
         else:
             selected_path = None
             st.caption("No saved simulations found in the default output directory.")
-        custom_path = st.text_input(
+        custom_path = render_path_input(
             "Or enter a summary JSON path",
             key="saved_result_path",
+            title="Select simulation summary JSON",
+            filetypes=[("Summary files", "*_summary.json"), ("JSON files", "*.json")],
             help="The matching _steps.jsonl file must be in the same folder.",
         )
         if st.button("Import result", disabled=not (custom_path.strip() or selected_path)):
             try:
-                path = Path(custom_path.strip()) if custom_path.strip() else selected_path
+                path = resolve_project_path(custom_path) if custom_path.strip() else selected_path
                 if path is None:
                     raise ValueError("Select a saved result.")
                 bundle = load_saved_result(path)

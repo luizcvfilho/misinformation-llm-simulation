@@ -61,6 +61,7 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     select_evaluation_steps,
 )
 from misinformation_simulation.apps.interaction_graph_components import render_result_bundle
+from misinformation_simulation.apps.interaction_graph_io import render_path_input
 from misinformation_simulation.apps.interaction_graph_results import (
     evaluation_result_bundle,
     load_saved_result,
@@ -71,6 +72,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 )
 from misinformation_simulation.apps.interaction_graph_workspace import widget_default
 from misinformation_simulation.config.prompts import GRAPH_REWRITE_MODE_LABELS
+from misinformation_simulation.simulation.io import resolve_project_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS_DIR = PROJECT_ROOT / "output" / "interaction_graph" / "app_runs"
@@ -132,15 +134,23 @@ def _execution_recency(execution_id: str) -> float:
 
 
 def _render_run_folder_input() -> tuple[str, ...]:
-    state_key = "analysis_runs_folders"
-    if state_key not in st.session_state:
-        st.session_state[state_key] = str(DEFAULT_RUNS_DIR)
-    folder_input = st.sidebar.text_area(
-        "Run folders (one per line)",
-        key=state_key,
-        help="Enter execution folders or parent folders containing several executions.",
+    with st.sidebar:
+        folder_input = render_path_input(
+            "Run folders (one per line)",
+            key="analysis_runs_folders",
+            title="Select run folder",
+            default=str(DEFAULT_RUNS_DIR),
+            directory=True,
+            multiple=True,
+            help="Enter execution folders or parent folders. Browse adds a folder to the list.",
+        )
+    return tuple(
+        dict.fromkeys(
+            str(resolve_project_path(line).resolve())
+            for line in folder_input.splitlines()
+            if line.strip()
+        )
     )
-    return tuple(dict.fromkeys(line.strip() for line in folder_input.splitlines() if line.strip()))
 
 
 def render_analysis() -> None:
