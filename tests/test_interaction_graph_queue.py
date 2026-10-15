@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from contextlib import nullcontext
 from copy import deepcopy
 from io import BytesIO
 from pathlib import Path
@@ -166,7 +167,11 @@ def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> N
     assert judge_counts == [judge_repeats or 3, judge_repeats or 3]
     assert output_dirs == [tmp_path / "batch" / name for name in calls]
     assert all(directory.is_dir() for directory in output_dirs)
-    assert sorted(path.name for path in (tmp_path / "batch").iterdir()) == sorted(calls)
+    assert sorted(path.name for path in (tmp_path / "batch").iterdir() if path.is_dir()) == sorted(
+        calls
+    )
+    assert (tmp_path / "batch" / "execution.log").is_file()
+    assert (tmp_path / "batch" / "timings.json").is_file()
     assert [bundle["status"] for bundle in bundles] == ["failed", "completed"]
     assert bundles[1]["name"] == "Second"
     assert any("failed: provider unavailable" in message for message in messages)
@@ -340,6 +345,9 @@ def test_cancel_button_signals_active_job(monkeypatch) -> None:
         warning=messages.append,
         info=messages.append,
         code=lambda *_args, **_kwargs: None,
+        expander=lambda *_args: nullcontext(),
+        text_input=lambda *_args, **_kwargs: "",
+        download_button=lambda *_args, **_kwargs: None,
     )
     monkeypatch.setattr(sections, "st", fake_st)
 
@@ -442,7 +450,7 @@ def test_work_progress_covers_news_nodes_and_failed_graph(tmp_path) -> None:
     assert not any(kind == "work" for kind, _ in job.events.queue)
 
 
-def test_progress_display_estimates_remaining_time(monkeypatch) -> None:
+def test_progress_display_waits_for_operation_timings(monkeypatch) -> None:
     bars = []
     captions = []
     monkeypatch.setattr(
@@ -468,10 +476,57 @@ def test_progress_display_estimates_remaining_time(monkeypatch) -> None:
     )
 
     assert bars == [(0.25, "Graph 1/2 · news 1/2 · node 2/2 · 25% complete")]
-    assert captions == ["Estimated time remaining: about 1m 30s"]
+    assert captions == ["Calibrating time estimate: waiting for operation timings."]
 
 
-def test_monitor_bounds_message_history(monkeypatch) -> None:
+def test_progress_display_shows_judge_wait_repetition_and_time_range(monkeypatch) -> None:
+    captions = []
+    bars = []
+    monkeypatch.setattr(
+        sections,
+        "st",
+        SimpleNamespace(
+            progress=lambda value, **kwargs: bars.append(kwargs["text"]),
+            caption=captions.append,
+        ),
+    )
+    sections._render_run_progress(
+        dict(
+            completed=3,
+            total=12,
+            graph_index=1,
+            graph_total=2,
+            row=1,
+            row_total=2,
+            step=2,
+            step_total=2,
+            phase="judge",
+            node_id="C2",
+            estimate_low=50,
+            estimate_high=90,
+            current=dict(
+                kind="rate_limit_wait",
+                stage="judge",
+                news_id="n1",
+                node_id="C2",
+                comparison="vs original",
+                model="test-model",
+                repeat=2,
+                repeats=3,
+                delay=55,
+                age=5,
+            ),
+            stages={"judge": dict(completed=1, total=6, cache_hits=0, skipped=0, failed=0)},
+        )
+    )
+    assert "repeat 2/3" in captions[1]
+    assert "vs original" in captions[1]
+    assert "waiting for request limit · 50s" in captions[1]
+    assert "50s–1m 30s" in captions[2]
+    assert "Graph 1/2 · judge · news 1/2 · node C2" in bars[0]
+
+
+def test_monitor_preserves_complete_message_history(monkeypatch) -> None:
     job = run_job.GraphRunJob()
     for index in range(30):
         job.events.put(("progress", f"Step {index}"))
@@ -487,9 +542,12 @@ def test_monitor_bounds_message_history(monkeypatch) -> None:
         warning=lambda *_args: None,
         info=lambda *_args: None,
         code=lambda *_args, **_kwargs: None,
+        expander=lambda *_args: nullcontext(),
+        text_input=lambda *_args, **_kwargs: "",
+        download_button=lambda *_args, **_kwargs: None,
     )
     monkeypatch.setattr(sections, "st", fake_st)
 
     sections._render_run_monitor.__wrapped__()
 
-    assert state.run_messages == [f"Step {index}" for index in range(10, 30)]
+    assert state.run_messages == [f"Step {index}" for index in range(30)]

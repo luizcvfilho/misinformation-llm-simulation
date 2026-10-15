@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import time
 
+from misinformation_simulation.llm.progress import emit_event
+
 
 class MinuteRateLimiter:
     def __init__(self, max_requests_per_minute: int | None) -> None:
@@ -20,6 +22,7 @@ class MinuteRateLimiter:
 
         if self.requests_in_current_minute >= self.max_requests_per_minute:
             seconds_until_next_minute = 60 - (time.time() % 60)
+            emit_event("rate_limit_wait", delay=seconds_until_next_minute)
             time.sleep(seconds_until_next_minute)
             self.current_minute_bucket = int(time.time() // 60)
             self.requests_in_current_minute = 0

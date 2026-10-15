@@ -8,6 +8,7 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+from misinformation_simulation.llm.progress import retry_wait
 from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
 
 MAX_EVALUATION_ATTEMPTS = 4
@@ -26,14 +27,18 @@ def generate_and_parse_with_retry[T](
         raise ValueError("'retry_attempts' must be greater than zero.")
     max_attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS)
     for attempt in range(1, max_attempts + 1):
+        reason = "response did not meet validation requirements"
         try:
             result = parse(generate())
             if should_retry is None or not should_retry(result) or attempt == max_attempts:
                 return result
-        except Exception:
+        except Exception as exc:
+            reason = type(exc).__name__ + ": " + str(exc)
             if attempt == max_attempts:
                 raise
-        time.sleep(base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1))
+        delay = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+        retry_wait(delay, attempt=attempt, max_attempts=max_attempts, reason=reason)
+        time.sleep(delay)
     raise AssertionError("The evaluation retry budget was exhausted without a result.")
 
 
@@ -100,7 +105,14 @@ def generate_gemini_text_with_retry(
             )
             if not is_retryable or attempt == max_attempts:
                 break
-            time.sleep(base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1))
+            delay = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+            retry_wait(
+                delay,
+                attempt=attempt,
+                max_attempts=max_attempts,
+                reason=type(exc).__name__ + ": " + str(exc),
+            )
+            time.sleep(delay)
 
     raise last_error
 
@@ -150,6 +162,13 @@ def generate_openai_text_with_retry(
             )
             if not is_retryable or attempt == max_attempts:
                 break
-            time.sleep(base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1))
+            delay = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+            retry_wait(
+                delay,
+                attempt=attempt,
+                max_attempts=max_attempts,
+                reason=type(exc).__name__ + ": " + str(exc),
+            )
+            time.sleep(delay)
 
     raise last_error

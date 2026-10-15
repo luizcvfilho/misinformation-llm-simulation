@@ -14,7 +14,9 @@ from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_summary_dataframe,
 )
 from misinformation_simulation.apps.interaction_graph_results import load_saved_result
+from misinformation_simulation.llm.progress import observe_events, set_progress_context
 from misinformation_simulation.simulation import graph
+from misinformation_simulation.simulation.progress import ProgressTracker
 from misinformation_simulation.simulation.types import SimulationNode
 from misinformation_simulation.text_metrics.vad import VADScore
 from misinformation_simulation.topic_drift import extraction, semantic_comparison
@@ -436,6 +438,37 @@ def test_cancellation_stops_between_judge_draws_and_retains_completed_draw():
     assert result["stdi"] is None
 
 
+def test_judge_events_report_each_draw_cache_failure_and_identity_shortcut(tmp_path):
+    events = []
+    calls = []
+
+    def flaky_judge(**kwargs):
+        calls.append(kwargs)
+        if len(calls) == 2:
+            raise ValueError("Invalid judgment")
+        return judge(**kwargs)
+
+    with observe_events(events.append):
+        set_progress_context(news_id="news", node_id="branch", comparison="vs previous")
+        result = compare(cache=EvaluationCache(tmp_path), judge_fn=flaky_judge)
+    draws = [event for event in events if event["kind"] == "finished"]
+    assert [event["repeat"] for event in draws] == [1, 2, 3]
+    assert [event["status"] for event in draws] == ["completed", "failed", "completed"]
+    assert draws[1]["error"] == "Invalid judgment"
+    assert all(event["comparison"] == "vs previous" for event in draws)
+    assert result["llm_judge"]["valid_repeats"] == 2
+    events.clear()
+    with observe_events(events.append):
+        compare(cache=EvaluationCache(tmp_path), judge_fn=flaky_judge)
+    draws = [event for event in events if event["kind"] == "finished"]
+    assert [event["cache_hit"] for event in draws] == [True, False, True]
+    events.clear()
+    with observe_events(events.append):
+        compare(original_text="same", modified_text="same")
+    assert all(event["status"] == "skipped" for event in events if event["kind"] == "finished")
+    assert len([event for event in events if event["kind"] == "finished"]) == 3
+
+
 def test_parser_preserves_qualifiers_and_incomplete_relations():
     payload = topic_structure_to_dict(structure(relation(), relation(polarity="negated")))
     payload["central_relations"].append({"subject": "Agency"})
@@ -529,6 +562,53 @@ def test_workflow_deduplicates_extraction_and_exports_both_methods(tmp_path):
             assert row[f"{branch}_valence_drift"] == 0
     write_comparison_output(tmp_path / "output", result)
     assert (tmp_path / "output" / "comparison_results.csv").exists()
+
+
+def test_graph_progress_tracks_judge_after_generation_and_persists_events(monkeypatch, tmp_path):
+    monkeypatch.setattr(graph, "create_llm_client", lambda **kwargs: ("chatgpt", object()))
+    monkeypatch.setattr(graph, "extract_topic_structure", lambda **kwargs: structure(relation()))
+    outputs = iter(["First", "Second"])
+    monkeypatch.setattr(graph, "_generate_rewrite", lambda **kwargs: next(outputs))
+    tracker = ProgressTracker()
+    snapshots = []
+
+    def receive(event):
+        tracker.observe(1, event)
+        if event.get("stage") == "judge" and event["kind"] == "finished":
+            snapshots.append(tracker.snapshot())
+
+    result = graph.run_news_interaction_graph(
+        pd.DataFrame([{"description": "Original"}]),
+        nodes=[
+            SimulationNode("a", "test", "chatgpt", "persona"),
+            SimulationNode("b", "test", "chatgpt", "persona"),
+        ],
+        stdi_embedder=ConstantEmbedder(),
+        stdi_judge_fn=judge,
+        vad_scorer=lambda text: VADScore(3, 3, 3),
+        output_dir=tmp_path,
+        operation_callback=receive,
+    )
+    assert len(snapshots) == 12
+    assert snapshots[0]["stages"]["rewrite"]["completed"] == 2
+    assert snapshots[0]["completed"] < snapshots[0]["total"]
+    assert snapshots[-1]["stages"]["judge"]["completed"] == 12
+    assert snapshots[-1]["stages"]["judge"]["cache_hits"] == 3
+    assert tracker.snapshot()["completed"] == tracker.snapshot()["total"]
+    events = [
+        json.loads(line) for line in (tmp_path / "simulation_events.jsonl").read_text().splitlines()
+    ]
+    assert (
+        len(
+            [
+                event
+                for event in events
+                if event.get("stage") == "judge" and event["kind"] == "finished"
+            ]
+        )
+        == 12
+    )
+    assert result.step_results[1].stdi_vs_original is not None
 
 
 def test_graph_defaults_to_dual_and_retains_valid_branch_on_judge_failure(monkeypatch, tmp_path):

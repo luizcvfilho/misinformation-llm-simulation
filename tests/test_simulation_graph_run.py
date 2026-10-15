@@ -271,6 +271,17 @@ def test_graph_retains_shared_embedding_comparison_when_selected(monkeypatch, tm
     assert saved_steps[1]["stdi_cumulative"] == second.stdi_incremental
 
 
+def test_graph_invalid_input_does_not_create_execution_artifacts(tmp_path):
+    with pytest.raises(ValueError, match="rewrite_mode"):
+        run_news_interaction_graph(
+            pd.DataFrame([{"description": "Original"}]),
+            nodes=[SimulationNode("first", "model", "chatgpt", "persona")],
+            rewrite_mode="invalid",
+            output_dir=tmp_path,
+        )
+    assert not list(tmp_path.iterdir())
+
+
 def test_graph_cancellation_saves_completed_steps(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(graph, "create_llm_client", lambda **_kwargs: ("chatgpt", object()))
     monkeypatch.setattr(graph, "extract_topic_structure", lambda **_kwargs: make_structure("topic"))
@@ -287,7 +298,7 @@ def test_graph_cancellation_saves_completed_steps(monkeypatch, tmp_path) -> None
     cancel_event = Event()
 
     def on_progress(message: str) -> None:
-        if "STDI pending" in message:
+        if "STDI evaluation pending" in message:
             cancel_event.set()
 
     result = run_news_interaction_graph(

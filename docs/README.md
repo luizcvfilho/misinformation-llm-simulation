@@ -11,6 +11,8 @@ This directory uses a purpose-based language policy.
 
 ## Software Documentation
 
+- [Execution monitoring](execution_monitoring.md): operation progress, judge diagnostics,
+  timing estimates and persistent execution logs.
 - [API costs and compatible result reuse](api_costs_and_cache.md): stage compatibility,
   shared cache configuration, recorded token usage and dated USD cost estimates.
 

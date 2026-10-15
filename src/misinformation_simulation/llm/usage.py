@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 from uuid import uuid4
 
 from misinformation_simulation.llm.pricing import default_pricing, estimate_cost, validate_pricing
+from misinformation_simulation.llm.progress import emit_event
 
 _tracker: ContextVar[UsageTracker | None] = ContextVar("llm_usage_tracker", default=None)
 _stage: ContextVar[str] = ContextVar("llm_usage_stage", default="other")
@@ -243,11 +244,15 @@ def record_response(response: Any, *, provider: str, model: str) -> None:
 
 @contextmanager
 def api_request(*, provider: str, model: str):
+    emit_event("request_started", requested_model=str(model), requested_provider=provider)
     try:
         yield
     except Exception as error:
         record_request_error(error, provider=provider, model=model)
+        emit_event("request_finished", status="failed", reason=type(error).__name__)
         raise
+    else:
+        emit_event("request_finished", status="response")
 
 
 def record_request_error(error: Exception, *, provider: str, model: str) -> None:

@@ -17,12 +17,21 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_editor_graph_payload,
     build_news_summary_dataframe,
     build_node_summary_dataframe,
+    build_simulation_nodes,
     steps_to_dataframe,
 )
+from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.usage import combine_usage
+from misinformation_simulation.simulation.graph import DEFAULT_STDI_EMBEDDING_MODEL
 from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
+from misinformation_simulation.simulation.progress import (
+    ProgressTracker,
+    event_message,
+    simulation_plan,
+)
 from misinformation_simulation.simulation.types import SimulationResult
+from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 
 GraphRunner = Callable[..., SimulationResult]
 
@@ -34,7 +43,9 @@ class GraphRunJob:
     thread: Thread | None = None
     started_at: float = field(default_factory=monotonic)
     progress_lock: Lock = field(default_factory=Lock)
-    latest_progress: dict[str, int] | None = None
+    latest_progress: dict[str, Any] | None = None
+    tracker: ProgressTracker | None = None
+    observing: bool = False
 
 
 def start_graph_run_job(
@@ -114,6 +125,8 @@ def _run_graph_queue(
             "step_total": units_per_row - 1,
         }
         with job.progress_lock:
+            if job.observing:
+                progress.update(job.tracker.snapshot())
             job.latest_progress = progress
 
     try:
@@ -122,6 +135,57 @@ def _run_graph_queue(
             raise ValueError("Enter an output prefix before running.")
         batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
         reuse = bool(settings.get("reuse_previous_results", False))
+        histories = sorted(
+            runs_dir.glob("*/timings.json"), key=lambda path: path.stat().st_mtime, reverse=True
+        )
+        job.tracker = ProgressTracker(histories[0] if histories else None)
+        job.tracker.history_path = batch_dir / "timings.json"
+        for graph_index, planned_graph in enumerate(graphs, 1):
+            planned_nodes = build_simulation_nodes(planned_graph["nodes"])
+            vad_method = settings.get("vad_method", "model")
+            vad_model = (
+                f"{vad_method}:{settings.get('vad_llm_model') or settings['topic_drift_model']}"
+                if vad_method != "model"
+                else DEFAULT_VAD_MODEL_NAME
+            )
+            job.tracker.plan(
+                graph_index,
+                simulation_plan(
+                    rows_per_graph,
+                    planned_nodes,
+                    method=settings.get("stdi_comparison_method", "dual"),
+                    repeats=int(settings.get("stdi_judge_repeats", 3)),
+                    model=settings["topic_drift_model"],
+                    provider=normalize_provider(settings["topic_drift_provider"]),
+                    vad_model=vad_model,
+                    vad_provider=normalize_provider(
+                        settings.get("vad_llm_provider") or settings["topic_drift_provider"]
+                    )
+                    if vad_method != "model"
+                    else "local",
+                    embedding_model=DEFAULT_STDI_EMBEDDING_MODEL,
+                    sleep_seconds=float(settings["sleep_seconds"]),
+                ),
+            )
+
+        def log(message):
+            job.events.put(("progress", message))
+            with (batch_dir / "execution.log").open("a", encoding="utf-8") as stream:
+                stream.write(message + "\n")
+
+        def observe(index, event):
+            with job.progress_lock:
+                job.observing = True
+                job.tracker.observe(index, event)
+                if job.latest_progress is not None:
+                    job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
+                    if "stage" in event:
+                        job.latest_progress["row"] = event.get("row", 0)
+                        job.latest_progress["phase"] = event["stage"]
+                        job.latest_progress["node_id"] = event.get("node_id")
+            message = event_message(event)
+            if message:
+                log(f"Graph {index}/{len(graphs)}: {message}")
 
         for index, graph in enumerate(graphs, start=1):
             if job.cancel_event.is_set():
@@ -132,7 +196,7 @@ def _run_graph_queue(
                 settings["output_prefix"], index if queue_mode else 1, name, include_base=False
             )
             label = f"Graph {index}/{len(graphs)}: {name}"
-            job.events.put(("progress", f"{label} — starting"))
+            log(f"{label} — starting")
             report_work(index, 0, 0)
             run_dir = None
             try:
@@ -170,9 +234,8 @@ def _run_graph_queue(
                     ),
                     output_dir=run_dir,
                     output_prefix=prefix,
-                    progress_callback=lambda message, label=label: job.events.put(
-                        ("progress", f"{label}: {message}")
-                    ),
+                    progress_callback=lambda message, label=label: log(f"{label}: {message}"),
+                    operation_callback=lambda event, index=index: observe(index, event),
                     work_progress_callback=lambda row, _total, steps, _nodes, index=index: (
                         report_work(index, row, steps)
                     ),
@@ -211,21 +274,25 @@ def _run_graph_queue(
                 job.events.put(("bundle", bundle))
                 if status == "cancelled":
                     cancelled = True
-                    job.events.put(("progress", f"{label} — cancelled; partial results saved"))
+                    log(f"{label} — cancelled; partial results saved")
                     break
                 completed += 1
+                with job.progress_lock:
+                    job.tracker.finish_graph(index)
                 finished_units += graph_units[index - 1]
                 report_work(index, 0, 0)
-                job.events.put(("progress", f"{label} — finished"))
+                log(f"{label} — finished")
                 if job.cancel_event.is_set():
                     cancelled = True
                     break
             except Exception as exc:
                 if job.cancel_event.is_set():
                     cancelled = True
-                    job.events.put(("progress", f"{label} — cancelled: {exc}"))
+                    log(f"{label} — cancelled: {exc}")
                     break
                 failed += 1
+                with job.progress_lock:
+                    job.tracker.finish_graph(index)
                 finished_units += graph_units[index - 1]
                 report_work(index, 0, 0)
                 job.events.put(
@@ -240,7 +307,7 @@ def _run_graph_queue(
                         },
                     )
                 )
-                job.events.put(("progress", f"{label} — failed: {exc}"))
+                log(f"{label} — failed: {exc}")
             finally:
                 cost_path = run_dir / f"{prefix}_api_costs.json" if run_dir else None
                 if cost_path is not None and cost_path.is_file():
@@ -250,6 +317,11 @@ def _run_graph_queue(
                         encoding="utf-8",
                     )
     finally:
+        if job.tracker is not None:
+            try:
+                job.tracker.save_history()
+            except OSError as exc:
+                job.events.put(("progress", f"Could not save timing history: {exc}"))
         job.events.put(
             (
                 "done",

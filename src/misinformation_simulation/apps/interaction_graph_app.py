@@ -40,6 +40,7 @@ def _refresh_graph_backend_if_stale() -> None:
         "stdi_comparison_method",
         "stdi_judge_repeats",
         "work_progress_callback",
+        "operation_callback",
         "cancel_check",
         "rewrite_mode",
         "vad_method",
@@ -51,6 +52,17 @@ def _refresh_graph_backend_if_stale() -> None:
     if getattr(
         simulation_graph, "GRAPH_STEP_SCHEMA_VERSION", 0
     ) < 6 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
+        for module_name in (
+            "llm.progress",
+            "llm.usage",
+            "llm.retry",
+            "llm.rate_limit",
+            "topic_drift.extraction",
+            "topic_drift.semantic_comparison",
+            "text_metrics.llm_vad",
+            "text_metrics.vad_evaluation",
+        ):
+            importlib.reload(importlib.import_module(f"misinformation_simulation.{module_name}"))
         importlib.reload(sys.modules["misinformation_simulation.simulation.types"])
         importlib.reload(sys.modules["misinformation_simulation.simulation.io"])
         importlib.reload(sys.modules["misinformation_simulation.simulation.topology"])
@@ -62,7 +74,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 27:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 28:
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_workspace)
         importlib.reload(interaction_graph_dataset_builder)

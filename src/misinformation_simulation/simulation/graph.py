@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 import time
 from collections.abc import Callable
+from contextlib import nullcontext as _null_operation
 from dataclasses import asdict
 from hashlib import sha256
 from pathlib import Path
@@ -25,6 +26,15 @@ from misinformation_simulation.datasets.selection import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client, normalize_provider
+from misinformation_simulation.llm.progress import (
+    emit_event,
+    mark_cached,
+    mark_failed,
+    operation,
+    set_progress_context,
+    timed_operation,
+    track_run_progress,
+)
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
 from misinformation_simulation.llm.retry import (
     generate_gemini_text_with_retry,
@@ -33,6 +43,7 @@ from misinformation_simulation.llm.retry import (
 from misinformation_simulation.llm.usage import track_run_usage, usage_stage
 from misinformation_simulation.simulation.paths import project_graph_paths
 from misinformation_simulation.simulation.persistence import _persist_results
+from misinformation_simulation.simulation.progress import simulation_plan, timing_key
 from misinformation_simulation.simulation.topology import (
     _node_label,
     _normalize_edges,
@@ -248,6 +259,7 @@ def _record_dual_metrics(step: SimulationStepResult, suffix: str, result: dict[s
                 setattr(step, f"{component}_{suffix}", embedding[component])
 
 
+@track_run_progress
 @track_run_usage
 def run_news_interaction_graph(
     df: pd.DataFrame,
@@ -290,6 +302,7 @@ def run_news_interaction_graph(
     persist_results: bool = True,
     progress_callback: ProgressCallback | None = None,
     work_progress_callback: WorkProgressCallback | None = None,
+    operation_callback: Callable[[dict], None] | None = None,
     cancel_check: CancelCheck | None = None,
 ) -> SimulationResult:
     if not isinstance(df, pd.DataFrame):
@@ -337,6 +350,9 @@ def run_news_interaction_graph(
         cache=evaluation_cache,
     )
 
+    @timed_operation(
+        "extraction", model=topic_drift_model, provider=normalize_provider(topic_drift_provider)
+    )
     def extract_structure(**kwargs: Any) -> TopicStructure:
         if stdi_comparison_method not in {"dual", "cluster", "llm"}:
             return extract_topic_structure(**kwargs)
@@ -348,6 +364,7 @@ def run_news_interaction_graph(
         inputs["version"] = STRUCTURED_EXTRACTION_VERSION
         saved = evaluation_cache.get("extraction", inputs)
         if saved is not None:
+            mark_cached()
             return _build_topic_structure(saved)
         try:
             structure = extract_topic_structure(
@@ -356,6 +373,7 @@ def run_news_interaction_graph(
                 before_request_hook=judge_limiter.acquire,
             )
         except Exception as exc:
+            mark_failed(str(exc))
             structure = empty_topic_structure()
             structure.schema_version = 2
             structure.extraction_status = "failed"
@@ -364,10 +382,27 @@ def run_news_interaction_graph(
             return structure
         if structure.extraction_status == "valid":
             evaluation_cache.put("extraction", inputs, topic_structure_to_dict(structure))
+        if structure.extraction_status == "failed":
+            mark_failed("; ".join(structure.extraction_issues))
         return structure
 
+    vad_timing_model = (
+        f"{vad_method}:{vad_llm_model or topic_drift_model}"
+        if vad_method != "model"
+        else DEFAULT_VAD_MODEL_NAME
+    )
+
+    @timed_operation(
+        "vad",
+        model=vad_timing_model,
+        provider=normalize_provider(vad_provider) if vad_method != "model" else "local",
+    )
     def score_vad(text: str) -> VADScore:
+        memory_hit = text in vad_evaluator.records
         evaluation = vad_evaluator.evaluate(text)
+        methods = ("model", "llm") if vad_method == "dual" else (vad_method,)
+        if memory_hit or all(evaluation[method].get("cache_hit") for method in methods):
+            mark_cached()
         source = "model" if vad_method == "dual" else vad_method
         vad_cache[text] = evaluation_score(evaluation, source)
         required = ("model", "llm") if vad_method == "dual" else (vad_method,)
@@ -379,6 +414,7 @@ def run_news_interaction_graph(
             if evaluation[method]["status"] != "valid"
         ]
         if errors:
+            mark_failed("; ".join(errors))
             vad_errors[text] = "; ".join(errors)
             if vad_method == "model" and stdi_comparison_method not in {"dual", "llm"}:
                 raise ValueError(vad_errors[text])
@@ -419,17 +455,18 @@ def run_news_interaction_graph(
 
     clients_by_node_id: dict[str, tuple[str, Any]] = {}
     limiters_by_node_id: dict[str, MinuteRateLimiter] = {}
-    for node in nodes:
-        provider_normalized = normalize_provider(node.provider)
-        clients_by_node_id[node.node_id] = (
-            provider_normalized,
-            create_llm_client(
-                provider=provider_normalized,
-                api_key=node.api_key,
-                base_url=node.base_url,
-            )[1],
-        )
-        limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
+    with operation("preparation"):
+        for node in nodes:
+            provider_normalized = normalize_provider(node.provider)
+            clients_by_node_id[node.node_id] = (
+                provider_normalized,
+                create_llm_client(
+                    provider=provider_normalized,
+                    api_key=node.api_key,
+                    base_url=node.base_url,
+                )[1],
+            )
+            limiters_by_node_id[node.node_id] = MinuteRateLimiter(max_requests_per_minute)
 
     evaluation_metadata = {
         "vad_method": vad_method,
@@ -466,6 +503,22 @@ def run_news_interaction_graph(
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
     total_rows = len(target_indexes)
+    emit_event(
+        "plan",
+        entries=simulation_plan(
+            total_rows,
+            list(nodes_by_id.values()),
+            method=stdi_comparison_method,
+            repeats=stdi_judge_repeats,
+            model=topic_drift_model,
+            provider=normalize_provider(topic_drift_provider),
+            vad_model=vad_timing_model,
+            vad_provider=normalize_provider(vad_provider) if vad_method != "model" else "local",
+            embedding_model=stdi_embedding_model,
+            sleep_seconds=sleep_seconds,
+            persist=persist_results,
+        ),
+    )
     rows_started = 0
     cancelled = False
     rewrite_operations_started = 0
@@ -488,6 +541,7 @@ def run_news_interaction_graph(
             f"[{row_position}/{total_rows}] Preparing news '{news_id}' ({title or 'Untitled'}).",
         )
 
+        set_progress_context(news_id=news_id, row=row_position)
         extraction_title = (title or "Untitled") if rewrite_prompt.original_title_context else None
         original_structure_ready = False
         try:
@@ -624,6 +678,7 @@ def run_news_interaction_graph(
             states_by_node[node_id] = inherited_state
             provider_normalized, client = clients_by_node_id[node.node_id]
             node_label = _node_label(node)
+            set_progress_context(news_id=news_id, row=row_position, node_id=node_id)
             _emit_progress(
                 progress_callback,
                 f"[{row_position}/{total_rows}] Step {step_index}/{len(ordered_node_ids)} "
@@ -723,26 +778,30 @@ def run_news_interaction_graph(
                     if getattr(client, "base_url", None)
                     else node.base_url,
                 }
-                saved_rewrite = (
-                    evaluation_cache.get("rewrite", rewrite_inputs) if reuse_rewrites else None
-                )
-                step_result.metadata["rewrite_cache_hit"] = saved_rewrite is not None
-                if saved_rewrite is not None:
-                    rewritten_text = saved_rewrite["text"]
-                else:
-                    rewrite_operations_started += 1
-                    step_result.metadata["rewrite_operation_started"] = True
-                    rewritten_text = _generate_rewrite(
-                        provider_normalized=provider_normalized,
-                        client=client,
-                        model=node.model,
-                        prompt=prompt,
-                        system_instruction=rewrite_prompt.system_instruction,
-                        retry_attempts=retry_attempts,
-                        limiter=limiters_by_node_id[node.node_id],
+                with operation("rewrite", model=node.model, provider=provider_normalized):
+                    saved_rewrite = (
+                        evaluation_cache.get("rewrite", rewrite_inputs) if reuse_rewrites else None
                     )
-                    if reuse_rewrites:
-                        evaluation_cache.put("rewrite", rewrite_inputs, {"text": rewritten_text})
+                    step_result.metadata["rewrite_cache_hit"] = saved_rewrite is not None
+                    if saved_rewrite is not None:
+                        mark_cached()
+                        rewritten_text = saved_rewrite["text"]
+                    else:
+                        rewrite_operations_started += 1
+                        step_result.metadata["rewrite_operation_started"] = True
+                        rewritten_text = _generate_rewrite(
+                            provider_normalized=provider_normalized,
+                            client=client,
+                            model=node.model,
+                            prompt=prompt,
+                            system_instruction=rewrite_prompt.system_instruction,
+                            retry_attempts=retry_attempts,
+                            limiter=limiters_by_node_id[node.node_id],
+                        )
+                        if reuse_rewrites:
+                            evaluation_cache.put(
+                                "rewrite", rewrite_inputs, {"text": rewritten_text}
+                            )
                 step_result.rewritten_text = rewritten_text
                 step_result.rewrite_status = "success"
                 if _cancel_requested(cancel_check):
@@ -756,29 +815,38 @@ def run_news_interaction_graph(
                     ),
                 )
 
-                rewritten_structure = (
-                    extract_structure(
-                        text=rewritten_text,
-                        title=extraction_title,
+                with (
+                    operation(
+                        "extraction",
                         model=topic_drift_model,
-                        provider=topic_drift_provider,
-                        api_key=topic_drift_api_key,
-                        base_url=topic_drift_base_url,
-                        max_requests_per_minute=max_requests_per_minute,
-                        retry_attempts=retry_attempts,
+                        provider=normalize_provider(topic_drift_provider),
                     )
-                    if stdi_comparison_method in {"dual", "llm"}
-                    else _extract_compared_structure(
-                        compared_text=rewritten_text,
-                        title=extraction_title,
-                        topic_drift_model=topic_drift_model,
-                        topic_drift_provider=topic_drift_provider,
-                        topic_drift_api_key=topic_drift_api_key,
-                        topic_drift_base_url=topic_drift_base_url,
-                        max_requests_per_minute=max_requests_per_minute,
-                        retry_attempts=retry_attempts,
+                    if stdi_comparison_method not in {"dual", "llm"}
+                    else _null_operation()
+                ):
+                    rewritten_structure = (
+                        extract_structure(
+                            text=rewritten_text,
+                            title=extraction_title,
+                            model=topic_drift_model,
+                            provider=topic_drift_provider,
+                            api_key=topic_drift_api_key,
+                            base_url=topic_drift_base_url,
+                            max_requests_per_minute=max_requests_per_minute,
+                            retry_attempts=retry_attempts,
+                        )
+                        if stdi_comparison_method in {"dual", "llm"}
+                        else _extract_compared_structure(
+                            compared_text=rewritten_text,
+                            title=extraction_title,
+                            topic_drift_model=topic_drift_model,
+                            topic_drift_provider=topic_drift_provider,
+                            topic_drift_api_key=topic_drift_api_key,
+                            topic_drift_base_url=topic_drift_base_url,
+                            max_requests_per_minute=max_requests_per_minute,
+                            retry_attempts=retry_attempts,
+                        )
                     )
-                )
                 rewritten_structure_ready = True
                 if _cancel_requested(cancel_check):
                     cancelled = True
@@ -883,11 +951,12 @@ def run_news_interaction_graph(
                     progress_callback,
                     (
                         f"[{row_position}/{total_rows}] Step {step_index}/{len(ordered_node_ids)} "
-                        f"node='{node_label}': success; "
+                        f"node='{node_label}': rewrite processing completed; "
                         + (
-                            "STDI pending shared embedding comparison."
-                            if stdi_comparison_method in {"cluster", "dual"}
-                            else f"stdi_vs_original={step_result.stdi_vs_original}, "
+                            "STDI evaluation pending."
+                            if stdi_comparison_method in {"cluster", "dual", "llm"}
+                            else "STDI evaluation complete; "
+                            f"stdi_vs_original={step_result.stdi_vs_original}, "
                             f"stdi_incremental={step_result.stdi_incremental}."
                         )
                     ),
@@ -918,19 +987,35 @@ def run_news_interaction_graph(
                     row_position, total_rows, execution_index, len(ordered_node_ids)
                 )
 
-            if sleep_seconds > 0 and _wait_between_steps(sleep_seconds, cancel_check):
-                cancelled = True
-                break
+            with operation("pacing") if sleep_seconds > 0 else _null_operation():
+                if sleep_seconds > 0 and _wait_between_steps(sleep_seconds, cancel_check):
+                    cancelled = True
+                    break
 
         if cancelled:
             break
 
     if _cancel_requested(cancel_check):
         cancelled = True
+    if not cancelled:
+        emit_event("settle", stages=["rewrite", "extraction", "vad", "pacing"])
+    set_progress_context()
+    if stdi_comparison_method in {"dual", "llm"}:
+        emit_event(
+            "plan",
+            entries=[
+                dict(
+                    key=timing_key(
+                        "judge", topic_drift_model, normalize_provider(topic_drift_provider)
+                    ),
+                    total=len(scoring_contexts) * 2 * stdi_judge_repeats,
+                )
+            ],
+        )
     if scoring_contexts:
         _emit_progress(
             progress_callback,
-            f"Fitting shared STDI embeddings from {len(scoring_contexts)} successful step(s).",
+            f"Preparing STDI evaluations for {len(scoring_contexts)} processed step(s).",
         )
         pairs = [
             TopicStructurePair(f"{index}:original", original, rewritten)
@@ -946,7 +1031,8 @@ def run_news_interaction_graph(
         )
         try:
             if stdi_comparison_method != "llm":
-                comparator.fit(pairs)
+                with operation("embeddings", model=stdi_embedding_model):
+                    comparator.fit(pairs)
         except Exception:
             if stdi_comparison_method not in {"dual", "llm"}:
                 raise
@@ -966,6 +1052,7 @@ def run_news_interaction_graph(
             previous_vad,
             rewritten_vad,
         ) in scoring_contexts:
+            set_progress_context(news_id=step.news_id, row=row_position, node_id=step.node_id)
             if stdi_comparison_method in {"dual", "llm"} and _cancel_requested(cancel_check):
                 cancelled = True
                 break
@@ -989,7 +1076,8 @@ def run_news_interaction_graph(
             if stdi_comparison_method in {"dual", "llm"}:
                 _emit_progress(
                     progress_callback,
-                    f"Evaluating dual STDI for '{step.news_id}' step {step.step_index}.",
+                    f"Evaluating {stdi_comparison_method} STDI for '{step.news_id}' "
+                    f"node '{step.node_id}'.",
                 )
                 common = {
                     "modified_text": step.rewritten_text,
@@ -1009,6 +1097,12 @@ def run_news_interaction_graph(
                     "comparison_method": stdi_comparison_method,
                     **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
                 }
+                set_progress_context(
+                    news_id=step.news_id,
+                    row=row_position,
+                    node_id=step.node_id,
+                    comparison="vs original",
+                )
                 vs_original_dual = compare_dual_stdi(
                     original_text=step.metadata["original_text"],
                     original_structure=original,
@@ -1020,6 +1114,12 @@ def run_news_interaction_graph(
                     cancelled = True
                     _record_dual_metrics(step, "vs_original", vs_original_dual)
                     break
+                set_progress_context(
+                    news_id=step.news_id,
+                    row=row_position,
+                    node_id=step.node_id,
+                    comparison="vs previous",
+                )
                 incremental_dual = compare_dual_stdi(
                     original_text=step.source_text,
                     original_structure=previous,
@@ -1029,6 +1129,12 @@ def run_news_interaction_graph(
                 )
                 _record_dual_metrics(step, "vs_original", vs_original_dual)
                 _record_dual_metrics(step, "incremental", incremental_dual)
+                _emit_progress(
+                    progress_callback,
+                    f"News '{step.news_id}' node '{step.node_id}': STDI evaluation complete; "
+                    f"vs_original={vs_original_dual['status']}, "
+                    f"incremental={incremental_dual['status']}.",
+                )
                 if incremental_dual["stdi"] is not None:
                     cumulative_stdi += incremental_dual["stdi"]
                     valid_steps += 1
@@ -1195,11 +1301,13 @@ def run_news_interaction_graph(
         resolved_output_dir = (
             Path(output_dir) if output_dir is not None else DEFAULT_SIMULATION_OUTPUT_DIR
         )
-        summary_path, steps_path = _persist_results(
-            result=result,
-            output_dir=resolved_output_dir,
-            output_prefix=output_prefix,
-        )
+        set_progress_context()
+        with operation("saving"):
+            summary_path, steps_path = _persist_results(
+                result=result,
+                output_dir=resolved_output_dir,
+                output_prefix=output_prefix,
+            )
         result.summary_path = summary_path
         result.steps_path = steps_path
         _emit_progress(
@@ -1207,6 +1315,7 @@ def run_news_interaction_graph(
             f"Saved summary to {summary_path} and step records to {steps_path}.",
         )
 
+    emit_event("run_finished", cancelled=cancelled)
     _emit_progress(
         progress_callback,
         (

@@ -8,6 +8,7 @@ from statistics import fmean, stdev
 from typing import Any
 
 from misinformation_simulation.config.prompts import STRUCTURED_JUDGE_VERSION
+from misinformation_simulation.llm.progress import operation
 from misinformation_simulation.text_metrics.vad import VADScore
 from misinformation_simulation.text_metrics.vad_evaluation import vad_for_branch
 from misinformation_simulation.topic_drift.cluster_comparison import (
@@ -277,6 +278,16 @@ def compare_dual_stdi(
         and not structure_issues(original_structure)
         and vad["status"] == "valid"
     ):
+        if comparison_method != "cluster":
+            for repeat_index in range(judge_repeats):
+                with operation(
+                    "judge",
+                    model=model,
+                    provider=provider,
+                    repeat=repeat_index + 1,
+                    repeats=judge_repeats,
+                ) as progress:
+                    progress.update(status="skipped", reason="identical texts")
         zero = dict.fromkeys(
             (
                 *CONTENT_COMPONENTS,
@@ -363,44 +374,49 @@ def compare_dual_stdi(
         # Keep the historical first draw; subsequent draws have distinct durable keys.
         sample_inputs = inputs if repeat_index == 0 else {**inputs, "repeat_index": repeat_index}
         sample: dict[str, Any] = {"repeat": repeat_index + 1, "metrics": None}
-        try:
-            saved = None if uncached_judge else cache.get("judge", sample_inputs)
-            sample["cache_hit"] = saved is not None
-            if saved is None:
-                saved = asdict(
-                    judge_fn(
-                        original_text=original_text,
-                        modified_text=modified_text,
-                        title=title,
-                        original_structure=original_structure,
-                        modified_structure=modified_structure,
-                        model=model,
-                        provider=provider,
-                        api_key=api_key,
-                        base_url=base_url,
-                        retry_attempts=retry_attempts,
-                        before_request_hook=before_request_hook,
-                        structured=True,
+        with operation(
+            "judge", model=model, provider=provider, repeat=repeat_index + 1, repeats=judge_repeats
+        ) as progress:
+            try:
+                saved = None if uncached_judge else cache.get("judge", sample_inputs)
+                sample["cache_hit"] = saved is not None
+                progress["cache_hit"] = saved is not None
+                if saved is None:
+                    saved = asdict(
+                        judge_fn(
+                            original_text=original_text,
+                            modified_text=modified_text,
+                            title=title,
+                            original_structure=original_structure,
+                            modified_structure=modified_structure,
+                            model=model,
+                            provider=provider,
+                            api_key=api_key,
+                            base_url=base_url,
+                            retry_attempts=retry_attempts,
+                            before_request_hook=before_request_hook,
+                            structured=True,
+                        )
                     )
+                scores = [
+                    saved["component_drifts"][key]
+                    for key in (*CONTENT_COMPONENTS, "contradiction_drift")
+                ]
+                if not all(math.isfinite(value) and 0 <= value <= 1 for value in scores):
+                    raise ValueError("Judge components must be finite scores between zero and one")
+                sample["judgment"] = saved
+                if not uncached_judge and not sample["cache_hit"]:
+                    cache.put("judge", sample_inputs, saved)
+                sample["status"] = "valid"
+                if judge_vad["status"] == "valid":
+                    sample["metrics"] = complete_stdi(saved["component_drifts"], judge_vad)
+                if vad["status"] == "valid":
+                    sample["dual_metrics"] = complete_stdi(saved["component_drifts"], vad)
+            except Exception as exc:
+                sample.update(
+                    status="failed", error=str(exc), provenance=getattr(exc, "provenance", {})
                 )
-            scores = [
-                saved["component_drifts"][key]
-                for key in (*CONTENT_COMPONENTS, "contradiction_drift")
-            ]
-            if not all(math.isfinite(value) and 0 <= value <= 1 for value in scores):
-                raise ValueError("Judge components must be finite scores between zero and one")
-            sample["judgment"] = saved
-            if not uncached_judge and not sample["cache_hit"]:
-                cache.put("judge", sample_inputs, saved)
-            sample["status"] = "valid"
-            if judge_vad["status"] == "valid":
-                sample["metrics"] = complete_stdi(saved["component_drifts"], judge_vad)
-            if vad["status"] == "valid":
-                sample["dual_metrics"] = complete_stdi(saved["component_drifts"], vad)
-        except Exception as exc:
-            sample.update(
-                status="failed", error=str(exc), provenance=getattr(exc, "provenance", {})
-            )
+                progress.update(status="failed", error=str(exc))
         samples.append(sample)
     valid_samples = [sample for sample in samples if sample["status"] == "valid"]
     all_valid = len(valid_samples) == judge_repeats

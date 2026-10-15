@@ -63,7 +63,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 27
+GRAPH_OUTPUT_LAYOUT_VERSION = 28
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -587,8 +587,7 @@ def _render_run_controls(
     elif st.session_state.get("run_messages"):
         if st.session_state.get("run_progress") is not None:
             _render_run_progress(st.session_state.run_progress, active=False)
-        st.info(st.session_state.run_messages[-1])
-        st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
+        _render_run_log()
 
 
 @st.fragment(run_every="3s")
@@ -615,9 +614,9 @@ def _render_run_monitor() -> None:
     if progress_lock is not None:
         with progress_lock:
             if job.latest_progress is not None:
+                if getattr(job, "observing", False):
+                    job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
                 st.session_state.run_progress = job.latest_progress
-    if len(st.session_state.run_messages) > 20:
-        del st.session_state.run_messages[:-20]
 
     if finished is not None:
         if finished["cancelled"]:
@@ -643,8 +642,28 @@ def _render_run_monitor() -> None:
         job.cancel_event.set()
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
     if st.session_state.run_messages:
-        st.info(st.session_state.run_messages[-1])
-        st.code("\n".join(st.session_state.run_messages[-20:]), language="text")
+        _render_run_log()
+
+
+def _render_run_log() -> None:
+    messages = st.session_state.run_messages
+    st.info(messages[-1])
+    st.code("\n".join(messages[-20:]), language="text")
+    with st.expander(f"Execution history ({len(messages)} messages)"):
+        query = st.text_input("Filter history", key="run_log_filter").strip().casefold()
+        visible = [message for message in messages if query in message.casefold()]
+        st.code("\n".join(visible[-500:]), language="text")
+        if len(visible) > 500:
+            st.caption(
+                "Showing the latest 500 matching messages. Download the complete history below."
+            )
+        st.download_button(
+            "Download complete execution log",
+            data="\n".join(messages),
+            file_name="execution.log",
+            mime="text/plain",
+            key="download_execution_log",
+        )
 
 
 def _format_duration(seconds: float) -> str:
@@ -658,25 +677,72 @@ def _format_duration(seconds: float) -> str:
 
 
 def _render_run_progress(
-    progress: dict[str, int], *, elapsed: float = 0, active: bool = True
+    progress: dict[str, Any], *, elapsed: float = 0, active: bool = True
 ) -> None:
     completed = progress["completed"]
     total = progress["total"]
     percent = completed / total if total else 1.0
     graph = f"Graph {progress['graph_index']}/{progress['graph_total']}"
+    if progress.get("phase"):
+        graph += f" · {progress['phase']}"
     if progress["row"]:
         detail = f" · news {progress['row']}/{progress['row_total']}"
-        if progress["step"]:
+        if progress.get("node_id"):
+            detail += f" · node {progress['node_id']}"
+        elif progress["step"] and not progress.get("phase"):
             detail += f" · node {progress['step']}/{progress['step_total']}"
     else:
         detail = ""
     st.progress(percent, text=f"{graph}{detail} · {percent:.0%} complete")
-    if active and completed < total:
-        if elapsed >= 2 and completed > 0:
-            estimate = elapsed * (total - completed) / completed
-            st.caption(f"Estimated time remaining: about {_format_duration(estimate)}")
+    if progress.get("stages"):
+        st.caption(
+            " · ".join(
+                f"{stage}: {counts['completed']}/{counts['total']} resolved "
+                f"({counts['cache_hits']} cached, {counts['skipped']} skipped, "
+                f"{counts['failed']} failed)"
+                for stage, counts in progress["stages"].items()
+            )
+        )
+    if active and (current := progress.get("current")):
+        context = " · ".join(
+            str(current[key])
+            for key in ("stage", "news_id", "node_id", "comparison", "model")
+            if current.get(key)
+        )
+        if current.get("repeat"):
+            context += f" · repeat {current['repeat']}/{current['repeats']}"
+        state = current["kind"]
+        if state in {"rate_limit_wait", "retry_wait"}:
+            remaining = max(0, current["delay"] - current["age"])
+            detail = (
+                f"waiting for request limit · {_format_duration(remaining)}"
+                if state == "rate_limit_wait"
+                else (
+                    f"retry {current['attempt'] + 1}/{current['max_attempts']} "
+                    f"in {_format_duration(remaining)} · {current['reason']}"
+                )
+            )
+        elif state == "request_started":
+            detail = f"awaiting API response for {_format_duration(current['age'])}"
         else:
-            st.caption("Estimating time remaining after the first steps...")
+            detail = f"processing for {_format_duration(current['age'])}"
+        st.caption(f"Current operation: {context} · {detail}")
+    if active and completed < total:
+        if progress.get("estimate_low") is not None:
+            st.caption(
+                f"Estimated time remaining: {_format_duration(progress['estimate_low'])}–"
+                f"{_format_duration(progress['estimate_high'])} (observed operation durations)"
+            )
+        else:
+            stages = ", ".join(progress.get("calibrating", []))
+            st.caption(
+                "Calibrating time estimate"
+                + (
+                    f": waiting for timings from {stages}."
+                    if stages
+                    else ": waiting for operation timings."
+                )
+            )
 
 
 def _validate_run_inputs(
