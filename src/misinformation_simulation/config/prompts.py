@@ -254,7 +254,7 @@ Keep the output in the same language as the source article.
 """.strip()
 
 STRUCTURED_EXTRACTION_VERSION = "structured_extraction_v5"
-STRUCTURED_JUDGE_VERSION = "structured_judge_v4"
+STRUCTURED_JUDGE_VERSION = "structured_judge_v5"
 
 STRUCTURED_TOPIC_PROMPT_TEMPLATE = (
     TOPIC_DRIFT_PROMPT_TEMPLATE.replace(

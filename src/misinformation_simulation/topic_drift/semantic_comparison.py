@@ -107,6 +107,13 @@ def parse_structured_semantic_comparison(
     )
 
 
+def _structure_for_judge(structure: TopicStructure) -> dict[str, Any]:
+    payload = topic_structure_to_dict(structure)
+    # Keep extraction audit metadata locally rather than repeating it in judge prompts.
+    payload.pop("provenance")
+    return payload
+
+
 def compare_stdi_components_semantically(
     *,
     original_text: str,
@@ -143,12 +150,8 @@ def compare_stdi_components_semantically(
         title=title or "Untitled",
         original_text=original_text.strip(),
         modified_text=modified_text.strip(),
-        original_structure=json.dumps(
-            topic_structure_to_dict(original_structure), ensure_ascii=False
-        ),
-        modified_structure=json.dumps(
-            topic_structure_to_dict(modified_structure), ensure_ascii=False
-        ),
+        original_structure=json.dumps(_structure_for_judge(original_structure), ensure_ascii=False),
+        modified_structure=json.dumps(_structure_for_judge(modified_structure), ensure_ascii=False),
     )
     generate = (
         generate_gemini_text_with_retry

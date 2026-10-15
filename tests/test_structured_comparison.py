@@ -300,6 +300,32 @@ def test_judge_cache_is_durable_and_uncached_samples_do_not_replace_canonical(tm
     assert len(calls) == 9
 
 
+def test_new_judge_prompt_version_does_not_reuse_historical_cache(monkeypatch, tmp_path):
+    from misinformation_simulation.topic_drift import structured_comparison
+
+    calls = []
+
+    def counting_judge(**kwargs):
+        calls.append(kwargs)
+        return judge(**kwargs)
+
+    with monkeypatch.context() as historical:
+        historical.setattr(structured_comparison, "STRUCTURED_JUDGE_VERSION", "structured_judge_v4")
+        compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
+    historical_files = {path: path.read_bytes() for path in tmp_path.rglob("judge_*.json")}
+    assert len(calls) == 3
+
+    current = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
+    assert len(calls) == 6
+    assert not current["llm_judge"]["cache_hit"]
+    assert len(list(tmp_path.rglob("judge_*.json"))) == 6
+    assert all(path.read_bytes() == content for path, content in historical_files.items())
+
+    restored = compare(cache=EvaluationCache(tmp_path), judge_fn=counting_judge)
+    assert len(calls) == 6
+    assert restored["llm_judge"]["cache_hit"]
+
+
 def test_repeated_judge_averages_complete_scores_and_preserves_draws():
     draws = iter([0.0, 0.5, 1.0])
     requests = []

@@ -18,6 +18,9 @@ Dual evaluation adds LLM requests, and an initial run may download the embedding
 ## Repeated judge evaluations
 
 Each draw receives the same complete texts, extracted structures, model, endpoint and rubric.
+Judge prompts exclude the structures' `provenance` field, including raw extraction responses,
+hashes and request metadata. All other extracted fields remain available to the judge.
+Full extraction provenance remains in saved structures and evaluation-cache inputs for audit.
 Draws do not see other judgments or embedding scores. Extraction, embeddings and VAD are reused.
 Repetition is distinct from retrying failed requests: every draw has its own existing bounded
 retry budget. Scores and the final 50/50 branch weights remain unchanged.
@@ -94,10 +97,13 @@ and are preserved in the base action, rather than stored in a separate passage f
 Pure opinions/recommendations are recorded separately. Historical version-1 structures retain
 their missing qualifiers and legacy comparison behavior; saved artifacts are not rewritten.
 
-The current versions are `structured_extraction_v5`, `structured_judge_v4`, `cluster_v4`,
+The current versions are `structured_extraction_v5`, `structured_judge_v5`, `cluster_v4`,
 and `dual_stdi_v6`. Prompt versions invalidate request caches for new runs. Dual v5 introduced
 repeated-judge aggregation; v6 identifies selectable VAD and final Dual recomputation.
-The per-draw judge prompt and component STDI formula are unchanged.
+Judge v5 removes extraction provenance from prompt payloads; the rubric and component STDI
+formula are unchanged. Earlier judge-cache entries remain saved but are not reused for v5.
+The smaller prompt does not guarantee identical LLM scores; assess empirical stability on
+fixed text pairs before interpreting changes relative to historical results.
 The extraction prompt requires exactly `affirmed` or `negated`, never `unknown`.
 Hypothesis/uncertainty is represented by assertion type, independently of polarity.
 If a schema-2 response omits or violates the polarity enum, the parser normalizes it from
