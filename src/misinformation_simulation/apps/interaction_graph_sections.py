@@ -24,6 +24,7 @@ from misinformation_simulation.apps.interaction_graph_components import (
     render_node_editor,
     render_result_bundle,
 )
+from misinformation_simulation.apps.interaction_graph_credentials import render_api_keys
 from misinformation_simulation.apps.interaction_graph_generator import render_graph_generator
 from misinformation_simulation.apps.interaction_graph_io import render_path_input
 from misinformation_simulation.apps.interaction_graph_queue import (
@@ -550,6 +551,26 @@ def _render_run_controls(
 ) -> None:
     queue = st.session_state.graph_queue
     active_job = st.session_state.get("run_job")
+    graphs = (
+        deepcopy(queue)
+        if queue
+        else [
+            {
+                "name": settings["graph_name"].strip(),
+                "nodes": deepcopy(st.session_state.graph_nodes),
+            }
+        ]
+    )
+    with st.expander("API keys", expanded=False):
+        api_credentials, missing_keys = render_api_keys(
+            graphs, settings, disabled=active_job is not None
+        )
+    if missing_keys:
+        st.info(
+            "Expand **API keys** and enter credentials for "
+            + ", ".join(missing_keys)
+            + " to run the selected graphs."
+        )
     permissions = PermissionStore()
     permission_count = len(permissions.signatures())
     if permission_count:
@@ -561,19 +582,9 @@ def _render_run_controls(
         "Run graph queue" if queue else "Run simulation",
         type="primary",
         width="stretch",
-        disabled=active_job is not None,
+        disabled=active_job is not None or bool(missing_keys),
     )
     if run_button:
-        graphs = (
-            deepcopy(queue)
-            if queue
-            else [
-                {
-                    "name": settings["graph_name"].strip(),
-                    "nodes": deepcopy(st.session_state.graph_nodes),
-                }
-            ]
-        )
         validation_errors = _validate_run_inputs(df, settings, graphs)
         if validation_errors:
             for error in validation_errors:
@@ -589,6 +600,7 @@ def _render_run_controls(
             settings=settings,
             runner=run_news_interaction_graph,
             queue_mode=bool(queue),
+            api_credentials=api_credentials,
         )
 
     if st.session_state.get("run_job") is not None:

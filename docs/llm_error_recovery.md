@@ -18,6 +18,26 @@ the current graph. LLM retries resume the pending generation/evaluation rather t
 
 ## Two OpenAI credentials
 
+Graph Studio's **API keys** section lists every remote provider required by the selected
+graph queue (or the current graph), topic extraction, STDI judging, and LLM VAD evaluation.
+It identifies the models and stages using each provider, requesting a single password field
+per missing primary key. OpenAI also offers an optional fallback field when none is configured.
+Existing environment credentials, including their supported aliases, are reported as configured
+without displaying their values. Select **Use a different ... key for this session** to enter a
+replacement even when an environment key exists. Uncheck it to use the environment key again.
+OpenAI primary and fallback keys have independent replacement options. Local/Ollama providers
+and disabled LLM VAD need no input.
+
+The run button remains disabled until all required primary keys are available; the OpenAI
+fallback is optional unless its replacement option is selected, which requires a nonempty value.
+UI keys stay in the browser's server-side session and are supplied to
+the worker through an execution-scoped credential context. They are not written to `.env`,
+process-wide environment variables, graph exports, caches, or result settings. Other browser
+sessions cannot resolve them. Use **Clear session API keys** to remove the supplied keys and
+restore environment defaults. Switching providers or pages preserves entered values and
+replacement choices for the current session. Inputs are
+disabled while that session's execution is active, and the worker uses a snapshot of its keys.
+
 ```dotenv
 CHATGPT_API_KEY=your_primary_key
 CHATGPT_API_KEY_FALLBACK=your_secondary_key
@@ -25,7 +45,7 @@ CHATGPT_API_KEY_FALLBACK=your_secondary_key
 
 `OPENAI_API_KEY` and `OPENAI_API_KEY_FALLBACK` are aliases. The `CHATGPT_` names take
 precedence; they are not additional credential slots. An explicitly passed `api_key`
-is the primary credential and takes precedence over the environment.
+is the primary credential and takes precedence over session and environment credentials.
 
 When the active key reports credit/resource exhaustion, the other configured key is tried
 once. Successful calls make that slot active for subsequent operations and newly created

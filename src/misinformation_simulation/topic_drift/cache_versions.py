@@ -15,7 +15,15 @@ def runtime_cache_contracts() -> dict[str, dict]:
     def source(path: str) -> str:
         return input_hash((root / path).read_text(encoding="utf-8"))
 
-    common = {path: source(path) for path in ("llm/clients.py", "llm/retry.py", "llm/recovery.py")}
+    common = {
+        path: source(path)
+        for path in (
+            "llm/clients.py",
+            "llm/retry.py",
+            "llm/recovery.py",
+            "llm/credentials.py",
+        )
+    }
     dependencies = {
         "rewrite": ["datasets/selection.py"],
         "extraction": [

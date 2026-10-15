@@ -576,6 +576,14 @@ choose which key to try first; each manual retry can try both keys once. Interac
 and notebooks use a local dialog or terminal input. See
 [interactive LLM error recovery](docs/llm_error_recovery.md) for details and unattended behavior.
 
+The **API keys** section requests missing credentials for every provider used by the selected
+graphs, extraction, and evaluations, including an optional OpenAI fallback key. Password inputs
+are shared by models of the same provider and remain private to the current browser session;
+they are not saved to `.env` or exported results. Configured environment keys are used by default;
+select **Use a different ... key for this session** to replace one, or uncheck it to restore the
+environment key. OpenAI primary and fallback keys can be replaced independently. Fill all
+required keys, including any selected replacements, to enable execution.
+
 ### Rewriting false news as truthful news
 
 `rewrite_false_news_as_true` is the project's central implementation for rewriting false or

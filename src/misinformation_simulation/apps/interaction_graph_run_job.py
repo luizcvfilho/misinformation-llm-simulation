@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass, field
 from functools import partial
@@ -23,6 +23,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     steps_to_dataframe,
 )
 from misinformation_simulation.llm.clients import normalize_provider
+from misinformation_simulation.llm.credentials import ProviderAPIKeys, use_api_credentials
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.recovery import (
     RecoverySession,
@@ -72,6 +73,7 @@ def start_graph_run_job(
     settings: dict[str, Any],
     runner: GraphRunner,
     queue_mode: bool,
+    api_credentials: Mapping[str, ProviderAPIKeys] | None = None,
 ) -> GraphRunJob:
     job = GraphRunJob()
     thread = Thread(
@@ -83,6 +85,7 @@ def start_graph_run_job(
             "settings": dict(settings),
             "runner": runner,
             "queue_mode": queue_mode,
+            "api_credentials": dict(api_credentials or {}),
         },
         daemon=True,
         name="interaction-graph-simulation",
@@ -92,8 +95,13 @@ def start_graph_run_job(
     return job
 
 
-def _run_with_recovery(*, job: GraphRunJob, **kwargs) -> None:
-    with use_recovery(job.recovery_session):
+def _run_with_recovery(
+    *,
+    job: GraphRunJob,
+    api_credentials: Mapping[str, ProviderAPIKeys] | None = None,
+    **kwargs,
+) -> None:
+    with use_api_credentials(api_credentials), use_recovery(job.recovery_session):
         _run_graph_queue(job=job, **kwargs)
 
 
