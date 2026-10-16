@@ -7,6 +7,8 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from functools import wraps
 
+from misinformation_simulation.llm.flex_fallback import use_flex_fallback
+
 OPENAI_SERVICE_TIERS = ("auto", "default", "flex")
 FLEX_TIMEOUT_SECONDS = 900.0
 
@@ -41,7 +43,13 @@ def use_openai_service_tier(tier: str | None):
 def with_openai_service_tier(function):
     @wraps(function)
     def wrapped(*args, **kwargs):
-        with use_openai_service_tier(kwargs.get("openai_service_tier")):
+        with (
+            use_openai_service_tier(kwargs.get("openai_service_tier")),
+            use_flex_fallback(
+                kwargs.get("openai_flex_fallback", False),
+                kwargs.get("openai_flex_retry_seconds", 300),
+            ),
+        ):
             return function(*args, **kwargs)
 
     return wrapped

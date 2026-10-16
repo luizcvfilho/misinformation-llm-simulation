@@ -827,9 +827,26 @@ Operational considerations (official documentation checked October 15, 2026):
   OpenAI model's compatibility when running a graph with mixed models, and ensure the API
   project permits Flex. Fast is a different, more expensive processing mode.
 - Flex can be slower and return `429 Resource Unavailable`. Requests returning this specific
-  capacity error are not charged. The existing retry/recovery flow remains in use and always
-  retains the selected tier, including credential failover; it never switches to Standard
-  automatically. Exhausted retries can require recovery or leave a failed evaluation.
+  capacity error are not charged. By default, retries retain the selected tier, including
+  credential failover. Exhausted retries can require recovery or leave a failed evaluation.
+- With Flex selected, enable **Allow temporary fallback to Standard** before starting to
+  continue work at Standard prices when the API returns `flex_unavailable`. The rejected
+  call is retried in Standard, and all runs in that execution share the temporary mode.
+  **Try Flex again after (minutes)** defaults to 5 minutes. After that interval, one real
+  request tests Flex while the others continue in Standard. Success restores Flex for new
+  requests; another capacity error starts a new interval. In-flight calls finish normally.
+  Other errors, including token/request limits and exhausted quota, retain normal recovery.
+  Persistent Flex unavailability can cause most of the execution to be billed at Standard
+  prices. The UI and event log show transitions; usage records keep each requested and
+  returned service tier, and costs use the returned tier.
+  Explicit `flex_unavailable` rejections are recorded at zero cost; other failed requests
+  retain unknown costs. SDK retries are disabled while fallback is enabled so a rejected
+  Flex attempt can switch immediately; application recovery still handles Standard errors.
+- CLI: combine `--openai-service-tier flex --openai-flex-fallback` with the optional
+  `--openai-flex-retry-seconds 300`. Python: pass `openai_service_tier="flex"`,
+  `openai_flex_fallback=True`, and optionally `openai_flex_retry_seconds=300` to
+  `run_news_interaction_graph`. Summaries save the fallback configuration. The fallback is
+  disabled by default and only affects official OpenAI calls explicitly using Flex.
 - Flex requests use a 900-second timeout per API attempt. Retries can make the total wait
   longer, and cancellation may wait for an in-flight synchronous API call to return. A client
   timeout does not establish that the server did no work or that the request was free.

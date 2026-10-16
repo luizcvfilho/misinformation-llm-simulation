@@ -24,6 +24,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 )
 from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.llm.credentials import ProviderAPIKeys, use_api_credentials
+from misinformation_simulation.llm.flex_fallback import FlexFallback, use_flex_fallback
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
 from misinformation_simulation.llm.recovery import (
@@ -61,6 +62,7 @@ class GraphRunJob:
     recovery_session: RecoverySession = field(init=False)
     run_cancellations: dict[str, Event] = field(default_factory=dict)
     finished: bool = False
+    flex_fallback: FlexFallback | None = None
 
     def finish(self, payload):
         if not self.finished:
@@ -117,7 +119,12 @@ def _run_with_recovery(
             use_api_credentials(api_credentials),
             use_recovery(job.recovery_session),
             use_shared_limiter(limiter),
+            use_flex_fallback(
+                kwargs["settings"].get("openai_flex_fallback", False),
+                kwargs["settings"].get("openai_flex_retry_seconds", 300),
+            ) as fallback,
         ):
+            job.flex_fallback = fallback
             _run_graph_queue(job=job, **kwargs)
     except Exception as error:
         job.events.put(("progress", f"Execution failed: {safe_message(error)}"))
@@ -378,6 +385,8 @@ class _SequentialQueue:
                     else None
                 ),
                 openai_service_tier=self.settings.get("openai_service_tier"),
+                openai_flex_fallback=self.settings.get("openai_flex_fallback", False),
+                openai_flex_retry_seconds=self.settings.get("openai_flex_retry_seconds", 300),
                 output_dir=self.run_dir,
                 output_prefix=self.prefix,
                 progress_callback=lambda message, label=self.label: self.log(f"{label}: {message}"),

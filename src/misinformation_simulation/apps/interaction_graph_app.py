@@ -48,6 +48,8 @@ def _refresh_graph_backend_if_stale() -> None:
         "reuse_rewrites",
         "api_pricing",
         "openai_service_tier",
+        "openai_flex_fallback",
+        "openai_flex_retry_seconds",
         "defer_evaluation",
     }
     backend_module = simulation_graph
@@ -56,6 +58,7 @@ def _refresh_graph_backend_if_stale() -> None:
     ) < 6 or not required_parameters.issubset(inspect.signature(current_runner).parameters):
         for module_name in (
             "llm.progress",
+            "llm.service_tier",
             "llm.usage",
             "llm.retry",
             "llm.rate_limit",
@@ -77,7 +80,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 30:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 31:
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_workspace)
         importlib.reload(interaction_graph_dataset_builder)

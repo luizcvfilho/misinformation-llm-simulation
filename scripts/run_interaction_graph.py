@@ -52,6 +52,17 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--allow-title-fallback", action="store_true")
     parser.add_argument(
+        "--openai-flex-fallback",
+        action="store_true",
+        help="Temporarily use Standard after flex_unavailable errors (higher cost).",
+    )
+    parser.add_argument(
+        "--openai-flex-retry-seconds",
+        type=float,
+        default=300,
+        help="Interval before a single request probes Flex capacity again (default: 300).",
+    )
+    parser.add_argument(
         "--rewrite-mode",
         choices=GRAPH_REWRITE_MODES,
         default="faithful",
@@ -117,6 +128,8 @@ def main() -> None:
         max_requests_per_minute=args.max_requests_per_minute,
         retry_attempts=args.retry_attempts,
         openai_service_tier=args.openai_service_tier,
+        openai_flex_fallback=args.openai_flex_fallback,
+        openai_flex_retry_seconds=args.openai_flex_retry_seconds,
         allow_title_fallback=args.allow_title_fallback,
         rewrite_mode=args.rewrite_mode,
         topic_drift_model=args.topic_drift_model,

@@ -258,6 +258,8 @@ class _ParallelQueue:
                 reuse_rewrites=reuse,
                 api_pricing=self.pricing,
                 openai_service_tier=self.settings.get("openai_service_tier"),
+                openai_flex_fallback=self.settings.get("openai_flex_fallback", False),
+                openai_flex_retry_seconds=self.settings.get("openai_flex_retry_seconds", 300),
                 output_dir=task.directory,
                 output_prefix=task.run_id,
                 progress_callback=lambda message: self.log(task, message),

@@ -39,6 +39,8 @@ def test_app_refreshes_stale_graph_runner_without_restarting_session(monkeypatch
         reuse_rewrites=False,
         api_pricing=None,
         openai_service_tier=None,
+        openai_flex_fallback=False,
+        openai_flex_retry_seconds=300,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -85,6 +87,8 @@ def test_app_refreshes_backend_with_old_category_schema(monkeypatch) -> None:
         reuse_rewrites=False,
         api_pricing=None,
         openai_service_tier=None,
+        openai_flex_fallback=False,
+        openai_flex_retry_seconds=300,
         stdi_comparison_method="cluster",
         stdi_judge_repeats=3,
         work_progress_callback=None,
@@ -124,6 +128,14 @@ st.session_state.test_settings = _render_advanced_settings()
     assert not app.exception
     assert app.session_state.test_settings["openai_service_tier"] == "flex"
     assert any("15-minute timeout" in caption.value for caption in app.caption)
+    assert app.session_state.test_settings["openai_flex_fallback"] is False
+    app.checkbox(key="openai_flex_fallback").check().run(timeout=30)
+    assert app.session_state.test_settings["openai_flex_fallback"] is True
+    assert app.session_state.test_settings["openai_flex_retry_seconds"] == 300
+    app.number_input(key="openai_flex_retry_minutes").set_value(2.0).run(timeout=30)
+    assert app.session_state.test_settings["openai_flex_retry_seconds"] == 120
+    app.selectbox(key="openai_service_tier").set_value("default").run(timeout=30)
+    assert app.session_state.test_settings["openai_flex_fallback"] is False
 
 
 def test_execution_settings_offer_interpretive_transmission_mode() -> None:

@@ -4,12 +4,14 @@ import os
 import random
 import time
 from collections.abc import Callable
+from functools import partial
 
 from google import genai
 from google.genai import types
 from openai import OpenAI
 
 from misinformation_simulation.llm.clients import refresh_llm_client
+from misinformation_simulation.llm.flex_fallback import get_flex_fallback, is_flex_unavailable
 from misinformation_simulation.llm.progress import retry_wait
 from misinformation_simulation.llm.recovery import (
     RequestContext,
@@ -18,7 +20,11 @@ from misinformation_simulation.llm.recovery import (
     get_recovery,
     set_request_context,
 )
-from misinformation_simulation.llm.service_tier import openai_request_options
+from misinformation_simulation.llm.service_tier import (
+    configured_openai_service_tier,
+    openai_request_options,
+    use_openai_service_tier,
+)
 from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
 
 MAX_EVALUATION_ATTEMPTS = 4
@@ -177,7 +183,7 @@ def generate_openai_text_with_retry(
     provider = provider_for_client(client)
     session = get_recovery() if provider != "local" else None
 
-    def generate(request_client):
+    def generate_once(request_client):
         if before_request_hook is not None:
             before_request_hook()
         with api_request(provider=provider, model=model):
@@ -196,6 +202,8 @@ def generate_openai_text_with_retry(
         if not text:
             raise ValueError("The API response was empty.")
         return text
+
+    generate = partial(_generate_with_flex_fallback, generate_once, provider=provider)
 
     if session:
         context = RequestContext(provider, model, endpoint=str(getattr(client, "base_url", "")))
@@ -235,6 +243,30 @@ def generate_openai_text_with_retry(
             time.sleep(delay)
 
     raise last_error
+
+
+def _generate_with_flex_fallback(generate, request_client, provider):
+    controller = get_flex_fallback()
+    if provider != "chatgpt" or configured_openai_service_tier() != "flex" or not controller:
+        return generate(request_client)
+    if isinstance(request_client, OpenAI):
+        request_client = request_client.with_options(max_retries=0)
+    attempt = controller.select()
+    succeeded = False
+    try:
+        with use_openai_service_tier(attempt.tier):
+            result = generate(request_client)
+        succeeded = True
+        return result
+    except Exception as error:
+        if attempt.tier != "flex" or not is_flex_unavailable(error):
+            raise
+        controller.unavailable(attempt)
+    finally:
+        controller.finish(attempt, succeeded=succeeded)
+    # Retry only an explicitly rejected Flex request; Standard errors use normal recovery.
+    with use_openai_service_tier("default"):
+        return generate(request_client)
 
 
 class ResponseEnvelopeError(Exception):

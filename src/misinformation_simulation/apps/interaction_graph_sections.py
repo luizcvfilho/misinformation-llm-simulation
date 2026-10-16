@@ -70,7 +70,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 30
+GRAPH_OUTPUT_LAYOUT_VERSION = 31
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -351,10 +351,35 @@ def _render_advanced_settings() -> dict[str, Any]:
                 "GPT-6 Luna supports Flex; check compatibility when mixing other models."
             ),
         )
+        openai_flex_fallback = False
+        openai_flex_retry_minutes = 5.0
         if openai_service_tier == "flex":
+            openai_flex_fallback = st.checkbox(
+                "Allow temporary fallback to Standard",
+                value=False,
+                key="openai_flex_fallback",
+                disabled=st.session_state.get("run_job") is not None,
+                help=(
+                    "On Flex capacity errors, all runs in this execution temporarily use "
+                    "Standard at its higher price. Other API errors keep normal recovery."
+                ),
+            )
+            openai_flex_retry_minutes = st.number_input(
+                "Try Flex again after (minutes)",
+                min_value=0.1,
+                value=5.0,
+                step=0.5,
+                key="openai_flex_retry_minutes",
+                disabled=not openai_flex_fallback or st.session_state.get("run_job") is not None,
+                help=(
+                    "One request tests Flex after this interval. Other requests continue in "
+                    "Standard until the test succeeds. Another capacity error restarts "
+                    "the interval."
+                ),
+            )
             st.caption(
                 "Flex uses a 15-minute timeout per request and may return resource unavailable "
-                "errors. Retries keep Flex; there is no automatic switch to Standard. "
+                "errors. With fallback disabled, retries keep Flex. "
                 "Reused results do not make new API calls."
             )
         reuse_previous_results = st.checkbox(
@@ -454,6 +479,8 @@ def _render_advanced_settings() -> dict[str, Any]:
     return {
         "sleep_seconds": sleep_seconds,
         "openai_service_tier": openai_service_tier,
+        "openai_flex_fallback": openai_flex_fallback,
+        "openai_flex_retry_seconds": float(openai_flex_retry_minutes) * 60,
         "reuse_previous_results": reuse_previous_results,
         "api_pricing_path": api_pricing_path,
         "max_requests_per_minute": max_requests_per_minute,
@@ -708,9 +735,19 @@ def _format_duration(seconds: float) -> str:
     return f"{remaining_seconds}s"
 
 
+def _render_flex_fallback_status(progress, active):
+    if active and (fallback := progress.get("flex_fallback")):
+        if fallback["probing"]:
+            st.caption("Testing Flex availability; other requests continue in temporary Standard.")
+        elif fallback["temporary_standard"]:
+            remaining = _format_duration(fallback["retry_in_seconds"])
+            st.caption(f"Temporary Standard active · next Flex attempt in {remaining}.")
+
+
 def _render_run_progress(
     progress: dict[str, Any], *, elapsed: float = 0, active: bool = True
 ) -> None:
+    _render_flex_fallback_status(progress, active)
     if progress.get("parallel"):
         _render_parallel_progress(progress, active)
         return
@@ -1040,7 +1077,12 @@ def _update_job_progress(job):
             if job.latest_progress is not None:
                 if getattr(job, "observing", False):
                     job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
-                st.session_state.run_progress = job.latest_progress
+                st.session_state.run_progress = {
+                    **job.latest_progress,
+                    "flex_fallback": job.flex_fallback.snapshot()
+                    if getattr(job, "flex_fallback", None)
+                    else None,
+                }
 
 
 def _render_cancellation_controls(job, progress):
@@ -1080,6 +1122,7 @@ def _render_parallel_progress(progress, active):
                     **{key: value for key, value in item.items() if key != "current"},
                     "stage": current.get("stage", ""),
                     "node": current.get("node_id", ""),
+                    "requested_service_tier": current.get("requested_service_tier", ""),
                 }
             )
         if runs:

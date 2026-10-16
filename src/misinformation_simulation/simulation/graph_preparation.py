@@ -18,6 +18,7 @@ from misinformation_simulation.datasets.selection import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import normalize_provider
+from misinformation_simulation.llm.flex_fallback import flex_fallback_settings
 from misinformation_simulation.llm.progress import (
     emit_event,
     mark_cached,
@@ -335,6 +336,7 @@ class _GraphPreparation:
     def _initialize_results(self):
         self.evaluation_metadata = {
             "openai_service_tier": configured_openai_service_tier(),
+            **flex_fallback_settings(),
             "vad_method": self.options.vad_method,
             "vad_evaluation_version": "vad_evaluation_v1",
             "vad_llm_model": str(self.options.vad_llm_model or self.options.topic_drift_model)

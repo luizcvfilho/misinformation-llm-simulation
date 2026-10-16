@@ -15,6 +15,7 @@ from misinformation_simulation.apps.interaction_graph_parallel import run_parall
 from misinformation_simulation.apps.interaction_graph_recovery import RecoveryBroker
 from misinformation_simulation.apps.interaction_graph_run_job import GraphRunJob
 from misinformation_simulation.apps.interaction_graph_ui import create_default_node_form
+from misinformation_simulation.llm.flex_fallback import get_flex_fallback
 from misinformation_simulation.llm.progress import progress_context
 from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
 from misinformation_simulation.llm.recovery import (
@@ -62,6 +63,34 @@ def graphs(count=2):
 
 def frame(rows=2):
     return pd.DataFrame([dict(title=f"Headline {i}", description=f"News {i}") for i in range(rows)])
+
+
+def test_background_job_shares_one_fallback_controller_across_news_runs(tmp_path):
+    from misinformation_simulation.apps.interaction_graph_run_job import start_graph_run_job
+
+    controllers = []
+    barrier = Barrier(3)
+
+    def runner(**kwargs):
+        controllers.append(get_flex_fallback())
+        assert kwargs["openai_flex_fallback"] is True
+        assert kwargs["openai_flex_retry_seconds"] == 120
+        barrier.wait(timeout=5)
+        return SimulationResult(dict(rows_processed=1, steps_total=0, cancelled=False), [])
+
+    configuration = settings(tmp_path, rows=3)
+    configuration.update(
+        openai_service_tier="flex", openai_flex_fallback=True, openai_flex_retry_seconds=120
+    )
+    job = start_graph_run_job(
+        df=frame(3), graphs=graphs(1), settings=configuration, runner=runner, queue_mode=False
+    )
+    job.thread.join(timeout=10)
+    assert not job.thread.is_alive()
+    assert len(controllers) == 3
+    assert all(controller is job.flex_fallback for controller in controllers)
+    assert job.flex_fallback.retry_seconds == 120
+    assert get_flex_fallback() is None
 
 
 def test_global_cap_prefers_same_graph_and_uses_spare_slots(tmp_path):

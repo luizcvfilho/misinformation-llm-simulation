@@ -231,7 +231,20 @@ def event_message(event: dict) -> str:
     elif kind == "rate_limit_wait":
         detail = f"waiting for request limit · {event['delay']:.1f}s"
     else:
-        detail = kind.replace("_", " ")
+        detail = _service_tier_event_message(event) or kind.replace("_", " ")
     return (
         f"[{event['timestamp']}] " + " · ".join(item for item in context if item) + f" · {detail}"
     )
+
+
+def _service_tier_event_message(event):
+    kind = event["kind"]
+    if kind == "flex_fallback_started":
+        return f"temporary Standard active · next Flex attempt in {event['delay']:.1f}s"
+    if kind == "flex_probe":
+        return "testing Flex availability; other requests continue in Standard"
+    if kind == "flex_restored":
+        return "Flex restored for new requests"
+    if kind == "request_started" and event.get("requested_service_tier"):
+        return f"request started · service tier {event['requested_service_tier']}"
+    return ""

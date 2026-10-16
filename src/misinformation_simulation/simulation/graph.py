@@ -235,6 +235,8 @@ def run_news_interaction_graph(
     reuse_rewrites: bool = False,
     api_pricing: dict | None = None,
     openai_service_tier: str | None = None,
+    openai_flex_fallback: bool = False,
+    openai_flex_retry_seconds: float = 300,
     stdi_judge_fn: Callable[..., Any] | None = None,
     stdi_judge_repeats: int = DEFAULT_JUDGE_REPEATS,
     vad_model_bundle: VADModelBundle | None = None,

@@ -11,6 +11,7 @@ from typing import Any
 from urllib.parse import urlparse
 from uuid import uuid4
 
+from misinformation_simulation.llm.flex_fallback import is_flex_unavailable
 from misinformation_simulation.llm.pricing import default_pricing, estimate_cost, validate_pricing
 from misinformation_simulation.llm.progress import emit_event
 from misinformation_simulation.llm.service_tier import configured_openai_service_tier
@@ -186,7 +187,7 @@ class UsageTracker:
             "estimated_cost_usd": None if unknown else known,
             "note": "Costs use provider-reported amounts when available, otherwise recorded usage "
             "and dated rates. Token-rate estimates do not replace invoices. "
-            "Unknown pricing and failed requests are not treated as free.",
+            "Failed requests remain unknown unless explicitly rejected without charge.",
         }
 
 
@@ -258,7 +259,12 @@ def api_request(*, provider: str, model: str):
     from misinformation_simulation.llm.rate_limit import shared_request_slot
 
     shared_request_slot(provider)
-    emit_event("request_started", requested_model=str(model), requested_provider=provider)
+    emit_event(
+        "request_started",
+        requested_model=str(model),
+        requested_provider=provider,
+        requested_service_tier=configured_openai_service_tier() if provider == "chatgpt" else None,
+    )
     try:
         yield
     except Exception as error:
@@ -271,14 +277,23 @@ def api_request(*, provider: str, model: str):
 
 def record_request_error(error: Exception, *, provider: str, model: str) -> None:
     if tracker := _tracker.get():
+        free_flex_rejection = (
+            provider == "chatgpt"
+            and configured_openai_service_tier() == "flex"
+            and is_flex_unavailable(error)
+        )
         tracker.append(
             {
                 "kind": "request",
                 "status": "error",
                 "provider": provider,
                 "requested_model": str(model),
+                "requested_service_tier": configured_openai_service_tier()
+                if provider == "chatgpt"
+                else None,
                 "exception_type": type(error).__name__,
-                "estimated_cost_usd": None,
+                "estimated_cost_usd": 0.0 if free_flex_rejection else None,
+                "cost_source": "flex_capacity_rejection" if free_flex_rejection else "unavailable",
             }
         )
 

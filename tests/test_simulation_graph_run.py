@@ -91,6 +91,8 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
         pd.DataFrame([{"title": title, "description": original, "language": "en"}]),
         stdi_comparison_method="cluster",
         openai_service_tier="flex",
+        openai_flex_fallback=True,
+        openai_flex_retry_seconds=120,
         nodes=nodes,
         **({"rewrite_mode": mode} if mode != "faithful" else {}),
         stdi_embedder=KeywordEmbedder(),
@@ -111,6 +113,8 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     assert result.step_results[1].source_text == "First person's interpretation"
     assert result.summary["rewrite_mode"] == mode
     assert result.summary["openai_service_tier"] == "flex"
+    assert result.summary["openai_flex_fallback"] is True
+    assert result.summary["openai_flex_retry_seconds"] == 120
     assert result.summary["rewrite_prompt_version"] == prompt_config.version
     assert result.summary["rewrite_original_title_context"] == (mode == "faithful")
     assert result.summary["topic_extraction_original_title_context"] == (mode == "faithful")
@@ -119,6 +123,8 @@ def test_graph_transmission_modes_pass_previous_message_and_persist_prompt_prove
     assert result.summary["rewrite_system_instruction"] == prompt_config.system_instruction
     persisted = json.loads(result.summary_path.read_text(encoding="utf-8"))
     assert persisted["rewrite_mode"] == mode
+    assert persisted["openai_flex_fallback"] is True
+    assert persisted["openai_flex_retry_seconds"] == 120
     assert persisted["topic_extraction_original_title_context"] == (mode == "faithful")
     saved_steps = [json.loads(line) for line in result.steps_path.read_text().splitlines()]
     assert all(step["metadata_rewrite_mode"] == mode for step in saved_steps)
