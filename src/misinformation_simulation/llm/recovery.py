@@ -106,13 +106,14 @@ def error_signature(error: Exception, context: RequestContext) -> str:
     message = re.sub(r"\b\d{4}-\d\d-\d\d[t ][\d:.+z-]+", "timestamp", message)
     message = re.sub(r"\b(?:retry|try again)\s+(?:after|in)\s+[\d.]+s?", "retry later", message)
     message = re.sub(r"[$€£]\s*\d+(?:[.,]\d+)*", "amount", message)
-    # Specific resource codes identify the cause even when balances or request IDs change.
+    # Stable codes identify the cause independently of occurrence-specific diagnostics.
     if str(code) in {
         "credit_balance_exhausted",
         "insufficient_quota",
         "organization_usage_limit_exceeded",
         "organization_spend_limit_exceeded",
         "project_spend_limit_exceeded",
+        "invalid_vad_evidence",
     }:
         message = ""
     payload = [
@@ -387,6 +388,12 @@ class RecoverySession:
 
 def set_request_context(context: RequestContext) -> None:
     _request.set(context)
+
+
+def discard_successful_attempts() -> None:
+    """Allow corrected generation on the working key without retrying failed credentials."""
+    if history := _attempts.get():
+        _attempts.set([(context, error) for context, error in history if error is not None])
 
 
 @contextmanager

@@ -36,7 +36,11 @@ def runtime_cache_contracts() -> dict[str, dict]:
             "topic_drift/models.py",
             "topic_drift/manual_evaluation_definitions.py",
         ],
-        "vad_llm": ["text_metrics/llm_vad.py", "text_metrics/vad_evaluation.py"],
+        "vad_llm": [
+            "text_metrics/llm_vad.py",
+            "text_metrics/vad_evaluation.py",
+            "text_metrics/evidence_alignment.py",
+        ],
         "vad_model": ["text_metrics/vad.py", "text_metrics/vad_evaluation.py"],
     }
     contracts = {

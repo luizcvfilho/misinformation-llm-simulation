@@ -1018,6 +1018,22 @@ include these components against the original article and the previous version, 
 with the raw VAD scores. The VAD model is loaded locally and may need to be downloaded on
 its first use. Complete STDI requires all three dimensions from its selected VAD source;
 failed ratings retain available independent results and never become zero drift.
+LLM VAD evidence is stored as an exact, non-empty substring of the evaluated text; empty
+evidence lists remain valid when no emotional cue is asserted. Existing exact quotes pass
+unchanged. Otherwise, the v2 validator aligns only letter-case and whitespace differences
+when exactly one source span matches, preserving word boundaries and complete Unicode
+characters. It leaves words, numbers, accents and punctuation unchanged. Ambiguous matches
+and other invalid responses receive
+validation feedback and up to four generation attempts before interactive recovery is
+requested. Corrections use the working credential and the shared request budget; transport
+failures keep their separate recovery behavior. Each attempt retains its raw response,
+validation error, input hash and prompt hash. Adjustments are recorded in `evidence_alignments`
+with dimension, quote index, original quote, literal source quote, applied rule, and source
+start/end offsets (Python Unicode character indices, end exclusive). Raw model responses
+remain unchanged. Scores and rationales remain unchanged. `evidence_validation_version`
+records the alignment policy; the v2 evaluator and stage cache contracts distinguish new
+assessments from older validation results. Equivalent evidence failures share the same
+recovery signature. Historical run files are not modified.
 Graph step records also include `stdi_cumulative`, the running sum of successful incremental
 STDI values for each news item. Failed steps have no cumulative score; a later successful step
 continues from the last successful version. This sum is not normalized and can exceed 1.

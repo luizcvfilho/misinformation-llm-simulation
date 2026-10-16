@@ -14,6 +14,7 @@ from misinformation_simulation.llm.progress import retry_wait
 from misinformation_simulation.llm.recovery import (
     RequestContext,
     automatic_openai_call,
+    discard_successful_attempts,
     get_recovery,
     set_request_context,
 )
@@ -30,24 +31,45 @@ def generate_and_parse_with_retry[T](
     max_attempts: int = MAX_EVALUATION_ATTEMPTS,
     should_retry: Callable[[T], bool] | None = None,
     base_delay: float = 2.0,
+    on_validation_error: Callable[[Exception], None] | None = None,
 ) -> T:
     """Share one budget across API and validation failures: initial call plus three retries."""
     if max_attempts <= 0:
         raise ValueError("'retry_attempts' must be greater than zero.")
+
+    def parse_response(raw):
+        try:
+            return parse(raw)
+        except (ValueError, TypeError, KeyError) as error:
+            if on_validation_error is not None:
+                on_validation_error(error)
+            raise
+
     if session := get_recovery():
 
         def evaluate():
-            result = parse(generate())
-            if should_retry is not None and should_retry(result):
-                raise ValueError("The response did not meet validation requirements.")
-            return result
+            attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS) if on_validation_error else 1
+            for attempt in range(1, attempts + 1):
+                raw = generate()
+                try:
+                    result = parse_response(raw)
+                    if should_retry is not None and should_retry(result):
+                        raise ValueError("The response did not meet validation requirements.")
+                    return result
+                except (ValueError, TypeError, KeyError) as error:
+                    if attempt == attempts:
+                        raise
+                    session.check_cancelled()
+                    discard_successful_attempts()
+                    retry_wait(0, attempt=attempt, max_attempts=attempts, reason=str(error))
+            raise AssertionError("The validation retry budget was exhausted without a result.")
 
         return session.run(evaluate)
     max_attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS)
     for attempt in range(1, max_attempts + 1):
         reason = "response did not meet validation requirements"
         try:
-            result = parse(generate())
+            result = parse_response(generate())
             if should_retry is None or not should_retry(result) or attempt == max_attempts:
                 return result
         except Exception as exc:
