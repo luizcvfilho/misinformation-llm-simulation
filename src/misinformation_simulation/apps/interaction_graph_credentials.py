@@ -141,22 +141,25 @@ def render_api_keys(
             if not primary:
                 missing.append(PROVIDER_LABELS[provider])
         if provider == "chatgpt":
-            fallback_configured = bool(environment_openai_fallback())
-            override_fallback = False
-            if fallback_configured:
-                st.caption("OpenAI fallback key configured in the environment.")
-                override_fallback = _override_environment_key(
-                    provider, "fallback", disabled=disabled
-                )
-            if not fallback_configured or override_fallback:
-                fallback = (
-                    _key_input(
-                        provider, "fallback", disabled=disabled, replacement=override_fallback
-                    )
-                    or None
-                )
-                if override_fallback and not fallback:
-                    missing.append(f"{PROVIDER_LABELS[provider]} fallback")
+            fallback = _render_fallback_key(provider, disabled, missing)
+
         if primary or fallback:
             credentials[provider] = ProviderAPIKeys(primary, fallback)
     return credentials, missing
+
+
+def _render_fallback_key(provider, disabled, missing):
+    fallback = None
+    fallback_configured = bool(environment_openai_fallback())
+    override_fallback = False
+    if fallback_configured:
+        st.caption("OpenAI fallback key configured in the environment.")
+        override_fallback = _override_environment_key(provider, "fallback", disabled=disabled)
+    if not fallback_configured or override_fallback:
+        fallback = (
+            _key_input(provider, "fallback", disabled=disabled, replacement=override_fallback)
+            or None
+        )
+        if override_fallback and not fallback:
+            missing.append(f"{PROVIDER_LABELS[provider]} fallback")
+    return fallback

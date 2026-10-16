@@ -155,15 +155,8 @@ def build_manual_stdi_evaluation_dataset(
             excluded_source_counts[exclusion_reason] += 1
             continue
 
-        title = ""
-        if title_column in row.index and pd.notna(row[title_column]):
-            title = str(row[title_column]).strip()
-        if not title:
-            title = "Untitled"
+        title, article_id = _manual_source_metadata(row, title_column, article_id_column)
 
-        article_id = ""
-        if article_id_column in row.index and pd.notna(row[article_id_column]):
-            article_id = str(row[article_id_column]).strip()
         candidates.append(
             {
                 "source_row_index": source_row_index,
@@ -375,21 +368,15 @@ def score_manual_stdi_evaluation_pairs(
                 compared_vad=modified_vad,
                 component_overrides=semantic_comparison.component_drifts,
             )
-            for component in semantic_comparison.component_drifts:
-                record[f"lexical_{component}"] = lexical_metrics[component]
-                record[f"semantic_{component}"] = semantic_comparison.component_drifts[component]
-                record[f"semantic_{component}_rationale"] = semantic_comparison.rationales[
-                    component
-                ]
-            for key, value in metrics.items():
-                record[f"calculated_{key}" if key != "stdi" else CALCULATED_STDI_COLUMN] = value
-            record["scoring_status"] = "success"
-            record["scoring_error"] = pd.NA
-            for key, value in {
-                **flatten_topic_structure(original_structure, prefix="original"),
-                **flatten_topic_structure(modified_structure, prefix="modified"),
-            }.items():
-                record[key] = value
+            _write_manual_pair_scores(
+                record,
+                semantic_comparison,
+                lexical_metrics,
+                metrics,
+                original_structure,
+                modified_structure,
+            )
+
         except Exception as exc:
             record["scoring_status"] = "error"
             record["scoring_error"] = str(exc)
@@ -484,3 +471,34 @@ def fit_manual_stdi_regression(
         test_size=test_size,
         random_state=random_state,
     )
+
+
+def _manual_source_metadata(row, title_column, article_id_column):
+    title = ""
+    if title_column in row.index and pd.notna(row[title_column]):
+        title = str(row[title_column]).strip()
+    if not title:
+        title = "Untitled"
+
+    article_id = ""
+    if article_id_column in row.index and pd.notna(row[article_id_column]):
+        article_id = str(row[article_id_column]).strip()
+    return title, article_id
+
+
+def _write_manual_pair_scores(
+    record, semantic_comparison, lexical_metrics, metrics, original_structure, modified_structure
+):
+    for component in semantic_comparison.component_drifts:
+        record[f"lexical_{component}"] = lexical_metrics[component]
+        record[f"semantic_{component}"] = semantic_comparison.component_drifts[component]
+        record[f"semantic_{component}_rationale"] = semantic_comparison.rationales[component]
+    for key, value in metrics.items():
+        record[f"calculated_{key}" if key != "stdi" else CALCULATED_STDI_COLUMN] = value
+    record["scoring_status"] = "success"
+    record["scoring_error"] = pd.NA
+    for key, value in {
+        **flatten_topic_structure(original_structure, prefix="original"),
+        **flatten_topic_structure(modified_structure, prefix="modified"),
+    }.items():
+        record[key] = value

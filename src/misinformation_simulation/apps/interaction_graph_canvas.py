@@ -133,24 +133,8 @@ def flow_state_to_forms(
     state: StreamlitFlowState,
 ) -> list[dict[str, str]]:
     """Accept an editable forest, but reject cycles, merges and removal of the source root."""
-    node_ids = [node.id for node in state.nodes]
-    if not node_ids or len(node_ids) != len(set(node_ids)) or not all(node_ids):
-        raise ValueError("The canvas must contain nodes with unique IDs.")
-    root = next((form["uid"] for form in forms if not form.get("parent_uid")), None)
-    if root is not None and root not in node_ids:
-        raise ValueError("Keep the source root node in the graph.")
-    graph = nx.DiGraph()
-    graph.add_nodes_from(node_ids)
-    for edge in state.edges:
-        if edge.source not in graph or edge.target not in graph:
-            raise ValueError("Connect only nodes that exist on the canvas.")
-        graph.add_edge(edge.source, edge.target)
-    if not nx.is_directed_acyclic_graph(graph):
-        raise ValueError("That connection creates a cycle. Each branch must continue separately.")
-    if any(graph.in_degree(node) > 1 for node in graph):
-        raise ValueError("A node can have only one parent. Remove its previous connection first.")
-    if root is not None and graph.in_degree(root):
-        raise ValueError("The source root cannot receive text from another node.")
+    graph, node_ids = _validate_canvas_graph(forms, state)
+
     existing = {form["uid"]: deepcopy(form) for form in forms}
     result = [existing[uid] for uid in node_ids if uid in existing]
     for node in state.nodes:
@@ -194,6 +178,69 @@ def render_graph_canvas() -> None:
         st.session_state._graph_flow_state = state
         st.session_state._graph_flow_source = fingerprint
 
+    state = _render_canvas_controls(forms, state)
+
+    st.caption(
+        "Drag nodes to move them. Drag from the right handle to another node's left handle "
+        "to connect them. Right-click a connection to remove it. Click a node to configure it."
+    )
+    returned = streamlit_flow(
+        "simulation_graph_canvas",
+        state,
+        height=500,
+        fit_view=True,
+        allow_new_edges=True,
+        get_node_on_click=True,
+        enable_pane_menu=True,
+        enable_node_menu=True,
+        enable_edge_menu=True,
+        show_minimap=True,
+        layout=ManualLayout(),
+        min_zoom=0.1,
+    )
+    forms = _apply_canvas_update(forms, state, returned)
+
+    if st.session_state.get("_graph_flow_error"):
+        st.warning(st.session_state._graph_flow_error)
+    options = {form["uid"]: form for form in forms}
+    if st.session_state.get("graph_canvas_selected") not in options:
+        st.session_state.graph_canvas_selected = next(iter(options))
+    selected = st.selectbox(
+        "Node to configure",
+        list(options),
+        key="graph_canvas_selected",
+        format_func=lambda uid: f"{options[uid]['label']} ({options[uid]['node_id']})",
+    )
+    with st.expander("Selected node settings", expanded=True):
+        before = forms_fingerprint(forms)
+        render_node_editor(forms.index(options[selected]), options[selected])
+        if forms_fingerprint(forms) != before:
+            st.rerun()
+
+
+def _validate_canvas_graph(forms, state):
+    node_ids = [node.id for node in state.nodes]
+    if not node_ids or len(node_ids) != len(set(node_ids)) or not all(node_ids):
+        raise ValueError("The canvas must contain nodes with unique IDs.")
+    root = next((form["uid"] for form in forms if not form.get("parent_uid")), None)
+    if root is not None and root not in node_ids:
+        raise ValueError("Keep the source root node in the graph.")
+    graph = nx.DiGraph()
+    graph.add_nodes_from(node_ids)
+    for edge in state.edges:
+        if edge.source not in graph or edge.target not in graph:
+            raise ValueError("Connect only nodes that exist on the canvas.")
+        graph.add_edge(edge.source, edge.target)
+    if not nx.is_directed_acyclic_graph(graph):
+        raise ValueError("That connection creates a cycle. Each branch must continue separately.")
+    if any(graph.in_degree(node) > 1 for node in graph):
+        raise ValueError("A node can have only one parent. Remove its previous connection first.")
+    if root is not None and graph.in_degree(root):
+        raise ValueError("The source root cannot receive text from another node.")
+    return graph, node_ids
+
+
+def _render_canvas_controls(forms, state):
     controls = st.columns([2, 1, 1])
     new_persona = controls[0].selectbox(
         "New node persona",
@@ -216,24 +263,10 @@ def render_graph_canvas() -> None:
         st.session_state.graph_nodes = flow_state_to_forms(forms, state)
         st.session_state._graph_flow_source = forms_fingerprint(st.session_state.graph_nodes)
         st.rerun()
-    st.caption(
-        "Drag nodes to move them. Drag from the right handle to another node's left handle "
-        "to connect them. Right-click a connection to remove it. Click a node to configure it."
-    )
-    returned = streamlit_flow(
-        "simulation_graph_canvas",
-        state,
-        height=500,
-        fit_view=True,
-        allow_new_edges=True,
-        get_node_on_click=True,
-        enable_pane_menu=True,
-        enable_node_menu=True,
-        enable_edge_menu=True,
-        show_minimap=True,
-        layout=ManualLayout(),
-        min_zoom=0.1,
-    )
+    return state
+
+
+def _apply_canvas_update(forms, state, returned):
     if returned.timestamp >= state.timestamp:
         try:
             updated = flow_state_to_forms(forms, returned)
@@ -242,14 +275,8 @@ def render_graph_canvas() -> None:
             state.timestamp = max(state.timestamp, returned.timestamp) + 1
         else:
             changed = forms_fingerprint(forms) != forms_fingerprint(updated)
-            for old_form in forms:
-                new_form = next((item for item in updated if item["uid"] == old_form["uid"]), None)
-                if new_form is not None and new_form.get("parent_uid") != old_form.get(
-                    "parent_uid"
-                ):
-                    st.session_state.pop(f"parent_uid_{old_form['uid']}", None)
-                if new_form is not None and new_form.get("label") != old_form.get("label"):
-                    st.session_state.pop(f"label_{old_form['uid']}", None)
+            _clear_changed_node_widgets(forms, updated)
+
             forms = updated
             st.session_state.graph_nodes = forms
             st.session_state._graph_flow_state = returned
@@ -261,19 +288,13 @@ def render_graph_canvas() -> None:
                     st.session_state._graph_flow_clicked = returned.selected_id
             if changed:
                 st.rerun()
-    if st.session_state.get("_graph_flow_error"):
-        st.warning(st.session_state._graph_flow_error)
-    options = {form["uid"]: form for form in forms}
-    if st.session_state.get("graph_canvas_selected") not in options:
-        st.session_state.graph_canvas_selected = next(iter(options))
-    selected = st.selectbox(
-        "Node to configure",
-        list(options),
-        key="graph_canvas_selected",
-        format_func=lambda uid: f"{options[uid]['label']} ({options[uid]['node_id']})",
-    )
-    with st.expander("Selected node settings", expanded=True):
-        before = forms_fingerprint(forms)
-        render_node_editor(forms.index(options[selected]), options[selected])
-        if forms_fingerprint(forms) != before:
-            st.rerun()
+    return forms
+
+
+def _clear_changed_node_widgets(forms, updated):
+    for old_form in forms:
+        new_form = next((item for item in updated if item["uid"] == old_form["uid"]), None)
+        if new_form is not None and new_form.get("parent_uid") != old_form.get("parent_uid"):
+            st.session_state.pop(f"parent_uid_{old_form['uid']}", None)
+        if new_form is not None and new_form.get("label") != old_form.get("label"):
+            st.session_state.pop(f"label_{old_form['uid']}", None)

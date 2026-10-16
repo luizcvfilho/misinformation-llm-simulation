@@ -185,65 +185,15 @@ def render_analysis() -> None:
         st.warning("The selected folders contain no step records.")
         return
 
-    target = (
-        steps.loc[steps["source_path"].eq(requested_path)] if requested_path else steps.iloc[:0]
-    )
-    executions = steps[["execution_id", "execution_label"]].drop_duplicates()
-    execution_labels = executions.set_index("execution_id")["execution_label"].to_dict()
-    execution_options = sorted(
-        execution_labels,
-        key=lambda execution_id: (_execution_recency(execution_id), execution_id),
-        reverse=True,
-    )
-    _sync_multiselect_options("analysis_main_executions", execution_options)
-    if not target.empty:
-        st.session_state.analysis_main_executions = execution_options
-        st.session_state.analysis_main_active_execution = target.iloc[0]["execution_id"]
-    selected_executions = st.sidebar.multiselect(
-        "Executions",
-        execution_options,
-        default=widget_default("analysis_main_executions", execution_options, None),
-        format_func=lambda value: f"{execution_labels[value]} — {value}",
-        key="analysis_main_executions",
-    )
-    if not selected_executions:
-        st.warning("Select at least one execution.")
+    selection = _select_analysis_execution(steps, requested_path)
+    if selection is None:
         return
-    active_execution = st.sidebar.selectbox(
-        "Active execution",
-        [execution_id for execution_id in execution_options if execution_id in selected_executions],
-        format_func=lambda value: f"{execution_labels[value]} — {value}",
-        help="Defaults to the most recent execution. You can select an older execution manually.",
-        key="analysis_main_active_execution",
-    )
-    steps = steps.loc[steps["execution_id"].eq(active_execution)].copy()
-    st.caption(f"Analyzing execution: {active_execution}")
-    st.sidebar.caption("All charts, summaries and cases use only the active execution.")
+    steps, target = selection
 
-    rewrite_modes = sorted(steps["metadata_rewrite_mode"].unique())
-    mode_labels = {**GRAPH_REWRITE_MODE_LABELS, "legacy": "Legacy (mode not recorded)"}
-    if not target.empty:
-        st.session_state.analysis_main_transmission_mode = target.iloc[0]["metadata_rewrite_mode"]
-    selected_mode = st.sidebar.selectbox(
-        "Transmission mode",
-        rewrite_modes,
-        format_func=lambda mode: mode_labels.get(mode, mode),
-        key="analysis_main_transmission_mode",
+    steps, selected_evaluation, selected_mode = _select_analysis_evaluation(
+        steps, target, requested_evaluation
     )
-    steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
-    evaluations = available_evaluations(steps)
-    selected_evaluation = None
-    if evaluations:
-        if requested_evaluation in evaluations:
-            st.session_state.analysis_stdi_evaluation = requested_evaluation
-        selected_evaluation = st.sidebar.selectbox(
-            "STDI evaluation",
-            evaluations,
-            format_func=EVALUATION_LABELS.__getitem__,
-            key="analysis_stdi_evaluation",
-        )
-        steps = select_evaluation_steps(steps, selected_evaluation)
-        st.caption(f"STDI evaluation: {EVALUATION_LABELS[selected_evaluation]}")
+
     chains = sorted(steps["chain_label"].unique())
     _sync_multiselect_options("analysis_main_chains", chains)
     if not target.empty:
@@ -273,47 +223,14 @@ def render_analysis() -> None:
         else None
     )
 
-    first_column, second_column, third_column = st.columns(3)
-    first_column.metric("Chain step files", selected_records["source_path"].nunique())
-    second_column.metric("News items", selected_records["news_id"].nunique())
-    third_column.metric("Successful observations", len(selected_steps))
-    (
-        overview_tab,
-        groups_tab,
-        personas_tab,
-        transitions_tab,
-        contrasts_tab,
-        cases_tab,
-        details_tab,
-    ) = st.tabs(
-        [
-            "Overview",
-            "Domains and categories",
-            "Personas",
-            "Transitions",
-            "Paired comparisons",
-            "Cases",
-            "Run details",
-        ]
+    _render_analysis_tabs(
+        selected_records,
+        selected_steps,
+        selected_metric,
+        metrics,
+        selected_evaluation,
+        selected_mode,
     )
-    with details_tab:
-        _render_run_details(selected_records, selected_evaluation, selected_mode)
-    if selected_metric not in metrics:
-        with overview_tab:
-            st.warning("No numeric STDI metrics are available for these chains. Open Run details.")
-        return
-    with overview_tab:
-        _render_overview(selected_steps, selected_metric, metrics)
-    with groups_tab:
-        _render_news_group_analysis(selected_steps, metrics)
-    with personas_tab:
-        _render_persona_analysis(selected_steps)
-    with transitions_tab:
-        _render_transition_analysis(selected_steps)
-    with contrasts_tab:
-        _render_scenario_contrasts(selected_steps, metrics)
-    with cases_tab:
-        _render_case_explorer(selected_steps, metrics)
 
 
 def _render_run_details(
@@ -564,20 +481,7 @@ def _render_news_group_analysis(
             "exploratory cases: " + ", ".join(small_groups) + "."
         )
 
-    st.subheader("Selection composition")
-    st.plotly_chart(
-        build_group_composition_figure(filtered_summary),
-        width="stretch",
-        config=PLOTLY_CONFIG,
-    )
-    if grouping == ORIGINAL_CATEGORY_GROUPING:
-        memberships = int(filtered_summary["news_items"].sum())
-        unique_news = int(filtered_news["news_id"].nunique())
-        if memberships > unique_news:
-            st.caption(
-                f"There are {memberships} category–news memberships for {unique_news} "
-                "unique news items because original categories may be multiple."
-            )
+    _render_group_composition(filtered_summary, filtered_news, grouping)
 
     st.subheader("Chain proximity within each news item")
     st.caption(
@@ -602,55 +506,7 @@ def _render_news_group_analysis(
         config=PLOTLY_CONFIG,
     )
 
-    summary_display = filtered_summary.rename(
-        columns={
-            "group_label": "Group",
-            "news_items": "News items",
-            "mean_news_metric": "Mean metric per news item",
-            "mean_range": "Mean range",
-            "median_range": "Median range",
-            "range_ci_low": "95% CI — lower",
-            "range_ci_high": "95% CI — upper",
-            "mean_sd": "Mean standard deviation",
-            "mean_pairwise_abs_diff": "Mean pairwise difference",
-            "minimum_chains": "Minimum chains",
-            "maximum_chains": "Maximum chains",
-        }
-    )
-    summary_columns = [
-        "Group",
-        "News items",
-        "Mean metric per news item",
-        "Mean range",
-        "Median range",
-        "95% CI — lower",
-        "95% CI — upper",
-        "Mean standard deviation",
-        "Mean pairwise difference",
-        "Minimum chains",
-        "Maximum chains",
-    ]
-    st.dataframe(
-        summary_display[summary_columns],
-        width="stretch",
-        hide_index=True,
-        column_config=_numeric_column_config(summary_display[summary_columns]),
-    )
-    first_download, second_download = st.columns(2)
-    first_download.download_button(
-        "Download group summary",
-        data=filtered_summary.to_csv(index=False).encode("utf-8"),
-        file_name=f"chain_proximity_by_{grouping}.csv",
-        mime="text/csv",
-        width="stretch",
-    )
-    second_download.download_button(
-        "Download news-level results",
-        data=filtered_news.to_csv(index=False).encode("utf-8"),
-        file_name=f"news_chain_proximity_by_{grouping}.csv",
-        mime="text/csv",
-        width="stretch",
-    )
+    _render_group_summary(filtered_summary, filtered_news, grouping)
 
     st.subheader("Chain pairs within a group")
     pair_summary = summarize_chain_pairs_by_group(selected_steps, metric, grouping)
@@ -1280,3 +1136,184 @@ def _render_case_components(row: pd.Series) -> None:
             hide_index=True,
             column_config={label: st.column_config.NumberColumn(format="%.3f") for label in values},
         )
+
+
+def _select_analysis_execution(steps, requested_path):
+    target = (
+        steps.loc[steps["source_path"].eq(requested_path)] if requested_path else steps.iloc[:0]
+    )
+    executions = steps[["execution_id", "execution_label"]].drop_duplicates()
+    execution_labels = executions.set_index("execution_id")["execution_label"].to_dict()
+    execution_options = sorted(
+        execution_labels,
+        key=lambda execution_id: (_execution_recency(execution_id), execution_id),
+        reverse=True,
+    )
+    _sync_multiselect_options("analysis_main_executions", execution_options)
+    if not target.empty:
+        st.session_state.analysis_main_executions = execution_options
+        st.session_state.analysis_main_active_execution = target.iloc[0]["execution_id"]
+    selected_executions = st.sidebar.multiselect(
+        "Executions",
+        execution_options,
+        default=widget_default("analysis_main_executions", execution_options, None),
+        format_func=lambda value: f"{execution_labels[value]} — {value}",
+        key="analysis_main_executions",
+    )
+    if not selected_executions:
+        st.warning("Select at least one execution.")
+        return
+    active_execution = st.sidebar.selectbox(
+        "Active execution",
+        [execution_id for execution_id in execution_options if execution_id in selected_executions],
+        format_func=lambda value: f"{execution_labels[value]} — {value}",
+        help="Defaults to the most recent execution. You can select an older execution manually.",
+        key="analysis_main_active_execution",
+    )
+    steps = steps.loc[steps["execution_id"].eq(active_execution)].copy()
+    st.caption(f"Analyzing execution: {active_execution}")
+    st.sidebar.caption("All charts, summaries and cases use only the active execution.")
+    return steps, target
+
+
+def _select_analysis_evaluation(steps, target, requested_evaluation):
+    rewrite_modes = sorted(steps["metadata_rewrite_mode"].unique())
+    mode_labels = {**GRAPH_REWRITE_MODE_LABELS, "legacy": "Legacy (mode not recorded)"}
+    if not target.empty:
+        st.session_state.analysis_main_transmission_mode = target.iloc[0]["metadata_rewrite_mode"]
+    selected_mode = st.sidebar.selectbox(
+        "Transmission mode",
+        rewrite_modes,
+        format_func=lambda mode: mode_labels.get(mode, mode),
+        key="analysis_main_transmission_mode",
+    )
+    steps = steps.loc[steps["metadata_rewrite_mode"].eq(selected_mode)].copy()
+    evaluations = available_evaluations(steps)
+    selected_evaluation = None
+    if evaluations:
+        if requested_evaluation in evaluations:
+            st.session_state.analysis_stdi_evaluation = requested_evaluation
+        selected_evaluation = st.sidebar.selectbox(
+            "STDI evaluation",
+            evaluations,
+            format_func=EVALUATION_LABELS.__getitem__,
+            key="analysis_stdi_evaluation",
+        )
+        steps = select_evaluation_steps(steps, selected_evaluation)
+        st.caption(f"STDI evaluation: {EVALUATION_LABELS[selected_evaluation]}")
+    return steps, selected_evaluation, selected_mode
+
+
+def _render_analysis_tabs(
+    selected_records, selected_steps, selected_metric, metrics, selected_evaluation, selected_mode
+):
+    first_column, second_column, third_column = st.columns(3)
+    first_column.metric("Chain step files", selected_records["source_path"].nunique())
+    second_column.metric("News items", selected_records["news_id"].nunique())
+    third_column.metric("Successful observations", len(selected_steps))
+    (
+        overview_tab,
+        groups_tab,
+        personas_tab,
+        transitions_tab,
+        contrasts_tab,
+        cases_tab,
+        details_tab,
+    ) = st.tabs(
+        [
+            "Overview",
+            "Domains and categories",
+            "Personas",
+            "Transitions",
+            "Paired comparisons",
+            "Cases",
+            "Run details",
+        ]
+    )
+    with details_tab:
+        _render_run_details(selected_records, selected_evaluation, selected_mode)
+    if selected_metric not in metrics:
+        with overview_tab:
+            st.warning("No numeric STDI metrics are available for these chains. Open Run details.")
+        return
+    with overview_tab:
+        _render_overview(selected_steps, selected_metric, metrics)
+    with groups_tab:
+        _render_news_group_analysis(selected_steps, metrics)
+    with personas_tab:
+        _render_persona_analysis(selected_steps)
+    with transitions_tab:
+        _render_transition_analysis(selected_steps)
+    with contrasts_tab:
+        _render_scenario_contrasts(selected_steps, metrics)
+    with cases_tab:
+        _render_case_explorer(selected_steps, metrics)
+
+
+def _render_group_composition(filtered_summary, filtered_news, grouping):
+    st.subheader("Selection composition")
+    st.plotly_chart(
+        build_group_composition_figure(filtered_summary),
+        width="stretch",
+        config=PLOTLY_CONFIG,
+    )
+    if grouping == ORIGINAL_CATEGORY_GROUPING:
+        memberships = int(filtered_summary["news_items"].sum())
+        unique_news = int(filtered_news["news_id"].nunique())
+        if memberships > unique_news:
+            st.caption(
+                f"There are {memberships} category–news memberships for {unique_news} "
+                "unique news items because original categories may be multiple."
+            )
+
+
+def _render_group_summary(filtered_summary, filtered_news, grouping):
+    summary_display = filtered_summary.rename(
+        columns={
+            "group_label": "Group",
+            "news_items": "News items",
+            "mean_news_metric": "Mean metric per news item",
+            "mean_range": "Mean range",
+            "median_range": "Median range",
+            "range_ci_low": "95% CI — lower",
+            "range_ci_high": "95% CI — upper",
+            "mean_sd": "Mean standard deviation",
+            "mean_pairwise_abs_diff": "Mean pairwise difference",
+            "minimum_chains": "Minimum chains",
+            "maximum_chains": "Maximum chains",
+        }
+    )
+    summary_columns = [
+        "Group",
+        "News items",
+        "Mean metric per news item",
+        "Mean range",
+        "Median range",
+        "95% CI — lower",
+        "95% CI — upper",
+        "Mean standard deviation",
+        "Mean pairwise difference",
+        "Minimum chains",
+        "Maximum chains",
+    ]
+    st.dataframe(
+        summary_display[summary_columns],
+        width="stretch",
+        hide_index=True,
+        column_config=_numeric_column_config(summary_display[summary_columns]),
+    )
+    first_download, second_download = st.columns(2)
+    first_download.download_button(
+        "Download group summary",
+        data=filtered_summary.to_csv(index=False).encode("utf-8"),
+        file_name=f"chain_proximity_by_{grouping}.csv",
+        mime="text/csv",
+        width="stretch",
+    )
+    second_download.download_button(
+        "Download news-level results",
+        data=filtered_news.to_csv(index=False).encode("utf-8"),
+        file_name=f"news_chain_proximity_by_{grouping}.csv",
+        mime="text/csv",
+        width="stretch",
+    )

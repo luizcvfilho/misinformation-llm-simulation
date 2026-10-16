@@ -155,240 +155,305 @@ def _run_graph_queue(
     runner: GraphRunner,
     queue_mode: bool,
 ) -> None:
-    if int(settings.get("max_simultaneous_runs", 1)) > 1:
-        from misinformation_simulation.apps.interaction_graph_parallel import run_parallel_queue
+    return _SequentialQueue(
+        job=job, df=df, graphs=graphs, settings=settings, runner=runner, queue_mode=queue_mode
+    ).run()
 
-        run_parallel_queue(
-            job=job, df=df, graphs=graphs, settings=settings, runner=runner, queue_mode=queue_mode
-        )
-        return
-    completed = 0
-    failed = 0
-    cancelled = False
-    rows_per_graph = min(len(df), max(0, int(settings["max_rows"])))
-    graph_units = [rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in graphs]
-    total_units = sum(graph_units)
-    finished_units = 0
-    runs_dir = resolve_project_path(Path(settings["output_dir"]).expanduser())
-    batch_dir = runs_dir
-    batch_usage = []
 
-    def report_work(index: int, row: int, steps: int) -> None:
-        units_per_row = len(graphs[index - 1]["nodes"]) + 1
-        completed_units = finished_units + max(0, row - 1) * units_per_row
+class _SequentialQueue:
+    """Execute queued graphs and report persisted results and progress."""
+
+    def __init__(self, *, job, df, graphs, settings, runner, queue_mode):
+        self.job = job
+        self.df = df
+        self.graphs = graphs
+        self.settings = settings
+        self.runner = runner
+        self.queue_mode = queue_mode
+
+    def run(self):
+        if int(self.settings.get("max_simultaneous_runs", 1)) > 1:
+            from misinformation_simulation.apps.interaction_graph_parallel import run_parallel_queue
+
+            run_parallel_queue(
+                job=self.job,
+                df=self.df,
+                graphs=self.graphs,
+                settings=self.settings,
+                runner=self.runner,
+                queue_mode=self.queue_mode,
+            )
+            return
+        self._initialize_queue()
+
+        try:
+            self._prepare_batch()
+
+            for index, graph in enumerate(self.graphs, start=1):
+                self.index, self.graph = (index, graph)
+                if self.job.cancel_event.is_set():
+                    self.cancelled = True
+                    break
+                self._execute_queue_item()
+                if self.cancelled:
+                    break
+
+        finally:
+            if self.job.tracker is not None:
+                try:
+                    self.job.tracker.save_history()
+                except OSError as exc:
+                    self.job.events.put(("progress", f"Could not save timing history: {exc}"))
+            self.job.finish(
+                {"completed": self.completed, "failed": self.failed, "cancelled": self.cancelled}
+            )
+
+    def report_work(self, index: int, row: int, steps: int) -> None:
+        units_per_row = len(self.graphs[index - 1]["nodes"]) + 1
+        completed_units = self.finished_units + max(0, row - 1) * units_per_row
         if row:
             completed_units += 1 + steps
         progress = {
             "completed": completed_units,
-            "total": total_units,
+            "total": self.total_units,
             "graph_index": index,
-            "graph_total": len(graphs),
+            "graph_total": len(self.graphs),
             "row": row,
-            "row_total": rows_per_graph,
+            "row_total": self.rows_per_graph,
             "step": steps,
             "step_total": units_per_row - 1,
         }
-        with job.progress_lock:
-            if job.observing:
-                progress.update(job.tracker.snapshot())
-            job.latest_progress = progress
+        with self.job.progress_lock:
+            if self.job.observing:
+                progress.update(self.job.tracker.snapshot())
+            self.job.latest_progress = progress
 
-    try:
-        batch_prefix = Path(settings["output_prefix"].strip()).name
+    def log(self, message):
+        self.job.events.put(("progress", message))
+        with (self.batch_dir / "execution.log").open("a", encoding="utf-8") as stream:
+            stream.write(message + "\n")
+
+    def observe(self, index, event):
+        with self.job.progress_lock:
+            self.job.observing = True
+            self.job.tracker.observe(index, event)
+            if self.job.latest_progress is not None:
+                self.job.latest_progress = {
+                    **self.job.latest_progress,
+                    **self.job.tracker.snapshot(),
+                }
+                if "stage" in event:
+                    self.job.latest_progress["row"] = event.get("row", 0)
+                    self.job.latest_progress["phase"] = event["stage"]
+                    self.job.latest_progress["node_id"] = event.get("node_id")
+        message = event_message(event)
+        if message:
+            self.log(f"Graph {index}/{len(self.graphs)}: {message}")
+
+    def _initialize_queue(self):
+        self.completed = 0
+        self.failed = 0
+        self.cancelled = False
+        self.rows_per_graph = min(len(self.df), max(0, int(self.settings["max_rows"])))
+        self.graph_units = [
+            self.rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in self.graphs
+        ]
+        self.total_units = sum(self.graph_units)
+        self.finished_units = 0
+        self.runs_dir = resolve_project_path(Path(self.settings["output_dir"]).expanduser())
+        self.batch_dir = self.runs_dir
+        self.batch_usage = []
+
+    def _prepare_batch(self):
+        batch_prefix = Path(self.settings["output_prefix"].strip()).name
         if not batch_prefix or batch_prefix in {".", ".."}:
             raise ValueError("Enter an output prefix before running.")
-        batch_dir, _ = _reserve_output_directory(runs_dir, batch_prefix)
-        reuse = bool(settings.get("reuse_previous_results", False))
+        self.batch_dir, _ = _reserve_output_directory(self.runs_dir, batch_prefix)
+        self.reuse = bool(self.settings.get("reuse_previous_results", False))
         histories = sorted(
-            runs_dir.glob("*/timings.json"), key=lambda path: path.stat().st_mtime, reverse=True
+            self.runs_dir.glob("*/timings.json"),
+            key=lambda path: path.stat().st_mtime,
+            reverse=True,
         )
-        job.tracker = ProgressTracker(histories[0] if histories else None)
-        job.tracker.history_path = batch_dir / "timings.json"
-        for graph_index, planned_graph in enumerate(graphs, 1):
+        self.job.tracker = ProgressTracker(histories[0] if histories else None)
+        self.job.tracker.history_path = self.batch_dir / "timings.json"
+        self._plan_graphs()
+
+    def _execute_queue_item(self):
+        self.name = self.graph["name"]
+        self.prefix = output_prefix_for_graph(
+            self.settings["output_prefix"],
+            self.index if self.queue_mode else 1,
+            self.name,
+            include_base=False,
+        )
+        self.label = f"Graph {self.index}/{len(self.graphs)}: {self.name}"
+        self.log(f"{self.label} — starting")
+        self.report_work(self.index, 0, 0)
+        self.run_dir = None
+        try:
+            self._run_graph()
+
+            self._publish_result()
+
+            if self.status == "cancelled":
+                self.cancelled = True
+                self.log(f"{self.label} — cancelled; partial results saved")
+                return
+            self.completed += 1
+            with self.job.progress_lock:
+                self.job.tracker.finish_graph(self.index)
+            self.finished_units += self.graph_units[self.index - 1]
+            self.report_work(self.index, 0, 0)
+            self.log(f"{self.label} — finished")
+            if self.job.cancel_event.is_set():
+                self.cancelled = True
+                return
+        except Exception as exc:
+            if self.job.cancel_event.is_set():
+                self.cancelled = True
+                self.log(f"{self.label} — cancelled: {exc}")
+                return
+            self.failed += 1
+            with self.job.progress_lock:
+                self.job.tracker.finish_graph(self.index)
+            self.finished_units += self.graph_units[self.index - 1]
+            self.report_work(self.index, 0, 0)
+            self.job.events.put(
+                (
+                    "bundle",
+                    {
+                        "name": self.name,
+                        "execution_name": self.batch_dir.name,
+                        "status": "failed",
+                        "error": str(exc),
+                        "output_prefix": self.prefix,
+                    },
+                )
+            )
+            self.log(f"{self.label} — failed: {exc}")
+        finally:
+            cost_path = self.run_dir / f"{self.prefix}_api_costs.json" if self.run_dir else None
+            if cost_path is not None and cost_path.is_file():
+                self.batch_usage.append(json.loads(cost_path.read_text(encoding="utf-8")))
+                (self.batch_dir / "api_costs.json").write_text(
+                    json.dumps(combine_usage(self.batch_usage), indent=2, allow_nan=False),
+                    encoding="utf-8",
+                )
+
+    def _run_graph(self):
+        self.run_dir, _ = _reserve_output_directory(self.batch_dir, self.prefix)
+        self.graph_payload = build_editor_graph_payload(self.graph["nodes"])
+        nodes, edges, start_node_id = graph_config_from_payload(self.graph_payload)
+        self.result = _execute_graph(
+            self.job,
+            partial(
+                self.runner,
+                df=self.df,
+                nodes=nodes,
+                edges=edges,
+                start_node_id=start_node_id,
+                text_column=self.settings["text_column"],
+                title_column=self.settings["title_column"],
+                news_id_column=self.settings["news_id_column"] or None,
+                max_rows=int(self.settings["max_rows"]),
+                sleep_seconds=float(self.settings["sleep_seconds"]),
+                max_requests_per_minute=int(self.settings["max_requests_per_minute"]) or None,
+                retry_attempts=int(self.settings["retry_attempts"]),
+                allow_title_fallback=self.settings["allow_title_fallback"],
+                rewrite_mode=self.settings.get("rewrite_mode", "faithful"),
+                topic_drift_model=self.settings["topic_drift_model"],
+                topic_drift_provider=self.settings["topic_drift_provider"],
+                stdi_comparison_method=self.settings.get("stdi_comparison_method", "dual"),
+                stdi_judge_repeats=int(self.settings.get("stdi_judge_repeats", 3)),
+                vad_method=self.settings.get("vad_method", "model"),
+                vad_llm_model=self.settings.get("vad_llm_model"),
+                vad_llm_provider=self.settings.get("vad_llm_provider"),
+                stdi_cache_dir=self.batch_dir / "evaluation_cache",
+                shared_cache_dir=self.runs_dir / "shared_cache" if self.reuse else None,
+                reuse_rewrites=self.reuse,
+                api_pricing=load_pricing(
+                    resolve_project_path(self.settings["api_pricing_path"])
+                    if self.settings.get("api_pricing_path")
+                    else None
+                ),
+                openai_service_tier=self.settings.get("openai_service_tier"),
+                output_dir=self.run_dir,
+                output_prefix=self.prefix,
+                progress_callback=lambda message, label=self.label: self.log(f"{label}: {message}"),
+                operation_callback=lambda event, index=self.index: self.observe(index, event),
+                work_progress_callback=lambda row, _total, steps, _nodes, index=self.index: (
+                    self.report_work(index, row, steps)
+                ),
+                cancel_check=self.job.cancel_event.is_set,
+            ),
+        )
+
+    def _publish_result(self):
+        self.result.summary["graph_name"] = self.name
+        self.result.summary["execution_name"] = self.batch_dir.name
+        for path_result in getattr(self.result, "path_results", []):
+            path_result.summary["execution_name"] = self.batch_dir.name
+            if path_result.summary_path is not None:
+                path_result.summary_path.write_text(
+                    json.dumps(path_result.summary, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+        if self.result.summary_path is not None:
+            self.result.summary_path.write_text(
+                json.dumps(self.result.summary, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        self.status = "cancelled" if self.result.summary.get("cancelled") else "completed"
+        steps_df = steps_to_dataframe(self.result.step_results)
+        bundle = {
+            "name": self.name,
+            "execution_name": self.batch_dir.name,
+            "status": self.status,
+            "summary": self.result.summary,
+            "summary_path": str(self.result.summary_path)
+            if self.result.summary_path is not None
+            else None,
+            "steps_path": str(self.result.steps_path)
+            if self.result.steps_path is not None
+            else None,
+            "steps_df": steps_df,
+            "node_summary_df": build_node_summary_dataframe(steps_df),
+            "news_summary_df": build_news_summary_dataframe(steps_df),
+            "output_prefix": self.prefix,
+            "graph_payload": self.graph_payload,
+        }
+        self.job.events.put(("bundle", bundle))
+
+    def _plan_graphs(self):
+        for graph_index, planned_graph in enumerate(self.graphs, 1):
             planned_nodes = build_simulation_nodes(planned_graph["nodes"])
-            vad_method = settings.get("vad_method", "model")
+            vad_method = self.settings.get("vad_method", "model")
             vad_model = (
-                f"{vad_method}:{settings.get('vad_llm_model') or settings['topic_drift_model']}"
+                (
+                    f"{vad_method}:"
+                    f"{self.settings.get('vad_llm_model') or self.settings['topic_drift_model']}"
+                )
                 if vad_method != "model"
                 else DEFAULT_VAD_MODEL_NAME
             )
-            job.tracker.plan(
+            self.job.tracker.plan(
                 graph_index,
                 simulation_plan(
-                    rows_per_graph,
+                    self.rows_per_graph,
                     planned_nodes,
-                    method=settings.get("stdi_comparison_method", "dual"),
-                    repeats=int(settings.get("stdi_judge_repeats", 3)),
-                    model=settings["topic_drift_model"],
-                    provider=normalize_provider(settings["topic_drift_provider"]),
+                    method=self.settings.get("stdi_comparison_method", "dual"),
+                    repeats=int(self.settings.get("stdi_judge_repeats", 3)),
+                    model=self.settings["topic_drift_model"],
+                    provider=normalize_provider(self.settings["topic_drift_provider"]),
                     vad_model=vad_model,
                     vad_provider=normalize_provider(
-                        settings.get("vad_llm_provider") or settings["topic_drift_provider"]
+                        self.settings.get("vad_llm_provider")
+                        or self.settings["topic_drift_provider"]
                     )
                     if vad_method != "model"
                     else "local",
                     embedding_model=DEFAULT_STDI_EMBEDDING_MODEL,
-                    sleep_seconds=float(settings["sleep_seconds"]),
+                    sleep_seconds=float(self.settings["sleep_seconds"]),
                 ),
             )
-
-        def log(message):
-            job.events.put(("progress", message))
-            with (batch_dir / "execution.log").open("a", encoding="utf-8") as stream:
-                stream.write(message + "\n")
-
-        def observe(index, event):
-            with job.progress_lock:
-                job.observing = True
-                job.tracker.observe(index, event)
-                if job.latest_progress is not None:
-                    job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
-                    if "stage" in event:
-                        job.latest_progress["row"] = event.get("row", 0)
-                        job.latest_progress["phase"] = event["stage"]
-                        job.latest_progress["node_id"] = event.get("node_id")
-            message = event_message(event)
-            if message:
-                log(f"Graph {index}/{len(graphs)}: {message}")
-
-        for index, graph in enumerate(graphs, start=1):
-            if job.cancel_event.is_set():
-                cancelled = True
-                break
-            name = graph["name"]
-            prefix = output_prefix_for_graph(
-                settings["output_prefix"], index if queue_mode else 1, name, include_base=False
-            )
-            label = f"Graph {index}/{len(graphs)}: {name}"
-            log(f"{label} — starting")
-            report_work(index, 0, 0)
-            run_dir = None
-            try:
-                run_dir, _ = _reserve_output_directory(batch_dir, prefix)
-                graph_payload = build_editor_graph_payload(graph["nodes"])
-                nodes, edges, start_node_id = graph_config_from_payload(graph_payload)
-                result = _execute_graph(
-                    job,
-                    partial(
-                        runner,
-                        df=df,
-                        nodes=nodes,
-                        edges=edges,
-                        start_node_id=start_node_id,
-                        text_column=settings["text_column"],
-                        title_column=settings["title_column"],
-                        news_id_column=settings["news_id_column"] or None,
-                        max_rows=int(settings["max_rows"]),
-                        sleep_seconds=float(settings["sleep_seconds"]),
-                        max_requests_per_minute=(int(settings["max_requests_per_minute"]) or None),
-                        retry_attempts=int(settings["retry_attempts"]),
-                        allow_title_fallback=settings["allow_title_fallback"],
-                        rewrite_mode=settings.get("rewrite_mode", "faithful"),
-                        topic_drift_model=settings["topic_drift_model"],
-                        topic_drift_provider=settings["topic_drift_provider"],
-                        stdi_comparison_method=settings.get("stdi_comparison_method", "dual"),
-                        stdi_judge_repeats=int(settings.get("stdi_judge_repeats", 3)),
-                        vad_method=settings.get("vad_method", "model"),
-                        vad_llm_model=settings.get("vad_llm_model"),
-                        vad_llm_provider=settings.get("vad_llm_provider"),
-                        stdi_cache_dir=batch_dir / "evaluation_cache",
-                        shared_cache_dir=runs_dir / "shared_cache" if reuse else None,
-                        reuse_rewrites=reuse,
-                        api_pricing=load_pricing(
-                            resolve_project_path(settings["api_pricing_path"])
-                            if settings.get("api_pricing_path")
-                            else None
-                        ),
-                        openai_service_tier=settings.get("openai_service_tier"),
-                        output_dir=run_dir,
-                        output_prefix=prefix,
-                        progress_callback=lambda message, label=label: log(f"{label}: {message}"),
-                        operation_callback=lambda event, index=index: observe(index, event),
-                        work_progress_callback=lambda row, _total, steps, _nodes, index=index: (
-                            report_work(index, row, steps)
-                        ),
-                        cancel_check=job.cancel_event.is_set,
-                    ),
-                )
-                result.summary["graph_name"] = name
-                result.summary["execution_name"] = batch_dir.name
-                for path_result in getattr(result, "path_results", []):
-                    path_result.summary["execution_name"] = batch_dir.name
-                    if path_result.summary_path is not None:
-                        path_result.summary_path.write_text(
-                            json.dumps(path_result.summary, ensure_ascii=False, indent=2),
-                            encoding="utf-8",
-                        )
-                if result.summary_path is not None:
-                    result.summary_path.write_text(
-                        json.dumps(result.summary, ensure_ascii=False, indent=2), encoding="utf-8"
-                    )
-                status = "cancelled" if result.summary.get("cancelled") else "completed"
-                steps_df = steps_to_dataframe(result.step_results)
-                bundle = {
-                    "name": name,
-                    "execution_name": batch_dir.name,
-                    "status": status,
-                    "summary": result.summary,
-                    "summary_path": str(result.summary_path)
-                    if result.summary_path is not None
-                    else None,
-                    "steps_path": str(result.steps_path) if result.steps_path is not None else None,
-                    "steps_df": steps_df,
-                    "node_summary_df": build_node_summary_dataframe(steps_df),
-                    "news_summary_df": build_news_summary_dataframe(steps_df),
-                    "output_prefix": prefix,
-                    "graph_payload": graph_payload,
-                }
-                job.events.put(("bundle", bundle))
-                if status == "cancelled":
-                    cancelled = True
-                    log(f"{label} — cancelled; partial results saved")
-                    break
-                completed += 1
-                with job.progress_lock:
-                    job.tracker.finish_graph(index)
-                finished_units += graph_units[index - 1]
-                report_work(index, 0, 0)
-                log(f"{label} — finished")
-                if job.cancel_event.is_set():
-                    cancelled = True
-                    break
-            except Exception as exc:
-                if job.cancel_event.is_set():
-                    cancelled = True
-                    log(f"{label} — cancelled: {exc}")
-                    break
-                failed += 1
-                with job.progress_lock:
-                    job.tracker.finish_graph(index)
-                finished_units += graph_units[index - 1]
-                report_work(index, 0, 0)
-                job.events.put(
-                    (
-                        "bundle",
-                        {
-                            "name": name,
-                            "execution_name": batch_dir.name,
-                            "status": "failed",
-                            "error": str(exc),
-                            "output_prefix": prefix,
-                        },
-                    )
-                )
-                log(f"{label} — failed: {exc}")
-            finally:
-                cost_path = run_dir / f"{prefix}_api_costs.json" if run_dir else None
-                if cost_path is not None and cost_path.is_file():
-                    batch_usage.append(json.loads(cost_path.read_text(encoding="utf-8")))
-                    (batch_dir / "api_costs.json").write_text(
-                        json.dumps(combine_usage(batch_usage), indent=2, allow_nan=False),
-                        encoding="utf-8",
-                    )
-    finally:
-        if job.tracker is not None:
-            try:
-                job.tracker.save_history()
-            except OSError as exc:
-                job.events.put(("progress", f"Could not save timing history: {exc}"))
-        job.finish({"completed": completed, "failed": failed, "cancelled": cancelled})

@@ -87,45 +87,15 @@ def parse_llm_vad_assessment(raw_response: str, text: str) -> LLMVADAssessment:
     required = {*VAD_DIMENSIONS, "rationales", "evidence", "ambiguities"}
     if not isinstance(payload, dict) or set(payload) != required:
         raise ValueError("Unexpected VAD response schema.")
-    scores = {}
-    for dimension in VAD_DIMENSIONS:
-        value = payload[dimension]
-        if value is not None and (
-            isinstance(value, bool)
-            or not isinstance(value, (int, float))
-            or not math.isfinite(value)
-            or not 1 <= value <= 5
-        ):
-            raise ValueError(f"Invalid {dimension} score; expected null or a number in [1,5].")
-        scores[dimension] = float(value) if value is not None else None
+    scores = _parse_vad_scores(payload)
+
     for field_name in ("rationales", "evidence"):
         if not isinstance(payload[field_name], dict) or set(payload[field_name]) != set(
             VAD_DIMENSIONS
         ):
             raise ValueError(f"Invalid per-dimension {field_name}.")
-    aligner = EvidenceAligner(text)
-    alignments = []
-    for dimension in VAD_DIMENSIONS:
-        rationale = payload["rationales"][dimension]
-        if not isinstance(rationale, str) or not rationale.strip():
-            raise ValueError("Each dimension requires a rationale, including missing scores.")
-        quotes = payload["evidence"][dimension]
-        if not isinstance(quotes, list):
-            raise ValueError(f"Evidence for {dimension} must be a list of exact quotes.")
-        for index, quote in enumerate(quotes):
-            try:
-                alignment = aligner.align(quote)
-            except ValueError as error:
-                raise VADEvidenceValidationError(
-                    "Evidence must contain exact, non-empty quotes from the input. "
-                    f"Invalid evidence.{dimension}[{index}]: {repr(quote)[:200]}. "
-                    f"{error} Copy a contiguous substring with identical spelling and punctuation."
-                ) from error
-            if alignment.rule != "exact":
-                quotes[index] = alignment.matched_quote
-                alignments.append(
-                    {"dimension": dimension, "quote_index": index, **asdict(alignment)}
-                )
+    alignments = _align_vad_evidence(payload, text)
+
     ambiguities = payload["ambiguities"]
     if not isinstance(ambiguities, list) or any(
         not isinstance(item, str) or not item.strip() for item in ambiguities
@@ -220,3 +190,45 @@ class LLMVADScorer:
         return generate_and_parse_with_retry(
             request, parse, max_attempts=self.retry_attempts, on_validation_error=correct
         )
+
+
+def _parse_vad_scores(payload):
+    scores = {}
+    for dimension in VAD_DIMENSIONS:
+        value = payload[dimension]
+        if value is not None and (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            or not 1 <= value <= 5
+        ):
+            raise ValueError(f"Invalid {dimension} score; expected null or a number in [1,5].")
+        scores[dimension] = float(value) if value is not None else None
+    return scores
+
+
+def _align_vad_evidence(payload, text):
+    aligner = EvidenceAligner(text)
+    alignments = []
+    for dimension in VAD_DIMENSIONS:
+        rationale = payload["rationales"][dimension]
+        if not isinstance(rationale, str) or not rationale.strip():
+            raise ValueError("Each dimension requires a rationale, including missing scores.")
+        quotes = payload["evidence"][dimension]
+        if not isinstance(quotes, list):
+            raise ValueError(f"Evidence for {dimension} must be a list of exact quotes.")
+        for index, quote in enumerate(quotes):
+            try:
+                alignment = aligner.align(quote)
+            except ValueError as error:
+                raise VADEvidenceValidationError(
+                    "Evidence must contain exact, non-empty quotes from the input. "
+                    f"Invalid evidence.{dimension}[{index}]: {repr(quote)[:200]}. "
+                    f"{error} Copy a contiguous substring with identical spelling and punctuation."
+                ) from error
+            if alignment.rule != "exact":
+                quotes[index] = alignment.matched_quote
+                alignments.append(
+                    {"dimension": dimension, "quote_index": index, **asdict(alignment)}
+                )
+    return alignments

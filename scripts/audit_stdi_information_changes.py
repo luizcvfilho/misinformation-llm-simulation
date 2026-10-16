@@ -233,70 +233,10 @@ def comparator_probes() -> list[TopicStructurePair]:
 def score_pairs(
     pairs: list[dict], jobs: list[dict], args: argparse.Namespace, config_hash: str
 ) -> None:
-    saved = {}
-    validation = []
-    for job in jobs:
-        record = json.loads(
-            (args.output_dir / "extractions" / f"{job['job_id']}.json").read_text(encoding="utf-8")
-        )
-        if record["configuration_sha256"] != config_hash:
-            raise ValueError("Extraction configuration mismatch.")
-        saved[job["job_id"]] = _build_topic_structure(record["structure"])
-        if args.structured:
-            issues = structure_issues(saved[job["job_id"]])
-            validation.append(
-                {
-                    "job_id": job["job_id"],
-                    "replicate": job["replicate"],
-                    "text": job["text"],
-                    "status": "partial" if issues else "valid",
-                    "issues_json": json.dumps(issues),
-                }
-            )
-    if validation:
-        write_csv(args.output_dir / "extraction_validation.csv", validation)
-    work = [
-        {
-            **pair,
-            "comparison_kind": "original_vs_rewrite",
-            "left_job": digest(pair["original_text"]),
-            "right_job": digest(pair["modified_text"]),
-        }
-        for pair in pairs
-    ]
-    lookup = {(pair["scenario_id"], pair["change_type"]): pair for pair in pairs}
-    for scenario_id in dict.fromkeys(pair["scenario_id"] for pair in pairs):
-        for left_type, right_type in (
-            ("motive_tentative", "motive_asserted"),
-            ("motive_asserted", "opposite_motive"),
-        ):
-            left, right = lookup[scenario_id, left_type], lookup[scenario_id, right_type]
-            work.append(
-                {
-                    "pair_id": f"{scenario_id}_{left_type}_vs_{right_type}",
-                    "scenario_id": scenario_id,
-                    "change_type": f"{left_type}_vs_{right_type}",
-                    "comparison_kind": "direct_contrast",
-                    "original_text": left["modified_text"],
-                    "modified_text": right["modified_text"],
-                    "left_job": digest(left["modified_text"]),
-                    "right_job": digest(right["modified_text"]),
-                }
-            )
-    for job in jobs:
-        if job["replicate"] == 1:
-            continue
-        base = next(pair for pair in pairs if pair["modified_text"] == job["text"])
-        work.append(
-            {
-                **base,
-                "pair_id": f"{base['pair_id']}_replicate_{job['replicate']}",
-                "comparison_kind": "extraction_repeat",
-                "replicate": job["replicate"],
-                "left_job": digest(base["original_text"]),
-                "right_job": job["job_id"],
-            }
-        )
+    saved, validation = _load_audit_extractions(jobs, args, config_hash)
+
+    work = _build_audit_work(pairs, jobs)
+
     shared = [
         TopicStructurePair(item["pair_id"], saved[item["left_job"]], saved[item["right_job"]])
         for item in work
@@ -317,65 +257,8 @@ def score_pairs(
     )
     bundle = load_huggingface_vad_model(device="cpu")
     vad_scores = dict(zip(texts, predict_vad_batch(texts, model_bundle=bundle), strict=True))
-    results = []
-    for item, pair in zip(work, shared, strict=True):
-        comparison = comparator.compare(pair.original, pair.modified)
-        without_vad = calculate_stdi(
-            pair.original, pair.modified, component_overrides=comparison.component_drifts
-        )
-        full = calculate_stdi(
-            pair.original,
-            pair.modified,
-            original_vad=vad_scores[item["original_text"]],
-            compared_vad=vad_scores[item["modified_text"]],
-            component_overrides=comparison.component_drifts,
-        )
-        historical = full
-        details = comparison.details
-        status = "valid"
-        issues = []
-        if structured_comparator is not None:
-            details = structured_comparator.compare_structured(pair.original, pair.modified)
-            status, issues = details["status"], details["issues"]
-            vad = shared_vad_drift(
-                vad_scores[item["original_text"]], vad_scores[item["modified_text"]]
-            )
-            if vad["status"] != "valid":
-                status = "partial"
-                issues.append("Incomplete VAD")
-            if status == "valid":
-                full = complete_stdi(details["components"], vad)
-                without_vad = complete_stdi(
-                    details["components"], {"status": "valid", "vad_drift": 0.0}
-                )
-            else:
-                full = dict.fromkeys(historical)
-                without_vad = {"stdi": None}
-        record = {
-            **item,
-            **full,
-            "stdi_without_vad": without_vad["stdi"],
-            "vad_stdi_increment": (
-                full["stdi"] - without_vad["stdi"] if full["stdi"] is not None else None
-            ),
-            "relation_weighted_contribution": (
-                0.25 * full["relation_drift"] if full["stdi"] is not None else None
-            ),
-            "comparison_status": status,
-            "comparison_issues_json": json.dumps(issues),
-            "historical_cluster_on_shared_extraction_stdi": historical["stdi"],
-            "comparison_details_json": json.dumps(details, ensure_ascii=False),
-            "original_structure_json": json.dumps(
-                topic_structure_to_dict(pair.original), ensure_ascii=False
-            ),
-            "modified_structure_json": json.dumps(
-                topic_structure_to_dict(pair.modified), ensure_ascii=False
-            ),
-        }
-        if item["comparison_kind"] == "original_vs_rewrite" and item["change_type"] == "identity":
-            if full["stdi"] is not None and full["stdi"] != 0:
-                raise ValueError("Identical-text control did not produce zero STDI.")
-        results.append(record)
+    results = _score_audit_pairs(work, shared, comparator, structured_comparator, vad_scores)
+
     write_csv(args.output_dir / "scored_pairs.csv", results)
     probe_results = []
     for pair in probes:
@@ -674,6 +557,141 @@ def main() -> None:
         score_pairs(pairs, jobs, args, config_hash)
     if args.stage == "semantic":
         score_semantic_comparisons(args)
+
+
+def _load_audit_extractions(jobs, args, config_hash):
+    saved = {}
+    validation = []
+    for job in jobs:
+        record = json.loads(
+            (args.output_dir / "extractions" / f"{job['job_id']}.json").read_text(encoding="utf-8")
+        )
+        if record["configuration_sha256"] != config_hash:
+            raise ValueError("Extraction configuration mismatch.")
+        saved[job["job_id"]] = _build_topic_structure(record["structure"])
+        if args.structured:
+            issues = structure_issues(saved[job["job_id"]])
+            validation.append(
+                {
+                    "job_id": job["job_id"],
+                    "replicate": job["replicate"],
+                    "text": job["text"],
+                    "status": "partial" if issues else "valid",
+                    "issues_json": json.dumps(issues),
+                }
+            )
+    if validation:
+        write_csv(args.output_dir / "extraction_validation.csv", validation)
+    return saved, validation
+
+
+def _build_audit_work(pairs, jobs):
+    work = [
+        {
+            **pair,
+            "comparison_kind": "original_vs_rewrite",
+            "left_job": digest(pair["original_text"]),
+            "right_job": digest(pair["modified_text"]),
+        }
+        for pair in pairs
+    ]
+    lookup = {(pair["scenario_id"], pair["change_type"]): pair for pair in pairs}
+    for scenario_id in dict.fromkeys(pair["scenario_id"] for pair in pairs):
+        for left_type, right_type in (
+            ("motive_tentative", "motive_asserted"),
+            ("motive_asserted", "opposite_motive"),
+        ):
+            left, right = lookup[scenario_id, left_type], lookup[scenario_id, right_type]
+            work.append(
+                {
+                    "pair_id": f"{scenario_id}_{left_type}_vs_{right_type}",
+                    "scenario_id": scenario_id,
+                    "change_type": f"{left_type}_vs_{right_type}",
+                    "comparison_kind": "direct_contrast",
+                    "original_text": left["modified_text"],
+                    "modified_text": right["modified_text"],
+                    "left_job": digest(left["modified_text"]),
+                    "right_job": digest(right["modified_text"]),
+                }
+            )
+    for job in jobs:
+        if job["replicate"] == 1:
+            continue
+        base = next(pair for pair in pairs if pair["modified_text"] == job["text"])
+        work.append(
+            {
+                **base,
+                "pair_id": f"{base['pair_id']}_replicate_{job['replicate']}",
+                "comparison_kind": "extraction_repeat",
+                "replicate": job["replicate"],
+                "left_job": digest(base["original_text"]),
+                "right_job": job["job_id"],
+            }
+        )
+    return work
+
+
+def _score_audit_pairs(work, shared, comparator, structured_comparator, vad_scores):
+    results = []
+    for item, pair in zip(work, shared, strict=True):
+        comparison = comparator.compare(pair.original, pair.modified)
+        without_vad = calculate_stdi(
+            pair.original, pair.modified, component_overrides=comparison.component_drifts
+        )
+        full = calculate_stdi(
+            pair.original,
+            pair.modified,
+            original_vad=vad_scores[item["original_text"]],
+            compared_vad=vad_scores[item["modified_text"]],
+            component_overrides=comparison.component_drifts,
+        )
+        historical = full
+        details = comparison.details
+        status = "valid"
+        issues = []
+        if structured_comparator is not None:
+            details = structured_comparator.compare_structured(pair.original, pair.modified)
+            status, issues = details["status"], details["issues"]
+            vad = shared_vad_drift(
+                vad_scores[item["original_text"]], vad_scores[item["modified_text"]]
+            )
+            if vad["status"] != "valid":
+                status = "partial"
+                issues.append("Incomplete VAD")
+            if status == "valid":
+                full = complete_stdi(details["components"], vad)
+                without_vad = complete_stdi(
+                    details["components"], {"status": "valid", "vad_drift": 0.0}
+                )
+            else:
+                full = dict.fromkeys(historical)
+                without_vad = {"stdi": None}
+        record = {
+            **item,
+            **full,
+            "stdi_without_vad": without_vad["stdi"],
+            "vad_stdi_increment": (
+                full["stdi"] - without_vad["stdi"] if full["stdi"] is not None else None
+            ),
+            "relation_weighted_contribution": (
+                0.25 * full["relation_drift"] if full["stdi"] is not None else None
+            ),
+            "comparison_status": status,
+            "comparison_issues_json": json.dumps(issues),
+            "historical_cluster_on_shared_extraction_stdi": historical["stdi"],
+            "comparison_details_json": json.dumps(details, ensure_ascii=False),
+            "original_structure_json": json.dumps(
+                topic_structure_to_dict(pair.original), ensure_ascii=False
+            ),
+            "modified_structure_json": json.dumps(
+                topic_structure_to_dict(pair.modified), ensure_ascii=False
+            ),
+        }
+        if item["comparison_kind"] == "original_vs_rewrite" and item["change_type"] == "identity":
+            if full["stdi"] is not None and full["stdi"] != 0:
+                raise ValueError("Identical-text control did not produce zero STDI.")
+        results.append(record)
+    return results
 
 
 if __name__ == "__main__":

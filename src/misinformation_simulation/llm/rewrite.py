@@ -62,16 +62,7 @@ def rewrite_news_with_personality(
     retry_attempts = pick(retry_attempts, DEFAULT_RETRY_ATTEMPTS)
     allow_title_fallback = pick(allow_title_fallback, DEFAULT_ALLOW_TITLE_FALLBACK)
 
-    if df is None:
-        raise ValueError("Provide 'df' in the call or set llm.rewrite.DEFAULT_DF.")
-    if not isinstance(df, pd.DataFrame):
-        raise ValueError("'df' must be a pandas.DataFrame.")
-    if df.empty:
-        raise ValueError("The DataFrame is empty.")
-    if not personality or not str(personality).strip():
-        raise ValueError("Provide a valid personality.")
-    if max_requests_per_minute is not None and max_requests_per_minute <= 0:
-        raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+    _validate_rewrite_input(df, personality, max_requests_per_minute)
 
     provider_normalized = normalize_provider(provider)
     text_column = text_column or choose_news_text_column(df)
@@ -85,19 +76,7 @@ def rewrite_news_with_personality(
     )
     limiter = MinuteRateLimiter(max_requests_per_minute)
 
-    rewritten_df = df.copy()
-    rewritten_df["source_text_column"] = pd.NA
-    rewritten_df["target_language"] = pd.NA
-    rewritten_df["target_language_source"] = pd.NA
-    rewritten_df[output_column] = pd.NA
-    rewritten_df["rewrite_status"] = "not_requested"
-    rewritten_df["rewrite_error"] = pd.NA
-    rewritten_df["rewrite_model"] = pd.NA
-    rewritten_df["rewrite_provider"] = pd.NA
-
-    target_indexes = list(rewritten_df.index)
-    if max_rows is not None:
-        target_indexes = target_indexes[:max_rows]
+    rewritten_df, target_indexes = _prepare_rewrite_rows(df, output_column, max_rows)
 
     for row_index in target_indexes:
         row = rewritten_df.loc[row_index]
@@ -170,3 +149,38 @@ def rewrite_news_with_personality(
             time.sleep(sleep_seconds)
 
     return rewritten_df
+
+
+def _validate_rewrite_input(df, personality, max_requests_per_minute):
+    if df is None:
+        raise ValueError("Provide 'df' in the call or set llm.rewrite.DEFAULT_DF.")
+    if not isinstance(df, pd.DataFrame):
+        raise ValueError("'df' must be a pandas.DataFrame.")
+    if df.empty:
+        raise ValueError("The DataFrame is empty.")
+    if not personality or not str(personality).strip():
+        raise ValueError("Provide a valid personality.")
+    if max_requests_per_minute is not None and max_requests_per_minute <= 0:
+        raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+
+
+def _prepare_rewrite_columns(df, output_column):
+    rewritten_df = df.copy()
+    rewritten_df["source_text_column"] = pd.NA
+    rewritten_df["target_language"] = pd.NA
+    rewritten_df["target_language_source"] = pd.NA
+    rewritten_df[output_column] = pd.NA
+    rewritten_df["rewrite_status"] = "not_requested"
+    rewritten_df["rewrite_error"] = pd.NA
+    rewritten_df["rewrite_model"] = pd.NA
+    rewritten_df["rewrite_provider"] = pd.NA
+    return rewritten_df
+
+
+def _prepare_rewrite_rows(df, output_column, max_rows):
+    rewritten_df = _prepare_rewrite_columns(df, output_column)
+
+    target_indexes = list(rewritten_df.index)
+    if max_rows is not None:
+        target_indexes = target_indexes[:max_rows]
+    return rewritten_df, target_indexes

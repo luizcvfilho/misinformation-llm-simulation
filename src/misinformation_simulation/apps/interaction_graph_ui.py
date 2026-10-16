@@ -221,17 +221,8 @@ def validate_node_forms(node_forms: list[dict[str, str]]) -> list[str]:
             errors.append(f"Node {index} must define a model.")
         if not personality:
             errors.append(f"Node {index} must define a personality.")
-    if not errors:
-        try:
-            payload = build_editor_graph_payload(node_forms)
-            nodes_by_id = _normalize_nodes(build_simulation_nodes(node_forms))
-            edges = _normalize_edges(
-                nodes_by_id, [SimulationEdge(**edge) for edge in payload.get("edges", [])]
-            )
-            start = _resolve_start_node(nodes_by_id, edges, payload.get("start_node_id"))
-            _topological_path(nodes_by_id, edges, start)
-        except (ValueError, KeyError) as exc:
-            errors.append(f"Invalid graph topology: {exc}")
+    _validate_form_topology(node_forms, errors)
+
     return errors
 
 
@@ -294,3 +285,17 @@ def build_news_summary_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
         .sort_values(["errors", "max_stdi_vs_original", "news_id"], ascending=[False, False, True])
     )
     return grouped
+
+
+def _validate_form_topology(node_forms, errors):
+    if not errors:
+        try:
+            payload = build_editor_graph_payload(node_forms)
+            nodes_by_id = _normalize_nodes(build_simulation_nodes(node_forms))
+            edges = _normalize_edges(
+                nodes_by_id, [SimulationEdge(**edge) for edge in payload.get("edges", [])]
+            )
+            start = _resolve_start_node(nodes_by_id, edges, payload.get("start_node_id"))
+            _topological_path(nodes_by_id, edges, start)
+        except (ValueError, KeyError) as exc:
+            errors.append(f"Invalid graph topology: {exc}")

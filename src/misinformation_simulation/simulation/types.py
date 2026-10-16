@@ -23,14 +23,8 @@ EVALUATION_METRICS = (
 
 def expand_dual_evaluation_record(record: dict[str, Any]) -> dict[str, Any]:
     """Expose each branch independently, including historical dual records."""
-    for role in ("original", "source", "rewritten"):
-        evaluation = record.get(f"metadata_{role}_vad_evaluation")
-        if not isinstance(evaluation, dict):
-            continue
-        for source in ("model", "llm"):
-            scores = evaluation.get(source, {}).get("score") or {}
-            for dimension in ("valence", "arousal", "dominance"):
-                record[f"vad_{source}_{role}_{dimension}"] = scores.get(dimension)
+    _expand_vad_scores(record)
+
     for suffix in ("vs_original", "incremental"):
         from misinformation_simulation.text_metrics.vad_evaluation import vad_pair_columns
 
@@ -155,3 +149,14 @@ class SimulationResult:
     summary_path: Path | None = None
     steps_path: Path | None = None
     path_results: list[SimulationResult] = field(default_factory=list)
+
+
+def _expand_vad_scores(record):
+    for role in ("original", "source", "rewritten"):
+        evaluation = record.get(f"metadata_{role}_vad_evaluation")
+        if not isinstance(evaluation, dict):
+            continue
+        for source in ("model", "llm"):
+            scores = evaluation.get(source, {}).get("score") or {}
+            for dimension in ("valence", "arousal", "dominance"):
+                record[f"vad_{source}_{role}_{dimension}"] = scores.get(dimension)

@@ -58,215 +58,302 @@ def annotate_stdi_for_version_chain(
     vad_scorer: Callable[[str], VADScore] | None = None,
     progress_callback: Callable[[int, int], None] | None = None,
 ) -> pd.DataFrame:
-    if not isinstance(df, pd.DataFrame):
-        raise ValueError("'df' must be a pandas.DataFrame.")
-    if df.empty:
-        raise ValueError("The DataFrame is empty.")
-    if not version_columns:
-        raise ValueError("Provide at least one version column.")
+    return _ChainAnnotator(
+        df=df,
+        version_columns=version_columns,
+        text_column=text_column,
+        title_column=title_column,
+        provider=provider,
+        model=model,
+        api_key=api_key,
+        base_url=base_url,
+        max_rows=max_rows,
+        sleep_seconds=sleep_seconds,
+        max_requests_per_minute=max_requests_per_minute,
+        retry_attempts=retry_attempts,
+        allow_title_fallback=allow_title_fallback,
+        vad_model_bundle=vad_model_bundle,
+        vad_scorer=vad_scorer,
+        progress_callback=progress_callback,
+    ).run()
 
-    resolved_text_column = text_column or choose_news_text_column(df)
-    for column in version_columns:
-        if column not in df.columns:
-            raise ValueError(f"Column '{column}' does not exist in the DataFrame.")
 
-    result_df = df.copy()
+class _ChainAnnotator:
+    """Annotate versions while retaining the last successful reference."""
 
-    version_tokens = {column: _sanitize_column_token(column) for column in version_columns}
-    _initialize_chain_metric_columns(
-        result_df,
-        version_tokens=list(version_tokens.values()),
-    )
+    def __init__(
+        self,
+        *,
+        df,
+        version_columns,
+        text_column,
+        title_column,
+        provider,
+        model,
+        api_key,
+        base_url,
+        max_rows,
+        sleep_seconds,
+        max_requests_per_minute,
+        retry_attempts,
+        allow_title_fallback,
+        vad_model_bundle,
+        vad_scorer,
+        progress_callback,
+    ):
+        self.df = df
+        self.version_columns = version_columns
+        self.text_column = text_column
+        self.title_column = title_column
+        self.provider = provider
+        self.model = model
+        self.api_key = api_key
+        self.base_url = base_url
+        self.max_rows = max_rows
+        self.sleep_seconds = sleep_seconds
+        self.max_requests_per_minute = max_requests_per_minute
+        self.retry_attempts = retry_attempts
+        self.allow_title_fallback = allow_title_fallback
+        self.vad_model_bundle = vad_model_bundle
+        self.vad_scorer = vad_scorer
+        self.progress_callback = progress_callback
 
-    vad_model_name = (
-        "custom_scorer"
-        if vad_scorer is not None
-        else vad_model_bundle.model_name
-        if vad_model_bundle is not None
-        else DEFAULT_VAD_MODEL_NAME
-    )
-    for prefix in ("original", *version_tokens.values()):
-        for suffix in ("extraction_model", "extraction_provider", "vad_model"):
-            column = f"{prefix}_{suffix}"
-            if column not in result_df:
-                result_df[column] = pd.NA
-            result_df[column] = result_df[column].astype("object")
-    target_indexes = list(result_df.index)
-    if max_rows is not None:
-        target_indexes = target_indexes[:max_rows]
+    def run(self):
+        self._validate_input()
 
-    total_rows = len(target_indexes)
-    for completed_rows, row_index in enumerate(target_indexes, start=1):
-        row = result_df.loc[row_index]
-        for prefix in ("original", *version_tokens.values()):
+        self._prepare_result()
+
+        self.total_rows = len(self.target_indexes)
+        for completed_rows, row_index in enumerate(self.target_indexes, start=1):
+            self.completed_rows, self.row_index = (completed_rows, row_index)
+            self._annotate_row()
+
+        return _ensure_expected_chain_output_columns(
+            self.result_df, version_tokens=list(self.version_tokens.values())
+        )
+
+    def _validate_input(self):
+        if not isinstance(self.df, pd.DataFrame):
+            raise ValueError("'df' must be a pandas.DataFrame.")
+        if self.df.empty:
+            raise ValueError("The DataFrame is empty.")
+        if not self.version_columns:
+            raise ValueError("Provide at least one version column.")
+        self.resolved_text_column = self.text_column or choose_news_text_column(self.df)
+        for column in self.version_columns:
+            self.column = column
+            if self.column not in self.df.columns:
+                raise ValueError(f"Column '{self.column}' does not exist in the DataFrame.")
+
+    def _prepare_result(self):
+        self.result_df = self.df.copy()
+        self.version_tokens = {
+            column: _sanitize_column_token(column) for column in self.version_columns
+        }
+        _initialize_chain_metric_columns(
+            self.result_df, version_tokens=list(self.version_tokens.values())
+        )
+        self.vad_model_name = (
+            "custom_scorer"
+            if self.vad_scorer is not None
+            else self.vad_model_bundle.model_name
+            if self.vad_model_bundle is not None
+            else DEFAULT_VAD_MODEL_NAME
+        )
+        for prefix in ("original", *self.version_tokens.values()):
+            self.prefix = prefix
             for suffix in ("extraction_model", "extraction_provider", "vad_model"):
-                result_df.at[row_index, f"{prefix}_{suffix}"] = pd.NA
+                self.suffix = suffix
+                self.column = f"{self.prefix}_{self.suffix}"
+                if self.column not in self.result_df:
+                    self.result_df[self.column] = pd.NA
+                self.result_df[self.column] = self.result_df[self.column].astype("object")
+        self.target_indexes = list(self.result_df.index)
+        if self.max_rows is not None:
+            self.target_indexes = self.target_indexes[: self.max_rows]
 
-        _apply_topic_structure_defaults(result_df, row_index=row_index, prefix="original")
-        _apply_vad_defaults(result_df, row_index=row_index, prefix="original")
-        for version_column in version_columns:
-            token = version_tokens[version_column]
-            _apply_topic_structure_defaults(result_df, row_index=row_index, prefix=token)
-            _apply_vad_defaults(result_df, row_index=row_index, prefix=token)
-            _apply_metric_defaults(result_df, row_index=row_index, token=token)
+    def _annotate_version(self):
+        self.token = self.version_tokens[self.version_column]
+        version_text_value = self.result_df.at[self.row_index, self.version_column]
+        version_text = "" if pd.isna(version_text_value) else str(version_text_value).strip()
+        if not version_text:
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_status"] = "skipped"
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_error"] = (
+                f"Column '{self.version_column}' has no usable text."
+            )
+            _apply_metric_defaults(
+                self.result_df,
+                row_index=self.row_index,
+                token=self.token,
+                reference_original_label="original",
+                reference_incremental_label=self.chain_labels[-1],
+            )
+            return
+        try:
+            self.result_df.at[self.row_index, f"{self.token}_extraction_model"] = str(self.model)
+            self.result_df.at[self.row_index, f"{self.token}_extraction_provider"] = str(
+                self.provider
+            )
+            version_structure = extract_topic_structure(
+                text=version_text,
+                title=self.title,
+                model=self.model,
+                provider=self.provider,
+                api_key=self.api_key,
+                base_url=self.base_url,
+                max_requests_per_minute=self.max_requests_per_minute,
+                retry_attempts=self.retry_attempts,
+            )
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_status"] = "success"
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_error"] = pd.NA
+            for column_name, value in flatten_topic_structure(
+                version_structure, prefix=self.token
+            ).items():
+                self.column_name, self.value = (column_name, value)
+                self.result_df.at[self.row_index, self.column_name] = self.value
+            self.result_df.at[self.row_index, f"{self.token}_vad_model"] = self.vad_model_name
+            version_vad = predict_text_vad(
+                version_text,
+                model_bundle=self.vad_model_bundle,
+                scorer=self.vad_scorer,
+            )
+            _write_vad_score(
+                self.result_df,
+                row_index=self.row_index,
+                prefix=self.token,
+                vad_score=version_vad,
+            )
+            self.chain_structures.append(version_structure)
+            self.chain_labels.append(self.token)
+            self.chain_vad_scores.append(version_vad)
+        except Exception as exc:
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_status"] = "error"
+            self.result_df.at[self.row_index, f"{self.token}_topic_structure_error"] = str(exc)
+            _apply_metric_defaults(
+                self.result_df,
+                row_index=self.row_index,
+                token=self.token,
+                reference_original_label="original",
+                reference_incremental_label=self.chain_labels[-1],
+            )
+        if self.sleep_seconds > 0:
+            time.sleep(self.sleep_seconds)
+
+    def _annotate_row(self):
+        self._reset_row()
 
         try:
-            source_column, original_text = resolve_row_text(
-                row=row,
-                preferred_column=resolved_text_column,
-                allow_title_fallback=allow_title_fallback,
+            source_column, self.original_text = resolve_row_text(
+                row=self.row,
+                preferred_column=self.resolved_text_column,
+                allow_title_fallback=self.allow_title_fallback,
             )
-            result_df.at[row_index, "source_text_column"] = source_column
+            self.result_df.at[self.row_index, "source_text_column"] = source_column
         except ValueError as exc:
-            result_df.at[row_index, "original_topic_structure_status"] = "skipped"
-            result_df.at[row_index, "original_topic_structure_error"] = str(exc)
-            for version_column in version_columns:
-                token = version_tokens[version_column]
-                result_df.at[row_index, f"{token}_topic_structure_status"] = "blocked"
-                result_df.at[row_index, f"{token}_topic_structure_error"] = (
+            self.result_df.at[self.row_index, "original_topic_structure_status"] = "skipped"
+            self.result_df.at[self.row_index, "original_topic_structure_error"] = str(exc)
+            for version_column in self.version_columns:
+                self.version_column = version_column
+                self.token = self.version_tokens[self.version_column]
+                self.result_df.at[self.row_index, f"{self.token}_topic_structure_status"] = (
+                    "blocked"
+                )
+                self.result_df.at[self.row_index, f"{self.token}_topic_structure_error"] = (
                     "Skipped because the original text could not be resolved."
                 )
-            _notify_progress(progress_callback, completed_rows, total_rows)
-            continue
-
-        title = ""
-        if title_column in result_df.columns and pd.notna(result_df.at[row_index, title_column]):
-            title = str(result_df.at[row_index, title_column]).strip()
-
+            _notify_progress(self.progress_callback, self.completed_rows, self.total_rows)
+            return
+        self.title = ""
+        if self.title_column in self.result_df.columns and pd.notna(
+            self.result_df.at[self.row_index, self.title_column]
+        ):
+            self.title = str(self.result_df.at[self.row_index, self.title_column]).strip()
         try:
-            result_df.at[row_index, "original_extraction_model"] = str(model)
-            result_df.at[row_index, "original_extraction_provider"] = str(provider)
-            original_structure = extract_topic_structure(
-                text=original_text,
-                title=title,
-                model=model,
-                provider=provider,
-                api_key=api_key,
-                base_url=base_url,
-                max_requests_per_minute=max_requests_per_minute,
-                retry_attempts=retry_attempts,
-            )
-            result_df.at[row_index, "original_topic_structure_status"] = "success"
-            result_df.at[row_index, "original_topic_structure_error"] = pd.NA
-            for column_name, value in flatten_topic_structure(
-                original_structure,
-                prefix="original",
-            ).items():
-                result_df.at[row_index, column_name] = value
+            self._extract_original()
+
         except Exception as exc:
-            result_df.at[row_index, "original_topic_structure_status"] = "error"
-            result_df.at[row_index, "original_topic_structure_error"] = str(exc)
-            for version_column in version_columns:
-                token = version_tokens[version_column]
-                result_df.at[row_index, f"{token}_topic_structure_status"] = "blocked"
-                result_df.at[row_index, f"{token}_topic_structure_error"] = (
+            self.result_df.at[self.row_index, "original_topic_structure_status"] = "error"
+            self.result_df.at[self.row_index, "original_topic_structure_error"] = str(exc)
+            for version_column in self.version_columns:
+                self.version_column = version_column
+                self.token = self.version_tokens[self.version_column]
+                self.result_df.at[self.row_index, f"{self.token}_topic_structure_status"] = (
+                    "blocked"
+                )
+                self.result_df.at[self.row_index, f"{self.token}_topic_structure_error"] = (
                     "Skipped because original topic extraction failed."
                 )
-            _notify_progress(progress_callback, completed_rows, total_rows)
-            continue
-
-        chain_structures = [original_structure]
-        chain_labels = ["original"]
-        result_df.at[row_index, "original_vad_model"] = vad_model_name
+            _notify_progress(self.progress_callback, self.completed_rows, self.total_rows)
+            return
+        self.chain_structures = [self.original_structure]
+        self.chain_labels = ["original"]
+        self.result_df.at[self.row_index, "original_vad_model"] = self.vad_model_name
         original_vad = predict_text_vad(
-            original_text,
-            model_bundle=vad_model_bundle,
-            scorer=vad_scorer,
+            self.original_text, model_bundle=self.vad_model_bundle, scorer=self.vad_scorer
         )
         _write_vad_score(
-            result_df,
-            row_index=row_index,
+            self.result_df,
+            row_index=self.row_index,
             prefix="original",
             vad_score=original_vad,
         )
-        chain_vad_scores: list[VADScore | None] = [original_vad]
-
-        for version_column in version_columns:
-            token = version_tokens[version_column]
-            version_text_value = result_df.at[row_index, version_column]
-            version_text = "" if pd.isna(version_text_value) else str(version_text_value).strip()
-
-            if not version_text:
-                result_df.at[row_index, f"{token}_topic_structure_status"] = "skipped"
-                result_df.at[row_index, f"{token}_topic_structure_error"] = (
-                    f"Column '{version_column}' has no usable text."
-                )
-                _apply_metric_defaults(
-                    result_df,
-                    row_index=row_index,
-                    token=token,
-                    reference_original_label="original",
-                    reference_incremental_label=chain_labels[-1],
-                )
-                continue
-
-            try:
-                result_df.at[row_index, f"{token}_extraction_model"] = str(model)
-                result_df.at[row_index, f"{token}_extraction_provider"] = str(provider)
-                version_structure = extract_topic_structure(
-                    text=version_text,
-                    title=title,
-                    model=model,
-                    provider=provider,
-                    api_key=api_key,
-                    base_url=base_url,
-                    max_requests_per_minute=max_requests_per_minute,
-                    retry_attempts=retry_attempts,
-                )
-                result_df.at[row_index, f"{token}_topic_structure_status"] = "success"
-                result_df.at[row_index, f"{token}_topic_structure_error"] = pd.NA
-                for column_name, value in flatten_topic_structure(
-                    version_structure,
-                    prefix=token,
-                ).items():
-                    result_df.at[row_index, column_name] = value
-                result_df.at[row_index, f"{token}_vad_model"] = vad_model_name
-                version_vad = predict_text_vad(
-                    version_text,
-                    model_bundle=vad_model_bundle,
-                    scorer=vad_scorer,
-                )
-                _write_vad_score(
-                    result_df,
-                    row_index=row_index,
-                    prefix=token,
-                    vad_score=version_vad,
-                )
-
-                chain_structures.append(version_structure)
-                chain_labels.append(token)
-                chain_vad_scores.append(version_vad)
-            except Exception as exc:
-                result_df.at[row_index, f"{token}_topic_structure_status"] = "error"
-                result_df.at[row_index, f"{token}_topic_structure_error"] = str(exc)
-                _apply_metric_defaults(
-                    result_df,
-                    row_index=row_index,
-                    token=token,
-                    reference_original_label="original",
-                    reference_incremental_label=chain_labels[-1],
-                )
-
-            if sleep_seconds > 0:
-                time.sleep(sleep_seconds)
+        self.chain_vad_scores: list[VADScore | None] = [original_vad]
+        for version_column in self.version_columns:
+            self.version_column = version_column
+            self._annotate_version()
 
         chain_metrics = calculate_stdi_chain_metrics(
-            chain_structures,
-            version_labels=chain_labels,
-            vad_scores=chain_vad_scores,
+            self.chain_structures,
+            version_labels=self.chain_labels,
+            vad_scores=self.chain_vad_scores,
         )
         for metric_row in chain_metrics:
-            token = metric_row["version_label"]
+            self.token = metric_row["version_label"]
             for key, value in metric_row.items():
+                key, self.value = (key, value)
                 if key == "version_label":
                     continue
-                result_df.at[row_index, f"{token}_{key}"] = value
-        _notify_progress(progress_callback, completed_rows, total_rows)
+                self.result_df.at[self.row_index, f"{self.token}_{key}"] = self.value
+        _notify_progress(self.progress_callback, self.completed_rows, self.total_rows)
 
-    return _ensure_expected_chain_output_columns(
-        result_df,
-        version_tokens=list(version_tokens.values()),
-    )
+    def _reset_row(self):
+        self.row = self.result_df.loc[self.row_index]
+        for prefix in ("original", *self.version_tokens.values()):
+            self.prefix = prefix
+            for suffix in ("extraction_model", "extraction_provider", "vad_model"):
+                self.suffix = suffix
+                self.result_df.at[self.row_index, f"{self.prefix}_{self.suffix}"] = pd.NA
+        _apply_topic_structure_defaults(self.result_df, row_index=self.row_index, prefix="original")
+        _apply_vad_defaults(self.result_df, row_index=self.row_index, prefix="original")
+        for version_column in self.version_columns:
+            self.version_column = version_column
+            self.token = self.version_tokens[self.version_column]
+            _apply_topic_structure_defaults(
+                self.result_df, row_index=self.row_index, prefix=self.token
+            )
+            _apply_vad_defaults(self.result_df, row_index=self.row_index, prefix=self.token)
+            _apply_metric_defaults(self.result_df, row_index=self.row_index, token=self.token)
+
+    def _extract_original(self):
+        self.result_df.at[self.row_index, "original_extraction_model"] = str(self.model)
+        self.result_df.at[self.row_index, "original_extraction_provider"] = str(self.provider)
+        self.original_structure = extract_topic_structure(
+            text=self.original_text,
+            title=self.title,
+            model=self.model,
+            provider=self.provider,
+            api_key=self.api_key,
+            base_url=self.base_url,
+            max_requests_per_minute=self.max_requests_per_minute,
+            retry_attempts=self.retry_attempts,
+        )
+        self.result_df.at[self.row_index, "original_topic_structure_status"] = "success"
+        self.result_df.at[self.row_index, "original_topic_structure_error"] = pd.NA
+        for column_name, value in flatten_topic_structure(
+            self.original_structure, prefix="original"
+        ).items():
+            self.column_name, self.value = (column_name, value)
+            self.result_df.at[self.row_index, self.column_name] = self.value
 
 
 def annotate_stdi_for_rewrites(

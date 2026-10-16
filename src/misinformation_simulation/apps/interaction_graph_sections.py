@@ -533,27 +533,7 @@ def _render_graph_queue() -> None:
         except ValueError as exc:
             st.error(str(exc))
 
-    with st.expander("Add graphs from a folder"):
-        render_path_input(
-            "Graph folder path",
-            key="graph_queue_folder_path",
-            title="Select folder with graph configs",
-            directory=True,
-            browse_key="browse_graph_queue_folder",
-            help="Adds every JSON graph config directly inside this folder, in filename order.",
-        )
-        if st.button("Add folder to queue", disabled=st.session_state.get("run_job") is not None):
-            try:
-                added, errors = add_graphs_from_directory(
-                    st.session_state.graph_queue, st.session_state.graph_queue_folder_path
-                )
-            except (OSError, ValueError) as exc:
-                st.error(str(exc))
-            else:
-                if added:
-                    st.success(f"Added {len(added)} graph(s): {', '.join(added)}")
-                for error in errors:
-                    st.error(error)
+    _render_queue_folder_import()
 
     for index, graph in enumerate(st.session_state.graph_queue):
         cols = st.columns([5, 1, 1, 1])
@@ -663,24 +643,9 @@ def _render_run_monitor() -> None:
             kind, payload = job.events.get_nowait()
         except Empty:
             break
-        if kind == "progress":
-            st.session_state.run_messages.append(payload)
-        elif kind == "work":
-            st.session_state.run_progress = payload
-        elif kind == "bundle":
-            st.session_state.run_bundles.append(payload)
-            if payload["status"] in {"completed", "cancelled"}:
-                st.session_state.run_bundle = payload
-        elif kind == "done":
-            finished = payload
+        finished = _consume_job_event(kind, payload, finished)
 
-    progress_lock = getattr(job, "progress_lock", None)
-    if progress_lock is not None:
-        with progress_lock:
-            if job.latest_progress is not None:
-                if getattr(job, "observing", False):
-                    job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
-                st.session_state.run_progress = job.latest_progress
+    _update_job_progress(job)
 
     if finished is not None:
         if "completed_runs" in finished:
@@ -706,21 +671,8 @@ def _render_run_monitor() -> None:
             progress, elapsed=monotonic() - job.started_at, active=not job.cancel_event.is_set()
         )
 
-    if job.cancel_event.is_set():
-        st.warning("Cancellation requested. Waiting for the current operation to finish.")
-    elif st.button("Cancel simulation", type="secondary", width="stretch"):
-        job.cancel_event.set()
-        st.warning("Cancellation requested. Waiting for the current operation to finish.")
-    if request := job.recovery.pending:
-        st.warning("Some runs are waiting for an error recovery decision; others may continue.")
-        render_recovery_dialog(job, request)
-    if progress and progress.get("parallel"):
-        running = [item["run_id"] for item in progress.get("runs", [])]
-        if running:
-            selected = st.selectbox("Run to cancel", running, key="cancel_selected_news_run")
-            if st.button("Cancel selected news run", key="cancel_news_run"):
-                job.run_cancellations[selected].set()
-                st.info(f"Cancellation requested for {selected}.")
+    _render_cancellation_controls(job, progress)
+
     if st.session_state.run_messages:
         _render_run_log()
 
@@ -760,39 +712,9 @@ def _render_run_progress(
     progress: dict[str, Any], *, elapsed: float = 0, active: bool = True
 ) -> None:
     if progress.get("parallel"):
-        total = progress["total"]
-        resolved = progress["completed"]
-        st.progress(
-            resolved / total if total else 1.0, text=f"News runs resolved: {resolved}/{total}"
-        )
-        st.caption(
-            f"Simultaneous run limit: {progress['max_simultaneous_runs']} · "
-            f"Operations resolved: {progress['operation_completed']}/{progress['operation_total']}"
-        )
-        runs = []
-        for item in progress.get("runs", []):
-            current = item.get("current") or {}
-            runs.append(
-                {
-                    **{key: value for key, value in item.items() if key != "current"},
-                    "stage": current.get("stage", ""),
-                    "node": current.get("node_id", ""),
-                }
-            )
-        if runs:
-            st.dataframe(pd.DataFrame(runs), hide_index=True, width="stretch")
-        if active and resolved < total:
-            if progress.get("awaiting_decisions"):
-                st.caption("Time estimate suspended while a recovery decision is pending.")
-            elif progress.get("estimate_low") is not None:
-                st.caption(
-                    f"Estimated time remaining: {_format_duration(progress['estimate_low'])}–"
-                    f"{_format_duration(progress['estimate_high'])} "
-                    "(observed batch throughput, including quota waits)"
-                )
-            else:
-                st.caption("Calibrating time estimate from observed batch throughput.")
+        _render_parallel_progress(progress, active)
         return
+
     completed = progress["completed"]
     total = progress["total"]
     percent = completed / total if total else 1.0
@@ -817,30 +739,8 @@ def _render_run_progress(
                 for stage, counts in progress["stages"].items()
             )
         )
-    if active and (current := progress.get("current")):
-        context = " · ".join(
-            str(current[key])
-            for key in ("stage", "news_id", "node_id", "comparison", "model")
-            if current.get(key)
-        )
-        if current.get("repeat"):
-            context += f" · repeat {current['repeat']}/{current['repeats']}"
-        state = current["kind"]
-        if state in {"rate_limit_wait", "retry_wait"}:
-            remaining = max(0, current["delay"] - current["age"])
-            detail = (
-                f"waiting for request limit · {_format_duration(remaining)}"
-                if state == "rate_limit_wait"
-                else (
-                    f"retry {current['attempt'] + 1}/{current['max_attempts']} "
-                    f"in {_format_duration(remaining)} · {current['reason']}"
-                )
-            )
-        elif state == "request_started":
-            detail = f"awaiting API response for {_format_duration(current['age'])}"
-        else:
-            detail = f"processing for {_format_duration(current['age'])}"
-        st.caption(f"Current operation: {context} · {detail}")
+    _render_current_operation(progress, active)
+
     if active and completed < total:
         if progress.get("estimate_low") is not None:
             st.caption(
@@ -886,44 +786,8 @@ def _validate_run_inputs(
 
 def render_results_tab() -> None:
     st.subheader("Simulation outputs")
-    with st.expander("Import a saved simulation"):
-        output_dir = resolve_project_path("output/interaction_graph/app_runs")
-        saved_results = find_saved_results(output_dir)
-        if saved_results:
-            selected_path = st.selectbox(
-                "Saved results",
-                saved_results,
-                format_func=lambda path: str(path.relative_to(output_dir)),
-                key="saved_result_selection",
-            )
-        else:
-            selected_path = None
-            st.caption("No saved simulations found in the default output directory.")
-        custom_path = render_path_input(
-            "Or enter a summary JSON path",
-            key="saved_result_path",
-            title="Select simulation summary JSON",
-            filetypes=[("Summary files", "*_summary.json"), ("JSON files", "*.json")],
-            help="The matching _steps.jsonl file must be in the same folder.",
-        )
-        if st.button("Import result", disabled=not (custom_path.strip() or selected_path)):
-            try:
-                path = resolve_project_path(custom_path) if custom_path.strip() else selected_path
-                if path is None:
-                    raise ValueError("Select a saved result.")
-                bundle = load_saved_result(path)
-            except (OSError, ValueError, json.JSONDecodeError, KeyError) as exc:
-                st.error(f"Could not import result: {exc}")
-            else:
-                existing = st.session_state.run_bundles
-                existing[:] = [
-                    item
-                    for item in existing
-                    if item.get("source") != "imported"
-                    or item.get("summary_path") != bundle["summary_path"]
-                ]
-                existing.append(bundle)
-                st.success(f"Imported {bundle['name']} from {bundle['execution_name']}.")
+    _render_saved_result_import()
+
     bundles = st.session_state.run_bundles
     if not bundles:
         st.info("Run a simulation or import a saved result to populate this dashboard.")
@@ -988,43 +852,16 @@ def render_results_tab() -> None:
             key="simulation_results_tab_inspect_graph_result",
         )
         selected = bundles[selected_index]
-        usage = selected.get("summary", {}).get("api_usage")
-        if usage:
-            st.subheader("API usage and estimated cost")
-            st.caption(usage["note"])
-            st.dataframe(
-                pd.DataFrame.from_dict(usage["stages"], orient="index").rename_axis("stage"),
-                width="stretch",
-            )
-            if usage["estimated_cost_usd"] is None:
-                st.info(
-                    f"Total cost is unavailable for {usage['unpriced_requests']} request(s). "
-                    f"Known estimated subtotal: USD {usage['known_estimated_cost_usd']:.6f}."
-                )
-            else:
-                st.caption(f"Estimated total: USD {usage['estimated_cost_usd']:.6f}")
+        _render_result_usage(selected)
+
         if selected.get("summary_path") and "_studio_analysis_page" in st.session_state:
             if st.button(
                 "Analyze this run",
                 type="primary",
             ):
                 open_run_analysis(selected["summary_path"], selected_evaluation)
-        action_cols = st.columns(2)
-        if action_cols[0].button(
-            "Remove selected imported result",
-            disabled=selected.get("source") != "imported",
-            width="stretch",
-        ):
-            remove_imported_result(bundles, selected_index)
-            st.rerun()
-        if action_cols[1].button(
-            "Clear imported results",
-            disabled=not any(bundle.get("source") == "imported" for bundle in bundles),
-            width="stretch",
-        ):
-            clear_imported_results(bundles)
-            st.rerun()
-        st.caption("Removing imported results from this view does not delete saved files.")
+        _render_imported_result_controls(bundles, selected, selected_index)
+
         if selected["status"] == "failed":
             st.error(selected["error"])
         else:
@@ -1170,3 +1007,211 @@ def _first_column(available_columns: list[str]) -> str:
 
 def _option_index(options: list[str], selected: str) -> int:
     return options.index(selected) if selected in options else 0
+
+
+def _render_queue_folder_import():
+    with st.expander("Add graphs from a folder"):
+        render_path_input(
+            "Graph folder path",
+            key="graph_queue_folder_path",
+            title="Select folder with graph configs",
+            directory=True,
+            browse_key="browse_graph_queue_folder",
+            help="Adds every JSON graph config directly inside this folder, in filename order.",
+        )
+        if st.button("Add folder to queue", disabled=st.session_state.get("run_job") is not None):
+            try:
+                added, errors = add_graphs_from_directory(
+                    st.session_state.graph_queue, st.session_state.graph_queue_folder_path
+                )
+            except (OSError, ValueError) as exc:
+                st.error(str(exc))
+            else:
+                if added:
+                    st.success(f"Added {len(added)} graph(s): {', '.join(added)}")
+                for error in errors:
+                    st.error(error)
+
+
+def _update_job_progress(job):
+    progress_lock = getattr(job, "progress_lock", None)
+    if progress_lock is not None:
+        with progress_lock:
+            if job.latest_progress is not None:
+                if getattr(job, "observing", False):
+                    job.latest_progress = {**job.latest_progress, **job.tracker.snapshot()}
+                st.session_state.run_progress = job.latest_progress
+
+
+def _render_cancellation_controls(job, progress):
+    if job.cancel_event.is_set():
+        st.warning("Cancellation requested. Waiting for the current operation to finish.")
+    elif st.button("Cancel simulation", type="secondary", width="stretch"):
+        job.cancel_event.set()
+        st.warning("Cancellation requested. Waiting for the current operation to finish.")
+    if request := job.recovery.pending:
+        st.warning("Some runs are waiting for an error recovery decision; others may continue.")
+        render_recovery_dialog(job, request)
+    if progress and progress.get("parallel"):
+        running = [item["run_id"] for item in progress.get("runs", [])]
+        if running:
+            selected = st.selectbox("Run to cancel", running, key="cancel_selected_news_run")
+            if st.button("Cancel selected news run", key="cancel_news_run"):
+                job.run_cancellations[selected].set()
+                st.info(f"Cancellation requested for {selected}.")
+
+
+def _render_parallel_progress(progress, active):
+    if progress.get("parallel"):
+        total = progress["total"]
+        resolved = progress["completed"]
+        st.progress(
+            resolved / total if total else 1.0, text=f"News runs resolved: {resolved}/{total}"
+        )
+        st.caption(
+            f"Simultaneous run limit: {progress['max_simultaneous_runs']} · "
+            f"Operations resolved: {progress['operation_completed']}/{progress['operation_total']}"
+        )
+        runs = []
+        for item in progress.get("runs", []):
+            current = item.get("current") or {}
+            runs.append(
+                {
+                    **{key: value for key, value in item.items() if key != "current"},
+                    "stage": current.get("stage", ""),
+                    "node": current.get("node_id", ""),
+                }
+            )
+        if runs:
+            st.dataframe(pd.DataFrame(runs), hide_index=True, width="stretch")
+        if active and resolved < total:
+            if progress.get("awaiting_decisions"):
+                st.caption("Time estimate suspended while a recovery decision is pending.")
+            elif progress.get("estimate_low") is not None:
+                st.caption(
+                    f"Estimated time remaining: {_format_duration(progress['estimate_low'])}–"
+                    f"{_format_duration(progress['estimate_high'])} "
+                    "(observed batch throughput, including quota waits)"
+                )
+            else:
+                st.caption("Calibrating time estimate from observed batch throughput.")
+        return
+
+
+def _render_current_operation(progress, active):
+    if active and (current := progress.get("current")):
+        context = " · ".join(
+            str(current[key])
+            for key in ("stage", "news_id", "node_id", "comparison", "model")
+            if current.get(key)
+        )
+        if current.get("repeat"):
+            context += f" · repeat {current['repeat']}/{current['repeats']}"
+        state = current["kind"]
+        if state in {"rate_limit_wait", "retry_wait"}:
+            remaining = max(0, current["delay"] - current["age"])
+            detail = (
+                f"waiting for request limit · {_format_duration(remaining)}"
+                if state == "rate_limit_wait"
+                else (
+                    f"retry {current['attempt'] + 1}/{current['max_attempts']} "
+                    f"in {_format_duration(remaining)} · {current['reason']}"
+                )
+            )
+        elif state == "request_started":
+            detail = f"awaiting API response for {_format_duration(current['age'])}"
+        else:
+            detail = f"processing for {_format_duration(current['age'])}"
+        st.caption(f"Current operation: {context} · {detail}")
+
+
+def _render_saved_result_import():
+    with st.expander("Import a saved simulation"):
+        output_dir = resolve_project_path("output/interaction_graph/app_runs")
+        saved_results = find_saved_results(output_dir)
+        if saved_results:
+            selected_path = st.selectbox(
+                "Saved results",
+                saved_results,
+                format_func=lambda path: str(path.relative_to(output_dir)),
+                key="saved_result_selection",
+            )
+        else:
+            selected_path = None
+            st.caption("No saved simulations found in the default output directory.")
+        custom_path = render_path_input(
+            "Or enter a summary JSON path",
+            key="saved_result_path",
+            title="Select simulation summary JSON",
+            filetypes=[("Summary files", "*_summary.json"), ("JSON files", "*.json")],
+            help="The matching _steps.jsonl file must be in the same folder.",
+        )
+        if st.button("Import result", disabled=not (custom_path.strip() or selected_path)):
+            try:
+                path = resolve_project_path(custom_path) if custom_path.strip() else selected_path
+                if path is None:
+                    raise ValueError("Select a saved result.")
+                bundle = load_saved_result(path)
+            except (OSError, ValueError, json.JSONDecodeError, KeyError) as exc:
+                st.error(f"Could not import result: {exc}")
+            else:
+                existing = st.session_state.run_bundles
+                existing[:] = [
+                    item
+                    for item in existing
+                    if item.get("source") != "imported"
+                    or item.get("summary_path") != bundle["summary_path"]
+                ]
+                existing.append(bundle)
+                st.success(f"Imported {bundle['name']} from {bundle['execution_name']}.")
+
+
+def _render_result_usage(selected):
+    usage = selected.get("summary", {}).get("api_usage")
+    if usage:
+        st.subheader("API usage and estimated cost")
+        st.caption(usage["note"])
+        st.dataframe(
+            pd.DataFrame.from_dict(usage["stages"], orient="index").rename_axis("stage"),
+            width="stretch",
+        )
+        if usage["estimated_cost_usd"] is None:
+            st.info(
+                f"Total cost is unavailable for {usage['unpriced_requests']} request(s). "
+                f"Known estimated subtotal: USD {usage['known_estimated_cost_usd']:.6f}."
+            )
+        else:
+            st.caption(f"Estimated total: USD {usage['estimated_cost_usd']:.6f}")
+
+
+def _render_imported_result_controls(bundles, selected, selected_index):
+    action_cols = st.columns(2)
+    if action_cols[0].button(
+        "Remove selected imported result",
+        disabled=selected.get("source") != "imported",
+        width="stretch",
+    ):
+        remove_imported_result(bundles, selected_index)
+        st.rerun()
+    if action_cols[1].button(
+        "Clear imported results",
+        disabled=not any(bundle.get("source") == "imported" for bundle in bundles),
+        width="stretch",
+    ):
+        clear_imported_results(bundles)
+        st.rerun()
+    st.caption("Removing imported results from this view does not delete saved files.")
+
+
+def _consume_job_event(kind, payload, finished):
+    if kind == "progress":
+        st.session_state.run_messages.append(payload)
+    elif kind == "work":
+        st.session_state.run_progress = payload
+    elif kind == "bundle":
+        st.session_state.run_bundles.append(payload)
+        if payload["status"] in {"completed", "cancelled"}:
+            st.session_state.run_bundle = payload
+    elif kind == "done":
+        finished = payload
+    return finished

@@ -33,12 +33,13 @@ from misinformation_simulation.simulation.topology import _root_to_leaf_paths
 
 
 def initialize_state() -> None:
-    if "dataset_path" not in st.session_state:
-        st.session_state.dataset_path = DEFAULT_DATASET_PATH
-    if "graph_config_path" not in st.session_state:
-        st.session_state.graph_config_path = DEFAULT_GRAPH_CONFIG_PATH
-    if "graph_queue_folder_path" not in st.session_state:
-        st.session_state.graph_queue_folder_path = DEFAULT_INTERACTION_CHAINS_PATH
+    defaults = {
+        "dataset_path": DEFAULT_DATASET_PATH,
+        "graph_config_path": DEFAULT_GRAPH_CONFIG_PATH,
+        "graph_queue_folder_path": DEFAULT_INTERACTION_CHAINS_PATH,
+    }
+    for key, value in defaults.items():
+        st.session_state.setdefault(key, value)
     if "graph_nodes" not in st.session_state:
         st.session_state.graph_nodes = load_initial_graph_nodes()
     if "current_graph_name" not in st.session_state:

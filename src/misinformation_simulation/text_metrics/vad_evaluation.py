@@ -128,35 +128,8 @@ class VADTextEvaluator:
                         score=asdict(score), model="custom_scorer" if custom else model_name
                     )
                 else:
-                    if self.llm_scorer is not None:
-                        assessment = self.llm_scorer(text)
-                    else:
-                        if self._llm is None:
-                            self._llm = LLMVADScorer(
-                                model=self.llm_model,
-                                provider=self.llm_provider,
-                                api_key=self.api_key,
-                                base_url=self.base_url,
-                                before_request_hook=self.before_request_hook,
-                            )
-                        assessment = self._llm.assess(text)
-                    if isinstance(assessment, LLMVADAssessment):
-                        score = assessment.score
-                        output = asdict(assessment)
-                    else:
-                        score = assessment
-                        output = {"score": asdict(score)}
-                    output.update(
-                        model=self.llm_model,
-                        provider=self.llm_provider,
-                        rubric_version=LLM_VAD_VERSION,
-                        attempts=self._llm.last_attempts if self._llm else [],
-                    )
-                    if any(
-                        value is not None and not 1 <= value <= 5
-                        for value in asdict(score).values()
-                    ):
-                        raise ValueError("LLM VAD values must be within [1,5].")
+                    score, output = self._evaluate_llm_score(text)
+
                 output["status"] = _score_status(score)
                 if not custom:
                     self.cache.put(f"vad_{method}", inputs, output)
@@ -170,6 +143,35 @@ class VADTextEvaluator:
                 )
         self.records[text] = record
         return record
+
+    def _evaluate_llm_score(self, text):
+        if self.llm_scorer is not None:
+            assessment = self.llm_scorer(text)
+        else:
+            if self._llm is None:
+                self._llm = LLMVADScorer(
+                    model=self.llm_model,
+                    provider=self.llm_provider,
+                    api_key=self.api_key,
+                    base_url=self.base_url,
+                    before_request_hook=self.before_request_hook,
+                )
+            assessment = self._llm.assess(text)
+        if isinstance(assessment, LLMVADAssessment):
+            score = assessment.score
+            output = asdict(assessment)
+        else:
+            score = assessment
+            output = {"score": asdict(score)}
+        output.update(
+            model=self.llm_model,
+            provider=self.llm_provider,
+            rubric_version=LLM_VAD_VERSION,
+            attempts=self._llm.last_attempts if self._llm else [],
+        )
+        if any(value is not None and not 1 <= value <= 5 for value in asdict(score).values()):
+            raise ValueError("LLM VAD values must be within [1,5].")
+        return score, output
 
 
 def _drift(original: VADScore, modified: VADScore) -> dict:

@@ -249,36 +249,8 @@ def _build_topic_structure(payload: dict[str, Any]) -> TopicStructure:
 
     structured = payload.get("schema_version") == 2
     issues = list(payload.get("extraction_issues", []))
-    if structured:
-        if not isinstance(payload.get("has_internal_contradiction"), bool):
-            issues.append("Invalid contradiction flag")
-        required = (
-            "main_topic",
-            "subtopics",
-            "central_entities",
-            "central_relations",
-            "has_internal_contradiction",
-            "internal_contradiction_score",
-            "opinions",
-        )
-        issues.extend(f"Missing required field: {key}" for key in required if key not in payload)
-        for key in ("subtopics", "central_entities", "central_relations", "opinions"):
-            if not isinstance(payload.get(key), list):
-                issues.append(f"Invalid list: {key}")
-        if isinstance(payload.get("central_relations"), list) and any(
-            not isinstance(item, dict) for item in payload["central_relations"]
-        ):
-            issues.append("Invalid relation record")
-        try:
-            score = float(payload.get("internal_contradiction_score"))
-            if (
-                isinstance(payload.get("internal_contradiction_score"), bool)
-                or not math.isfinite(score)
-                or not 0 <= score <= 1
-            ):
-                issues.append("Invalid contradiction score")
-        except (TypeError, ValueError):
-            issues.append("Invalid contradiction score")
+    _validate_structured_payload(payload, structured, issues)
+
     relations = _coerce_relations(payload.get("central_relations"), structured=structured)
     if structured and isinstance(payload.get("central_relations"), list):
         for index, item in enumerate(payload["central_relations"]):
@@ -394,3 +366,36 @@ def extract_topic_structure(
         max_attempts=retry_attempts,
         should_retry=should_retry if structured else None,
     )
+
+
+def _validate_structured_payload(payload, structured, issues):
+    if structured:
+        if not isinstance(payload.get("has_internal_contradiction"), bool):
+            issues.append("Invalid contradiction flag")
+        required = (
+            "main_topic",
+            "subtopics",
+            "central_entities",
+            "central_relations",
+            "has_internal_contradiction",
+            "internal_contradiction_score",
+            "opinions",
+        )
+        issues.extend(f"Missing required field: {key}" for key in required if key not in payload)
+        for key in ("subtopics", "central_entities", "central_relations", "opinions"):
+            if not isinstance(payload.get(key), list):
+                issues.append(f"Invalid list: {key}")
+        if isinstance(payload.get("central_relations"), list) and any(
+            not isinstance(item, dict) for item in payload["central_relations"]
+        ):
+            issues.append("Invalid relation record")
+        try:
+            score = float(payload.get("internal_contradiction_score"))
+            if (
+                isinstance(payload.get("internal_contradiction_score"), bool)
+                or not math.isfinite(score)
+                or not 0 <= score <= 1
+            ):
+                issues.append("Invalid contradiction score")
+        except (TypeError, ValueError):
+            issues.append("Invalid contradiction score")

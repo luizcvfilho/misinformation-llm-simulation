@@ -237,57 +237,191 @@ def compare_dual_stdi(
     vad_evaluation: dict[str, Any] | None = None,
     comparison_method: str = "dual",
 ) -> dict[str, Any]:
-    if comparison_method not in {"dual", "cluster", "llm"}:
-        raise ValueError("STDI comparison method must be 'dual', 'cluster' or 'llm'.")
-    validate_judge_repeats(judge_repeats)
-    cache = cache or EvaluationCache()
-    result: dict[str, Any] = {
-        "version": DUAL_STDI_VERSION,
-        "formula_version": FORMULA_VERSION,
-        "numerical_tolerance": NUMERICAL_TOLERANCE,
-        "polarity_weight": 0.2,
-        "duration_weight": 0.2,
-        "numeric_weight": 0.2,
-        "numeric_aggregation": "maximum",
-        "branch_weights": [0.5, 0.5],
-        "judge_repeats": judge_repeats,
-        "judge_aggregation": "mean_complete_metrics",
-        "stdi": None,
-        "method_gap": None,
-        "metrics": None,
-        "comparison_method": comparison_method,
-        "input_sha256": input_hash(
-            {"original": original_text, "modified": modified_text, "title": title}
-        ),
-    }
-    legacy_vad = shared_vad_drift(original_vad, modified_vad)
-    evaluation = vad_evaluation or {"method": "model", "model": legacy_vad}
-    paired = comparison_method == "dual"
-    embedding_vad = vad_for_branch(evaluation, "embedding", paired=paired)
-    judge_vad = vad_for_branch(evaluation, "llm_judge", paired=paired)
-    vad = vad_for_branch(evaluation, "dual", paired=paired)
-    result["shared_vad"] = vad
-    result["vad_evaluation"] = evaluation
-    result["vad_method"] = evaluation["method"]
-    result["vad_sources"] = dict(
-        embedding=embedding_vad["source"], llm_judge=judge_vad["source"], dual=vad["source"]
-    )
-    result["dual_aggregation"] = "mean_complete_branches_with_selected_vad"
-    if (
-        original_text == modified_text
-        and not structure_issues(original_structure)
-        and vad["status"] == "valid"
+    return _DualSTDIComparison(
+        original_text=original_text,
+        modified_text=modified_text,
+        title=title,
+        original_structure=original_structure,
+        modified_structure=modified_structure,
+        original_vad=original_vad,
+        modified_vad=modified_vad,
+        comparator=comparator,
+        model=model,
+        provider=provider,
+        api_key=api_key,
+        base_url=base_url,
+        retry_attempts=retry_attempts,
+        before_request_hook=before_request_hook,
+        judge_fn=judge_fn,
+        cache=cache,
+        uncached_judge=uncached_judge,
+        judge_repeats=judge_repeats,
+        cancel_check=cancel_check,
+        vad_evaluation=vad_evaluation,
+        comparison_method=comparison_method,
+    ).run()
+
+
+class _DualSTDIComparison:
+    """Combine structural comparisons with cached, repeated judge evaluations."""
+
+    def __init__(
+        self,
+        *,
+        original_text,
+        modified_text,
+        title,
+        original_structure,
+        modified_structure,
+        original_vad,
+        modified_vad,
+        comparator,
+        model,
+        provider,
+        api_key,
+        base_url,
+        retry_attempts,
+        before_request_hook,
+        judge_fn,
+        cache,
+        uncached_judge,
+        judge_repeats,
+        cancel_check,
+        vad_evaluation,
+        comparison_method,
     ):
-        if comparison_method != "cluster":
-            for repeat_index in range(judge_repeats):
+        self.original_text = original_text
+        self.modified_text = modified_text
+        self.title = title
+        self.original_structure = original_structure
+        self.modified_structure = modified_structure
+        self.original_vad = original_vad
+        self.modified_vad = modified_vad
+        self.comparator = comparator
+        self.model = model
+        self.provider = provider
+        self.api_key = api_key
+        self.base_url = base_url
+        self.retry_attempts = retry_attempts
+        self.before_request_hook = before_request_hook
+        self.judge_fn = judge_fn
+        self.cache = cache
+        self.uncached_judge = uncached_judge
+        self.judge_repeats = judge_repeats
+        self.cancel_check = cancel_check
+        self.vad_evaluation = vad_evaluation
+        self.comparison_method = comparison_method
+
+    def run(self):
+        if self.comparison_method not in {"dual", "cluster", "llm"}:
+            raise ValueError("STDI comparison method must be 'dual', 'cluster' or 'llm'.")
+        validate_judge_repeats(self.judge_repeats)
+        self.cache = self.cache or EvaluationCache()
+        self.result: dict[str, Any] = {
+            "version": DUAL_STDI_VERSION,
+            "formula_version": FORMULA_VERSION,
+            "numerical_tolerance": NUMERICAL_TOLERANCE,
+            "polarity_weight": 0.2,
+            "duration_weight": 0.2,
+            "numeric_weight": 0.2,
+            "numeric_aggregation": "maximum",
+            "branch_weights": [0.5, 0.5],
+            "judge_repeats": self.judge_repeats,
+            "judge_aggregation": "mean_complete_metrics",
+            "stdi": None,
+            "method_gap": None,
+            "metrics": None,
+            "comparison_method": self.comparison_method,
+            "input_sha256": input_hash(
+                {
+                    "original": self.original_text,
+                    "modified": self.modified_text,
+                    "title": self.title,
+                }
+            ),
+        }
+        legacy_vad = shared_vad_drift(self.original_vad, self.modified_vad)
+        evaluation = self.vad_evaluation or {"method": "model", "model": legacy_vad}
+        paired = self.comparison_method == "dual"
+        self.embedding_vad = vad_for_branch(evaluation, "embedding", paired=paired)
+        self.judge_vad = vad_for_branch(evaluation, "llm_judge", paired=paired)
+        self.vad = vad_for_branch(evaluation, "dual", paired=paired)
+        self.result["shared_vad"] = self.vad
+        self.result["vad_evaluation"] = evaluation
+        self.result["vad_method"] = evaluation["method"]
+        self.result["vad_sources"] = dict(
+            embedding=self.embedding_vad["source"],
+            llm_judge=self.judge_vad["source"],
+            dual=self.vad["source"],
+        )
+        self.result["dual_aggregation"] = "mean_complete_branches_with_selected_vad"
+        if (
+            self.original_text == self.modified_text
+            and (not structure_issues(self.original_structure))
+            and (self.vad["status"] == "valid")
+        ):
+            return self._identity_result()
+
+        self._evaluate_embedding()
+
+        self._evaluate_judge()
+
+        self._aggregate_judge()
+
+        if self.comparison_method == "cluster":
+            self.result["llm_judge"].update(status="not_requested")
+        if self.comparison_method != "dual":
+            chosen = self.result[
+                "embedding" if self.comparison_method == "cluster" else "llm_judge"
+            ]
+            metrics = chosen.get("metrics")
+            self.result.update(
+                status=chosen["status"],
+                metrics=metrics,
+                stdi=metrics["stdi"] if metrics else None,
+            )
+            return self.result
+        a, b = (
+            self.result["embedding"].get("dual_metrics"),
+            self.result["llm_judge"].get("dual_metrics"),
+        )
+        if a is not None and b is not None:
+            metrics = {key: (a[key] + b[key]) / 2 for key in a}
+            own_a, own_b = (
+                self.result["embedding"]["metrics"],
+                self.result["llm_judge"]["metrics"],
+            )
+            self.result.update(
+                status="valid",
+                stdi=metrics["stdi"],
+                metrics=metrics,
+                method_gap=abs(own_a["stdi"] - own_b["stdi"])
+                if own_a is not None and own_b is not None
+                else None,
+            )
+        else:
+            self.result["status"] = (
+                "partial"
+                if any(
+                    self.result[branch]["status"] in {"valid", "partial"}
+                    for branch in ("embedding", "llm_judge")
+                )
+                else "failed"
+            )
+        return self.result
+
+    def _identity_result(self):
+        if self.comparison_method != "cluster":
+            for repeat_index in range(self.judge_repeats):
+                self.repeat_index = repeat_index
                 with operation(
                     "judge",
-                    model=model,
-                    provider=provider,
-                    repeat=repeat_index + 1,
-                    repeats=judge_repeats,
-                ) as progress:
-                    progress.update(status="skipped", reason="identical texts")
+                    model=self.model,
+                    provider=self.provider,
+                    repeat=self.repeat_index + 1,
+                    repeats=self.judge_repeats,
+                ) as self.progress:
+                    self.progress.update(status="skipped", reason="identical texts")
         zero = dict.fromkeys(
             (
                 *CONTENT_COMPONENTS,
@@ -301,100 +435,103 @@ def compare_dual_stdi(
             ),
             0.0,
         )
-        result.update(
+        self.result.update(
             status="valid",
             identity_shortcut=True,
             stdi=0.0,
             method_gap=0.0,
-            embedding={"status": "valid", "metrics": zero, "vad_source": embedding_vad["source"]},
+            embedding={
+                "status": "valid",
+                "metrics": zero,
+                "vad_source": self.embedding_vad["source"],
+            },
             llm_judge={
                 "status": "valid",
                 "metrics": zero,
-                "requested_repeats": judge_repeats,
+                "requested_repeats": self.judge_repeats,
                 "valid_repeats": 0,
                 "executed_repeats": 0,
                 "identity_shortcut": True,
                 "samples": [],
-                "vad_source": judge_vad["source"],
+                "vad_source": self.judge_vad["source"],
             },
             shared_vad={
                 "status": "valid",
-                "source": vad["source"],
+                "source": self.vad["source"],
                 **{
                     key: 0.0
-                    for key in ("valence_drift", "arousal_drift", "dominance_drift", "vad_drift")
+                    for key in (
+                        "valence_drift",
+                        "arousal_drift",
+                        "dominance_drift",
+                        "vad_drift",
+                    )
                 },
             },
             metrics=zero,
         )
-        if comparison_method != "dual":
-            excluded = "embedding" if comparison_method == "llm" else "llm_judge"
-            result[excluded] = {"status": "not_requested", "metrics": None}
-            result["method_gap"] = None
-        return result
-    try:
-        embedding = (
-            comparator.compare_structured(original_structure, modified_structure)
-            if comparison_method != "llm"
-            else {"status": "not_requested", "components": None}
+        if self.comparison_method != "dual":
+            excluded = "embedding" if self.comparison_method == "llm" else "llm_judge"
+            self.result[excluded] = {"status": "not_requested", "metrics": None}
+            self.result["method_gap"] = None
+        return self.result
+
+    def _evaluate_embedding(self):
+        try:
+            embedding = (
+                self.comparator.compare_structured(self.original_structure, self.modified_structure)
+                if self.comparison_method != "llm"
+                else {"status": "not_requested", "components": None}
+            )
+            embedding["metrics"] = (
+                complete_stdi(embedding["components"], self.embedding_vad)
+                if embedding["status"] == "valid" and self.embedding_vad["status"] == "valid"
+                else None
+            )
+            embedding["dual_metrics"] = (
+                complete_stdi(embedding["components"], self.vad)
+                if embedding["status"] == "valid" and self.vad["status"] == "valid"
+                else None
+            )
+            embedding["vad_source"] = self.embedding_vad["source"]
+            if embedding["metrics"] is None and embedding["status"] != "not_requested":
+                embedding["status"] = "partial"
+            self.result["embedding"] = embedding
+        except Exception as exc:
+            self.result["embedding"] = {"status": "failed", "error": str(exc), "metrics": None}
+
+    def _evaluate_judge_sample(self):
+        sample_inputs = (
+            self.inputs
+            if self.repeat_index == 0
+            else {**self.inputs, "repeat_index": self.repeat_index}
         )
-        embedding["metrics"] = (
-            complete_stdi(embedding["components"], embedding_vad)
-            if embedding["status"] == "valid" and embedding_vad["status"] == "valid"
-            else None
-        )
-        embedding["dual_metrics"] = (
-            complete_stdi(embedding["components"], vad)
-            if embedding["status"] == "valid" and vad["status"] == "valid"
-            else None
-        )
-        embedding["vad_source"] = embedding_vad["source"]
-        if embedding["metrics"] is None and embedding["status"] != "not_requested":
-            embedding["status"] = "partial"
-        result["embedding"] = embedding
-    except Exception as exc:
-        result["embedding"] = {"status": "failed", "error": str(exc), "metrics": None}
-    inputs = {
-        "original_text": original_text,
-        "modified_text": modified_text,
-        "title": title,
-        "original_structure": topic_structure_to_dict(original_structure),
-        "modified_structure": topic_structure_to_dict(modified_structure),
-        "model": str(model),
-        "provider": str(provider),
-        "base_url": base_url,
-        "prompt_version": STRUCTURED_JUDGE_VERSION,
-    }
-    samples = []
-    cancelled = False
-    for repeat_index in range(judge_repeats if comparison_method != "cluster" else 0):
-        if cancel_check is not None and cancel_check():
-            cancelled = True
-            break
-        # Keep the historical first draw; subsequent draws have distinct durable keys.
-        sample_inputs = inputs if repeat_index == 0 else {**inputs, "repeat_index": repeat_index}
-        sample: dict[str, Any] = {"repeat": repeat_index + 1, "metrics": None}
+        sample: dict[str, Any] = {"repeat": self.repeat_index + 1, "metrics": None}
         with operation(
-            "judge", model=model, provider=provider, repeat=repeat_index + 1, repeats=judge_repeats
-        ) as progress:
+            "judge",
+            model=self.model,
+            provider=self.provider,
+            repeat=self.repeat_index + 1,
+            repeats=self.judge_repeats,
+        ) as self.progress:
             try:
-                saved = None if uncached_judge else cache.get("judge", sample_inputs)
+                saved = None if self.uncached_judge else self.cache.get("judge", sample_inputs)
                 sample["cache_hit"] = saved is not None
-                progress["cache_hit"] = saved is not None
+                self.progress["cache_hit"] = saved is not None
                 if saved is None:
                     saved = asdict(
-                        judge_fn(
-                            original_text=original_text,
-                            modified_text=modified_text,
-                            title=title,
-                            original_structure=original_structure,
-                            modified_structure=modified_structure,
-                            model=model,
-                            provider=provider,
-                            api_key=api_key,
-                            base_url=base_url,
-                            retry_attempts=retry_attempts,
-                            before_request_hook=before_request_hook,
+                        self.judge_fn(
+                            original_text=self.original_text,
+                            modified_text=self.modified_text,
+                            title=self.title,
+                            original_structure=self.original_structure,
+                            modified_structure=self.modified_structure,
+                            model=self.model,
+                            provider=self.provider,
+                            api_key=self.api_key,
+                            base_url=self.base_url,
+                            retry_attempts=self.retry_attempts,
+                            before_request_hook=self.before_request_hook,
                             structured=True,
                         )
                     )
@@ -405,111 +542,115 @@ def compare_dual_stdi(
                 if not all(math.isfinite(value) and 0 <= value <= 1 for value in scores):
                     raise ValueError("Judge components must be finite scores between zero and one")
                 sample["judgment"] = saved
-                if not uncached_judge and not sample["cache_hit"]:
-                    cache.put("judge", sample_inputs, saved)
+                if not self.uncached_judge and (not sample["cache_hit"]):
+                    self.cache.put("judge", sample_inputs, saved)
                 sample["status"] = "valid"
-                if judge_vad["status"] == "valid":
-                    sample["metrics"] = complete_stdi(saved["component_drifts"], judge_vad)
-                if vad["status"] == "valid":
-                    sample["dual_metrics"] = complete_stdi(saved["component_drifts"], vad)
+                if self.judge_vad["status"] == "valid":
+                    sample["metrics"] = complete_stdi(saved["component_drifts"], self.judge_vad)
+                if self.vad["status"] == "valid":
+                    sample["dual_metrics"] = complete_stdi(saved["component_drifts"], self.vad)
             except Exception as exc:
                 sample.update(
                     status="failed", error=str(exc), provenance=getattr(exc, "provenance", {})
                 )
-                progress.update(status="failed", error=str(exc))
-        samples.append(sample)
-    valid_samples = [sample for sample in samples if sample["status"] == "valid"]
-    all_valid = len(valid_samples) == judge_repeats
-    complete_metrics = [sample["metrics"] for sample in valid_samples if sample["metrics"]]
-    statistics = {}
-    for key in (*CONTENT_COMPONENTS, "contradiction_drift", "stdi"):
-        values = (
-            [metrics[key] for metrics in complete_metrics]
-            if key == "stdi"
-            else [sample["judgment"]["component_drifts"][key] for sample in valid_samples]
-        )
-        statistics[key] = {
-            "count": len(values),
-            "mean": fmean(values) if values else None,
-            "std": stdev(values) if len(values) > 1 else None,
-            "min": min(values) if values else None,
-            "max": max(values) if values else None,
+                self.progress.update(status="failed", error=str(exc))
+        self.samples.append(sample)
+
+    def _evaluate_judge(self):
+        self.inputs = {
+            "original_text": self.original_text,
+            "modified_text": self.modified_text,
+            "title": self.title,
+            "original_structure": topic_structure_to_dict(self.original_structure),
+            "modified_structure": topic_structure_to_dict(self.modified_structure),
+            "model": str(self.model),
+            "provider": str(self.provider),
+            "base_url": self.base_url,
+            "prompt_version": STRUCTURED_JUDGE_VERSION,
         }
-    judge_metrics = (
-        {key: fmean(metrics[key] for metrics in complete_metrics) for key in complete_metrics[0]}
-        if all_valid and len(complete_metrics) == judge_repeats
-        else None
-    )
-    dual_samples = [
-        sample["dual_metrics"] for sample in valid_samples if sample.get("dual_metrics") is not None
-    ]
-    dual_judge_metrics = (
-        {key: fmean(metrics[key] for metrics in dual_samples) for key in dual_samples[0]}
-        if all_valid and len(dual_samples) == judge_repeats
-        else None
-    )
-    branch: dict[str, Any] = {
-        "status": "valid"
-        if judge_metrics is not None
-        else "partial"
-        if valid_samples
-        else "failed",
-        "metrics": judge_metrics,
-        "dual_metrics": dual_judge_metrics,
-        "vad_source": judge_vad["source"],
-        "aggregation": "mean_complete_metrics",
-        "requested_repeats": judge_repeats,
-        "executed_repeats": len(samples),
-        "valid_repeats": len(valid_samples),
-        "cache_hit": bool(samples) and all(sample.get("cache_hit", False) for sample in samples),
-        "cancelled": cancelled,
-        "samples": samples,
-        "statistics": statistics,
-    }
-    if judge_repeats == 1 and valid_samples:
-        branch["judgment"] = valid_samples[0]["judgment"]
-    elif judge_repeats == 1 and samples:
-        branch["provenance"] = samples[0].get("provenance", {})
-    if not all_valid:
-        errors = [
-            f"Repeat {sample['repeat']}: {sample['error']}"
-            for sample in samples
-            if sample["status"] == "failed"
+        self.samples = []
+        self.cancelled = False
+        for repeat_index in range(self.judge_repeats if self.comparison_method != "cluster" else 0):
+            self.repeat_index = repeat_index
+            if self.cancel_check is not None and self.cancel_check():
+                self.cancelled = True
+                break
+            self._evaluate_judge_sample()
+
+    def _aggregate_judge(self):
+        self.valid_samples = [sample for sample in self.samples if sample["status"] == "valid"]
+        all_valid = len(self.valid_samples) == self.judge_repeats
+        self.complete_metrics = [
+            sample["metrics"] for sample in self.valid_samples if sample["metrics"]
         ]
-        if cancelled:
-            errors.append("Judge evaluation cancelled before all repeats completed")
-        branch["error"] = "; ".join(errors)
-        if judge_repeats == 1 and samples and not cancelled:
-            branch["error"] = samples[0]["error"]
-    result["llm_judge"] = branch
-    if comparison_method == "cluster":
-        result["llm_judge"].update(status="not_requested")
-    if comparison_method != "dual":
-        chosen = result["embedding" if comparison_method == "cluster" else "llm_judge"]
-        metrics = chosen.get("metrics")
-        result.update(
-            status=chosen["status"], metrics=metrics, stdi=metrics["stdi"] if metrics else None
+        self._record_judge_statistics()
+
+        judge_metrics = (
+            {
+                key: fmean(metrics[key] for metrics in self.complete_metrics)
+                for key in self.complete_metrics[0]
+            }
+            if all_valid and len(self.complete_metrics) == self.judge_repeats
+            else None
         )
-        return result
-    a, b = result["embedding"].get("dual_metrics"), result["llm_judge"].get("dual_metrics")
-    if a is not None and b is not None:
-        metrics = {key: (a[key] + b[key]) / 2 for key in a}
-        own_a, own_b = result["embedding"]["metrics"], result["llm_judge"]["metrics"]
-        result.update(
-            status="valid",
-            stdi=metrics["stdi"],
-            metrics=metrics,
-            method_gap=abs(own_a["stdi"] - own_b["stdi"])
-            if own_a is not None and own_b is not None
-            else None,
+        dual_samples = [
+            sample["dual_metrics"]
+            for sample in self.valid_samples
+            if sample.get("dual_metrics") is not None
+        ]
+        dual_judge_metrics = (
+            {key: fmean(metrics[key] for metrics in dual_samples) for key in dual_samples[0]}
+            if all_valid and len(dual_samples) == self.judge_repeats
+            else None
         )
-    else:
-        result["status"] = (
-            "partial"
-            if any(
-                result[branch]["status"] in {"valid", "partial"}
-                for branch in ("embedding", "llm_judge")
+        branch: dict[str, Any] = {
+            "status": "valid"
+            if judge_metrics is not None
+            else "partial"
+            if self.valid_samples
+            else "failed",
+            "metrics": judge_metrics,
+            "dual_metrics": dual_judge_metrics,
+            "vad_source": self.judge_vad["source"],
+            "aggregation": "mean_complete_metrics",
+            "requested_repeats": self.judge_repeats,
+            "executed_repeats": len(self.samples),
+            "valid_repeats": len(self.valid_samples),
+            "cache_hit": bool(self.samples)
+            and all(sample.get("cache_hit", False) for sample in self.samples),
+            "cancelled": self.cancelled,
+            "samples": self.samples,
+            "statistics": self.statistics,
+        }
+        if self.judge_repeats == 1 and self.valid_samples:
+            branch["judgment"] = self.valid_samples[0]["judgment"]
+        elif self.judge_repeats == 1 and self.samples:
+            branch["provenance"] = self.samples[0].get("provenance", {})
+        if not all_valid:
+            errors = [
+                f"Repeat {sample['repeat']}: {sample['error']}"
+                for sample in self.samples
+                if sample["status"] == "failed"
+            ]
+            if self.cancelled:
+                errors.append("Judge evaluation cancelled before all repeats completed")
+            branch["error"] = "; ".join(errors)
+            if self.judge_repeats == 1 and self.samples and (not self.cancelled):
+                branch["error"] = self.samples[0]["error"]
+        self.result["llm_judge"] = branch
+
+    def _record_judge_statistics(self):
+        self.statistics = {}
+        for key in (*CONTENT_COMPONENTS, "contradiction_drift", "stdi"):
+            values = (
+                [metrics[key] for metrics in self.complete_metrics]
+                if key == "stdi"
+                else [sample["judgment"]["component_drifts"][key] for sample in self.valid_samples]
             )
-            else "failed"
-        )
-    return result
+            self.statistics[key] = {
+                "count": len(values),
+                "mean": fmean(values) if values else None,
+                "std": stdev(values) if len(values) > 1 else None,
+                "min": min(values) if values else None,
+                "max": max(values) if values else None,
+            }

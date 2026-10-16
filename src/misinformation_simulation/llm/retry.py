@@ -38,31 +38,14 @@ def generate_and_parse_with_retry[T](
         raise ValueError("'retry_attempts' must be greater than zero.")
 
     def parse_response(raw):
-        try:
-            return parse(raw)
-        except (ValueError, TypeError, KeyError) as error:
-            if on_validation_error is not None:
-                on_validation_error(error)
-            raise
+        return _parse_evaluation_response(raw, parse, on_validation_error)
 
     if session := get_recovery():
 
         def evaluate():
-            attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS) if on_validation_error else 1
-            for attempt in range(1, attempts + 1):
-                raw = generate()
-                try:
-                    result = parse_response(raw)
-                    if should_retry is not None and should_retry(result):
-                        raise ValueError("The response did not meet validation requirements.")
-                    return result
-                except (ValueError, TypeError, KeyError) as error:
-                    if attempt == attempts:
-                        raise
-                    session.check_cancelled()
-                    discard_successful_attempts()
-                    retry_wait(0, attempt=attempt, max_attempts=attempts, reason=str(error))
-            raise AssertionError("The validation retry budget was exhausted without a result.")
+            return _evaluate_with_recovery(
+                session, generate, parse_response, should_retry, max_attempts, on_validation_error
+            )
 
         return session.run(evaluate)
     max_attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS)
@@ -228,9 +211,8 @@ def generate_openai_text_with_retry(
 
     for attempt in range(1, max_attempts + 1):
         try:
-            if provider == "chatgpt" and os.getenv("LLM_ERROR_RECOVERY", "auto").lower() != "off":
-                return automatic_openai_call(client, generate, model=model)
-            return generate(client)
+            return _generate_unattended_openai(provider, client, generate, model)
+
         except Exception as exc:
             last_error = exc
             error_text = str(exc).lower()
@@ -272,3 +254,38 @@ def _raise_response_error(response) -> None:
         if hasattr(error, "model_dump"):
             error = error.model_dump()
         raise ResponseEnvelopeError(error if isinstance(error, dict) else {"message": str(error)})
+
+
+def _evaluate_with_recovery(
+    session, generate, parse_response, should_retry, max_attempts, on_validation_error
+):
+    attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS) if on_validation_error else 1
+    for attempt in range(1, attempts + 1):
+        raw = generate()
+        try:
+            result = parse_response(raw)
+            if should_retry is not None and should_retry(result):
+                raise ValueError("The response did not meet validation requirements.")
+            return result
+        except (ValueError, TypeError, KeyError) as error:
+            if attempt == attempts:
+                raise
+            session.check_cancelled()
+            discard_successful_attempts()
+            retry_wait(0, attempt=attempt, max_attempts=attempts, reason=str(error))
+    raise AssertionError("The validation retry budget was exhausted without a result.")
+
+
+def _generate_unattended_openai(provider, client, generate, model):
+    if provider == "chatgpt" and os.getenv("LLM_ERROR_RECOVERY", "auto").lower() != "off":
+        return automatic_openai_call(client, generate, model=model)
+    return generate(client)
+
+
+def _parse_evaluation_response(raw, parse, on_validation_error):
+    try:
+        return parse(raw)
+    except (ValueError, TypeError, KeyError) as error:
+        if on_validation_error is not None:
+            on_validation_error(error)
+        raise

@@ -173,37 +173,8 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
 
 
 def render_result_bundle(run_bundle: dict[str, Any]) -> None:
-    path_results = run_bundle["summary"].get("path_results", [])
-    if path_results:
-        labels = {
-            path["path_id"]: f"{path['chain_code']} ({path['path_id']})" for path in path_results
-        }
-        selected_path = st.selectbox(
-            "Result view",
-            [""] + list(labels),
-            format_func=lambda value: labels[value] if value else "Graph overview (unique nodes)",
-            key=f"result_path_{run_bundle['output_prefix']}",
-        )
-        if selected_path:
-            descriptor = next(path for path in path_results if path["path_id"] == selected_path)
-            path_bundle = load_saved_result(
-                resolve_result_reference(descriptor["summary_path"], run_bundle["summary_path"])
-            )
-            if run_bundle.get("stdi_evaluation"):
-                path_bundle = evaluation_result_bundle(path_bundle, run_bundle["stdi_evaluation"])
-            run_bundle = path_bundle
-    if "stdi_evaluation" not in run_bundle:
-        evaluations = available_evaluations(
-            run_bundle["steps_df"], run_bundle["summary"].get("stdi_comparison_method")
-        )
-        if evaluations:
-            evaluation = st.selectbox(
-                "STDI evaluation",
-                evaluations,
-                format_func=EVALUATION_LABELS.__getitem__,
-                key="result_bundle_stdi_evaluation",
-            )
-            run_bundle = evaluation_result_bundle(run_bundle, evaluation)
+    run_bundle = _select_result_view(run_bundle)
+
     summary = run_bundle["summary"]
     steps_df = run_bundle["steps_df"]
     node_summary_df = run_bundle["node_summary_df"]
@@ -227,34 +198,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     path_cols[0].caption(f"Summary path: `{run_bundle['summary_path'] or 'not persisted'}`")
     path_cols[1].caption(f"Steps path: `{run_bundle['steps_path'] or 'not persisted'}`")
 
-    download_cols = st.columns(3)
-    download_cols[0].download_button(
-        "Download summary JSON",
-        data=json.dumps(summary, ensure_ascii=False, indent=2).encode("utf-8"),
-        file_name=f"{run_bundle['output_prefix']}_summary.json",
-        mime="application/json",
-        key="download_results_summary_json",
-        width="stretch",
-    )
-    download_cols[1].download_button(
-        "Download steps CSV",
-        data=steps_df.to_csv(index=False).encode("utf-8"),
-        file_name=f"{run_bundle['output_prefix']}_steps.csv",
-        mime="text/csv",
-        key="download_results_steps_csv",
-        width="stretch",
-    )
-    if run_bundle.get("graph_payload") is not None:
-        download_cols[2].download_button(
-            "Download graph JSON",
-            data=json.dumps(run_bundle["graph_payload"], ensure_ascii=False, indent=2).encode(
-                "utf-8"
-            ),
-            file_name="graph_config_ui.json",
-            mime="application/json",
-            key="download_results_graph_json",
-            width="stretch",
-        )
+    _render_result_downloads(run_bundle, summary, steps_df)
 
     if steps_df.empty:
         st.info("This simulation has no completed step records.")
@@ -277,136 +221,9 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         st.dataframe(steps_df, width="stretch")
         return
 
-    st.subheader("Node performance")
-    if node_summary_df.empty:
-        st.info("No node summary available yet.")
-    else:
-        st.dataframe(
-            node_summary_df[
-                [
-                    "step_index",
-                    "node_label",
-                    "provider",
-                    "model",
-                    "runs",
-                    "successes",
-                    "errors",
-                    "success_rate",
-                    "mean_stdi_vs_original",
-                    "mean_stdi_incremental",
-                    "mean_stdi_cumulative",
-                    "mean_vad_drift_vs_original",
-                    "mean_contradiction_drift_vs_original",
-                ]
-            ],
-            width="stretch",
-        )
-        chart_df = node_summary_df.set_index("node_label")[
-            [
-                "mean_stdi_vs_original",
-                "mean_stdi_incremental",
-            ]
-        ]
-        st.bar_chart(chart_df)
+    _render_node_performance(node_summary_df)
 
-    st.subheader("News overview")
-    if news_summary_df.empty:
-        st.info("No per-news summary available yet.")
-    else:
-        st.dataframe(news_summary_df, width="stretch")
-        selected_news_id = st.selectbox(
-            "Inspect one news item",
-            news_summary_df["news_id"].tolist(),
-            key="selected_news_id",
-        )
-        selected_steps = (
-            steps_df[steps_df["news_id"] == selected_news_id].copy().sort_values("step_index")
-        )
-        if "metadata_run_id" in selected_steps:
-            occurrences = selected_steps["metadata_run_id"].dropna().unique().tolist()
-            if len(occurrences) > 1:
-                occurrence = st.selectbox(
-                    "News run occurrence",
-                    occurrences,
-                    key=f"result_occurrence_{run_bundle['output_prefix']}_{selected_news_id}",
-                )
-                selected_steps = selected_steps[selected_steps["metadata_run_id"] == occurrence]
-        if not selected_steps.empty:
-            st.line_chart(
-                selected_steps.set_index("step_index")[
-                    [
-                        "stdi_vs_original",
-                        "stdi_incremental",
-                    ]
-                ]
-            )
-            st.dataframe(
-                selected_steps[
-                    [
-                        "step_index",
-                        "node_label",
-                        "rewrite_status",
-                        "stdi_vs_original",
-                        "stdi_incremental",
-                        "stdi_cumulative",
-                        "vad_drift_vs_original",
-                        "vad_drift_incremental",
-                        "contradiction_drift_vs_original",
-                        "contradiction_drift_incremental",
-                        "rewrite_error",
-                    ]
-                ],
-                width="stretch",
-            )
-            for position, (_, row) in enumerate(selected_steps.iterrows()):
-                record_key = (
-                    f"{run_bundle['output_prefix']}:{selected_news_id}:"
-                    f"{row.get('metadata_run_id', '')}:{position}"
-                )
-                with st.expander(
-                    f"Step {int(row['step_index'])}: {row['node_label']} ({row['rewrite_status']})"
-                ):
-                    info_cols = st.columns(4)
-                    info_cols[0].metric("STDI vs original", format_metric(row["stdi_vs_original"]))
-                    info_cols[1].metric("Incremental STDI", format_metric(row["stdi_incremental"]))
-                    info_cols[2].metric("Provider", str(row["provider"]))
-                    info_cols[3].metric("Model", str(row["model"]))
-                    st.metric("Cumulative STDI", format_metric(row["stdi_cumulative"]))
-                    render_vad_evaluations(row)
-                    render_dual_stdi(row)
-                    component_cols = st.columns(4)
-                    component_cols[0].metric(
-                        "VAD vs original", format_metric(row["vad_drift_vs_original"])
-                    )
-                    component_cols[1].metric(
-                        "Incremental VAD", format_metric(row["vad_drift_incremental"])
-                    )
-                    component_cols[2].metric(
-                        "Contradiction vs original",
-                        format_metric(row["contradiction_drift_vs_original"]),
-                    )
-                    component_cols[3].metric(
-                        "Incremental contradiction",
-                        format_metric(row["contradiction_drift_incremental"]),
-                    )
-                    if pd.notna(row.get("rewrite_error")) and str(row["rewrite_error"]).strip():
-                        st.error(str(row["rewrite_error"]))
-                    text_cols = st.columns(2)
-                    text_cols[0].text_area(
-                        "Input text for this step",
-                        value=str(row.get("source_text") or ""),
-                        height=220,
-                        disabled=True,
-                        key=f"result_source_{record_key}",
-                    )
-                    text_cols[1].text_area(
-                        "Rewritten text",
-                        value=str(row.get("rewritten_text") or ""),
-                        height=220,
-                        disabled=True,
-                        key=f"result_rewritten_{record_key}",
-                    )
-                    render_topic_comparison(row)
+    _render_news_overview(run_bundle, news_summary_df, steps_df)
 
     st.subheader("All step records")
     st.dataframe(steps_df, width="stretch")
@@ -496,36 +313,8 @@ def render_dual_stdi(row: pd.Series) -> None:
             "Disagreement is not calibrated confidence."
         )
         for branch, title in (("embedding", "Cluster"), ("llm_judge", "LLM judge")):
-            evaluation = value.get(branch, {})
-            with st.expander(f"{title} evaluation — {label}"):
-                if evaluation.get("vad_source"):
-                    st.caption(f"VAD source: {evaluation['vad_source']}")
-                st.caption(f"Status: {evaluation.get('status', 'unavailable')}")
-                if branch == "llm_judge" and "requested_repeats" in evaluation:
-                    if evaluation.get("identity_shortcut"):
-                        st.caption("Identical texts: zero drift without judge requests.")
-                    else:
-                        st.caption(
-                            f"Valid evaluations: {evaluation['valid_repeats']}/"
-                            f"{evaluation['requested_repeats']}. "
-                            "The LLM score averages complete per-evaluation scores."
-                        )
-                        statistics = evaluation.get("statistics", {})
-                        if statistics:
-                            st.dataframe(
-                                pd.DataFrame.from_dict(statistics, orient="index")
-                                .rename_axis("Metric")
-                                .reset_index(),
-                                hide_index=True,
-                                width="stretch",
-                            )
-                            st.caption(
-                                "std is the sample standard deviation across available draws; "
-                                "it requires at least two values and is not calibrated confidence."
-                            )
-                if evaluation.get("error"):
-                    st.error(evaluation["error"])
-                st.json(evaluation)
+            _render_stdi_branch(value, branch, title, label)
+
         with st.expander(f"Final Dual result and provenance — {label}"):
             st.json(value)
     complete = row.get("stdi_chain_complete")
@@ -625,3 +414,237 @@ def format_metric(value: Any) -> str:
         return f"{float(value):.3f}"
     except (TypeError, ValueError):
         return str(value)
+
+
+def _select_result_view(run_bundle):
+    path_results = run_bundle["summary"].get("path_results", [])
+    if path_results:
+        labels = {
+            path["path_id"]: f"{path['chain_code']} ({path['path_id']})" for path in path_results
+        }
+        selected_path = st.selectbox(
+            "Result view",
+            [""] + list(labels),
+            format_func=lambda value: labels[value] if value else "Graph overview (unique nodes)",
+            key=f"result_path_{run_bundle['output_prefix']}",
+        )
+        if selected_path:
+            descriptor = next(path for path in path_results if path["path_id"] == selected_path)
+            path_bundle = load_saved_result(
+                resolve_result_reference(descriptor["summary_path"], run_bundle["summary_path"])
+            )
+            if run_bundle.get("stdi_evaluation"):
+                path_bundle = evaluation_result_bundle(path_bundle, run_bundle["stdi_evaluation"])
+            run_bundle = path_bundle
+    if "stdi_evaluation" not in run_bundle:
+        evaluations = available_evaluations(
+            run_bundle["steps_df"], run_bundle["summary"].get("stdi_comparison_method")
+        )
+        if evaluations:
+            evaluation = st.selectbox(
+                "STDI evaluation",
+                evaluations,
+                format_func=EVALUATION_LABELS.__getitem__,
+                key="result_bundle_stdi_evaluation",
+            )
+            run_bundle = evaluation_result_bundle(run_bundle, evaluation)
+    return run_bundle
+
+
+def _render_result_downloads(run_bundle, summary, steps_df):
+    download_cols = st.columns(3)
+    download_cols[0].download_button(
+        "Download summary JSON",
+        data=json.dumps(summary, ensure_ascii=False, indent=2).encode("utf-8"),
+        file_name=f"{run_bundle['output_prefix']}_summary.json",
+        mime="application/json",
+        key="download_results_summary_json",
+        width="stretch",
+    )
+    download_cols[1].download_button(
+        "Download steps CSV",
+        data=steps_df.to_csv(index=False).encode("utf-8"),
+        file_name=f"{run_bundle['output_prefix']}_steps.csv",
+        mime="text/csv",
+        key="download_results_steps_csv",
+        width="stretch",
+    )
+    if run_bundle.get("graph_payload") is not None:
+        download_cols[2].download_button(
+            "Download graph JSON",
+            data=json.dumps(run_bundle["graph_payload"], ensure_ascii=False, indent=2).encode(
+                "utf-8"
+            ),
+            file_name="graph_config_ui.json",
+            mime="application/json",
+            key="download_results_graph_json",
+            width="stretch",
+        )
+
+
+def _render_node_performance(node_summary_df):
+    st.subheader("Node performance")
+    if node_summary_df.empty:
+        st.info("No node summary available yet.")
+    else:
+        st.dataframe(
+            node_summary_df[
+                [
+                    "step_index",
+                    "node_label",
+                    "provider",
+                    "model",
+                    "runs",
+                    "successes",
+                    "errors",
+                    "success_rate",
+                    "mean_stdi_vs_original",
+                    "mean_stdi_incremental",
+                    "mean_stdi_cumulative",
+                    "mean_vad_drift_vs_original",
+                    "mean_contradiction_drift_vs_original",
+                ]
+            ],
+            width="stretch",
+        )
+        chart_df = node_summary_df.set_index("node_label")[
+            [
+                "mean_stdi_vs_original",
+                "mean_stdi_incremental",
+            ]
+        ]
+        st.bar_chart(chart_df)
+
+
+def _render_step_details(row, record_key):
+    info_cols = st.columns(4)
+    info_cols[0].metric("STDI vs original", format_metric(row["stdi_vs_original"]))
+    info_cols[1].metric("Incremental STDI", format_metric(row["stdi_incremental"]))
+    info_cols[2].metric("Provider", str(row["provider"]))
+    info_cols[3].metric("Model", str(row["model"]))
+    st.metric("Cumulative STDI", format_metric(row["stdi_cumulative"]))
+    render_vad_evaluations(row)
+    render_dual_stdi(row)
+    component_cols = st.columns(4)
+    component_cols[0].metric("VAD vs original", format_metric(row["vad_drift_vs_original"]))
+    component_cols[1].metric("Incremental VAD", format_metric(row["vad_drift_incremental"]))
+    component_cols[2].metric(
+        "Contradiction vs original",
+        format_metric(row["contradiction_drift_vs_original"]),
+    )
+    component_cols[3].metric(
+        "Incremental contradiction",
+        format_metric(row["contradiction_drift_incremental"]),
+    )
+    if pd.notna(row.get("rewrite_error")) and str(row["rewrite_error"]).strip():
+        st.error(str(row["rewrite_error"]))
+    text_cols = st.columns(2)
+    text_cols[0].text_area(
+        "Input text for this step",
+        value=str(row.get("source_text") or ""),
+        height=220,
+        disabled=True,
+        key=f"result_source_{record_key}",
+    )
+    text_cols[1].text_area(
+        "Rewritten text",
+        value=str(row.get("rewritten_text") or ""),
+        height=220,
+        disabled=True,
+        key=f"result_rewritten_{record_key}",
+    )
+    render_topic_comparison(row)
+
+
+def _render_news_overview(run_bundle, news_summary_df, steps_df):
+    st.subheader("News overview")
+    if news_summary_df.empty:
+        st.info("No per-news summary available yet.")
+    else:
+        st.dataframe(news_summary_df, width="stretch")
+        selected_news_id = st.selectbox(
+            "Inspect one news item",
+            news_summary_df["news_id"].tolist(),
+            key="selected_news_id",
+        )
+        selected_steps = (
+            steps_df[steps_df["news_id"] == selected_news_id].copy().sort_values("step_index")
+        )
+        if "metadata_run_id" in selected_steps:
+            occurrences = selected_steps["metadata_run_id"].dropna().unique().tolist()
+            if len(occurrences) > 1:
+                occurrence = st.selectbox(
+                    "News run occurrence",
+                    occurrences,
+                    key=f"result_occurrence_{run_bundle['output_prefix']}_{selected_news_id}",
+                )
+                selected_steps = selected_steps[selected_steps["metadata_run_id"] == occurrence]
+        if not selected_steps.empty:
+            st.line_chart(
+                selected_steps.set_index("step_index")[
+                    [
+                        "stdi_vs_original",
+                        "stdi_incremental",
+                    ]
+                ]
+            )
+            st.dataframe(
+                selected_steps[
+                    [
+                        "step_index",
+                        "node_label",
+                        "rewrite_status",
+                        "stdi_vs_original",
+                        "stdi_incremental",
+                        "stdi_cumulative",
+                        "vad_drift_vs_original",
+                        "vad_drift_incremental",
+                        "contradiction_drift_vs_original",
+                        "contradiction_drift_incremental",
+                        "rewrite_error",
+                    ]
+                ],
+                width="stretch",
+            )
+            for position, (_, row) in enumerate(selected_steps.iterrows()):
+                record_key = (
+                    f"{run_bundle['output_prefix']}:{selected_news_id}:"
+                    f"{row.get('metadata_run_id', '')}:{position}"
+                )
+                with st.expander(
+                    f"Step {int(row['step_index'])}: {row['node_label']} ({row['rewrite_status']})"
+                ):
+                    _render_step_details(row, record_key)
+
+
+def _render_stdi_branch(value, branch, title, label):
+    evaluation = value.get(branch, {})
+    with st.expander(f"{title} evaluation — {label}"):
+        if evaluation.get("vad_source"):
+            st.caption(f"VAD source: {evaluation['vad_source']}")
+        st.caption(f"Status: {evaluation.get('status', 'unavailable')}")
+        if branch == "llm_judge" and "requested_repeats" in evaluation:
+            if evaluation.get("identity_shortcut"):
+                st.caption("Identical texts: zero drift without judge requests.")
+            else:
+                st.caption(
+                    f"Valid evaluations: {evaluation['valid_repeats']}/"
+                    f"{evaluation['requested_repeats']}. "
+                    "The LLM score averages complete per-evaluation scores."
+                )
+                statistics = evaluation.get("statistics", {})
+                if statistics:
+                    st.dataframe(
+                        pd.DataFrame.from_dict(statistics, orient="index")
+                        .rename_axis("Metric")
+                        .reset_index(),
+                        hide_index=True,
+                        width="stretch",
+                    )
+                    st.caption(
+                        "std is the sample standard deviation across available draws; "
+                        "it requires at least two values and is not calibrated confidence."
+                    )
+        if evaluation.get("error"):
+            st.error(evaluation["error"])
+        st.json(evaluation)

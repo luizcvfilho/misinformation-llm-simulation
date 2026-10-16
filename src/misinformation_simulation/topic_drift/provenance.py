@@ -100,47 +100,15 @@ class EvaluationCache:
             if not path.exists():
                 path = self.directory / f"{key}.json"
             if path.exists():
-                try:
-                    payload = json.loads(path.read_text(encoding="utf-8"))
-                except ValueError:
-                    if namespace not in self.compatibility:
-                        raise
-                    payload = {}
-                if not isinstance(payload, dict):
-                    payload = {}
-                if payload.get("inputs") != inputs:
-                    if namespace not in self.compatibility:
-                        raise ValueError("Evaluation cache input mismatch")
-                    payload = {}
-                compatible = namespace not in self.compatibility or (
-                    payload.get("compatibility") == self.compatibility[namespace]
-                    and isinstance(payload.get("output"), dict)
-                    and payload.get("output_sha256") == input_hash(payload["output"])
-                    and self._reusable(namespace, payload["output"])
-                )
+                payload = self._read_local_cache_payload(namespace, path, inputs)
+
+                compatible = self._compatible_local_output(namespace, payload)
+
                 if compatible:
                     self._records[key] = payload["output"]
                     record_cache_hit(namespace, source="local")
                     return payload["output"]
-        if self.shared_directory is not None and namespace in self.compatibility:
-            path = self.shared_directory / namespace / f"{self._shared_key(namespace, inputs)}.json"
-            if path.exists():
-                try:
-                    payload = json.loads(path.read_text(encoding="utf-8"))
-                    valid = (
-                        payload.get("inputs") == inputs
-                        and payload.get("compatibility") == self.compatibility[namespace]
-                        and isinstance(payload.get("output"), dict)
-                        and payload.get("output_sha256") == input_hash(payload["output"])
-                        and self._reusable(namespace, payload["output"])
-                    )
-                except (ValueError, KeyError, TypeError, AttributeError):
-                    valid = False
-                if valid:
-                    self._save_local(namespace, inputs, payload["output"])
-                    record_cache_hit(namespace, source="shared")
-                    return payload["output"]
-        return None
+        return self._get_shared_evaluation(namespace, inputs)
 
     def put(self, namespace: str, inputs: dict[str, Any], output: dict[str, Any]) -> None:
         inputs = self._request_identity(namespace, inputs)
@@ -203,3 +171,47 @@ class EvaluationCache:
                 temporary.replace(path)
         finally:
             temporary.unlink(missing_ok=True)
+
+    def _get_shared_evaluation(self, namespace, inputs):
+        if self.shared_directory is not None and namespace in self.compatibility:
+            path = self.shared_directory / namespace / f"{self._shared_key(namespace, inputs)}.json"
+            if path.exists():
+                try:
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                    valid = (
+                        payload.get("inputs") == inputs
+                        and payload.get("compatibility") == self.compatibility[namespace]
+                        and isinstance(payload.get("output"), dict)
+                        and payload.get("output_sha256") == input_hash(payload["output"])
+                        and self._reusable(namespace, payload["output"])
+                    )
+                except (ValueError, KeyError, TypeError, AttributeError):
+                    valid = False
+                if valid:
+                    self._save_local(namespace, inputs, payload["output"])
+                    record_cache_hit(namespace, source="shared")
+                    return payload["output"]
+
+    def _compatible_local_output(self, namespace, payload):
+        compatible = namespace not in self.compatibility or (
+            payload.get("compatibility") == self.compatibility[namespace]
+            and isinstance(payload.get("output"), dict)
+            and payload.get("output_sha256") == input_hash(payload["output"])
+            and self._reusable(namespace, payload["output"])
+        )
+        return compatible
+
+    def _read_local_cache_payload(self, namespace, path, inputs):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except ValueError:
+            if namespace not in self.compatibility:
+                raise
+            payload = {}
+        if not isinstance(payload, dict):
+            payload = {}
+        if payload.get("inputs") != inputs:
+            if namespace not in self.compatibility:
+                raise ValueError("Evaluation cache input mismatch")
+            payload = {}
+        return payload

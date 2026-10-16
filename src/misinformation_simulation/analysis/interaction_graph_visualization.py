@@ -126,30 +126,8 @@ def load_interaction_graph_runs(runs_dir: Path | Sequence[Path]) -> InteractionG
         frame = _read_analysis_columns(path)
         if frame.empty:
             continue
-        missing = REQUIRED_STEP_COLUMNS - set(frame.columns)
-        if missing:
-            missing_text = ", ".join(sorted(missing))
-            raise ValueError(f"'{path}' is missing required columns: {missing_text}")
+        frame = _prepare_analysis_frame(frame, path)
 
-        frame = frame.copy()
-        version_column = "metadata_stdi_comparison_version"
-        if version_column not in frame.columns:
-            frame[version_column] = "legacy"
-        else:
-            frame[version_column] = frame[version_column].fillna("legacy")
-        if "metadata_rewrite_mode" not in frame.columns:
-            frame["metadata_rewrite_mode"] = "legacy"
-        else:
-            frame["metadata_rewrite_mode"] = frame["metadata_rewrite_mode"].fillna("legacy")
-        frame["step_index"] = pd.to_numeric(frame["step_index"], errors="coerce")
-        if frame["step_index"].isna().any():
-            raise ValueError(f"'{path}' contains non-numeric step indexes.")
-        frame["step_index"] = frame["step_index"].astype(int)
-        for column in METRIC_LABELS:
-            if column in frame.columns:
-                frame[column] = pd.to_numeric(frame[column], errors="coerce")
-
-        frame = frame.assign(**_run_metadata(path))
         frames.append(frame)
 
     if not frames:
@@ -494,3 +472,31 @@ def _is_kaleido_browser_available() -> bool:
     return any(
         which(name) is not None for name in ("google-chrome", "chromium", "chromium-browser")
     )
+
+
+def _prepare_analysis_frame(frame, path):
+    missing = REQUIRED_STEP_COLUMNS - set(frame.columns)
+    if missing:
+        missing_text = ", ".join(sorted(missing))
+        raise ValueError(f"'{path}' is missing required columns: {missing_text}")
+
+    frame = frame.copy()
+    version_column = "metadata_stdi_comparison_version"
+    if version_column not in frame.columns:
+        frame[version_column] = "legacy"
+    else:
+        frame[version_column] = frame[version_column].fillna("legacy")
+    if "metadata_rewrite_mode" not in frame.columns:
+        frame["metadata_rewrite_mode"] = "legacy"
+    else:
+        frame["metadata_rewrite_mode"] = frame["metadata_rewrite_mode"].fillna("legacy")
+    frame["step_index"] = pd.to_numeric(frame["step_index"], errors="coerce")
+    if frame["step_index"].isna().any():
+        raise ValueError(f"'{path}' contains non-numeric step indexes.")
+    frame["step_index"] = frame["step_index"].astype(int)
+    for column in METRIC_LABELS:
+        if column in frame.columns:
+            frame[column] = pd.to_numeric(frame[column], errors="coerce")
+
+    frame = frame.assign(**_run_metadata(path))
+    return frame

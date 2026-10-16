@@ -184,267 +184,385 @@ def run_comparison_workflow(
     vad_llm_base_url: str | None = None,
 ) -> ComparisonWorkflowResult:
     """Run one comparison method over shared LLM-extracted topic structures."""
-    resolved_method = _validate_method(str(method))
-    validate_judge_repeats(judge_repeats)
-    validate_vad_method(vad_method)
-    if resolved_method == "dual":
-        from misinformation_simulation.topic_drift.dual_workflow import run_dual_workflow
+    return _ComparisonWorkflow(
+        df=df,
+        method=method,
+        original_text_column=original_text_column,
+        modified_text_column=modified_text_column,
+        title_column=title_column,
+        pair_id_column=pair_id_column,
+        extraction_model=extraction_model,
+        extraction_provider=extraction_provider,
+        extraction_api_key=extraction_api_key,
+        extraction_base_url=extraction_base_url,
+        extraction_fn=extraction_fn,
+        llm_comparison_model=llm_comparison_model,
+        llm_comparison_provider=llm_comparison_provider,
+        llm_comparison_fn=llm_comparison_fn,
+        embedder=embedder,
+        embedding_model=embedding_model,
+        n_clusters=n_clusters,
+        random_state=random_state,
+        reuse_structures=reuse_structures,
+        progress_callback=progress_callback,
+        cache_dir=cache_dir,
+        vad_scorer=vad_scorer,
+        uncached_judge=uncached_judge,
+        judge_repeats=judge_repeats,
+        vad_method=vad_method,
+        vad_llm_model=vad_llm_model,
+        vad_llm_provider=vad_llm_provider,
+        vad_llm_scorer=vad_llm_scorer,
+        vad_llm_api_key=vad_llm_api_key,
+        vad_llm_base_url=vad_llm_base_url,
+    ).run()
 
-        return run_dual_workflow(
-            df,
-            original_text_column=original_text_column,
-            modified_text_column=modified_text_column,
-            title_column=title_column,
-            pair_id_column=pair_id_column,
-            extraction_model=extraction_model,
-            extraction_provider=extraction_provider,
-            api_key=extraction_api_key,
-            base_url=extraction_base_url,
-            extraction_fn=extraction_fn,
-            judge_model=llm_comparison_model or extraction_model,
-            judge_provider=llm_comparison_provider or extraction_provider,
-            judge_fn=llm_comparison_fn,
-            embedder=embedder,
-            embedding_model=embedding_model,
-            n_clusters=n_clusters,
-            random_state=random_state,
-            reuse_structures=reuse_structures,
-            progress_callback=progress_callback,
-            cache_dir=cache_dir,
-            vad_scorer=vad_scorer,
-            uncached_judge=uncached_judge,
-            judge_repeats=judge_repeats,
-            vad_method=vad_method,
-            vad_llm_model=vad_llm_model,
-            vad_llm_provider=vad_llm_provider,
-            vad_llm_scorer=vad_llm_scorer,
-            vad_llm_api_key=vad_llm_api_key,
-            vad_llm_base_url=vad_llm_base_url,
-        )
-    required_columns = {original_text_column, modified_text_column}
-    missing_columns = sorted(required_columns - set(df.columns))
-    if missing_columns:
-        raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
 
-    result = df.drop(
-        columns=[
-            "original_topic_domain",
-            "modified_topic_domain",
-            "cluster_theme_domain_match",
-            "cluster_theme_domain_gate_applied",
-        ],
-        errors="ignore",
-    ).copy()
-    for column in (
-        "original_extraction_model",
-        "original_extraction_provider",
-        "modified_extraction_model",
-        "modified_extraction_provider",
-        "comparison_model",
-        "comparison_provider",
+class _ComparisonWorkflow:
+    """Run extraction and one comparison method over paired texts."""
+
+    def __init__(
+        self,
+        *,
+        df,
+        method,
+        original_text_column,
+        modified_text_column,
+        title_column,
+        pair_id_column,
+        extraction_model,
+        extraction_provider,
+        extraction_api_key,
+        extraction_base_url,
+        extraction_fn,
+        llm_comparison_model,
+        llm_comparison_provider,
+        llm_comparison_fn,
+        embedder,
+        embedding_model,
+        n_clusters,
+        random_state,
+        reuse_structures,
+        progress_callback,
+        cache_dir,
+        vad_scorer,
+        uncached_judge,
+        judge_repeats,
+        vad_method,
+        vad_llm_model,
+        vad_llm_provider,
+        vad_llm_scorer,
+        vad_llm_api_key,
+        vad_llm_base_url,
     ):
-        if column in result:
-            result[column] = result[column].astype("object")
-    pair_ids = _resolved_pair_ids(result, pair_id_column)
-    result["pair_id"] = pair_ids
-    prepared_pairs: list[TopicStructurePair] = []
-    row_structures: dict[Any, tuple[TopicStructure, TopicStructure]] = {}
-    vad_provider = vad_llm_provider or llm_comparison_provider or extraction_provider
-    reuse_vad_endpoint = normalize_provider(vad_provider) == normalize_provider(extraction_provider)
-    vad_evaluator = VADTextEvaluator(
-        method=vad_method,
-        model_scorer=vad_scorer,
-        llm_scorer=vad_llm_scorer,
-        llm_model=vad_llm_model or llm_comparison_model or extraction_model,
-        llm_provider=vad_provider,
-        cache=EvaluationCache(cache_dir),
-        api_key=vad_llm_api_key or (extraction_api_key if reuse_vad_endpoint else None),
-        base_url=vad_llm_base_url or (extraction_base_url if reuse_vad_endpoint else None),
-    )
+        self.df = df
+        self.method = method
+        self.original_text_column = original_text_column
+        self.modified_text_column = modified_text_column
+        self.title_column = title_column
+        self.pair_id_column = pair_id_column
+        self.extraction_model = extraction_model
+        self.extraction_provider = extraction_provider
+        self.extraction_api_key = extraction_api_key
+        self.extraction_base_url = extraction_base_url
+        self.extraction_fn = extraction_fn
+        self.llm_comparison_model = llm_comparison_model
+        self.llm_comparison_provider = llm_comparison_provider
+        self.llm_comparison_fn = llm_comparison_fn
+        self.embedder = embedder
+        self.embedding_model = embedding_model
+        self.n_clusters = n_clusters
+        self.random_state = random_state
+        self.reuse_structures = reuse_structures
+        self.progress_callback = progress_callback
+        self.cache_dir = cache_dir
+        self.vad_scorer = vad_scorer
+        self.uncached_judge = uncached_judge
+        self.judge_repeats = judge_repeats
+        self.vad_method = vad_method
+        self.vad_llm_model = vad_llm_model
+        self.vad_llm_provider = vad_llm_provider
+        self.vad_llm_scorer = vad_llm_scorer
+        self.vad_llm_api_key = vad_llm_api_key
+        self.vad_llm_base_url = vad_llm_base_url
 
-    total_rows = len(result)
-    for row_position, (row_index, row) in enumerate(result.iterrows(), start=1):
-        pair_id = result.at[row_index, "pair_id"]
-        if progress_callback is not None:
-            progress_callback(f"[{row_position}/{total_rows}] Preparing pair '{pair_id}'.")
-        original_text = _as_non_empty_text(row[original_text_column])
-        modified_text = _as_non_empty_text(row[modified_text_column])
-        if not original_text or not modified_text:
-            result.at[row_index, "comparison_status"] = "skipped"
-            result.at[row_index, "comparison_error"] = "Both texts must be non-empty."
-            continue
-        title = _as_non_empty_text(row.get(title_column, ""))
-        original_structure = (
-            topic_structure_from_row(row, prefix="original") if reuse_structures else None
+    def run(self):
+        """Run one comparison method over shared LLM-extracted topic structures."""
+        self.resolved_method = _validate_method(str(self.method))
+        validate_judge_repeats(self.judge_repeats)
+        validate_vad_method(self.vad_method)
+        if self.resolved_method == "dual":
+            from misinformation_simulation.topic_drift.dual_workflow import run_dual_workflow
+
+            return run_dual_workflow(
+                self.df,
+                original_text_column=self.original_text_column,
+                modified_text_column=self.modified_text_column,
+                title_column=self.title_column,
+                pair_id_column=self.pair_id_column,
+                extraction_model=self.extraction_model,
+                extraction_provider=self.extraction_provider,
+                api_key=self.extraction_api_key,
+                base_url=self.extraction_base_url,
+                extraction_fn=self.extraction_fn,
+                judge_model=self.llm_comparison_model or self.extraction_model,
+                judge_provider=self.llm_comparison_provider or self.extraction_provider,
+                judge_fn=self.llm_comparison_fn,
+                embedder=self.embedder,
+                embedding_model=self.embedding_model,
+                n_clusters=self.n_clusters,
+                random_state=self.random_state,
+                reuse_structures=self.reuse_structures,
+                progress_callback=self.progress_callback,
+                cache_dir=self.cache_dir,
+                vad_scorer=self.vad_scorer,
+                uncached_judge=self.uncached_judge,
+                judge_repeats=self.judge_repeats,
+                vad_method=self.vad_method,
+                vad_llm_model=self.vad_llm_model,
+                vad_llm_provider=self.vad_llm_provider,
+                vad_llm_scorer=self.vad_llm_scorer,
+                vad_llm_api_key=self.vad_llm_api_key,
+                vad_llm_base_url=self.vad_llm_base_url,
+            )
+        self._prepare_result()
+
+        self.total_rows = len(self.result)
+        for row_position, (row_index, row) in enumerate(self.result.iterrows(), start=1):
+            self.row_position, (self.row_index, self.row) = (row_position, (row_index, row))
+            self._prepare_pair()
+
+        self._fit_clusters()
+
+        for row_position, (row_index, (original_structure, modified_structure)) in enumerate(
+            self.row_structures.items(), start=1
+        ):
+            (
+                self.row_position,
+                (self.row_index, (self.original_structure, self.modified_structure)),
+            ) = (row_position, (row_index, (original_structure, modified_structure)))
+            self._compare_pair()
+
+        manifest = {
+            "schema_version": 1,
+            "vad_method": self.vad_method,
+            "vad_llm_model": self.vad_evaluator.llm_model if self.vad_method != "model" else None,
+            "vad_llm_provider": self.vad_evaluator.llm_provider
+            if self.vad_method != "model"
+            else None,
+            "comparison_method": self.resolved_method,
+            "pair_count": len(self.result),
+            "successful_pair_count": int(self.result["comparison_status"].eq("success").sum()),
+            "original_text_column": self.original_text_column,
+            "modified_text_column": self.modified_text_column,
+            "title_column": self.title_column,
+            "shared_extraction": {
+                "model": self.extraction_model,
+                "provider": self.extraction_provider,
+                "reused_existing_structures": self.reuse_structures,
+            },
+            "llm_comparison": {
+                "model": self.llm_comparison_model or self.extraction_model,
+                "provider": self.llm_comparison_provider or self.extraction_provider,
+            }
+            if self.resolved_method == "llm_semantic"
+            else None,
+            "cluster": {
+                "comparison_version": STRUCTURED_CLUSTER_VERSION
+                if any(
+                    pair.original.schema_version == 2 or pair.modified.schema_version == 2
+                    for pair in self.prepared_pairs
+                )
+                else CLUSTER_STDI_COMPARISON_VERSION,
+                "embedding_model": self.embedding_model,
+                "n_clusters": self.n_clusters,
+                "random_state": self.random_state,
+            }
+            if self.resolved_method == "cluster"
+            else None,
+        }
+        return ComparisonWorkflowResult(
+            results=self.result, manifest=manifest, cluster_artifacts=self.cluster_artifacts
         )
-        modified_structure = (
-            topic_structure_from_row(row, prefix="modified") if reuse_structures else None
+
+    def _prepare_result(self):
+        required_columns = {self.original_text_column, self.modified_text_column}
+        missing_columns = sorted(required_columns - set(self.df.columns))
+        if missing_columns:
+            raise ValueError(f"Missing required column(s): {', '.join(missing_columns)}")
+        self.result = self.df.drop(
+            columns=[
+                "original_topic_domain",
+                "modified_topic_domain",
+                "cluster_theme_domain_match",
+                "cluster_theme_domain_gate_applied",
+            ],
+            errors="ignore",
+        ).copy()
+        for column in (
+            "original_extraction_model",
+            "original_extraction_provider",
+            "modified_extraction_model",
+            "modified_extraction_provider",
+            "comparison_model",
+            "comparison_provider",
+        ):
+            self.column = column
+            if self.column in self.result:
+                self.result[self.column] = self.result[self.column].astype("object")
+        pair_ids = _resolved_pair_ids(self.result, self.pair_id_column)
+        self.result["pair_id"] = pair_ids
+        self.prepared_pairs: list[TopicStructurePair] = []
+        self.row_structures: dict[Any, tuple[TopicStructure, TopicStructure]] = {}
+        vad_provider = (
+            self.vad_llm_provider or self.llm_comparison_provider or self.extraction_provider
+        )
+        reuse_vad_endpoint = normalize_provider(vad_provider) == normalize_provider(
+            self.extraction_provider
+        )
+        self.vad_evaluator = VADTextEvaluator(
+            method=self.vad_method,
+            model_scorer=self.vad_scorer,
+            llm_scorer=self.vad_llm_scorer,
+            llm_model=self.vad_llm_model or self.llm_comparison_model or self.extraction_model,
+            llm_provider=vad_provider,
+            cache=EvaluationCache(self.cache_dir),
+            api_key=self.vad_llm_api_key
+            or (self.extraction_api_key if reuse_vad_endpoint else None),
+            base_url=self.vad_llm_base_url
+            or (self.extraction_base_url if reuse_vad_endpoint else None),
+        )
+
+    def _prepare_pair(self):
+        pair_id = self.result.at[self.row_index, "pair_id"]
+        if self.progress_callback is not None:
+            self.progress_callback(
+                f"[{self.row_position}/{self.total_rows}] Preparing pair '{pair_id}'."
+            )
+        original_text = _as_non_empty_text(self.row[self.original_text_column])
+        modified_text = _as_non_empty_text(self.row[self.modified_text_column])
+        if not original_text or not modified_text:
+            self.result.at[self.row_index, "comparison_status"] = "skipped"
+            self.result.at[self.row_index, "comparison_error"] = "Both texts must be non-empty."
+            return
+        title = _as_non_empty_text(self.row.get(self.title_column, ""))
+        self.original_structure = (
+            topic_structure_from_row(self.row, prefix="original") if self.reuse_structures else None
+        )
+        self.modified_structure = (
+            topic_structure_from_row(self.row, prefix="modified") if self.reuse_structures else None
         )
         try:
-            if original_structure is None:
-                if progress_callback is not None:
-                    progress_callback(
-                        f"[{row_position}/{total_rows}] Extracting original structure."
+            if self.original_structure is None:
+                if self.progress_callback is not None:
+                    self.progress_callback(
+                        f"[{self.row_position}/{self.total_rows}] Extracting original structure."
                     )
-                result.at[row_index, "original_extraction_model"] = str(extraction_model)
-                result.at[row_index, "original_extraction_provider"] = str(extraction_provider)
-                original_structure = extraction_fn(
+                self.result.at[self.row_index, "original_extraction_model"] = str(
+                    self.extraction_model
+                )
+                self.result.at[self.row_index, "original_extraction_provider"] = str(
+                    self.extraction_provider
+                )
+                self.original_structure = self.extraction_fn(
                     text=original_text,
                     title=title,
-                    model=extraction_model,
-                    provider=extraction_provider,
-                    api_key=extraction_api_key,
-                    base_url=extraction_base_url,
-                    **({"structured": True} if resolved_method == "cluster" else {}),
+                    model=self.extraction_model,
+                    provider=self.extraction_provider,
+                    api_key=self.extraction_api_key,
+                    base_url=self.extraction_base_url,
+                    **{"structured": True} if self.resolved_method == "cluster" else {},
                 )
-            if modified_structure is None:
-                if progress_callback is not None:
-                    progress_callback(
-                        f"[{row_position}/{total_rows}] Extracting modified structure."
+            if self.modified_structure is None:
+                if self.progress_callback is not None:
+                    self.progress_callback(
+                        f"[{self.row_position}/{self.total_rows}] Extracting modified structure."
                     )
-                result.at[row_index, "modified_extraction_model"] = str(extraction_model)
-                result.at[row_index, "modified_extraction_provider"] = str(extraction_provider)
-                modified_structure = extraction_fn(
+                self.result.at[self.row_index, "modified_extraction_model"] = str(
+                    self.extraction_model
+                )
+                self.result.at[self.row_index, "modified_extraction_provider"] = str(
+                    self.extraction_provider
+                )
+                self.modified_structure = self.extraction_fn(
                     text=modified_text,
                     title=title,
-                    model=extraction_model,
-                    provider=extraction_provider,
-                    api_key=extraction_api_key,
-                    base_url=extraction_base_url,
-                    **({"structured": True} if resolved_method == "cluster" else {}),
+                    model=self.extraction_model,
+                    provider=self.extraction_provider,
+                    api_key=self.extraction_api_key,
+                    base_url=self.extraction_base_url,
+                    **{"structured": True} if self.resolved_method == "cluster" else {},
                 )
         except Exception as exc:
-            result.at[row_index, "comparison_status"] = "error"
-            result.at[row_index, "comparison_error"] = str(exc)
-            continue
-        if progress_callback is not None:
-            progress_callback(f"[{row_position}/{total_rows}] Shared structures ready.")
-        row_structures[row_index] = (original_structure, modified_structure)
-        prepared_pairs.append(
+            self.result.at[self.row_index, "comparison_status"] = "error"
+            self.result.at[self.row_index, "comparison_error"] = str(exc)
+            return
+        if self.progress_callback is not None:
+            self.progress_callback(
+                f"[{self.row_position}/{self.total_rows}] Shared structures ready."
+            )
+        self.row_structures[self.row_index] = (self.original_structure, self.modified_structure)
+        self.prepared_pairs.append(
             TopicStructurePair(
-                pair_id=result.at[row_index, "pair_id"],
-                original=original_structure,
-                modified=modified_structure,
+                pair_id=self.result.at[self.row_index, "pair_id"],
+                original=self.original_structure,
+                modified=self.modified_structure,
             )
         )
         _write_structure(
-            result,
-            row_index=row_index,
-            structure=original_structure,
+            self.result,
+            row_index=self.row_index,
+            structure=self.original_structure,
             prefix="original",
         )
         _write_structure(
-            result,
-            row_index=row_index,
-            structure=modified_structure,
+            self.result,
+            row_index=self.row_index,
+            structure=self.modified_structure,
             prefix="modified",
         )
 
-    cluster_comparator: ClusterSTDIComparator | None = None
-    cluster_artifacts: pd.DataFrame | None = None
-    if resolved_method == "cluster" and prepared_pairs:
-        if progress_callback is not None:
-            progress_callback(
-                f"Fitting shared clusters from {len(prepared_pairs)} prepared pair(s)."
-            )
-        cluster_comparator = StructuredEmbeddingComparator(
-            embedder=embedder,
-            embedding_model=embedding_model,
-            n_clusters=n_clusters,
-            random_state=random_state,
-        ).fit(prepared_pairs)
-        cluster_artifacts = pd.DataFrame(cluster_comparator.artifact_rows())
+    def _fit_clusters(self):
+        self.cluster_comparator: ClusterSTDIComparator | None = None
+        self.cluster_artifacts: pd.DataFrame | None = None
+        if self.resolved_method == "cluster" and self.prepared_pairs:
+            if self.progress_callback is not None:
+                self.progress_callback(
+                    f"Fitting shared clusters from {len(self.prepared_pairs)} prepared pair(s)."
+                )
+            self.cluster_comparator = StructuredEmbeddingComparator(
+                embedder=self.embedder,
+                embedding_model=self.embedding_model,
+                n_clusters=self.n_clusters,
+                random_state=self.random_state,
+            ).fit(self.prepared_pairs)
+            self.cluster_artifacts = pd.DataFrame(self.cluster_comparator.artifact_rows())
 
-    for row_position, (row_index, (original_structure, modified_structure)) in enumerate(
-        row_structures.items(), start=1
-    ):
-        row = result.loc[row_index]
+    def _compare_pair(self):
+        self.row = self.result.loc[self.row_index]
         try:
-            if progress_callback is not None:
-                progress_callback(
-                    f"[{row_position}/{len(row_structures)}] Comparing pair "
-                    f"'{result.at[row_index, 'pair_id']}' with {resolved_method}."
+            if self.progress_callback is not None:
+                self.progress_callback(
+                    f"[{self.row_position}/{len(self.row_structures)}] Comparing pair '"
+                    f"{self.result.at[self.row_index, 'pair_id']}' with "
+                    f"{self.resolved_method}."
                 )
-            details: dict[str, dict[str, float | int]] = {}
-            rationales: dict[str, str] = {}
-            if resolved_method == "llm_semantic":
-                result.at[row_index, "comparison_model"] = str(
-                    llm_comparison_model or extraction_model
-                )
-                result.at[row_index, "comparison_provider"] = str(
-                    llm_comparison_provider or extraction_provider
-                )
-                semantic_result = llm_comparison_fn(
-                    original_text=str(row[original_text_column]),
-                    modified_text=str(row[modified_text_column]),
-                    title=_as_non_empty_text(row.get(title_column, "")),
-                    original_structure=original_structure,
-                    modified_structure=modified_structure,
-                    model=llm_comparison_model or extraction_model,
-                    provider=llm_comparison_provider or extraction_provider,
-                    api_key=extraction_api_key,
-                    base_url=extraction_base_url,
-                )
-                component_overrides = {
-                    component: semantic_result.component_drifts[component]
-                    for component in (
-                        "theme_drift",
-                        "subtopic_drift",
-                        "entity_drift",
-                        "relation_drift",
-                    )
-                }
-                rationales = semantic_result.rationales
-            else:
-                if cluster_comparator is None:
-                    raise RuntimeError("The cluster comparator was not initialized.")
-                cluster_result = cluster_comparator.compare(original_structure, modified_structure)
-                component_overrides = cluster_result.component_drifts
-                details = cluster_result.details
-            metrics = calculate_stdi(
-                original_structure,
-                modified_structure,
-                component_overrides=component_overrides,
+            self._compare_content()
+
+            self.metrics = calculate_stdi(
+                self.original_structure,
+                self.modified_structure,
+                component_overrides=self.component_overrides,
             )
-            text_evaluations = {
-                prefix: vad_evaluator.evaluate(_as_non_empty_text(row[column]))
-                for prefix, column in (
-                    ("original", original_text_column),
-                    ("modified", modified_text_column),
-                )
-            }
-            vad_evaluation = compare_vad_evaluations(
-                text_evaluations["original"], text_evaluations["modified"], method=vad_method
-            )
-            for key, value in vad_pair_columns(vad_evaluation).items():
-                if key not in result:
-                    result[key] = pd.Series(index=result.index, dtype=object)
-                result.at[row_index, key] = value
-            for prefix, evaluation in text_evaluations.items():
-                key = f"{prefix}_vad_evaluation_json"
-                if key not in result:
-                    result[key] = pd.Series(index=result.index, dtype=object)
-                result.at[row_index, key] = json.dumps(evaluation, ensure_ascii=False)
-            vad = vad_for_branch(
-                vad_evaluation, "embedding" if resolved_method == "cluster" else "llm_judge"
-            )
-            if vad["status"] != "valid":
-                raise ValueError("Selected VAD evaluation is incomplete.")
-            metrics = complete_stdi(metrics, vad)
-            result.at[row_index, "comparison_method"] = resolved_method
-            result.at[row_index, "comparison_status"] = "success"
-            result.at[row_index, "comparison_error"] = pd.NA
-            for column, value in metrics.items():
-                result.at[row_index, column] = value
-            for component, rationale in rationales.items():
-                result.at[row_index, f"comparison_{component}_rationale"] = rationale
-            for component, component_details in details.items():
-                for detail_name, value in component_details.items():
-                    result.at[row_index, f"cluster_{component}_{detail_name}"] = value
+            self._evaluate_pair_vad()
+
+            self.metrics = complete_stdi(self.metrics, self.vad)
+            self._write_comparison()
+
         except Exception as exc:
-            result.at[row_index, "comparison_method"] = resolved_method
-            result.at[row_index, "comparison_status"] = "error"
-            result.at[row_index, "comparison_error"] = str(exc)
+            self.result.at[self.row_index, "comparison_method"] = self.resolved_method
+            self.result.at[self.row_index, "comparison_status"] = "error"
+            self.result.at[self.row_index, "comparison_error"] = str(exc)
             for metric in (
                 "theme_drift",
                 "subtopic_drift",
@@ -458,55 +576,91 @@ def run_comparison_workflow(
                 "vad_drift",
                 "stdi",
             ):
-                result.at[row_index, metric] = np.nan
+                self.result.at[self.row_index, metric] = np.nan
 
-    manifest = {
-        "schema_version": 1,
-        "vad_method": vad_method,
-        "vad_llm_model": vad_evaluator.llm_model if vad_method != "model" else None,
-        "vad_llm_provider": vad_evaluator.llm_provider if vad_method != "model" else None,
-        "comparison_method": resolved_method,
-        "pair_count": len(result),
-        "successful_pair_count": int(result["comparison_status"].eq("success").sum()),
-        "original_text_column": original_text_column,
-        "modified_text_column": modified_text_column,
-        "title_column": title_column,
-        "shared_extraction": {
-            "model": extraction_model,
-            "provider": extraction_provider,
-            "reused_existing_structures": reuse_structures,
-        },
-        "llm_comparison": (
-            {
-                "model": llm_comparison_model or extraction_model,
-                "provider": llm_comparison_provider or extraction_provider,
+    def _compare_content(self):
+        self.details: dict[str, dict[str, float | int]] = {}
+        self.rationales: dict[str, str] = {}
+        if self.resolved_method == "llm_semantic":
+            self.result.at[self.row_index, "comparison_model"] = str(
+                self.llm_comparison_model or self.extraction_model
+            )
+            self.result.at[self.row_index, "comparison_provider"] = str(
+                self.llm_comparison_provider or self.extraction_provider
+            )
+            semantic_result = self.llm_comparison_fn(
+                original_text=str(self.row[self.original_text_column]),
+                modified_text=str(self.row[self.modified_text_column]),
+                title=_as_non_empty_text(self.row.get(self.title_column, "")),
+                original_structure=self.original_structure,
+                modified_structure=self.modified_structure,
+                model=self.llm_comparison_model or self.extraction_model,
+                provider=self.llm_comparison_provider or self.extraction_provider,
+                api_key=self.extraction_api_key,
+                base_url=self.extraction_base_url,
+            )
+            self.component_overrides = {
+                component: semantic_result.component_drifts[component]
+                for component in (
+                    "theme_drift",
+                    "subtopic_drift",
+                    "entity_drift",
+                    "relation_drift",
+                )
             }
-            if resolved_method == "llm_semantic"
-            else None
-        ),
-        "cluster": (
-            {
-                "comparison_version": (
-                    STRUCTURED_CLUSTER_VERSION
-                    if any(
-                        pair.original.schema_version == 2 or pair.modified.schema_version == 2
-                        for pair in prepared_pairs
-                    )
-                    else CLUSTER_STDI_COMPARISON_VERSION
-                ),
-                "embedding_model": embedding_model,
-                "n_clusters": n_clusters,
-                "random_state": random_state,
-            }
-            if resolved_method == "cluster"
-            else None
-        ),
-    }
-    return ComparisonWorkflowResult(
-        results=result,
-        manifest=manifest,
-        cluster_artifacts=cluster_artifacts,
-    )
+            self.rationales = semantic_result.rationales
+        else:
+            if self.cluster_comparator is None:
+                raise RuntimeError("The cluster comparator was not initialized.")
+            cluster_result = self.cluster_comparator.compare(
+                self.original_structure, self.modified_structure
+            )
+            self.component_overrides = cluster_result.component_drifts
+            self.details = cluster_result.details
+
+    def _evaluate_pair_vad(self):
+        text_evaluations = {
+            prefix: self.vad_evaluator.evaluate(_as_non_empty_text(self.row[column]))
+            for prefix, column in (
+                ("original", self.original_text_column),
+                ("modified", self.modified_text_column),
+            )
+        }
+        vad_evaluation = compare_vad_evaluations(
+            text_evaluations["original"],
+            text_evaluations["modified"],
+            method=self.vad_method,
+        )
+        for key, value in vad_pair_columns(vad_evaluation).items():
+            key, self.value = (key, value)
+            if key not in self.result:
+                self.result[key] = pd.Series(index=self.result.index, dtype=object)
+            self.result.at[self.row_index, key] = self.value
+        for prefix, evaluation in text_evaluations.items():
+            key = f"{prefix}_vad_evaluation_json"
+            if key not in self.result:
+                self.result[key] = pd.Series(index=self.result.index, dtype=object)
+            self.result.at[self.row_index, key] = json.dumps(evaluation, ensure_ascii=False)
+        self.vad = vad_for_branch(
+            vad_evaluation,
+            "embedding" if self.resolved_method == "cluster" else "llm_judge",
+        )
+        if self.vad["status"] != "valid":
+            raise ValueError("Selected VAD evaluation is incomplete.")
+
+    def _write_comparison(self):
+        self.result.at[self.row_index, "comparison_method"] = self.resolved_method
+        self.result.at[self.row_index, "comparison_status"] = "success"
+        self.result.at[self.row_index, "comparison_error"] = pd.NA
+        for column, value in self.metrics.items():
+            self.column, self.value = (column, value)
+            self.result.at[self.row_index, self.column] = self.value
+        for component, rationale in self.rationales.items():
+            self.result.at[self.row_index, f"comparison_{component}_rationale"] = rationale
+        for component, component_details in self.details.items():
+            for detail_name, value in component_details.items():
+                detail_name, self.value = (detail_name, value)
+                self.result.at[self.row_index, f"cluster_{component}_{detail_name}"] = self.value
 
 
 def load_comparison_input(input_directory: Path) -> pd.DataFrame:

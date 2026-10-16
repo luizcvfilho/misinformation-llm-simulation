@@ -41,66 +41,11 @@ def load_comparison_pairs(
         raise ValueError("Invalid scope or news count.")
     rows = []
     if scope in {"both", "context"}:
-        contexts = pd.read_csv(context_path, dtype={"pair_id": str})
-        for pair_id, group in contexts.groupby("pair_id", sort=True):
-            if len(group) != 2 or set(group.context_polarity) != {"negative", "positive"}:
-                raise ValueError("Context pairs require one negative and one positive text.")
-            indexed = group.set_index("context_polarity")
-            rows.append(
-                dict(
-                    pair_id=f"context_{pair_id}",
-                    dataset="context",
-                    news_id=pair_id,
-                    chain_code="",
-                    reference_text=indexed.loc["negative", "article_text"],
-                    compared_text=indexed.loc["positive", "article_text"],
-                    comparison="positive_minus_negative",
-                    topic=indexed.iloc[0].topic,
-                )
-            )
+        _load_context_pairs(context_path, rows)
+
     if scope in {"both", "simulation"}:
-        steps = pd.read_csv(simulation_path, dtype={"news_id": str})
-        steps = steps[steps.chain_code.isin(chain_codes)]
-        available = {}
-        for chain in chain_codes:
-            frame = steps[steps.chain_code == chain]
-            if frame.empty or frame.run_id.nunique() != 1:
-                raise ValueError("Expected exactly one saved execution per requested chain.")
-            available[chain] = {}
-            for news_id, trajectory in frame.groupby("news_id"):
-                trajectory = trajectory.sort_values("step_index")
-                if trajectory.step_index.tolist() != [1, 2, 3, 4]:
-                    continue
-                if not trajectory.rewrite_status.eq("success").all():
-                    continue
-                if not trajectory.target_language.eq("en").all():
-                    continue
-                if trajectory.original_text.nunique() != 1:
-                    raise ValueError("Original text differs within a saved trajectory.")
-                available[chain][news_id] = trajectory.iloc[-1]
-        shared = set.intersection(*(set(items) for items in available.values()))
-        if len(shared) < news_count:
-            raise ValueError("Not enough jointly available news items for the requested sample.")
-        chosen = sorted(shared, key=lambda item: digest(SAMPLING_VERSION + ":" + item))[:news_count]
-        for news_id in chosen:
-            originals = {available[chain][news_id].original_text for chain in chain_codes}
-            if len(originals) != 1:
-                raise ValueError("Original text differs across chains for a paired news item.")
-            for chain in chain_codes:
-                final = available[chain][news_id]
-                rows.append(
-                    dict(
-                        pair_id=f"simulation_{chain}_{news_id}",
-                        dataset="simulation",
-                        news_id=news_id,
-                        chain_code=chain,
-                        run_id=final.run_id,
-                        reference_text=final.original_text,
-                        compared_text=final.rewritten_text,
-                        comparison="final_minus_original",
-                        topic="",
-                    )
-                )
+        _load_simulation_pairs(simulation_path, chain_codes, news_count, rows)
+
     result = pd.DataFrame(rows)
     if result.empty or result.pair_id.duplicated().any():
         raise ValueError("Comparison requires non-empty, unique pairs.")
@@ -415,3 +360,74 @@ def write_comparison_report(output_dir: Path, *, bert_cache_path: Path) -> dict:
     ]
     (output_dir / "findings.md").write_text("\n".join(lines), encoding="utf-8")
     return manifest
+
+
+def _load_context_pairs(context_path, rows):
+    contexts = pd.read_csv(context_path, dtype={"pair_id": str})
+    for pair_id, group in contexts.groupby("pair_id", sort=True):
+        if len(group) != 2 or set(group.context_polarity) != {"negative", "positive"}:
+            raise ValueError("Context pairs require one negative and one positive text.")
+        indexed = group.set_index("context_polarity")
+        rows.append(
+            dict(
+                pair_id=f"context_{pair_id}",
+                dataset="context",
+                news_id=pair_id,
+                chain_code="",
+                reference_text=indexed.loc["negative", "article_text"],
+                compared_text=indexed.loc["positive", "article_text"],
+                comparison="positive_minus_negative",
+                topic=indexed.iloc[0].topic,
+            )
+        )
+
+
+def _available_simulation_trajectories(steps, chain_codes):
+    available = {}
+    for chain in chain_codes:
+        frame = steps[steps.chain_code == chain]
+        if frame.empty or frame.run_id.nunique() != 1:
+            raise ValueError("Expected exactly one saved execution per requested chain.")
+        available[chain] = {}
+        for news_id, trajectory in frame.groupby("news_id"):
+            trajectory = trajectory.sort_values("step_index")
+            if trajectory.step_index.tolist() != [1, 2, 3, 4]:
+                continue
+            if not trajectory.rewrite_status.eq("success").all():
+                continue
+            if not trajectory.target_language.eq("en").all():
+                continue
+            if trajectory.original_text.nunique() != 1:
+                raise ValueError("Original text differs within a saved trajectory.")
+            available[chain][news_id] = trajectory.iloc[-1]
+    return available
+
+
+def _load_simulation_pairs(simulation_path, chain_codes, news_count, rows):
+    steps = pd.read_csv(simulation_path, dtype={"news_id": str})
+    steps = steps[steps.chain_code.isin(chain_codes)]
+    available = _available_simulation_trajectories(steps, chain_codes)
+
+    shared = set.intersection(*(set(items) for items in available.values()))
+    if len(shared) < news_count:
+        raise ValueError("Not enough jointly available news items for the requested sample.")
+    chosen = sorted(shared, key=lambda item: digest(SAMPLING_VERSION + ":" + item))[:news_count]
+    for news_id in chosen:
+        originals = {available[chain][news_id].original_text for chain in chain_codes}
+        if len(originals) != 1:
+            raise ValueError("Original text differs across chains for a paired news item.")
+        for chain in chain_codes:
+            final = available[chain][news_id]
+            rows.append(
+                dict(
+                    pair_id=f"simulation_{chain}_{news_id}",
+                    dataset="simulation",
+                    news_id=news_id,
+                    chain_code=chain,
+                    run_id=final.run_id,
+                    reference_text=final.original_text,
+                    compared_text=final.rewritten_text,
+                    comparison="final_minus_original",
+                    topic="",
+                )
+            )

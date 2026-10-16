@@ -122,12 +122,8 @@ def compare_saved_vad_steps(
     rows = []
     for _, group in steps.groupby(["run_id", "news_id"], sort=False):
         group = group.sort_values("step_index")
-        first = group.iloc[0]
-        if first.step_index != 1 or first.source_node_id != "original":
-            raise ValueError("Each saved trajectory needs step 1 sourced from the original text.")
-        original_text = first.source_text
-        if not isinstance(original_text, str) or not original_text.strip():
-            raise ValueError("Original text is missing from step 1.")
+        first, original_text = _trajectory_original(group)
+
         previous_text = original_text
         for record in group.to_dict("records"):
             if record["source_text"] != previous_text:
@@ -145,129 +141,20 @@ def compare_saved_vad_steps(
             }
             eligible = record["rewrite_status"] == "success" and record["target_language"] == "en"
             result["comparison_status"] = "eligible" if eligible else "excluded_status_or_language"
-            for role, analysis in analyses.items():
-                result[f"memolon_{role}_token_coverage"] = (
-                    analysis.token_coverage if analysis else math.nan
-                )
-                result[f"memolon_{role}_token_count"] = analysis.token_count if analysis else 0
-                result[f"memolon_{role}_matched_token_count"] = (
-                    analysis.matched_token_count if analysis else 0
-                )
-                for dimension in VAD_DIMENSIONS:
-                    saved_bert = _number(record.get(f"metadata_{role}_vad_{dimension}"), 1, 5)
-                    bert = (
-                        getattr(bert_scores.get(result[f"{role}_text"]), dimension, None)
-                        if bert_scores is not None
-                        else saved_bert
-                    )
-                    bert = _number(bert, 1, 5)
-                    memolon = (
-                        _number(getattr(analysis.score, dimension), 1, 5) if analysis else None
-                    )
-                    native = getattr(analysis.native_score, dimension) if analysis else None
-                    result[f"bert_{role}_{dimension}"] = bert
-                    result[f"memolon_{role}_{dimension}"] = memolon
-                    result[f"memolon_native_{role}_{dimension}"] = native
-                    result[f"bert_{role}_{dimension}_normalized"] = (bert - 1) / 4
-                    result[f"saved_bert_{role}_{dimension}_normalized"] = (saved_bert - 1) / 4
-                    result[f"memolon_{role}_{dimension}_normalized"] = (
-                        (memolon - 1) / 4 if memolon is not None else math.nan
-                    )
-                    anchor = _number(first.get(f"metadata_original_vad_{dimension}"), 1, 5)
-                    if role == "original" and math.isfinite(saved_bert) and math.isfinite(anchor):
-                        if not math.isclose(saved_bert, anchor, abs_tol=1e-6):
-                            raise ValueError(
-                                "Saved original BERT scores vary within one trajectory."
-                            )
+            _record_model_scores(result, record, first, analyses, bert_scores)
+
             for relation, reference in COMPARISON_RELATIONS.items():
-                for model in ("bert", "memolon"):
-                    drifts = []
-                    for dimension in VAD_DIMENSIONS:
-                        left = result[f"{model}_{reference}_{dimension}_normalized"]
-                        right = result[f"{model}_rewritten_{dimension}_normalized"]
-                        delta = right - left if eligible else math.nan
-                        drift = abs(delta)
-                        result[f"{model}_{dimension}_delta_{relation}"] = delta
-                        result[f"{model}_{dimension}_drift_{relation}"] = drift
-                        drifts.append(drift)
-                    result[f"{model}_vad_drift_{relation}"] = sum(drifts) / 3
-                result[f"vad_drift_change_{relation}"] = (
-                    result[f"memolon_vad_drift_{relation}"] - result[f"bert_vad_drift_{relation}"]
-                )
-                saved_vad = _number(record.get(f"vad_drift_{relation}"), 0, 1)
-                recalculated_saved_vad = (
-                    sum(
-                        abs(
-                            result[f"saved_bert_rewritten_{dim}_normalized"]
-                            - result[f"saved_bert_{reference}_{dim}_normalized"]
-                        )
-                        for dim in VAD_DIMENSIONS
-                    )
-                    / 3
-                )
-                drift_matches = math.isclose(saved_vad, recalculated_saved_vad, abs_tol=1.1e-6)
-                content = _number(record.get(f"content_drift_{relation}"), 0, 1)
-                contradiction = _number(record.get(f"contradiction_drift_{relation}"), 0, 1)
-                base = (
-                    content
-                    + (1 - content) * DEFAULT_CONTRADICTION_CONTRIBUTION_WEIGHT * contradiction
-                )
-                predicted_bert = base + (1 - base) * DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad
-                saved_stdi = _number(record.get(f"stdi_{relation}"), 0, 1)
-                formula_matches = math.isclose(predicted_bert, saved_stdi, abs_tol=2e-6)
-                valid = (
-                    eligible
-                    and drift_matches
-                    and formula_matches
-                    and math.isfinite(result[f"memolon_vad_drift_{relation}"])
-                    and math.isfinite(result[f"bert_vad_drift_{relation}"])
-                )
-                result[f"formula_check_{relation}"] = (
-                    "passed" if valid else "missing_or_inconsistent"
-                )
-                # Preserve the recorded non-VAD contribution, including its rounding.
-                denominator = 1 - DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad
-                preserved_base = (
-                    saved_stdi - DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad
-                ) / denominator
-                result[f"saved_bert_stdi_{relation}"] = saved_stdi
-                result[f"bert_stdi_{relation}"] = (
-                    preserved_base
-                    + (1 - preserved_base)
-                    * DEFAULT_VAD_CONTRIBUTION_WEIGHT
-                    * result[f"bert_vad_drift_{relation}"]
-                    if valid
-                    else math.nan
-                )
-                result[f"memolon_stdi_{relation}"] = (
-                    (
-                        preserved_base
-                        + (1 - preserved_base)
-                        * DEFAULT_VAD_CONTRIBUTION_WEIGHT
-                        * result[f"memolon_vad_drift_{relation}"]
-                    )
-                    if valid
-                    else math.nan
-                )
-                result[f"stdi_change_{relation}"] = (
-                    result[f"memolon_stdi_{relation}"] - result[f"bert_stdi_{relation}"]
-                )
+                _record_vad_drifts(result, relation, reference, eligible)
+
+                _record_stdi_comparison(result, record, relation, reference, eligible)
+
             rows.append(result)
     result = pd.DataFrame(rows)
     result["unique_texts_scored"] = len(cache)
     result["bert_stdi_cumulative"] = math.nan
     result["memolon_stdi_cumulative"] = math.nan
-    for _, group in result.groupby(["run_id", "news_id"], sort=False):
-        for model in ("bert", "memolon"):
-            total = 0.0
-            valid_path = True
-            for index in group.sort_values("step_index").index:
-                if result.at[index, "rewrite_status"] != "success":
-                    continue
-                value = result.at[index, f"{model}_stdi_incremental"]
-                valid_path = valid_path and pd.notna(value)
-                total += value
-                result.at[index, f"{model}_stdi_cumulative"] = total if valid_path else math.nan
+    _record_cumulative_comparison(result)
+
     if candidate_prefix != "memolon":
         result = result.rename(
             columns={
@@ -526,3 +413,129 @@ def build_vad_comparison_report(frame: pd.DataFrame, summary: pd.DataFrame, mani
         ]
     )
     return "\n".join(lines) + "\n"
+
+
+def _record_model_scores(result, record, first, analyses, bert_scores):
+    for role, analysis in analyses.items():
+        result[f"memolon_{role}_token_coverage"] = analysis.token_coverage if analysis else math.nan
+        result[f"memolon_{role}_token_count"] = analysis.token_count if analysis else 0
+        result[f"memolon_{role}_matched_token_count"] = (
+            analysis.matched_token_count if analysis else 0
+        )
+        for dimension in VAD_DIMENSIONS:
+            saved_bert = _number(record.get(f"metadata_{role}_vad_{dimension}"), 1, 5)
+            bert = (
+                getattr(bert_scores.get(result[f"{role}_text"]), dimension, None)
+                if bert_scores is not None
+                else saved_bert
+            )
+            bert = _number(bert, 1, 5)
+            memolon = _number(getattr(analysis.score, dimension), 1, 5) if analysis else None
+            native = getattr(analysis.native_score, dimension) if analysis else None
+            result[f"bert_{role}_{dimension}"] = bert
+            result[f"memolon_{role}_{dimension}"] = memolon
+            result[f"memolon_native_{role}_{dimension}"] = native
+            result[f"bert_{role}_{dimension}_normalized"] = (bert - 1) / 4
+            result[f"saved_bert_{role}_{dimension}_normalized"] = (saved_bert - 1) / 4
+            result[f"memolon_{role}_{dimension}_normalized"] = (
+                (memolon - 1) / 4 if memolon is not None else math.nan
+            )
+            anchor = _number(first.get(f"metadata_original_vad_{dimension}"), 1, 5)
+            if role == "original" and math.isfinite(saved_bert) and math.isfinite(anchor):
+                if not math.isclose(saved_bert, anchor, abs_tol=1e-6):
+                    raise ValueError("Saved original BERT scores vary within one trajectory.")
+
+
+def _record_vad_drifts(result, relation, reference, eligible):
+    for model in ("bert", "memolon"):
+        drifts = []
+        for dimension in VAD_DIMENSIONS:
+            left = result[f"{model}_{reference}_{dimension}_normalized"]
+            right = result[f"{model}_rewritten_{dimension}_normalized"]
+            delta = right - left if eligible else math.nan
+            drift = abs(delta)
+            result[f"{model}_{dimension}_delta_{relation}"] = delta
+            result[f"{model}_{dimension}_drift_{relation}"] = drift
+            drifts.append(drift)
+        result[f"{model}_vad_drift_{relation}"] = sum(drifts) / 3
+    result[f"vad_drift_change_{relation}"] = (
+        result[f"memolon_vad_drift_{relation}"] - result[f"bert_vad_drift_{relation}"]
+    )
+
+
+def _record_stdi_comparison(result, record, relation, reference, eligible):
+    saved_vad = _number(record.get(f"vad_drift_{relation}"), 0, 1)
+    recalculated_saved_vad = (
+        sum(
+            abs(
+                result[f"saved_bert_rewritten_{dim}_normalized"]
+                - result[f"saved_bert_{reference}_{dim}_normalized"]
+            )
+            for dim in VAD_DIMENSIONS
+        )
+        / 3
+    )
+    drift_matches = math.isclose(saved_vad, recalculated_saved_vad, abs_tol=1.1e-6)
+    content = _number(record.get(f"content_drift_{relation}"), 0, 1)
+    contradiction = _number(record.get(f"contradiction_drift_{relation}"), 0, 1)
+    base = content + (1 - content) * DEFAULT_CONTRADICTION_CONTRIBUTION_WEIGHT * contradiction
+    predicted_bert = base + (1 - base) * DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad
+    saved_stdi = _number(record.get(f"stdi_{relation}"), 0, 1)
+    formula_matches = math.isclose(predicted_bert, saved_stdi, abs_tol=2e-6)
+    valid = (
+        eligible
+        and drift_matches
+        and formula_matches
+        and math.isfinite(result[f"memolon_vad_drift_{relation}"])
+        and math.isfinite(result[f"bert_vad_drift_{relation}"])
+    )
+    result[f"formula_check_{relation}"] = "passed" if valid else "missing_or_inconsistent"
+    # Preserve the recorded non-VAD contribution, including its rounding.
+    denominator = 1 - DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad
+    preserved_base = (saved_stdi - DEFAULT_VAD_CONTRIBUTION_WEIGHT * saved_vad) / denominator
+    result[f"saved_bert_stdi_{relation}"] = saved_stdi
+    result[f"bert_stdi_{relation}"] = (
+        preserved_base
+        + (1 - preserved_base)
+        * DEFAULT_VAD_CONTRIBUTION_WEIGHT
+        * result[f"bert_vad_drift_{relation}"]
+        if valid
+        else math.nan
+    )
+    result[f"memolon_stdi_{relation}"] = (
+        (
+            preserved_base
+            + (1 - preserved_base)
+            * DEFAULT_VAD_CONTRIBUTION_WEIGHT
+            * result[f"memolon_vad_drift_{relation}"]
+        )
+        if valid
+        else math.nan
+    )
+    result[f"stdi_change_{relation}"] = (
+        result[f"memolon_stdi_{relation}"] - result[f"bert_stdi_{relation}"]
+    )
+
+
+def _record_cumulative_comparison(result):
+    for _, group in result.groupby(["run_id", "news_id"], sort=False):
+        for model in ("bert", "memolon"):
+            total = 0.0
+            valid_path = True
+            for index in group.sort_values("step_index").index:
+                if result.at[index, "rewrite_status"] != "success":
+                    continue
+                value = result.at[index, f"{model}_stdi_incremental"]
+                valid_path = valid_path and pd.notna(value)
+                total += value
+                result.at[index, f"{model}_stdi_cumulative"] = total if valid_path else math.nan
+
+
+def _trajectory_original(group):
+    first = group.iloc[0]
+    if first.step_index != 1 or first.source_node_id != "original":
+        raise ValueError("Each saved trajectory needs step 1 sourced from the original text.")
+    original_text = first.source_text
+    if not isinstance(original_text, str) or not original_text.strip():
+        raise ValueError("Original text is missing from step 1.")
+    return first, original_text

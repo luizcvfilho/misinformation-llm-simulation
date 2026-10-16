@@ -107,19 +107,8 @@ class ProgressTracker:
             self.active = (key, event)
             self.state = event
         elif kind == "finished":
-            self.completed[key] += 1
-            self.planned[key] = max(self.planned.get(key, 0), self.completed[key])
-            if event.get("cache_hit"):
-                self.cached[key] += 1
-            if event.get("status") == "skipped":
-                self.skipped[key] += 1
-            elif event.get("status") == "failed":
-                self.failed[key] += 1
-            elif not event.get("cache_hit") and event.get("duration", 0) > 0:
-                self.samples[key[1]].append(event["duration"])
-                self.samples[key[1]] = self.samples[key[1]][-60:]
-            self.active = None
-            self.state = None
+            self._finish_operation(key, event)
+
         elif kind in {"request_started", "request_finished", "retry_wait", "rate_limit_wait"}:
             self.state = event
 
@@ -198,6 +187,21 @@ class ProgressTracker:
                 json.dumps(dict(version=1, samples=dict(self.samples)), allow_nan=False),
                 encoding="utf-8",
             )
+
+    def _finish_operation(self, key, event):
+        self.completed[key] += 1
+        self.planned[key] = max(self.planned.get(key, 0), self.completed[key])
+        if event.get("cache_hit"):
+            self.cached[key] += 1
+        if event.get("status") == "skipped":
+            self.skipped[key] += 1
+        elif event.get("status") == "failed":
+            self.failed[key] += 1
+        elif not event.get("cache_hit") and event.get("duration", 0) > 0:
+            self.samples[key[1]].append(event["duration"])
+            self.samples[key[1]] = self.samples[key[1]][-60:]
+        self.active = None
+        self.state = None
 
 
 def event_message(event: dict) -> str:

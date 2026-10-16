@@ -244,32 +244,8 @@ def load_lexicon(model: str, language: str, candidates: set[str]) -> tuple[dict,
     minimum, maximum = [math.inf] * 3, [-math.inf] * 3
     translated_terms = set()
     duplicate_count = unsupported_count = 0
-    if model == "nrc_v1":
-        member = NRC_MEMBER_PT if language == "pt" else NRC_MEMBER_EN
-        with zipfile.ZipFile(CACHE_DIR / "NRC-VAD-Lexicon-v1.zip") as archive:
-            handle = io.StringIO(archive.read(member).decode("utf-8-sig"))
-        reader = csv.reader(handle, delimiter="\t")
-        if language == "pt":
-            header = next(reader)
-            if header != ["English Word", "Valence", "Arousal", "Dominance", "Portuguese Word"]:
-                raise ValueError(f"Unexpected NRC Portuguese header: {header}")
-        bounds = (0, 1)
-    elif model == "nrc_v2_1":
-        member = NRC_V2_MEMBER
-        with zipfile.ZipFile(NRC_V2_PATH) as archive:
-            handle = io.StringIO(archive.read(member).decode("utf-8-sig"))
-        reader = csv.reader(handle, delimiter="\t")
-        if next(reader) != ["term", *DIMENSIONS]:
-            raise ValueError("Unexpected NRC v2.1 header")
-        bounds = (-1, 1)
-    else:
-        member = f"{language}.tsv"
-        handle = (CACHE_DIR / f"memolon_{language}.tsv").open(encoding="utf-8", newline="")
-        reader = csv.reader(handle, delimiter="\t")
-        header = next(reader)
-        if header[:4] != ["word", *DIMENSIONS]:
-            raise ValueError(f"Unexpected MEmoLon header: {header}")
-        bounds = (1, 9)
+    handle, reader, member, bounds = _open_lexicon(model, language)
+
     with handle:
         for row in reader:
             row_count += 1
@@ -485,6 +461,76 @@ def write_csv(name: str, rows: list[dict]) -> None:
 
 def main() -> None:
     samples = build_samples()
+    downloads = _load_download_manifest()
+
+    rows, matches, resources = _score_lexicons(samples)
+
+    print("Running the current project model on the cached snapshot.", flush=True)
+    neural_rows, neural_metadata = score_current_model(samples)
+    rows.extend(neural_rows)
+    resources.append(neural_metadata)
+    by_key = {(row["sample_id"], row["model"]): row for row in rows}
+    summaries = _summarize_news_coverage(rows)
+
+    comparisons = _compare_model_scores(samples, by_key)
+
+    controls = _compare_controls(by_key)
+
+    translation_deltas = _compare_translations(by_key)
+
+    control_summaries = _summarize_controls(controls)
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for name, values in (
+        ("scores.csv", rows),
+        ("matched_terms.csv", matches),
+        ("news_coverage.csv", summaries),
+        ("model_deltas.csv", comparisons),
+        ("control_deltas.csv", controls),
+        ("translation_deltas.csv", translation_deltas),
+        ("control_summary.csv", control_summaries),
+    ):
+        write_csv(name, values)
+    _write_pilot_manifest(samples, resources, downloads)
+
+    _write_findings(rows, summaries, controls, control_summaries)
+
+    print(
+        json.dumps(dict(news_coverage=summaries, resources=resources, controls=controls), indent=2)
+    )
+
+
+def _open_lexicon(model, language):
+    if model == "nrc_v1":
+        member = NRC_MEMBER_PT if language == "pt" else NRC_MEMBER_EN
+        with zipfile.ZipFile(CACHE_DIR / "NRC-VAD-Lexicon-v1.zip") as archive:
+            handle = io.StringIO(archive.read(member).decode("utf-8-sig"))
+        reader = csv.reader(handle, delimiter="\t")
+        if language == "pt":
+            header = next(reader)
+            if header != ["English Word", "Valence", "Arousal", "Dominance", "Portuguese Word"]:
+                raise ValueError(f"Unexpected NRC Portuguese header: {header}")
+        bounds = (0, 1)
+    elif model == "nrc_v2_1":
+        member = NRC_V2_MEMBER
+        with zipfile.ZipFile(NRC_V2_PATH) as archive:
+            handle = io.StringIO(archive.read(member).decode("utf-8-sig"))
+        reader = csv.reader(handle, delimiter="\t")
+        if next(reader) != ["term", *DIMENSIONS]:
+            raise ValueError("Unexpected NRC v2.1 header")
+        bounds = (-1, 1)
+    else:
+        member = f"{language}.tsv"
+        handle = (CACHE_DIR / f"memolon_{language}.tsv").open(encoding="utf-8", newline="")
+        reader = csv.reader(handle, delimiter="\t")
+        header = next(reader)
+        if header[:4] != ["word", *DIMENSIONS]:
+            raise ValueError(f"Unexpected MEmoLon header: {header}")
+        bounds = (1, 9)
+    return handle, reader, member, bounds
+
+
+def _load_download_manifest():
     download_manifest = CACHE_DIR / "pilot_download_manifest.json"
     if not download_manifest.exists():
         download_manifest = CACHE_DIR / "download_manifest.json"
@@ -495,6 +541,10 @@ def main() -> None:
     for member in downloads["memolon"]["members"]:
         if sha256(CACHE_DIR / f"memolon_{member['language']}.tsv") != member["sha256"]:
             raise ValueError("MEmoLon resource hash changed")
+    return downloads
+
+
+def _score_lexicons(samples):
     rows, matches, resources = [], [], []
     for language in ("pt", "en"):
         candidates = candidate_terms(samples, language)
@@ -506,11 +556,10 @@ def main() -> None:
                     row, trace = score_sample(sample, model, entries)
                     rows.append(row)
                     matches.extend(trace)
-    print("Running the current project model on the cached snapshot.", flush=True)
-    neural_rows, neural_metadata = score_current_model(samples)
-    rows.extend(neural_rows)
-    resources.append(neural_metadata)
-    by_key = {(row["sample_id"], row["model"]): row for row in rows}
+    return rows, matches, resources
+
+
+def _summarize_news_coverage(rows):
     summaries = []
     for language in ("pt", "en"):
         for model in MODELS:
@@ -540,6 +589,10 @@ def main() -> None:
                     ),
                 )
             )
+    return summaries
+
+
+def _compare_model_scores(samples, by_key):
     comparisons = []
     for sample in samples:
         for model_a, model_b in combinations(MODELS, 2):
@@ -563,6 +616,10 @@ def main() -> None:
                     else None
                 )
             comparisons.append(comparison)
+    return comparisons
+
+
+def _compare_controls(by_key):
     controls = []
     for kind, high, low in (
         ("affect_word_control", "high", "low"),
@@ -591,6 +648,10 @@ def main() -> None:
                             expected_direction_observed=delta > 0 if delta is not None else None,
                         )
                     )
+    return controls
+
+
+def _compare_translations(by_key):
     translation_deltas = []
     for post_id in SELECTED_POSTS:
         for model in MODELS:
@@ -607,6 +668,10 @@ def main() -> None:
                     },
                 )
             )
+    return translation_deltas
+
+
+def _summarize_controls(controls):
     control_summaries = []
     for model in MODELS:
         for language in ("pt", "en"):
@@ -629,17 +694,10 @@ def main() -> None:
                         missing=sum(row["expected_direction_delta"] is None for row in group),
                     )
                 )
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    for name, values in (
-        ("scores.csv", rows),
-        ("matched_terms.csv", matches),
-        ("news_coverage.csv", summaries),
-        ("model_deltas.csv", comparisons),
-        ("control_deltas.csv", controls),
-        ("translation_deltas.csv", translation_deltas),
-        ("control_summary.csv", control_summaries),
-    ):
-        write_csv(name, values)
+    return control_summaries
+
+
+def _write_pilot_manifest(samples, resources, downloads):
     manifest = dict(
         created_at_utc=datetime.now(UTC).isoformat(),
         samples=samples,
@@ -678,6 +736,9 @@ def main() -> None:
     (OUTPUT_DIR / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+
+
+def _write_findings(rows, summaries, controls, control_summaries):
     control_lookup = {
         (row["model"], row["language"], row["kind"]): row for row in control_summaries
     }
@@ -917,9 +978,6 @@ def main() -> None:
         ),
     ]
     (OUTPUT_DIR / "findings.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(
-        json.dumps(dict(news_coverage=summaries, resources=resources, controls=controls), indent=2)
-    )
 
 
 if __name__ == "__main__":

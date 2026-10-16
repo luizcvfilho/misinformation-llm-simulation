@@ -87,14 +87,7 @@ def fetch_news(
             "apikey": api_key,
             "language": language,
         }
-        if query:
-            params["q"] = query
-        if country:
-            params["country"] = country
-        if category:
-            params["category"] = category
-        if next_page:
-            params["page"] = next_page
+        _add_query_filters(params, query, country, category, next_page)
 
         data = _request_news(params)
         status = data.get("status")
@@ -146,3 +139,14 @@ def build_query_metadata(
         "query_results_summary": summarize_query_results(news),
         "fetched_at_utc": datetime.now(UTC).isoformat(),
     }
+
+
+def _add_query_filters(params, query, country, category, next_page):
+    if query:
+        params["q"] = query
+    if country:
+        params["country"] = country
+    if category:
+        params["category"] = category
+    if next_page:
+        params["page"] = next_page

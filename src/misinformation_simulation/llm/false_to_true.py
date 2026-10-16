@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from dataclasses import dataclass
 from os import replace
 from pathlib import Path
 from uuid import uuid4
@@ -22,6 +23,28 @@ from misinformation_simulation.llm.retry import (
 
 DEFAULT_FALSE_TO_TRUE_TEXT_COLUMN = "original_article_text"
 DEFAULT_FALSE_TO_TRUE_OUTPUT_COLUMN = "rewritten_article_text"
+
+
+@dataclass(frozen=True)
+class _RewriteColumns:
+    topic: str | None
+    title: str | None
+    prompt: str
+    output: str
+    provider: str
+    model: str
+    status: str
+    error: str
+
+
+@dataclass(frozen=True)
+class _RewriteRequest:
+    client: object
+    provider: str
+    model: str
+    temperature: float
+    retry_attempts: int
+    limiter: MinuteRateLimiter
 
 
 def build_false_to_true_prompt(
@@ -71,18 +94,9 @@ def rewrite_false_news_as_true(
     the DataFrame is saved initially, periodically, and at completion. Checkpoint
     writes are atomic and retried to tolerate transient file locks.
     """
-    if not isinstance(df, pd.DataFrame):
-        raise ValueError("'df' must be a pandas.DataFrame.")
-    if df.empty:
-        raise ValueError("The false-news DataFrame is empty.")
-    if text_column not in df.columns:
-        raise ValueError(f"Column '{text_column}' does not exist in the DataFrame.")
-    if retry_attempts <= 0:
-        raise ValueError("'retry_attempts' must be greater than zero.")
-    if max_requests_per_minute is not None and max_requests_per_minute <= 0:
-        raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
-    if checkpoint_interval <= 0:
-        raise ValueError("'checkpoint_interval' must be greater than zero.")
+    _validate_false_to_true_input(
+        df, text_column, retry_attempts, max_requests_per_minute, checkpoint_interval
+    )
 
     provider_name = normalize_provider(provider)
     _, client = create_llm_client(
@@ -108,6 +122,18 @@ def rewrite_false_news_as_true(
     if max_rows is not None:
         target_indexes = target_indexes[:max_rows]
 
+    columns = _RewriteColumns(
+        topic_column,
+        title_column,
+        prompt_column,
+        output_column,
+        provider_column,
+        model_column,
+        status_column,
+        error_column,
+    )
+    request = _RewriteRequest(client, provider_name, model, temperature, retry_attempts, limiter)
+
     total_rows = len(target_indexes)
     attempted_since_checkpoint = 0
     for completed_rows, row_index in enumerate(target_indexes, start=1):
@@ -127,37 +153,9 @@ def rewrite_false_news_as_true(
             _notify_progress(progress_callback, completed_rows, total_rows, "skipped")
             continue
 
-        topic = (
-            row[topic_column]
-            if topic_column and topic_column in rewritten_df.columns
-            else "unknown"
+        progress_status = _rewrite_false_to_true_row(
+            rewritten_df, row_index, row, article_text, columns, request
         )
-        title = row[title_column] if title_column and title_column in rewritten_df.columns else ""
-        prompt = build_false_to_true_prompt(article_text, topic=topic, title=title)
-        rewritten_df.at[row_index, prompt_column] = prompt
-        rewritten_df.at[row_index, output_column] = pd.NA
-        rewritten_df.at[row_index, provider_column] = provider_name
-        rewritten_df.at[row_index, model_column] = model
-        rewritten_df.at[row_index, status_column] = "running"
-        rewritten_df.at[row_index, error_column] = pd.NA
-
-        try:
-            rewritten_text = _generate_rewrite(
-                client=client,
-                provider=provider_name,
-                model=model,
-                prompt=prompt,
-                temperature=temperature,
-                retry_attempts=retry_attempts,
-                limiter=limiter,
-            )
-            rewritten_df.at[row_index, output_column] = rewritten_text
-            rewritten_df.at[row_index, status_column] = "success"
-            progress_status = "success"
-        except Exception as exc:
-            rewritten_df.at[row_index, status_column] = "error"
-            rewritten_df.at[row_index, error_column] = str(exc)
-            progress_status = "error"
 
         attempted_since_checkpoint += 1
         if attempted_since_checkpoint >= checkpoint_interval:
@@ -232,3 +230,54 @@ def _notify_progress(
 ) -> None:
     if progress_callback is not None:
         progress_callback(completed_rows, total_rows, status)
+
+
+def _validate_false_to_true_input(
+    df, text_column, retry_attempts, max_requests_per_minute, checkpoint_interval
+):
+    if not isinstance(df, pd.DataFrame):
+        raise ValueError("'df' must be a pandas.DataFrame.")
+    if df.empty:
+        raise ValueError("The false-news DataFrame is empty.")
+    if text_column not in df.columns:
+        raise ValueError(f"Column '{text_column}' does not exist in the DataFrame.")
+    if retry_attempts <= 0:
+        raise ValueError("'retry_attempts' must be greater than zero.")
+    if max_requests_per_minute is not None and max_requests_per_minute <= 0:
+        raise ValueError("'max_requests_per_minute' must be greater than zero when provided.")
+    if checkpoint_interval <= 0:
+        raise ValueError("'checkpoint_interval' must be greater than zero.")
+
+
+def _rewrite_false_to_true_row(
+    rewritten_df, row_index, row, article_text, columns: _RewriteColumns, request: _RewriteRequest
+):
+    topic = (
+        row[columns.topic] if columns.topic and columns.topic in rewritten_df.columns else "unknown"
+    )
+    title = row[columns.title] if columns.title and columns.title in rewritten_df.columns else ""
+    prompt = build_false_to_true_prompt(article_text, topic=topic, title=title)
+    rewritten_df.at[row_index, columns.prompt] = prompt
+    rewritten_df.at[row_index, columns.output] = pd.NA
+    rewritten_df.at[row_index, columns.provider] = request.provider
+    rewritten_df.at[row_index, columns.model] = request.model
+    rewritten_df.at[row_index, columns.status] = "running"
+    rewritten_df.at[row_index, columns.error] = pd.NA
+    try:
+        rewritten_text = _generate_rewrite(
+            client=request.client,
+            provider=request.provider,
+            model=request.model,
+            prompt=prompt,
+            temperature=request.temperature,
+            retry_attempts=request.retry_attempts,
+            limiter=request.limiter,
+        )
+        rewritten_df.at[row_index, columns.output] = rewritten_text
+        rewritten_df.at[row_index, columns.status] = "success"
+        progress_status = "success"
+    except Exception as exc:
+        rewritten_df.at[row_index, columns.status] = "error"
+        rewritten_df.at[row_index, columns.error] = str(exc)
+        progress_status = "error"
+    return progress_status

@@ -179,30 +179,7 @@ def validate_pricing(pricing: dict) -> None:
         _validate_rates(rate)
         if not rate.get("source") or not rate.get("checked_on"):
             raise ValueError("Pricing requires a source and checked_on date.")
-        for key in ("tier_multipliers", "tier_rates"):
-            if not isinstance(rate.get(key, {}), dict):
-                raise ValueError(f"Pricing '{key}' must map service tiers to values.")
-        for tier_rate in rate.get("tier_rates", {}).values():
-            _validate_rates(tier_rate)
-        multipliers = [
-            *rate.get("tier_multipliers", {}).values(),
-            rate.get("long_input_multiplier", 1),
-            rate.get("long_output_multiplier", 1),
-        ]
-        if any(
-            isinstance(value, bool)
-            or not isinstance(value, (int, float))
-            or not math.isfinite(value)
-            or value < 0
-            for value in multipliers
-        ):
-            raise ValueError("Pricing multipliers must be finite and nonnegative.")
-        if "long_context_threshold" in rate:
-            threshold = rate["long_context_threshold"]
-            if isinstance(threshold, bool) or not isinstance(threshold, int) or threshold <= 0:
-                raise ValueError("The long-context threshold must be a positive integer.")
-        if not isinstance(rate.get("long_context_threshold_inclusive", False), bool):
-            raise ValueError("The long-context threshold inclusive flag must be boolean.")
+        _validate_tier_pricing(rate)
 
 
 def estimate_cost(record: dict, pricing: dict) -> tuple[float | None, dict | None]:
@@ -241,3 +218,30 @@ def estimate_cost(record: dict, pricing: dict) -> tuple[float | None, dict | Non
         / 1_000_000
     )
     return cost, rate
+
+
+def _validate_tier_pricing(rate):
+    for key in ("tier_multipliers", "tier_rates"):
+        if not isinstance(rate.get(key, {}), dict):
+            raise ValueError(f"Pricing '{key}' must map service tiers to values.")
+    for tier_rate in rate.get("tier_rates", {}).values():
+        _validate_rates(tier_rate)
+    multipliers = [
+        *rate.get("tier_multipliers", {}).values(),
+        rate.get("long_input_multiplier", 1),
+        rate.get("long_output_multiplier", 1),
+    ]
+    if any(
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+        or value < 0
+        for value in multipliers
+    ):
+        raise ValueError("Pricing multipliers must be finite and nonnegative.")
+    if "long_context_threshold" in rate:
+        threshold = rate["long_context_threshold"]
+        if isinstance(threshold, bool) or not isinstance(threshold, int) or threshold <= 0:
+            raise ValueError("The long-context threshold must be a positive integer.")
+    if not isinstance(rate.get("long_context_threshold_inclusive", False), bool):
+        raise ValueError("The long-context threshold inclusive flag must be boolean.")

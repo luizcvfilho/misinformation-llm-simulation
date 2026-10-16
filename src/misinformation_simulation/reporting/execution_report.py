@@ -135,51 +135,7 @@ def _render_newsdata_query_summary(lines: list[str], content: dict[str, Any]) ->
                 f"{_format_markdown_value(_extract_unique_count(summary, 'keyword_summary'))}"
             )
 
-    history = content.get("request_history", [])
-    if isinstance(history, list) and history:
-        lines.append("- **Query history**:")
-        headers = [
-            "#",
-            "fetched_at_utc",
-            "query",
-            "language",
-            "country",
-            "category",
-            "max_records",
-            "rows_fetched",
-            "rows_appended",
-            "rows_skipped",
-            "dataset_rows",
-            "csv_lines",
-        ]
-
-        human_headers = [_humanize_key(h) for h in headers]
-        lines.append("  | " + " | ".join(human_headers) + " |")
-        lines.append("  | " + " | ".join(["---"] * len(headers)) + " |")
-
-        for idx, item in enumerate(history, start=1):
-            if not isinstance(item, dict):
-                continue
-            params = item.get("query_parameters", {})
-            if not isinstance(params, dict):
-                params = {}
-
-            row_values = [
-                str(idx),
-                _format_markdown_value(item.get("fetched_at_utc")),
-                _format_markdown_value(params.get("query")),
-                _format_markdown_value(params.get("language")),
-                _format_markdown_value(params.get("country")),
-                _format_markdown_value(params.get("category")),
-                _format_markdown_value(params.get("max_records")),
-                _format_markdown_value(item.get("rows_fetched_in_request")),
-                _format_markdown_value(item.get("rows_appended_to_file")),
-                _format_markdown_value(item.get("rows_skipped_as_duplicates")),
-                _format_range(item.get("dataset_row_index_range")),
-                _format_range(item.get("csv_line_range")),
-            ]
-            row_values = [_escape_markdown_table_cell(v) for v in row_values]
-            lines.append("  | " + " | ".join(row_values) + " |")
+    _render_newsdata_history(lines, content)
 
     accumulated = content.get("accumulated_dataset_summary", {})
     if isinstance(accumulated, dict):
@@ -418,3 +374,51 @@ def append_execution_report(
 
     with report_path.open("a", encoding="utf-8") as handle:
         handle.write("\n".join(lines))
+
+
+def _render_newsdata_history(lines, content):
+    history = content.get("request_history", [])
+    if isinstance(history, list) and history:
+        lines.append("- **Query history**:")
+        headers = [
+            "#",
+            "fetched_at_utc",
+            "query",
+            "language",
+            "country",
+            "category",
+            "max_records",
+            "rows_fetched",
+            "rows_appended",
+            "rows_skipped",
+            "dataset_rows",
+            "csv_lines",
+        ]
+
+        human_headers = [_humanize_key(h) for h in headers]
+        lines.append("  | " + " | ".join(human_headers) + " |")
+        lines.append("  | " + " | ".join(["---"] * len(headers)) + " |")
+
+        for idx, item in enumerate(history, start=1):
+            if not isinstance(item, dict):
+                continue
+            params = item.get("query_parameters", {})
+            if not isinstance(params, dict):
+                params = {}
+
+            row_values = [
+                str(idx),
+                _format_markdown_value(item.get("fetched_at_utc")),
+                _format_markdown_value(params.get("query")),
+                _format_markdown_value(params.get("language")),
+                _format_markdown_value(params.get("country")),
+                _format_markdown_value(params.get("category")),
+                _format_markdown_value(params.get("max_records")),
+                _format_markdown_value(item.get("rows_fetched_in_request")),
+                _format_markdown_value(item.get("rows_appended_to_file")),
+                _format_markdown_value(item.get("rows_skipped_as_duplicates")),
+                _format_range(item.get("dataset_row_index_range")),
+                _format_range(item.get("csv_line_range")),
+            ]
+            row_values = [_escape_markdown_table_cell(v) for v in row_values]
+            lines.append("  | " + " | ".join(row_values) + " |")

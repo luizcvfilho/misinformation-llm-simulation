@@ -261,80 +261,23 @@ class RecoverySession:
                         "503",
                         "rate_limit_exceeded",
                     }
-                    if limiter and temporary and not openai_resource_exhausted(cause):
-                        if transient_attempts < 4:
-                            delay = min(60, 2 ** (transient_attempts + 1))
-                            headers = getattr(getattr(cause, "response", None), "headers", {})
-                            try:
-                                delay = max(delay, float(headers.get("retry-after", 0)))
-                            except (ValueError, TypeError):
-                                pass
-                            limiter.cooldown(delay)
-                            transient_attempts += 1
-                            emit_event(
-                                "retry_wait",
-                                delay=delay,
-                                attempt=transient_attempts,
-                                max_attempts=5,
-                                reason=safe_message(cause),
-                            )
-                            _attempts.set([])
-                            continue
+                    next_attempt = _cooldown_transient_failure(
+                        cause, limiter, temporary, transient_attempts
+                    )
+                    if next_attempt is not None:
+                        transient_attempts = next_attempt
+                        continue
+
                     # Validation can fail after a successful HTTP response. A manual retry
                     # still gives the other key one chance for the complete operation.
-                    if _manual_slot.get() is not None and current.provider == "chatgpt":
-                        tried = {ctx.credential for ctx, _ in history}
-                        remaining = [slot for slot in current.choices if slot not in tried]
-                        if remaining:
-                            _attempts.set(failures)
-                            _manual_slot.set(remaining[0])
-                            continue
-                    signatures = tuple(error_signature(exc, ctx) for ctx, exc in failures)
-                    message = (
-                        safe_message(AttemptFailures(failures))
-                        if current.choices
-                        else (safe_message(error))
+                    if _retry_remaining_credential(current, history, failures):
+                        continue
+
+                    self._resolve_recovery_decision(
+                        current, failures, error, status, cause, limiter
                     )
-                    if set(signatures) <= self.store.signatures():
-                        emit_event(
-                            "error_permitted",
-                            provider=current.provider,
-                            model=current.model,
-                            credential=current.credential,
-                        )
-                        raise ErrorPermitted(message) from None
-                    request = RecoveryRequest(
-                        uuid4().hex, current, message, signatures, progress_context()
-                    )
-                    emit_event("recovery_wait", provider=current.provider, model=current.model)
-                    resource_error = status in {401, 402, 403} or openai_resource_exhausted(cause)
-                    if limiter and resource_error:
-                        limiter.block(current.provider)
-                    try:
-                        decision = self.handler(request)
-                    finally:
-                        if limiter and resource_error:
-                            limiter.unblock(current.provider)
-                    self.check_cancelled()
-                    if decision.action == "allow":
-                        self.store.allow(signatures)
-                        emit_event(
-                            "error_permitted",
-                            provider=current.provider,
-                            model=current.model,
-                            credential=current.credential,
-                        )
-                        raise ErrorPermitted(message) from None
-                    if decision.action != "retry":
-                        self.cancelled = True
-                        raise RecoveryCancelled(
-                            "Execution cancelled during error recovery."
-                        ) from None
-                    self.reload_keys()
                     transient_attempts = 0
-                    _attempts.set([])
-                    _manual_slot.set(decision.credential or current.credential)
-                    emit_event("recovery_retry", credential=_manual_slot.get())
+
         finally:
             _attempts.reset(attempts_token)
             _manual_slot.reset(manual_token)
@@ -342,23 +285,11 @@ class RecoverySession:
             _inside.reset(inside_token)
 
     def openai_call(self, client, function: Callable, *, model: str):
-        from misinformation_simulation.llm.clients import openai_credentials
-
         if not callable(getattr(client, "with_options", None)):
             _request.set(RequestContext("chatgpt", model))
             return function(client)
-        keys = openai_credentials(client)
-        for value in keys.values():
-            register_secret(value)
-        endpoint = str(getattr(client, "base_url", ""))
-        pool = hashlib.sha256(repr((endpoint, keys)).encode()).hexdigest()
-        preferred = _manual_slot.get() or self.active_slots.get(pool, "primary")
-        order = [preferred] if preferred in keys else []
-        order.extend(slot for slot in keys if slot not in order)
-        history = _attempts.get()
-        if history is not None:
-            tried = {ctx.credential for ctx, _ in history if ctx.endpoint == endpoint}
-            order = [slot for slot in order if slot not in tried]
+        keys, endpoint, pool, order, history = self._openai_credential_order(client)
+
         failures = []
         for slot in order:
             self.check_cancelled()
@@ -384,6 +315,64 @@ class RecoverySession:
                 self.active_slots[pool] = slot
                 return result
         raise AttemptFailures(failures)
+
+    def _resolve_recovery_decision(self, current, failures, error, status, cause, limiter):
+        signatures = tuple(error_signature(exc, ctx) for ctx, exc in failures)
+        message = (
+            safe_message(AttemptFailures(failures)) if current.choices else (safe_message(error))
+        )
+        if set(signatures) <= self.store.signatures():
+            emit_event(
+                "error_permitted",
+                provider=current.provider,
+                model=current.model,
+                credential=current.credential,
+            )
+            raise ErrorPermitted(message) from None
+        request = RecoveryRequest(uuid4().hex, current, message, signatures, progress_context())
+        emit_event("recovery_wait", provider=current.provider, model=current.model)
+        resource_error = status in {401, 402, 403} or openai_resource_exhausted(cause)
+        if limiter and resource_error:
+            limiter.block(current.provider)
+        try:
+            decision = self.handler(request)
+        finally:
+            if limiter and resource_error:
+                limiter.unblock(current.provider)
+        self.check_cancelled()
+        if decision.action == "allow":
+            self.store.allow(signatures)
+            emit_event(
+                "error_permitted",
+                provider=current.provider,
+                model=current.model,
+                credential=current.credential,
+            )
+            raise ErrorPermitted(message) from None
+        if decision.action != "retry":
+            self.cancelled = True
+            raise RecoveryCancelled("Execution cancelled during error recovery.") from None
+        self.reload_keys()
+        _attempts.set([])
+        _manual_slot.set(decision.credential or current.credential)
+        emit_event("recovery_retry", credential=_manual_slot.get())
+
+    def _openai_credential_order(self, client):
+        from misinformation_simulation.llm.clients import openai_credentials
+
+        keys = openai_credentials(client)
+        for value in keys.values():
+            register_secret(value)
+        endpoint = str(getattr(client, "base_url", ""))
+        pool = hashlib.sha256(repr((endpoint, keys)).encode()).hexdigest()
+        preferred = _manual_slot.get() or self.active_slots.get(pool, "primary")
+        order = [preferred] if preferred in keys else []
+        order.extend(slot for slot in keys if slot not in order)
+        history = _attempts.get()
+        if history is not None:
+            tried = {ctx.credential for ctx, _ in history if ctx.endpoint == endpoint}
+            order = [slot for slot in order if slot not in tried]
+        return keys, endpoint, pool, order, history
 
 
 def set_request_context(context: RequestContext) -> None:
@@ -435,3 +424,35 @@ def automatic_openai_call(client, function: Callable, *, model: str):
         raise error.failures[-1][1] from None
     finally:
         _attempts.reset(token)
+
+
+def _cooldown_transient_failure(cause, limiter, temporary, transient_attempts):
+    if limiter and temporary and not openai_resource_exhausted(cause):
+        if transient_attempts < 4:
+            delay = min(60, 2 ** (transient_attempts + 1))
+            headers = getattr(getattr(cause, "response", None), "headers", {})
+            try:
+                delay = max(delay, float(headers.get("retry-after", 0)))
+            except (ValueError, TypeError):
+                pass
+            limiter.cooldown(delay)
+            transient_attempts += 1
+            emit_event(
+                "retry_wait",
+                delay=delay,
+                attempt=transient_attempts,
+                max_attempts=5,
+                reason=safe_message(cause),
+            )
+            _attempts.set([])
+            return transient_attempts
+
+
+def _retry_remaining_credential(current, history, failures):
+    if _manual_slot.get() is not None and current.provider == "chatgpt":
+        tried = {ctx.credential for ctx, _ in history}
+        remaining = [slot for slot in current.choices if slot not in tried]
+        if remaining:
+            _attempts.set(failures)
+            _manual_slot.set(remaining[0])
+            return True

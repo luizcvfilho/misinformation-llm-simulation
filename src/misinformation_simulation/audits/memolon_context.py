@@ -36,17 +36,8 @@ def run_memolon_context_audit(
         verify_baseline(frame, baseline)
     baseline_metadata = None
     if rerun_bert:
-        if bert_cache_path is None:
-            raise ValueError("A local BERT cache path is required for reevaluation.")
-        scores, baseline_metadata = score_current_bert_texts(
-            frame.article_text.tolist(), bert_cache_path
-        )
-        baseline = frame.copy()
-        for dimension in VAD_DIMENSIONS:
-            baseline[f"vad_{dimension}"] = [
-                getattr(scores[text], dimension) for text in frame.article_text
-            ]
-        verify_baseline(frame, baseline)
+        baseline, baseline_metadata = _rescore_bert_baseline(frame, bert_cache_path)
+
     lexicon = MEmoLonLexicon(lexicon_path, texts=frame.article_text.tolist())
     analyses = [lexicon.analyze(text) for text in frame.article_text]
     scored = frame.copy()
@@ -303,3 +294,18 @@ def _build_report(
         ]
     )
     return "\n".join(lines) + "\n"
+
+
+def _rescore_bert_baseline(frame, bert_cache_path):
+    if bert_cache_path is None:
+        raise ValueError("A local BERT cache path is required for reevaluation.")
+    scores, baseline_metadata = score_current_bert_texts(
+        frame.article_text.tolist(), bert_cache_path
+    )
+    baseline = frame.copy()
+    for dimension in VAD_DIMENSIONS:
+        baseline[f"vad_{dimension}"] = [
+            getattr(scores[text], dimension) for text in frame.article_text
+        ]
+    verify_baseline(frame, baseline)
+    return baseline, baseline_metadata

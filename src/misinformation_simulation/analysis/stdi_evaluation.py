@@ -82,29 +82,8 @@ def prepare_evaluation_steps(steps: pd.DataFrame, method: str | None = None) -> 
             native = methods.eq("cluster") | (methods.eq("dual") if metric != "stdi" else False)
             values = values.fillna(_numeric(data, f"{metric}_{suffix}").where(native))
             data[column] = values
-    if "news_id" in data and "step_index" in data:
-        ordered = data.sort_values("step_index")
-        groupers = [
-            ordered[column]
-            for column in ("execution_id", "source_path", "run_id", "chain_label", "news_id")
-            if column in ordered
-        ]
-        for branch in ("cluster", "llm_judge"):
-            scores = _numeric(ordered, f"stdi_{branch}_incremental")
-            valid = scores.notna()
-            available = valid.groupby(groupers, dropna=False).transform("any")
-            counts = valid.groupby(groupers, dropna=False).cumsum()
-            totals = scores.fillna(0).groupby(groupers, dropna=False).cumsum()
-            has_saved_cumulative = _numeric(data, f"stdi_{branch}_cumulative").notna()
-            for field, values in (
-                ("cumulative", totals),
-                ("cumulative_valid_steps", counts),
-                ("chain_complete", counts.eq(ordered["step_index"])),
-            ):
-                column = f"stdi_{branch}_{field}"
-                existing = data.get(column, pd.Series(index=data.index, dtype=object))
-                existing = existing.where(has_saved_cumulative)
-                data[column] = existing.combine_first(values.where(available).reindex(data.index))
+    _recover_cumulative_metrics(data)
+
     return data
 
 
@@ -165,6 +144,39 @@ def select_evaluation_steps(
                     f"stdi_{field}_{evaluation}_{suffix}",
                     pd.Series(index=original.index, dtype=object),
                 )
+    _select_cumulative_metrics(data, original, native, evaluation)
+
+    data["stdi_evaluation"] = evaluation
+    return data
+
+
+def _recover_cumulative_metrics(data):
+    if "news_id" in data and "step_index" in data:
+        ordered = data.sort_values("step_index")
+        groupers = [
+            ordered[column]
+            for column in ("execution_id", "source_path", "run_id", "chain_label", "news_id")
+            if column in ordered
+        ]
+        for branch in ("cluster", "llm_judge"):
+            scores = _numeric(ordered, f"stdi_{branch}_incremental")
+            valid = scores.notna()
+            available = valid.groupby(groupers, dropna=False).transform("any")
+            counts = valid.groupby(groupers, dropna=False).cumsum()
+            totals = scores.fillna(0).groupby(groupers, dropna=False).cumsum()
+            has_saved_cumulative = _numeric(data, f"stdi_{branch}_cumulative").notna()
+            for field, values in (
+                ("cumulative", totals),
+                ("cumulative_valid_steps", counts),
+                ("chain_complete", counts.eq(ordered["step_index"])),
+            ):
+                column = f"stdi_{branch}_{field}"
+                existing = data.get(column, pd.Series(index=data.index, dtype=object))
+                existing = existing.where(has_saved_cumulative)
+                data[column] = existing.combine_first(values.where(available).reindex(data.index))
+
+
+def _select_cumulative_metrics(data, original, native, evaluation):
     for field in ("cumulative", "cumulative_valid_steps", "chain_complete"):
         column = f"stdi_{field}"
         values = original.get(column, pd.Series(index=original.index, dtype=object)).where(native)
@@ -173,5 +185,3 @@ def select_evaluation_steps(
                 f"stdi_{evaluation}_{field}", pd.Series(index=original.index, dtype=object)
             ).combine_first(values)
         data[column] = values
-    data["stdi_evaluation"] = evaluation
-    return data

@@ -90,17 +90,7 @@ def _create_llm_client(
     provider_normalized = normalize_provider(provider)
     retry_kwargs = {} if max_retries is None else {"max_retries": max_retries}
 
-    env_key_name = None
-    if provider_normalized == "gemini":
-        env_key_name = "GEMINI_API_KEY"
-    elif provider_normalized == "chatgpt":
-        env_key_name = "CHATGPT_API_KEY"
-    elif provider_normalized == "openrouter":
-        env_key_name = "OPENROUTER_API_KEY"
-    elif provider_normalized == "deepseek":
-        env_key_name = "DEEPSEEK_API_KEY"
-    elif provider_normalized == "grok":
-        env_key_name = "GROK_API_KEY"
+    env_key_name = _provider_environment_key(provider_normalized)
 
     if provider_normalized == "local":
         resolved_api_key = api_key or configured_api_key("local") or "ollama"
@@ -163,3 +153,13 @@ def _create_llm_client(
         base_url=base_url or "https://api.x.ai/v1",
         **retry_kwargs,
     )
+
+
+def _provider_environment_key(provider_normalized):
+    return {
+        "gemini": "GEMINI_API_KEY",
+        "chatgpt": "CHATGPT_API_KEY",
+        "openrouter": "OPENROUTER_API_KEY",
+        "deepseek": "DEEPSEEK_API_KEY",
+        "grok": "GROK_API_KEY",
+    }.get(provider_normalized)
