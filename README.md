@@ -36,6 +36,7 @@ make add PKG=...  # add dependency
 make notebook     # open Jupyter Lab via uv
 
 make lint         # run ruff check
+make complexity   # report complexity in src/ and scripts/ (informational)
 make format       # run ruff format
 make lint-format  # run lint then format
 
@@ -53,6 +54,20 @@ make interaction-graph-ui
 make interaction-graph-analysis
 make clean
 ```
+
+### Code complexity
+
+Run `make complexity` to inspect Python functions in `src/` and `scripts/` using Ruff:
+
+- `C901`: cyclomatic complexity above 10.
+- `PLR0912`: more than 12 branches.
+- `PLR0915`: more than 50 statements.
+
+The command prints locations and diagnostics without modifying source files. Findings do not
+cause a nonzero exit status; tool or configuration errors still do. This report is separate from
+the regular lint checks and pre-commit hooks, so existing findings can be addressed gradually.
+The thresholds are Ruff's defaults. Use the report to prioritize reviews of responsibilities
+and control flow; it does not measure file length or prove that a function needs refactoring.
 
 ### Brazilian elections corpus exploration
 

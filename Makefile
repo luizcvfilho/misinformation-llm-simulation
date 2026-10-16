@@ -1,4 +1,4 @@
-.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis clean
+.PHONY: help setup sync sync-dev lock add notebook precommit-install precommit-run test coverage coverage-html lint complexity format lint-format notebooks notebooks-inplace notebooks-continue fetch-news prepare-stdi-manual-evaluation calibrate-stdi topic-drift-comparison stdi-logistic-regression csv-explorer interaction-graph interaction-graph-verbose interaction-graph-ui interaction-graph-analysis clean
 
 .DEFAULT_GOAL := help
 
@@ -104,6 +104,7 @@ help: ## List available targets
 	@echo "  coverage           Run tests and print coverage report"
 	@echo "  coverage-html      Run tests and generate htmlcov/index.html"
 	@echo "  lint               Run Ruff lint checks"
+	@echo "  complexity         Report code complexity without failing on findings"
 	@echo "  format             Format code with Ruff"
 	@echo "  lint-format        Run Ruff lint and format in sequence"
 	@echo "  notebooks          Run notebooks sequentially and save to output/runs/<run_id>"
@@ -160,6 +161,9 @@ coverage-html: ## Run tests and generate htmlcov/index.html
 
 lint: ## Run Ruff lint checks
 	uv run ruff check .
+
+complexity: ## Report code complexity without failing on findings
+	uv run ruff check src scripts --select C901,PLR0912,PLR0915 --no-fix --exit-zero
 
 format: ## Format code with Ruff
 	uv run ruff format .
