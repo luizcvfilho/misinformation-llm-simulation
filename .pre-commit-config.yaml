@@ -4,6 +4,11 @@ repos:
     hooks:
       - id: ruff-check
         args: [--fix]
+      - id: ruff-check
+        alias: ruff-complexity
+        name: Check code complexity
+        args: [--select, "C901,PLR0912,PLR0915", --no-fix]
+        files: ^(src|scripts)/.*\.py$
       - id: ruff-format
 
   - repo: https://github.com/kynan/nbstripout

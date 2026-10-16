@@ -62,3 +62,10 @@ exclude = ["output", "data", ".venv", ".venv-linux"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "W"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-branches = 12
+max-statements = 50

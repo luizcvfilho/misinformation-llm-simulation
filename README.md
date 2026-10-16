@@ -64,10 +64,19 @@ Run `make complexity` to inspect Python functions in `src/` and `scripts/` using
 - `PLR0915`: more than 50 statements.
 
 The command prints locations and diagnostics without modifying source files. Findings do not
-cause a nonzero exit status; tool or configuration errors still do. This report is separate from
-the regular lint checks and pre-commit hooks, so existing findings can be addressed gradually.
-The thresholds are Ruff's defaults. Use the report to prioritize reviews of responsibilities
-and control flow; it does not measure file length or prove that a function needs refactoring.
+cause a nonzero exit status; tool or configuration errors still do.
+
+The `ruff-complexity` pre-commit hook checks staged Python files in `src/` and `scripts/` using
+the same rules and blocks commits when it finds violations. Tests and notebooks are outside
+this hook's scope. The limits are configured explicitly in `pyproject.toml`. Run the hook across
+all applicable tracked files with:
+
+```powershell
+uv run pre-commit run ruff-complexity --all-files
+```
+
+Use the report to prioritize reviews of responsibilities and control flow; it does not measure
+file length or prove that a function needs refactoring.
 
 ### Brazilian elections corpus exploration
 
