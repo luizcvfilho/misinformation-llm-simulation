@@ -17,51 +17,91 @@ class RecoveryBroker:
     def __init__(self, cancel_event: Event):
         self.cancel_event = cancel_event
         self._lock = Lock()
-        self._ready = Event()
         self._pending: RecoveryRequest | None = None
         self._decision: RecoveryDecision | None = None
+        self._requests: dict[str, tuple[RecoveryRequest, Event]] = {}
+        self._decisions: dict[str, RecoveryDecision] = {}
+        self._allowed: set[str] = set()
 
     @property
     def pending(self) -> RecoveryRequest | None:
         with self._lock:
             return self._pending
 
-    def ask(self, request: RecoveryRequest) -> RecoveryDecision:
+    @property
+    def pending_requests(self) -> list[RecoveryRequest]:
         with self._lock:
-            self._ready.clear()
-            self._decision = None
-            self._pending = request
+            return [item[0] for item in self._requests.values()] or (
+                [self._pending] if self._pending else []
+            )
+
+    def ask(self, request: RecoveryRequest, *, cancel_check=None) -> RecoveryDecision:
+        ready = Event()
+        with self._lock:
+            if request.signatures and set(request.signatures) <= self._allowed:
+                return RecoveryDecision("allow")
+            self._requests[request.id] = (request, ready)
+            self._pending = self._pending or request
         try:
-            while not self._ready.wait(0.1):
-                if self.cancel_event.is_set():
+            while not ready.wait(0.1):
+                if self.cancel_event.is_set() or (cancel_check and cancel_check()):
                     raise RecoveryCancelled("Execution cancelled during error recovery.")
             with self._lock:
-                return self._decision
+                return self._decisions.pop(request.id)
         finally:
             with self._lock:
-                self._pending = None
+                self._requests.pop(request.id, None)
+                self._pending = next((item[0] for item in self._requests.values()), None)
 
     def submit(self, request_id: str, decision: RecoveryDecision) -> bool:
         with self._lock:
-            if self._pending is None or self._pending.id != request_id or self._decision:
+            entry = self._requests.get(request_id)
+            request = entry[0] if entry else self._pending
+            if request is None or request.id != request_id or request_id in self._decisions:
                 return False
-            if decision.action not in {"retry", "allow", "cancel"}:
+            if decision.action not in {"retry", "allow", "cancel", "cancel_run"}:
                 return False
-            if decision.credential and decision.credential not in self._pending.context.choices:
+            if decision.credential and decision.credential not in request.context.choices:
                 return False
             self._decision = decision
-            self._pending = None
+            targets = [request_id]
+            if decision.action == "allow":
+                self._allowed.update(request.signatures)
+                targets = [
+                    key
+                    for key, (item, _) in self._requests.items()
+                    if set(item.signatures) <= self._allowed
+                ] or targets
             if decision.action == "cancel":
                 self.cancel_event.set()
-            self._ready.set()
+            for key in targets:
+                self._decisions[key] = decision
+                if item := self._requests.pop(key, None):
+                    item[1].set()
+            self._pending = next((item[0] for item in self._requests.values()), None)
             return True
 
 
-@st.dialog("Execution paused", dismissible=False)
+@st.dialog("Runs awaiting recovery", dismissible=False)
 def render_recovery_dialog(job, request: RecoveryRequest) -> None:
     pending = job.recovery.pending
     if pending is None or pending.id != request.id:
         st.rerun()
+    requests = job.recovery.pending_requests
+    if len(requests) > 1:
+        selected_id = st.selectbox(
+            "Pending errors",
+            [item.id for item in requests],
+            format_func=lambda key: next(
+                f"{item.location.get('run_id', item.id)} · {item.context.provider} · "
+                f"{item.location.get('stage', 'execution')} · {item.message[:80]}"
+                for item in requests
+                if item.id == key
+            ),
+            key="recovery_pending_selection",
+        )
+        request = next(item for item in requests if item.id == selected_id)
+    st.caption(f"{len(requests)} pending error(s). Other runs continue when possible.")
     context = request.context
     st.write(f"Provider: **{context.provider}** · Model: **{context.model or '—'}**")
     if request.location:
@@ -87,6 +127,11 @@ def render_recovery_dialog(job, request: RecoveryRequest) -> None:
         st.rerun()
     if st.button("Allow this error in future executions and continue", key=f"allow_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("allow"))
+        st.rerun()
+    if request.location.get("run_id") and st.button(
+        "Cancel this run", key=f"cancel_run_{request.id}"
+    ):
+        job.recovery.submit(request.id, RecoveryDecision("cancel_run"))
         st.rerun()
     if st.button("Cancel execution", key=f"cancel_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("cancel"))

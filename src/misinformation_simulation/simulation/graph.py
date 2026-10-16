@@ -31,6 +31,7 @@ from misinformation_simulation.llm.progress import (
     mark_cached,
     mark_failed,
     operation,
+    progress_context,
     set_progress_context,
     timed_operation,
     track_run_progress,
@@ -45,6 +46,7 @@ from misinformation_simulation.llm.service_tier import (
     with_openai_service_tier,
 )
 from misinformation_simulation.llm.usage import track_run_usage, usage_stage
+from misinformation_simulation.simulation.deferred import PreparedSimulation
 from misinformation_simulation.simulation.paths import project_graph_paths
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.progress import simulation_plan, timing_key
@@ -310,7 +312,8 @@ def run_news_interaction_graph(
     work_progress_callback: WorkProgressCallback | None = None,
     operation_callback: Callable[[dict], None] | None = None,
     cancel_check: CancelCheck | None = None,
-) -> SimulationResult:
+    defer_evaluation: bool = False,
+) -> SimulationResult | PreparedSimulation:
     if not isinstance(df, pd.DataFrame):
         raise ValueError("'df' must be a pandas.DataFrame.")
     if df.empty:
@@ -1006,332 +1009,359 @@ def run_news_interaction_graph(
         cancelled = True
     if not cancelled:
         emit_event("settle", stages=["rewrite", "extraction", "vad", "pacing"])
-    set_progress_context()
-    if stdi_comparison_method in {"dual", "llm"}:
-        emit_event(
-            "plan",
-            entries=[
-                dict(
-                    key=timing_key(
-                        "judge", topic_drift_model, normalize_provider(topic_drift_provider)
-                    ),
-                    total=len(scoring_contexts) * 2 * stdi_judge_repeats,
-                )
-            ],
-        )
-    if scoring_contexts:
-        _emit_progress(
-            progress_callback,
-            f"Preparing STDI evaluations for {len(scoring_contexts)} processed step(s).",
-        )
-        pairs = [
-            TopicStructurePair(f"{index}:original", original, rewritten)
-            for index, (_, _, original, _, rewritten, _, _, _) in enumerate(scoring_contexts)
-        ] + [
-            TopicStructurePair(f"{index}:incremental", previous, rewritten)
-            for index, (_, _, _, previous, rewritten, _, _, _) in enumerate(scoring_contexts)
-        ]
-        comparator_class = StructuredEmbeddingComparator
-        comparator = comparator_class(
+    pairs = [
+        TopicStructurePair(f"{index}:original", original, rewritten)
+        for index, (_, _, original, _, rewritten, _, _, _) in enumerate(scoring_contexts)
+    ] + [
+        TopicStructurePair(f"{index}:incremental", previous, rewritten)
+        for index, (_, _, _, previous, rewritten, _, _, _) in enumerate(scoring_contexts)
+    ]
+
+    def build_comparator(pairs):
+        comparator = StructuredEmbeddingComparator(
             embedder=stdi_embedder,
             embedding_model=stdi_embedding_model,
         )
         try:
-            if stdi_comparison_method != "llm":
+            if pairs and stdi_comparison_method != "llm":
                 with operation("embeddings", model=stdi_embedding_model):
                     comparator.fit(pairs)
         except Exception:
             if stdi_comparison_method not in {"dual", "llm"}:
                 raise
-        last_row_position = 0
-        cumulative_stdi = 0.0
-        valid_steps = 0
-        branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
-        branch_valid_steps = {"cluster": 0, "llm_judge": 0}
-        totals_by_node: dict[str, tuple] = {}
-        for (
-            row_position,
-            step,
-            original,
-            previous,
-            rewritten,
-            original_vad,
-            previous_vad,
-            rewritten_vad,
-        ) in scoring_contexts:
-            set_progress_context(news_id=step.news_id, row=row_position, node_id=step.node_id)
-            if stdi_comparison_method in {"dual", "llm"} and _cancel_requested(cancel_check):
-                cancelled = True
-                break
-            if row_position != last_row_position:
-                cumulative_stdi = 0.0
-                valid_steps = 0
-                branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
-                branch_valid_steps = {"cluster": 0, "llm_judge": 0}
-                last_row_position = row_position
-                totals_by_node = {}
-            if branching:
-                parent_totals = totals_by_node.get(parents_by_node.get(step.node_id))
-                if parent_totals is None:
-                    cumulative_stdi, valid_steps = 0.0, 0
+        return comparator
+
+    def finish(comparator=None, *, evaluate=True):
+        nonlocal cancelled
+        set_progress_context()
+        if evaluate and stdi_comparison_method in {"dual", "llm"}:
+            emit_event(
+                "plan",
+                entries=[
+                    dict(
+                        key=timing_key(
+                            "judge", topic_drift_model, normalize_provider(topic_drift_provider)
+                        ),
+                        total=len(scoring_contexts) * 2 * stdi_judge_repeats,
+                    )
+                ],
+            )
+        if evaluate and scoring_contexts:
+            _emit_progress(
+                progress_callback,
+                f"Preparing STDI evaluations for {len(scoring_contexts)} processed step(s).",
+            )
+            comparator = comparator or build_comparator(pairs)
+            last_row_position = 0
+            cumulative_stdi = 0.0
+            valid_steps = 0
+            branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
+            branch_valid_steps = {"cluster": 0, "llm_judge": 0}
+            totals_by_node: dict[str, tuple] = {}
+            for (
+                row_position,
+                step,
+                original,
+                previous,
+                rewritten,
+                original_vad,
+                previous_vad,
+                rewritten_vad,
+            ) in scoring_contexts:
+                set_progress_context(news_id=step.news_id, row=row_position, node_id=step.node_id)
+                if stdi_comparison_method in {"dual", "llm"} and _cancel_requested(cancel_check):
+                    cancelled = True
+                    break
+                if row_position != last_row_position:
+                    cumulative_stdi = 0.0
+                    valid_steps = 0
                     branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
                     branch_valid_steps = {"cluster": 0, "llm_judge": 0}
-                else:
-                    cumulative_stdi, valid_steps, saved_cumulative, saved_valid = parent_totals
-                    branch_cumulative = saved_cumulative.copy()
-                    branch_valid_steps = saved_valid.copy()
-            if stdi_comparison_method in {"dual", "llm"}:
-                _emit_progress(
-                    progress_callback,
-                    f"Evaluating {stdi_comparison_method} STDI for '{step.news_id}' "
-                    f"node '{step.node_id}'.",
-                )
-                common = {
-                    "modified_text": step.rewritten_text,
-                    "modified_structure": rewritten,
-                    "modified_vad": rewritten_vad,
-                    "title": step.metadata.get("extraction_title"),
-                    "comparator": comparator,
-                    "model": topic_drift_model,
-                    "provider": normalize_provider(topic_drift_provider),
-                    "api_key": topic_drift_api_key,
-                    "base_url": topic_drift_base_url,
-                    "retry_attempts": retry_attempts,
-                    "before_request_hook": judge_limiter.acquire,
-                    "judge_repeats": stdi_judge_repeats,
-                    "cancel_check": cancel_check,
-                    "cache": evaluation_cache,
-                    "comparison_method": stdi_comparison_method,
-                    **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
-                }
-                set_progress_context(
-                    news_id=step.news_id,
-                    row=row_position,
-                    node_id=step.node_id,
-                    comparison="vs original",
-                )
-                vs_original_dual = compare_dual_stdi(
-                    original_text=step.metadata["original_text"],
-                    original_structure=original,
-                    original_vad=original_vad,
-                    vad_evaluation=step.metadata["vad_evaluation_vs_original"],
-                    **common,
-                )
-                if _cancel_requested(cancel_check):
-                    cancelled = True
-                    _record_dual_metrics(step, "vs_original", vs_original_dual)
-                    break
-                set_progress_context(
-                    news_id=step.news_id,
-                    row=row_position,
-                    node_id=step.node_id,
-                    comparison="vs previous",
-                )
-                incremental_dual = compare_dual_stdi(
-                    original_text=step.source_text,
-                    original_structure=previous,
-                    original_vad=previous_vad,
-                    vad_evaluation=step.metadata["vad_evaluation_incremental"],
-                    **common,
-                )
-                _record_dual_metrics(step, "vs_original", vs_original_dual)
-                _record_dual_metrics(step, "incremental", incremental_dual)
-                _emit_progress(
-                    progress_callback,
-                    f"News '{step.news_id}' node '{step.node_id}': STDI evaluation complete; "
-                    f"vs_original={vs_original_dual['status']}, "
-                    f"incremental={incremental_dual['status']}.",
-                )
-                if incremental_dual["stdi"] is not None:
-                    cumulative_stdi += incremental_dual["stdi"]
-                    valid_steps += 1
-                step.stdi_cumulative = cumulative_stdi
-                step.stdi_cumulative_valid_steps = valid_steps
-                step.stdi_chain_complete = valid_steps == step.step_index
-                for branch, name in (("embedding", "cluster"), ("llm_judge", "llm_judge")):
-                    metrics = incremental_dual[branch].get("metrics")
-                    if metrics is not None:
-                        branch_cumulative[name] += metrics["stdi"]
-                        branch_valid_steps[name] += 1
-                    setattr(step, f"stdi_{name}_cumulative", branch_cumulative[name])
-                    setattr(step, f"stdi_{name}_cumulative_valid_steps", branch_valid_steps[name])
-                    setattr(
-                        step,
-                        f"stdi_{name}_chain_complete",
-                        branch_valid_steps[name] == step.step_index,
+                    last_row_position = row_position
+                    totals_by_node = {}
+                if branching:
+                    parent_totals = totals_by_node.get(parents_by_node.get(step.node_id))
+                    if parent_totals is None:
+                        cumulative_stdi, valid_steps = 0.0, 0
+                        branch_cumulative = {"cluster": 0.0, "llm_judge": 0.0}
+                        branch_valid_steps = {"cluster": 0, "llm_judge": 0}
+                    else:
+                        cumulative_stdi, valid_steps, saved_cumulative, saved_valid = parent_totals
+                        branch_cumulative = saved_cumulative.copy()
+                        branch_valid_steps = saved_valid.copy()
+                if stdi_comparison_method in {"dual", "llm"}:
+                    _emit_progress(
+                        progress_callback,
+                        f"Evaluating {stdi_comparison_method} STDI for '{step.news_id}' "
+                        f"node '{step.node_id}'.",
                     )
+                    common = {
+                        "modified_text": step.rewritten_text,
+                        "modified_structure": rewritten,
+                        "modified_vad": rewritten_vad,
+                        "title": step.metadata.get("extraction_title"),
+                        "comparator": comparator,
+                        "model": topic_drift_model,
+                        "provider": normalize_provider(topic_drift_provider),
+                        "api_key": topic_drift_api_key,
+                        "base_url": topic_drift_base_url,
+                        "retry_attempts": retry_attempts,
+                        "before_request_hook": judge_limiter.acquire,
+                        "judge_repeats": stdi_judge_repeats,
+                        "cancel_check": cancel_check,
+                        "cache": evaluation_cache,
+                        "comparison_method": stdi_comparison_method,
+                        **({"judge_fn": stdi_judge_fn} if stdi_judge_fn is not None else {}),
+                    }
+                    set_progress_context(
+                        news_id=step.news_id,
+                        row=row_position,
+                        node_id=step.node_id,
+                        comparison="vs original",
+                    )
+                    vs_original_dual = compare_dual_stdi(
+                        original_text=step.metadata["original_text"],
+                        original_structure=original,
+                        original_vad=original_vad,
+                        vad_evaluation=step.metadata["vad_evaluation_vs_original"],
+                        **common,
+                    )
+                    if _cancel_requested(cancel_check):
+                        cancelled = True
+                        _record_dual_metrics(step, "vs_original", vs_original_dual)
+                        break
+                    set_progress_context(
+                        news_id=step.news_id,
+                        row=row_position,
+                        node_id=step.node_id,
+                        comparison="vs previous",
+                    )
+                    incremental_dual = compare_dual_stdi(
+                        original_text=step.source_text,
+                        original_structure=previous,
+                        original_vad=previous_vad,
+                        vad_evaluation=step.metadata["vad_evaluation_incremental"],
+                        **common,
+                    )
+                    _record_dual_metrics(step, "vs_original", vs_original_dual)
+                    _record_dual_metrics(step, "incremental", incremental_dual)
+                    _emit_progress(
+                        progress_callback,
+                        f"News '{step.news_id}' node '{step.node_id}': STDI evaluation complete; "
+                        f"vs_original={vs_original_dual['status']}, "
+                        f"incremental={incremental_dual['status']}.",
+                    )
+                    if incremental_dual["stdi"] is not None:
+                        cumulative_stdi += incremental_dual["stdi"]
+                        valid_steps += 1
+                    step.stdi_cumulative = cumulative_stdi
+                    step.stdi_cumulative_valid_steps = valid_steps
+                    step.stdi_chain_complete = valid_steps == step.step_index
+                    for branch, name in (("embedding", "cluster"), ("llm_judge", "llm_judge")):
+                        metrics = incremental_dual[branch].get("metrics")
+                        if metrics is not None:
+                            branch_cumulative[name] += metrics["stdi"]
+                            branch_valid_steps[name] += 1
+                        setattr(step, f"stdi_{name}_cumulative", branch_cumulative[name])
+                        setattr(
+                            step, f"stdi_{name}_cumulative_valid_steps", branch_valid_steps[name]
+                        )
+                        setattr(
+                            step,
+                            f"stdi_{name}_chain_complete",
+                            branch_valid_steps[name] == step.step_index,
+                        )
+                    totals_by_node[step.node_id] = (
+                        cumulative_stdi,
+                        valid_steps,
+                        branch_cumulative.copy(),
+                        branch_valid_steps.copy(),
+                    )
+                    continue
+                vs_original = calculate_stdi(
+                    original,
+                    rewritten,
+                    original_vad=original_vad,
+                    compared_vad=rewritten_vad,
+                    component_overrides=comparator.compare(original, rewritten).component_drifts,
+                )
+                incremental = calculate_stdi(
+                    previous,
+                    rewritten,
+                    original_vad=previous_vad,
+                    compared_vad=rewritten_vad,
+                    component_overrides=comparator.compare(previous, rewritten).component_drifts,
+                )
+                for suffix, metrics in (("vs_original", vs_original), ("incremental", incremental)):
+                    vad = vad_for_branch(step.metadata[f"vad_evaluation_{suffix}"], "embedding")
+                    step.metadata[f"stdi_vad_source_{suffix}"] = vad["source"]
+                    setattr(step, f"stdi_status_{suffix}", vad["status"])
+                    if vad["status"] == "valid":
+                        metrics.update(
+                            {
+                                key: round(value, 6)
+                                for key, value in complete_stdi(metrics, vad).items()
+                            }
+                        )
+                    else:
+                        metrics.update(dict.fromkeys(STDI_COMPONENTS))
+                _record_stdi_metrics(step, suffix="vs_original", metrics=vs_original)
+                _record_stdi_metrics(step, suffix="incremental", metrics=incremental)
+                if incremental["stdi"] is not None:
+                    cumulative_stdi += incremental["stdi"]
+                step.stdi_cumulative = round(cumulative_stdi, 6)
                 totals_by_node[step.node_id] = (
                     cumulative_stdi,
                     valid_steps,
                     branch_cumulative.copy(),
                     branch_valid_steps.copy(),
                 )
-                continue
-            vs_original = calculate_stdi(
-                original,
-                rewritten,
-                original_vad=original_vad,
-                compared_vad=rewritten_vad,
-                component_overrides=comparator.compare(original, rewritten).component_drifts,
-            )
-            incremental = calculate_stdi(
-                previous,
-                rewritten,
-                original_vad=previous_vad,
-                compared_vad=rewritten_vad,
-                component_overrides=comparator.compare(previous, rewritten).component_drifts,
-            )
-            for suffix, metrics in (("vs_original", vs_original), ("incremental", incremental)):
-                vad = vad_for_branch(step.metadata[f"vad_evaluation_{suffix}"], "embedding")
-                step.metadata[f"stdi_vad_source_{suffix}"] = vad["source"]
-                setattr(step, f"stdi_status_{suffix}", vad["status"])
-                if vad["status"] == "valid":
-                    metrics.update(
-                        {key: round(value, 6) for key, value in complete_stdi(metrics, vad).items()}
-                    )
-                else:
-                    metrics.update(dict.fromkeys(STDI_COMPONENTS))
-            _record_stdi_metrics(step, suffix="vs_original", metrics=vs_original)
-            _record_stdi_metrics(step, suffix="incremental", metrics=incremental)
-            if incremental["stdi"] is not None:
-                cumulative_stdi += incremental["stdi"]
-            step.stdi_cumulative = round(cumulative_stdi, 6)
-            totals_by_node[step.node_id] = (
-                cumulative_stdi,
-                valid_steps,
-                branch_cumulative.copy(),
-                branch_valid_steps.copy(),
-            )
 
-    if _cancel_requested(cancel_check):
-        cancelled = True
-    success_count = sum(1 for step in step_results if step.rewrite_status == "success")
-    error_count = sum(1 for step in step_results if step.rewrite_status == "error")
-    vad_model_name = DEFAULT_VAD_MODEL_NAME
-    if vad_model_bundle is not None:
-        vad_model_name = vad_model_bundle.model_name
-    if vad_scorer is not None:
-        vad_model_name = "custom_scorer"
-    if vad_method == "llm":
-        vad_model_name = None
-    embedding_model_name = (
-        (
-            stdi_embedding_model
-            if stdi_embedder is None
-            else f"custom:{type(stdi_embedder).__name__}"
-        )
-        if stdi_comparison_method in {"cluster", "dual"}
-        else None
-    )
-    comparison_version = (
-        DUAL_STDI_VERSION
-        if stdi_comparison_method in {"dual", "llm"}
-        else (
-            STRUCTURED_CLUSTER_VERSION
-            if any(
-                structure.schema_version == 2
-                for context in scoring_contexts
-                for structure in (context[2], context[3], context[4])
+        if _cancel_requested(cancel_check):
+            cancelled = True
+        success_count = sum(1 for step in step_results if step.rewrite_status == "success")
+        error_count = sum(1 for step in step_results if step.rewrite_status == "error")
+        vad_model_name = DEFAULT_VAD_MODEL_NAME
+        if vad_model_bundle is not None:
+            vad_model_name = vad_model_bundle.model_name
+        if vad_scorer is not None:
+            vad_model_name = "custom_scorer"
+        if vad_method == "llm":
+            vad_model_name = None
+        embedding_model_name = (
+            (
+                stdi_embedding_model
+                if stdi_embedder is None
+                else f"custom:{type(stdi_embedder).__name__}"
             )
-            else CLUSTER_STDI_COMPARISON_VERSION
+            if stdi_comparison_method in {"cluster", "dual"}
+            else None
         )
-        if stdi_comparison_method == "cluster"
-        else "lexical_v1"
-    )
-    for step in step_results:
-        step.metadata.update(
-            {
-                "rewrite_model": step.model,
-                "rewrite_provider": step.provider,
-                "vad_model": vad_model_name,
-                "stdi_embedding_model": embedding_model_name,
-                "stdi_comparison_version": comparison_version,
-                "graph_shared_node": step.node_id in shared_node_ids,
-                "graph_step_reused": False,
-                "rewrite_operation_attributed": step.metadata.get(
-                    "rewrite_operation_started", False
+        comparison_version = (
+            DUAL_STDI_VERSION
+            if stdi_comparison_method in {"dual", "llm"}
+            else (
+                STRUCTURED_CLUSTER_VERSION
+                if any(
+                    structure.schema_version == 2
+                    for context in scoring_contexts
+                    for structure in (context[2], context[3], context[4])
+                )
+                else CLUSTER_STDI_COMPARISON_VERSION
+            )
+            if stdi_comparison_method == "cluster"
+            else "lexical_v1"
+        )
+        for step in step_results:
+            identity = progress_context()
+            if run_id := identity.get("run_id"):
+                step.metadata.update(
+                    run_id=run_id,
+                    dataset_row=identity["dataset_row"],
+                    graph_step_id=f"{run_id}:{step.node_id}",
+                )
+            step.metadata.update(
+                {
+                    "rewrite_model": step.model,
+                    "rewrite_provider": step.provider,
+                    "vad_model": vad_model_name,
+                    "stdi_embedding_model": embedding_model_name,
+                    "stdi_comparison_version": comparison_version,
+                    "graph_shared_node": step.node_id in shared_node_ids,
+                    "graph_step_reused": False,
+                    "rewrite_operation_attributed": step.metadata.get(
+                        "rewrite_operation_started", False
+                    ),
+                }
+            )
+        summary = {
+            "partial": not evaluate or cancelled,
+            "schema_version": GRAPH_STEP_SCHEMA_VERSION,
+            "cache_contracts": cache_contracts,
+            "shared_cache_dir": str(shared_cache_dir) if shared_cache_dir is not None else None,
+            "reuse_rewrites": reuse_rewrites,
+            **evaluation_metadata,
+            "rewrite_system_instruction": rewrite_prompt.system_instruction,
+            "rewrite_prompt_template": rewrite_prompt.template,
+            "rows_processed": rows_started,
+            "cancelled": cancelled,
+            "steps_total": len(step_results),
+            "steps_success": success_count,
+            "steps_error": error_count,
+            "steps_blocked": sum(step.rewrite_status == "blocked" for step in step_results),
+            "result_kind": "branching_graph" if branching else "chain",
+            "rewrite_operations_started": rewrite_operations_started,
+            "rewrite_reuse_scope": "current_graph_run",
+            "planned_unique_rewrites": total_rows * len(ordered_node_ids),
+            "planned_linear_rewrites": total_rows * sum(len(path) for path in graph_paths),
+            "planned_rewrites_saved": total_rows
+            * (sum(len(path) for path in graph_paths) - len(ordered_node_ids)),
+            "vad_model": vad_model_name,
+            "stdi_comparison_method": stdi_comparison_method,
+            "stdi_comparison_version": comparison_version,
+            "stdi_embedding_model": embedding_model_name,
+            "stdi_complete_incremental_pairs": sum(
+                step.stdi_status_incremental == "valid" for step in step_results
+            )
+            if stdi_comparison_method in {"dual", "llm"}
+            else None,
+            "stdi_components_branch": "selected_evaluation",
+            "graph": {
+                "start_node_id": resolved_start_node,
+                "ordered_node_ids": ordered_node_ids,
+                "edges": [asdict(edge) for edge in normalized_edges],
+                "paths": graph_paths,
+            },
+            "nodes": [asdict(node) for node in nodes],
+        }
+        result = SimulationResult(summary=summary, step_results=step_results)
+        if branching:
+            result.path_results = project_graph_paths(result)
+            summary["path_results"] = [
+                {
+                    "path_id": path.summary["path_id"],
+                    "chain_code": path.summary["chain_code"],
+                    "node_ids": path.summary["graph"]["ordered_node_ids"],
+                }
+                for path in result.path_results
+            ]
+
+        if persist_results:
+            resolved_output_dir = (
+                Path(output_dir) if output_dir is not None else DEFAULT_SIMULATION_OUTPUT_DIR
+            )
+            set_progress_context()
+            with operation("saving") if evaluate else _null_operation():
+                summary_path, steps_path = _persist_results(
+                    result=result,
+                    output_dir=resolved_output_dir,
+                    output_prefix=output_prefix,
+                )
+            result.summary_path = summary_path
+            result.steps_path = steps_path
+            if evaluate:
+                _emit_progress(
+                    progress_callback,
+                    f"Saved summary to {summary_path} and step records to {steps_path}.",
+                )
+
+        if evaluate:
+            emit_event("run_finished", cancelled=cancelled)
+            _emit_progress(
+                progress_callback,
+                (
+                    "Run finished: "
+                    f"rows_processed={summary['rows_processed']}, "
+                    f"steps_total={summary['steps_total']}, "
+                    f"steps_success={summary['steps_success']}, "
+                    f"steps_error={summary['steps_error']}."
                 ),
-            }
-        )
-    summary = {
-        "schema_version": GRAPH_STEP_SCHEMA_VERSION,
-        "cache_contracts": cache_contracts,
-        "shared_cache_dir": str(shared_cache_dir) if shared_cache_dir is not None else None,
-        "reuse_rewrites": reuse_rewrites,
-        **evaluation_metadata,
-        "rewrite_system_instruction": rewrite_prompt.system_instruction,
-        "rewrite_prompt_template": rewrite_prompt.template,
-        "rows_processed": rows_started,
-        "cancelled": cancelled,
-        "steps_total": len(step_results),
-        "steps_success": success_count,
-        "steps_error": error_count,
-        "steps_blocked": sum(step.rewrite_status == "blocked" for step in step_results),
-        "result_kind": "branching_graph" if branching else "chain",
-        "rewrite_operations_started": rewrite_operations_started,
-        "rewrite_reuse_scope": "current_graph_run",
-        "planned_unique_rewrites": total_rows * len(ordered_node_ids),
-        "planned_linear_rewrites": total_rows * sum(len(path) for path in graph_paths),
-        "planned_rewrites_saved": total_rows
-        * (sum(len(path) for path in graph_paths) - len(ordered_node_ids)),
-        "vad_model": vad_model_name,
-        "stdi_comparison_method": stdi_comparison_method,
-        "stdi_comparison_version": comparison_version,
-        "stdi_embedding_model": embedding_model_name,
-        "stdi_complete_incremental_pairs": sum(
-            step.stdi_status_incremental == "valid" for step in step_results
-        )
-        if stdi_comparison_method in {"dual", "llm"}
-        else None,
-        "stdi_components_branch": "selected_evaluation",
-        "graph": {
-            "start_node_id": resolved_start_node,
-            "ordered_node_ids": ordered_node_ids,
-            "edges": [asdict(edge) for edge in normalized_edges],
-            "paths": graph_paths,
-        },
-        "nodes": [asdict(node) for node in nodes],
-    }
-    result = SimulationResult(summary=summary, step_results=step_results)
-    if branching:
-        result.path_results = project_graph_paths(result)
-        summary["path_results"] = [
-            {
-                "path_id": path.summary["path_id"],
-                "chain_code": path.summary["chain_code"],
-                "node_ids": path.summary["graph"]["ordered_node_ids"],
-            }
-            for path in result.path_results
-        ]
-
-    if persist_results:
-        resolved_output_dir = (
-            Path(output_dir) if output_dir is not None else DEFAULT_SIMULATION_OUTPUT_DIR
-        )
-        set_progress_context()
-        with operation("saving"):
-            summary_path, steps_path = _persist_results(
-                result=result,
-                output_dir=resolved_output_dir,
-                output_prefix=output_prefix,
             )
-        result.summary_path = summary_path
-        result.steps_path = steps_path
-        _emit_progress(
-            progress_callback,
-            f"Saved summary to {summary_path} and step records to {steps_path}.",
+
+        return result
+
+    if defer_evaluation:
+        return PreparedSimulation(
+            pairs, finish, build_comparator, checkpoint=lambda: finish(evaluate=False)
         )
-
-    emit_event("run_finished", cancelled=cancelled)
-    _emit_progress(
-        progress_callback,
-        (
-            "Run finished: "
-            f"rows_processed={summary['rows_processed']}, "
-            f"steps_total={summary['steps_total']}, "
-            f"steps_success={summary['steps_success']}, "
-            f"steps_error={summary['steps_error']}."
-        ),
-    )
-
-    return result
+    return finish()

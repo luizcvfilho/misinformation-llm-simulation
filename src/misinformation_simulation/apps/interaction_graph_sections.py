@@ -70,7 +70,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 29
+GRAPH_OUTPUT_LAYOUT_VERSION = 30
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -384,12 +384,26 @@ def _render_advanced_settings() -> dict[str, Any]:
             help="Delay inserted between simulation steps to reduce API pressure.",
             key="simulation_advanced_settings_sleep_between_requests_seconds",
         )
+        max_simultaneous_runs = st.number_input(
+            "Simultaneous news runs",
+            min_value=1,
+            value=widget_default("simulation_advanced_settings_max_simultaneous_runs", 1, "min"),
+            step=1,
+            help=(
+                "Global limit across all graphs. News from the first graph is scheduled first; "
+                "spare slots start news from the next graph. Use 1 for sequential execution."
+            ),
+            key="simulation_advanced_settings_max_simultaneous_runs",
+        )
         max_requests_per_minute = st.number_input(
             "Max requests per minute",
             min_value=0,
             value=widget_default("simulation_advanced_settings_max_requests_per_minute", 0, "min"),
             step=1,
-            help="Use 0 to disable rate limiting.",
+            help=(
+                "Shared by all news runs, nodes, evaluations and retries. "
+                "Requests are spaced evenly. Use 0 to disable the RPM limit."
+            ),
             key="simulation_advanced_settings_max_requests_per_minute",
         )
         retry_attempts = st.number_input(
@@ -443,6 +457,7 @@ def _render_advanced_settings() -> dict[str, Any]:
         "reuse_previous_results": reuse_previous_results,
         "api_pricing_path": api_pricing_path,
         "max_requests_per_minute": max_requests_per_minute,
+        "max_simultaneous_runs": max_simultaneous_runs,
         "retry_attempts": retry_attempts,
         "topic_drift_provider": topic_drift_provider,
         "topic_drift_model": topic_drift_model,
@@ -668,7 +683,13 @@ def _render_run_monitor() -> None:
                 st.session_state.run_progress = job.latest_progress
 
     if finished is not None:
-        if finished["cancelled"]:
+        if "completed_runs" in finished:
+            message = (
+                f"News runs finished: {finished['completed_runs']} completed, "
+                f"{finished['failed_runs']} failed, {finished['cancelled_runs']} cancelled. "
+                "Open Results for graph summaries and available steps."
+            )
+        elif finished["cancelled"]:
             message = "Simulation cancelled. Open Results for any completed steps."
         else:
             message = (
@@ -691,8 +712,15 @@ def _render_run_monitor() -> None:
         job.cancel_event.set()
         st.warning("Cancellation requested. Waiting for the current operation to finish.")
     if request := job.recovery.pending:
-        st.warning("Execution is paused and waiting for your error recovery decision.")
+        st.warning("Some runs are waiting for an error recovery decision; others may continue.")
         render_recovery_dialog(job, request)
+    if progress and progress.get("parallel"):
+        running = [item["run_id"] for item in progress.get("runs", [])]
+        if running:
+            selected = st.selectbox("Run to cancel", running, key="cancel_selected_news_run")
+            if st.button("Cancel selected news run", key="cancel_news_run"):
+                job.run_cancellations[selected].set()
+                st.info(f"Cancellation requested for {selected}.")
     if st.session_state.run_messages:
         _render_run_log()
 
@@ -731,6 +759,40 @@ def _format_duration(seconds: float) -> str:
 def _render_run_progress(
     progress: dict[str, Any], *, elapsed: float = 0, active: bool = True
 ) -> None:
+    if progress.get("parallel"):
+        total = progress["total"]
+        resolved = progress["completed"]
+        st.progress(
+            resolved / total if total else 1.0, text=f"News runs resolved: {resolved}/{total}"
+        )
+        st.caption(
+            f"Simultaneous run limit: {progress['max_simultaneous_runs']} · "
+            f"Operations resolved: {progress['operation_completed']}/{progress['operation_total']}"
+        )
+        runs = []
+        for item in progress.get("runs", []):
+            current = item.get("current") or {}
+            runs.append(
+                {
+                    **{key: value for key, value in item.items() if key != "current"},
+                    "stage": current.get("stage", ""),
+                    "node": current.get("node_id", ""),
+                }
+            )
+        if runs:
+            st.dataframe(pd.DataFrame(runs), hide_index=True, width="stretch")
+        if active and resolved < total:
+            if progress.get("awaiting_decisions"):
+                st.caption("Time estimate suspended while a recovery decision is pending.")
+            elif progress.get("estimate_low") is not None:
+                st.caption(
+                    f"Estimated time remaining: {_format_duration(progress['estimate_low'])}–"
+                    f"{_format_duration(progress['estimate_high'])} "
+                    "(observed batch throughput, including quota waits)"
+                )
+            else:
+                st.caption("Calibrating time estimate from observed batch throughput.")
+        return
     completed = progress["completed"]
     total = progress["total"]
     percent = completed / total if total else 1.0
@@ -968,7 +1030,12 @@ def render_results_tab() -> None:
         else:
             if selected["status"] == "cancelled":
                 st.warning("Simulation cancelled; showing completed steps.")
-            render_result_bundle(displayed_bundles[selected_index])
+            if failures := selected.get("summary", {}).get("run_failures"):
+                st.warning(f"{len(failures)} news run(s) failed; showing available results.")
+            if isinstance(selected.get("steps_df"), pd.DataFrame):
+                render_result_bundle(displayed_bundles[selected_index])
+            else:
+                st.info("This graph has no completed news results.")
 
 
 def _refresh_category_data_from_saved_results(bundles: list[dict[str, Any]]) -> None:

@@ -322,6 +322,15 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
         selected_steps = (
             steps_df[steps_df["news_id"] == selected_news_id].copy().sort_values("step_index")
         )
+        if "metadata_run_id" in selected_steps:
+            occurrences = selected_steps["metadata_run_id"].dropna().unique().tolist()
+            if len(occurrences) > 1:
+                occurrence = st.selectbox(
+                    "News run occurrence",
+                    occurrences,
+                    key=f"result_occurrence_{run_bundle['output_prefix']}_{selected_news_id}",
+                )
+                selected_steps = selected_steps[selected_steps["metadata_run_id"] == occurrence]
         if not selected_steps.empty:
             st.line_chart(
                 selected_steps.set_index("step_index")[
@@ -349,7 +358,11 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                 ],
                 width="stretch",
             )
-            for _, row in selected_steps.iterrows():
+            for position, (_, row) in enumerate(selected_steps.iterrows()):
+                record_key = (
+                    f"{run_bundle['output_prefix']}:{selected_news_id}:"
+                    f"{row.get('metadata_run_id', '')}:{position}"
+                )
                 with st.expander(
                     f"Step {int(row['step_index'])}: {row['node_label']} ({row['rewrite_status']})"
                 ):
@@ -384,12 +397,14 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
                         value=str(row.get("source_text") or ""),
                         height=220,
                         disabled=True,
+                        key=f"result_source_{record_key}",
                     )
                     text_cols[1].text_area(
                         "Rewritten text",
                         value=str(row.get("rewritten_text") or ""),
                         height=220,
                         disabled=True,
+                        key=f"result_rewritten_{record_key}",
                     )
                     render_topic_comparison(row)
 

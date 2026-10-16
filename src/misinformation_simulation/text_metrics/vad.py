@@ -10,6 +10,8 @@ import torch
 from tqdm.auto import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+from misinformation_simulation.text_metrics.local_runtime import serialized_inference
+
 VAD_DIMENSIONS = ("valence", "arousal", "dominance")
 DEFAULT_VAD_MODEL_NAME = "RobroKools/vad-bert"
 
@@ -50,6 +52,7 @@ def load_huggingface_vad_model(
     )
 
 
+@serialized_inference
 @lru_cache(maxsize=2)
 def get_default_vad_model_bundle(
     model_name: str = DEFAULT_VAD_MODEL_NAME,
@@ -91,6 +94,7 @@ def analyze_text_vad(
     )
 
 
+@serialized_inference
 def predict_vad_batch(
     texts: list[str],
     *,

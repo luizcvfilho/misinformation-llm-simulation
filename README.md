@@ -933,7 +933,7 @@ The UI lets you:
 - add, remove, and reorder nodes in the chain
 - export the current graph as JSON without running a simulation
 - export the entire graph queue as a ZIP containing one JSON per graph
-- add snapshots of multiple graphs to a queue, reorder them, and run them sequentially without further input
+- add snapshots of multiple graphs to a queue, reorder them, and choose sequential or concurrent news execution
 - select predefined personalities or write custom personality prompts
 - inspect each graph's status, summary, per-node metrics, and per-news outputs
 - compare success rates and drift metrics by NewsData `category` across queued graphs and download the comparison as CSV
@@ -973,6 +973,36 @@ labels, so category counts overlap. Saved runs can be imported for the same comp
 older step files without `metadata_category` need their original category data restored or a new run.
 
 Each graph in the queue is a single connected chain of nodes, as required by the backend.
+
+In **Advanced options**, set **Simultaneous news runs** to the global worker limit
+(for example, `5`). The default `1` preserves sequential execution. Workers prioritize
+different news rows from the first graph, then use spare capacity for the next graph.
+Nodes still follow their parent dependencies. News preparation runs concurrently;
+embedding comparison is fitted once to the complete prepared corpus of each graph,
+then news evaluations resume within the same worker limit. Prepared news waiting for
+that fit releases its worker slot. Local model loading and inference are serialized.
+
+**Max requests per minute** is shared across all API calls in the execution, including
+all nodes, evaluations, credential attempts and retries. Requests use a FIFO queue and
+even spacing; `0` disables the RPM cap. This is one conservative budget across providers,
+not a separate allowance per worker. Provider token limits still apply. Temporary
+429/503 failures use bounded retries and a shared cooldown; exhausted retry budgets
+appear in recovery. Credential and account failures block new calls to the affected
+provider until a recovery decision is made. Calls already sent may finish.
+
+The monitor identifies each news run by graph and dataset row, with its current stage
+and node. Its time range uses observed batch throughput, includes quota waits, and is
+suspended while recovery decisions are pending. The recovery dialog lists separate
+pending errors. Allowing an error releases equivalent pending occurrences and retains
+the existing permission for future executions. Cancel a selected news run separately
+from the complete batch; calls already sent may finish before cancellation takes effect.
+
+Concurrent runs keep their own checkpoints, final steps, events and API usage under
+`<graph>/news_runs/<run_id>/`. Graph summaries and path projections are consolidated
+in the usual locations; automatic result discovery excludes the internal news files
+to prevent counting them twice. Identical concurrent cache misses execute independently
+and retain their own outputs. The first valid published cache entry remains available
+to later compatible requests. Judge repeat indices remain part of cache identity.
 
 Each graph step computes VAD (valence, arousal, and dominance) for the source article and
 the rewritten text using Model, LLM, or Dual VAD. The default remains `RobroKools/vad-bert`.

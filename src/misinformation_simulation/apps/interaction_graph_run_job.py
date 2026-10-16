@@ -25,10 +25,12 @@ from misinformation_simulation.apps.interaction_graph_ui import (
 from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.llm.credentials import ProviderAPIKeys, use_api_credentials
 from misinformation_simulation.llm.pricing import load_pricing
+from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
 from misinformation_simulation.llm.recovery import (
     RecoverySession,
     RequestContext,
     get_recovery,
+    safe_message,
     use_recovery,
 )
 from misinformation_simulation.llm.usage import combine_usage
@@ -57,6 +59,13 @@ class GraphRunJob:
     observing: bool = False
     recovery: RecoveryBroker = field(init=False)
     recovery_session: RecoverySession = field(init=False)
+    run_cancellations: dict[str, Event] = field(default_factory=dict)
+    finished: bool = False
+
+    def finish(self, payload):
+        if not self.finished:
+            self.finished = True
+            self.events.put(("done", payload))
 
     def __post_init__(self):
         self.recovery = RecoveryBroker(self.cancel_event)
@@ -101,8 +110,20 @@ def _run_with_recovery(
     api_credentials: Mapping[str, ProviderAPIKeys] | None = None,
     **kwargs,
 ) -> None:
-    with use_api_credentials(api_credentials), use_recovery(job.recovery_session):
-        _run_graph_queue(job=job, **kwargs)
+    rpm = int(kwargs["settings"].get("max_requests_per_minute", 0)) or None
+    limiter = SharedRequestLimiter(rpm, job.cancel_event.is_set)
+    try:
+        with (
+            use_api_credentials(api_credentials),
+            use_recovery(job.recovery_session),
+            use_shared_limiter(limiter),
+        ):
+            _run_graph_queue(job=job, **kwargs)
+    except Exception as error:
+        job.events.put(("progress", f"Execution failed: {safe_message(error)}"))
+        job.finish(
+            dict(completed=0, failed=len(kwargs["graphs"]), cancelled=job.cancel_event.is_set())
+        )
 
 
 def _execute_graph(job: GraphRunJob, function: Callable):
@@ -134,6 +155,13 @@ def _run_graph_queue(
     runner: GraphRunner,
     queue_mode: bool,
 ) -> None:
+    if int(settings.get("max_simultaneous_runs", 1)) > 1:
+        from misinformation_simulation.apps.interaction_graph_parallel import run_parallel_queue
+
+        run_parallel_queue(
+            job=job, df=df, graphs=graphs, settings=settings, runner=runner, queue_mode=queue_mode
+        )
+        return
     completed = 0
     failed = 0
     cancelled = False
@@ -363,9 +391,4 @@ def _run_graph_queue(
                 job.tracker.save_history()
             except OSError as exc:
                 job.events.put(("progress", f"Could not save timing history: {exc}"))
-        job.events.put(
-            (
-                "done",
-                {"completed": completed, "failed": failed, "cancelled": cancelled},
-            )
-        )
+        job.finish({"completed": completed, "failed": failed, "cancelled": cancelled})

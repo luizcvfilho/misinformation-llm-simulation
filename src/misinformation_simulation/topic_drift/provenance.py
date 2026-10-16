@@ -4,10 +4,13 @@ import json
 import os
 from hashlib import sha256
 from pathlib import Path
+from threading import Lock
 from typing import Any
 from uuid import uuid4
 
 from misinformation_simulation.llm.usage import record_cache_hit
+
+_publication_lock = Lock()
 
 
 def input_hash(value: Any) -> str:
@@ -182,6 +185,21 @@ class EvaluationCache:
                 ),
                 encoding="utf-8",
             )
-            temporary.replace(path)
+            with _publication_lock:
+                try:
+                    existing = json.loads(path.read_text(encoding="utf-8"))
+                    output = existing.get("output")
+                    namespace = path.parent.name
+                    if (
+                        existing.get("inputs") == payload.get("inputs")
+                        and existing.get("compatibility") == payload.get("compatibility")
+                        and isinstance(output, dict)
+                        and existing.get("output_sha256") == input_hash(output)
+                        and EvaluationCache._reusable(namespace, output)
+                    ):
+                        return
+                except (OSError, ValueError, AttributeError):
+                    pass
+                temporary.replace(path)
         finally:
             temporary.unlink(missing_ok=True)

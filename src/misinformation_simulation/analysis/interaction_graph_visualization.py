@@ -95,6 +95,7 @@ def discover_step_paths(runs_dir: Path) -> list[Path]:
         path
         for path in runs_dir.rglob("*_steps.jsonl")
         if "old_runs" not in {part.casefold() for part in path.relative_to(runs_dir).parts}
+        and "news_runs" not in path.relative_to(runs_dir).parts
         and not _is_tree_overview(path)
     )
 

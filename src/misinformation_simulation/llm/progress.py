@@ -16,11 +16,22 @@ from uuid import uuid4
 _sink: ContextVar[Callable[[dict], None] | None] = ContextVar("execution_sink", default=None)
 _context: ContextVar[dict | None] = ContextVar("execution_context", default=None)
 _operation: ContextVar[dict | None] = ContextVar("execution_operation", default=None)
+_identity: ContextVar[dict | None] = ContextVar("execution_identity", default=None)
+
+
+@contextmanager
+def use_run_identity(**values):
+    token = _identity.set(values)
+    try:
+        yield
+    finally:
+        _identity.reset(token)
 
 
 def progress_context() -> dict:
     current = _operation.get() or {}
     return {
+        **(_identity.get() or {}),
         **(_context.get() or {}),
         **{key: current[key] for key in ("stage", "operation_id") if key in current},
     }
@@ -37,6 +48,7 @@ def emit_event(kind: str, **values: Any) -> None:
             {
                 "timestamp": datetime.now(UTC).isoformat(),
                 "monotonic": monotonic(),
+                **(_identity.get() or {}),
                 **(_context.get() or {}),
                 **{
                     key: current[key]

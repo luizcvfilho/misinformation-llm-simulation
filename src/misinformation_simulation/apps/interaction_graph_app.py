@@ -48,6 +48,7 @@ def _refresh_graph_backend_if_stale() -> None:
         "reuse_rewrites",
         "api_pricing",
         "openai_service_tier",
+        "defer_evaluation",
     }
     backend_module = simulation_graph
     if getattr(
@@ -65,6 +66,7 @@ def _refresh_graph_backend_if_stale() -> None:
         ):
             importlib.reload(importlib.import_module(f"misinformation_simulation.{module_name}"))
         importlib.reload(sys.modules["misinformation_simulation.simulation.types"])
+        importlib.reload(importlib.import_module("misinformation_simulation.simulation.deferred"))
         importlib.reload(sys.modules["misinformation_simulation.simulation.io"])
         importlib.reload(sys.modules["misinformation_simulation.simulation.topology"])
         importlib.reload(sys.modules["misinformation_simulation.simulation.paths"])
@@ -75,7 +77,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 29:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 30:
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_workspace)
         importlib.reload(interaction_graph_dataset_builder)
@@ -86,7 +88,12 @@ def _refresh_graph_backend_if_stale() -> None:
         importlib.reload(interaction_graph_io)
         importlib.reload(interaction_graph_state)
         importlib.reload(interaction_graph_queue)
-        for module_name in ("interaction_graph_canvas", "interaction_graph_generator"):
+        for module_name in (
+            "interaction_graph_canvas",
+            "interaction_graph_generator",
+            "interaction_graph_recovery",
+            "interaction_graph_parallel",
+        ):
             module = importlib.import_module(f"misinformation_simulation.apps.{module_name}")
             importlib.reload(module)
         importlib.reload(interaction_graph_run_job)

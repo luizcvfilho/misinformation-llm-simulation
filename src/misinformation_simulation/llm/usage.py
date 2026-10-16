@@ -218,6 +218,10 @@ def combine_usage(summaries: list[dict]) -> dict:
         "currency": "USD",
         "stages": stages,
         "graph_run_ids": [summary["run_id"] for summary in summaries],
+        "note": next(
+            (summary["note"] for summary in summaries if summary.get("note")),
+            "Combined recorded API usage and estimated costs across news runs.",
+        ),
         "requests": sum(summary["requests"] for summary in summaries),
         "cache_hits": sum(summary["cache_hits"] for summary in summaries),
         "unpriced_requests": unknown,
@@ -251,6 +255,9 @@ def record_response(response: Any, *, provider: str, model: str) -> None:
 
 @contextmanager
 def api_request(*, provider: str, model: str):
+    from misinformation_simulation.llm.rate_limit import shared_request_slot
+
+    shared_request_slot(provider)
     emit_event("request_started", requested_model=str(model), requested_provider=provider)
     try:
         yield
@@ -292,12 +299,8 @@ def track_run_usage(function):
         prefix = kwargs.get("output_prefix", "simulation")
         path = directory / f"{prefix}_api_usage.jsonl" if directory is not None else None
         tracker = UsageTracker(path, kwargs.get("api_pricing"))
-        result = None
-        try:
-            with collect_usage(tracker):
-                result = function(*args, **kwargs)
-            return result
-        finally:
+
+        def finalize(result):
             summary = tracker.summary()
             if directory is not None and (result is not None or tracker.records):
                 directory.mkdir(parents=True, exist_ok=True)
@@ -310,5 +313,18 @@ def track_run_usage(function):
                     result.summary_path.write_text(
                         json.dumps(result.summary, ensure_ascii=False, indent=2), encoding="utf-8"
                     )
+
+        from misinformation_simulation.simulation.deferred import PreparedSimulation
+
+        result = None
+        try:
+            with collect_usage(tracker):
+                result = function(*args, **kwargs)
+            if isinstance(result, PreparedSimulation):
+                result.finalize = finalize
+            return result
+        finally:
+            if not isinstance(result, PreparedSimulation):
+                finalize(result)
 
     return wrapped

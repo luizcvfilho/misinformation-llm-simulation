@@ -66,6 +66,7 @@ PERSISTENT_WIDGET_KEYS = (
     "saved_result_selection",
     "selected_news_id",
     "simulation_advanced_settings_max_requests_per_minute",
+    "simulation_advanced_settings_max_simultaneous_runs",
     "simulation_advanced_settings_output_directory",
     "simulation_advanced_settings_output_prefix",
     "simulation_advanced_settings_retry_attempts",

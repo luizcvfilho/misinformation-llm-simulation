@@ -2,14 +2,30 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Any, Protocol
 
 import numpy as np
 from sklearn.cluster import KMeans
 
+from misinformation_simulation.text_metrics.local_runtime import serialized_inference
 from misinformation_simulation.topic_drift.models import TopicRelation, TopicStructure
 
 CLUSTER_STDI_COMPARISON_VERSION = "cluster_v2"
+
+
+@lru_cache(maxsize=2)
+def _load_encoder(model_name):
+    try:
+        from transformers import AutoModel, AutoTokenizer
+    except ImportError as exc:  # pragma: no cover - project dependency guard
+        raise RuntimeError(
+            "Install the 'transformers' dependency to use cluster comparison."
+        ) from exc
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModel.from_pretrained(model_name)
+    model.eval()
+    return tokenizer, model
 
 
 class TextEmbedder(Protocol):
@@ -29,16 +45,9 @@ class TransformerTextEmbedder:
     def _load(self) -> None:
         if self._model is not None and self._tokenizer is not None:
             return
-        try:
-            from transformers import AutoModel, AutoTokenizer
-        except ImportError as exc:  # pragma: no cover - project dependency guard
-            raise RuntimeError(
-                "Install the 'transformers' dependency to use cluster comparison."
-            ) from exc
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self._model = AutoModel.from_pretrained(self.model_name)
-        self._model.eval()
+        self._tokenizer, self._model = _load_encoder(self.model_name)
 
+    @serialized_inference
     def encode(self, texts: Sequence[str]) -> np.ndarray:
         if not texts:
             return np.empty((0, 0), dtype=float)

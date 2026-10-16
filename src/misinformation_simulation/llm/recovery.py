@@ -233,6 +233,7 @@ class RecoverySession:
         request_token = _request.set(context or RequestContext())
         manual_token = _manual_slot.set(None)
         attempts_token = _attempts.set([])
+        transient_attempts = 0
         try:
             while True:
                 self.check_cancelled()
@@ -248,6 +249,36 @@ class RecoverySession:
                         failures.append((current, error))
                     if not failures:
                         failures = error.failures
+                    from misinformation_simulation.llm.rate_limit import get_shared_limiter
+
+                    limiter = get_shared_limiter()
+                    cause = failures[-1][1]
+                    status = getattr(cause, "status_code", None) or getattr(cause, "status", None)
+                    code = str(getattr(cause, "code", ""))
+                    temporary = status in {429, 503} or code in {
+                        "429",
+                        "503",
+                        "rate_limit_exceeded",
+                    }
+                    if limiter and temporary and not openai_resource_exhausted(cause):
+                        if transient_attempts < 4:
+                            delay = min(60, 2 ** (transient_attempts + 1))
+                            headers = getattr(getattr(cause, "response", None), "headers", {})
+                            try:
+                                delay = max(delay, float(headers.get("retry-after", 0)))
+                            except (ValueError, TypeError):
+                                pass
+                            limiter.cooldown(delay)
+                            transient_attempts += 1
+                            emit_event(
+                                "retry_wait",
+                                delay=delay,
+                                attempt=transient_attempts,
+                                max_attempts=5,
+                                reason=safe_message(cause),
+                            )
+                            _attempts.set([])
+                            continue
                     # Validation can fail after a successful HTTP response. A manual retry
                     # still gives the other key one chance for the complete operation.
                     if _manual_slot.get() is not None and current.provider == "chatgpt":
@@ -275,7 +306,14 @@ class RecoverySession:
                         uuid4().hex, current, message, signatures, progress_context()
                     )
                     emit_event("recovery_wait", provider=current.provider, model=current.model)
-                    decision = self.handler(request)
+                    resource_error = status in {401, 402, 403} or openai_resource_exhausted(cause)
+                    if limiter and resource_error:
+                        limiter.block(current.provider)
+                    try:
+                        decision = self.handler(request)
+                    finally:
+                        if limiter and resource_error:
+                            limiter.unblock(current.provider)
                     self.check_cancelled()
                     if decision.action == "allow":
                         self.store.allow(signatures)
@@ -292,6 +330,7 @@ class RecoverySession:
                             "Execution cancelled during error recovery."
                         ) from None
                     self.reload_keys()
+                    transient_attempts = 0
                     _attempts.set([])
                     _manual_slot.set(decision.credential or current.credential)
                     emit_event("recovery_retry", credential=_manual_slot.get())

@@ -31,7 +31,13 @@ def find_saved_results(output_dir: Path) -> list[Path]:
     if not output_dir.is_dir():
         return []
     return sorted(
-        output_dir.rglob("*_summary.json"), key=lambda path: path.stat().st_mtime, reverse=True
+        (
+            path
+            for path in output_dir.rglob("*_summary.json")
+            if "news_runs" not in path.relative_to(output_dir).parts
+        ),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
     )
 
 
