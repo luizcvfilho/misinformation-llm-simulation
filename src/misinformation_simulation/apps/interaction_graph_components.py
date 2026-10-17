@@ -21,12 +21,12 @@ from misinformation_simulation.apps.interaction_graph_state import (
     remove_node,
 )
 from misinformation_simulation.apps.interaction_graph_ui import (
-    AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
 )
 from misinformation_simulation.apps.interaction_graph_workspace import widget_default
+from misinformation_simulation.apps.model_selector import render_model_selector
 from misinformation_simulation.simulation.io import (
     graph_config_from_payload,
     resolve_result_reference,
@@ -104,32 +104,20 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
                 help="Select the parent. Several children can receive the same parent's output.",
             )
 
-        model_default = node_form.get("model", "")
-        model_options = AVAILABLE_MODELS + [CUSTOM_OPTION]
-        selected_model_option = (
-            model_default if model_default in AVAILABLE_MODELS else CUSTOM_OPTION
-        )
         model_cols = st.columns([1, 1])
-        selected_model_option = model_cols[0].selectbox(
-            "Model preset",
-            model_options,
-            index=widget_default(
-                f"model_option_{uid}", model_options.index(selected_model_option), 0
-            ),
-            key=f"model_option_{uid}",
-            format_func=lambda value: "Custom model" if value == CUSTOM_OPTION else value,
+        node_form["model"] = render_model_selector(
+            node_form["provider"],
+            label="Model preset",
+            option_key=f"model_option_{uid}",
+            custom_key=f"model_custom_{uid}",
+            default=node_form.get("model", ""),
+            selector_container=model_cols[0],
+            custom_container=model_cols[1],
         )
-        if selected_model_option == CUSTOM_OPTION:
-            node_form["model"] = model_cols[1].text_input(
-                "Custom model",
-                value=widget_default(f"model_custom_{uid}", model_default, ""),
-                key=f"model_custom_{uid}",
-            )
-        else:
-            node_form["model"] = selected_model_option
+        if st.session_state[f"model_option_{uid}"] != CUSTOM_OPTION:
+            st.session_state[f"model_resolved_{uid}"] = node_form["model"]
             model_cols[1].text_input(
                 "Resolved model",
-                value=widget_default(f"model_resolved_{uid}", node_form["model"], ""),
                 key=f"model_resolved_{uid}",
                 disabled=True,
             )

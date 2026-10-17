@@ -875,6 +875,14 @@ evaluation, VAD evaluation, and advanced options are available in collapsed expa
 VAD defaults to **Dual**; its **RobroKools/vad-bert** option uses the current model identifier.
 The VAD evaluation section appears immediately after STDI evaluation.
 
+Model selectors in the node editor, bulk editor, graph generator, Topic Drift, and VAD
+evaluation show only presets registered for the selected provider in `enums/models.py`.
+Changing provider resets the model selector to that provider's default. **Custom model**
+accepts provider-specific IDs outside the catalog; catalog models belonging to another
+provider are rejected before API requests. Providers without registered presets require a
+custom ID. Bulk edits of models across different providers require choosing a common provider;
+changing only the provider also selects its default model for affected nodes.
+
 The command-line workflow keeps **Faithful rewrite (preserve facts)** as its default and control
 condition. This condition explicitly instructs the model to preserve facts while changing
 framing and tone.

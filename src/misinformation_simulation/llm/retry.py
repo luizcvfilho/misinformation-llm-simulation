@@ -10,6 +10,7 @@ from google import genai
 from google.genai import types
 from openai import OpenAI
 
+from misinformation_simulation.enums.models import validate_provider_model
 from misinformation_simulation.llm.clients import refresh_llm_client
 from misinformation_simulation.llm.flex_fallback import get_flex_fallback, is_flex_unavailable
 from misinformation_simulation.llm.progress import retry_wait
@@ -28,6 +29,11 @@ from misinformation_simulation.llm.service_tier import (
 from misinformation_simulation.llm.usage import api_request, provider_for_client, record_response
 
 MAX_EVALUATION_ATTEMPTS = 4
+
+
+def _validate_request_model(provider: str, model: str) -> None:
+    if provider != "unknown":
+        validate_provider_model(provider, model)
 
 
 def generate_and_parse_with_retry[T](
@@ -110,6 +116,7 @@ def generate_gemini_text_with_retry(
     base_delay: float = 2.0,
     before_request_hook: Callable[[], None] | None = None,
 ) -> str:
+    _validate_request_model("gemini", model)
     if session := get_recovery():
 
         def generate():
@@ -190,6 +197,7 @@ def generate_openai_text_with_retry(
     before_request_hook: Callable[[], None] | None = None,
 ) -> str:
     provider = provider_for_client(client)
+    _validate_request_model(provider, model)
     session = get_recovery() if provider != "local" else None
 
     def generate_once(request_client):

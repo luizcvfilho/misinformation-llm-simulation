@@ -7,6 +7,7 @@ from typing import Any
 import networkx as nx
 
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from misinformation_simulation.enums.models import validate_provider_model
 from misinformation_simulation.simulation.io import build_graph_config_payload
 from misinformation_simulation.simulation.paths import PERSONALITY_CODES
 from misinformation_simulation.simulation.types import SimulationEdge, SimulationNode
@@ -50,6 +51,7 @@ def generate_branching_graphs(
     chains = parse_chain_sequences(sequences)
     if not model.strip() or not provider.strip():
         raise ValueError("Select a provider and a model for generated nodes.")
+    validate_provider_model(provider, model)
     forest = nx.DiGraph()
     for chain in chains:
         for length in range(1, len(chain) + 1):

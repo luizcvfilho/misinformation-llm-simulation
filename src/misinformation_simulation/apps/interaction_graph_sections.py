@@ -48,9 +48,7 @@ from misinformation_simulation.apps.interaction_graph_run_job import start_graph
 from misinformation_simulation.apps.interaction_graph_sidebar import render_sidebar
 from misinformation_simulation.apps.interaction_graph_state import import_graph_payload
 from misinformation_simulation.apps.interaction_graph_ui import (
-    AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
-    CUSTOM_OPTION,
     build_editor_graph_payload,
     resolve_personality_text,
     set_tree_mode,
@@ -60,11 +58,13 @@ from misinformation_simulation.apps.interaction_graph_workspace import (
     open_run_analysis,
     widget_default,
 )
+from misinformation_simulation.apps.model_selector import render_model_selector
 from misinformation_simulation.config.prompts import (
     GRAPH_REWRITE_MODE_LABELS,
     GRAPH_REWRITE_MODES,
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from misinformation_simulation.enums.models import validate_provider_model
 from misinformation_simulation.llm.recovery import PermissionStore
 from misinformation_simulation.llm.service_tier import (
     OPENAI_SERVICE_TIERS,
@@ -302,12 +302,6 @@ def _render_execution_settings(
                 "Dual averages VAD drifts. With Dual STDI, each branch uses its corresponding VAD."
             ),
         )
-        vad_llm_model = st.text_input(
-            "VAD evaluator model",
-            value=widget_default("vad_llm_model", str(advanced_settings["topic_drift_model"]), ""),
-            key="vad_llm_model",
-            disabled=vad_method == "model",
-        )
         vad_llm_provider = st.selectbox(
             "VAD evaluator provider",
             options=AVAILABLE_PROVIDERS,
@@ -318,6 +312,15 @@ def _render_execution_settings(
                 AVAILABLE_PROVIDERS.index(str(advanced_settings["topic_drift_provider"])),
                 0,
             ),
+        )
+        vad_llm_model = render_model_selector(
+            vad_llm_provider,
+            label="VAD evaluator model",
+            option_key="vad_llm_model_option",
+            custom_key="vad_llm_model",
+            default=str(advanced_settings["topic_drift_model"]),
+            custom_label="Custom VAD evaluator model",
+            disabled=vad_method == "model",
         )
 
     return {
@@ -460,7 +463,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             help="Provider used for topic extraction and the dual STDI judge.",
             key="simulation_advanced_settings_topic_drift_provider",
         )
-        topic_drift_model = _render_topic_drift_model_selector()
+        topic_drift_model = _render_topic_drift_model_selector(topic_drift_provider)
         output_dir = render_path_input(
             "Output directory",
             title="Select output directory",
@@ -499,35 +502,16 @@ def _render_advanced_settings() -> dict[str, Any]:
     }
 
 
-def _render_topic_drift_model_selector() -> str:
-    topic_drift_model_default = DEFAULT_LLM_MODEL.value
-    topic_drift_model_options = AVAILABLE_MODELS + [CUSTOM_OPTION]
-    selected_topic_drift_model_option = (
-        topic_drift_model_default
-        if topic_drift_model_default in AVAILABLE_MODELS
-        else CUSTOM_OPTION
-    )
-    selected_topic_drift_model_option = st.selectbox(
-        "Topic drift model preset",
-        topic_drift_model_options,
-        index=widget_default(
-            "topic_drift_model_option",
-            topic_drift_model_options.index(selected_topic_drift_model_option),
-            0,
-        ),
-        key="topic_drift_model_option",
-        format_func=lambda value: "Custom model" if value == CUSTOM_OPTION else value,
+def _render_topic_drift_model_selector(provider: str = DEFAULT_LLM_PROVIDER.value) -> str:
+    return render_model_selector(
+        provider,
+        label="Topic drift model preset",
+        option_key="topic_drift_model_option",
+        custom_key="topic_drift_model_custom",
+        default=DEFAULT_LLM_MODEL.value,
+        custom_label="Custom topic drift model",
         help="Model used for topic structure extraction before calculating topic drift.",
     )
-    if selected_topic_drift_model_option == CUSTOM_OPTION:
-        return st.text_input(
-            "Custom topic drift model",
-            value=widget_default("topic_drift_model_custom", topic_drift_model_default, ""),
-            key="topic_drift_model_custom",
-            help="Provider-specific model id for topic drift extraction.",
-        )
-
-    return selected_topic_drift_model_option
 
 
 def _render_graph_export(graph_payload: dict[str, Any]) -> None:
@@ -953,6 +937,20 @@ def _validate_run_inputs(
         validation_errors.append("Select a title column before running the simulation.")
     if not settings["topic_drift_model"].strip():
         validation_errors.append("Select or enter a topic drift model before running.")
+    evaluations = [("Topic drift", settings["topic_drift_provider"], settings["topic_drift_model"])]
+    if settings.get("vad_method", "model") in {"llm", "dual"}:
+        evaluations.append(
+            (
+                "VAD evaluator",
+                settings.get("vad_llm_provider") or settings["topic_drift_provider"],
+                settings.get("vad_llm_model", settings["topic_drift_model"]),
+            )
+        )
+    for label, provider, model in evaluations:
+        try:
+            validate_provider_model(provider, model)
+        except ValueError as exc:
+            validation_errors.append(f"{label}: {exc}")
     if not settings["output_prefix"].strip():
         validation_errors.append("Enter an output prefix before running.")
     return validation_errors

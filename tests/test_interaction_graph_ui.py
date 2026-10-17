@@ -209,7 +209,7 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     ).run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["vad_method"] == "dual"
-    assert not app.text_input(key="vad_llm_model").disabled
+    assert not app.selectbox(key="vad_llm_model_option").disabled
     assert app.selectbox(key="vad_method").options == [DEFAULT_VAD_MODEL_NAME, "LLM", "Dual"]
     assert [expander.label for expander in app.expander] == [
         "Dataset columns",
@@ -219,11 +219,11 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     ]
     app.selectbox(key="vad_method").set_value("model").run(timeout=30)
     assert app.session_state.test_settings["vad_method"] == "model"
-    assert app.text_input(key="vad_llm_model").disabled
+    assert app.selectbox(key="vad_llm_model_option").disabled
     app.selectbox(key="vad_method").set_value("dual").run(timeout=30)
     assert app.session_state.test_settings["vad_method"] == "dual"
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
-    assert not app.text_input(key="vad_llm_model").disabled
+    assert not app.selectbox(key="vad_llm_model_option").disabled
     app.checkbox(key="evaluate_dual_stdi").uncheck().run(timeout=30)
     assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
     assert app.session_state.test_settings["vad_method"] == "dual"

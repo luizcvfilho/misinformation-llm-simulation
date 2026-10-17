@@ -9,6 +9,7 @@ from misinformation_simulation.apps.interaction_graph_state import (
 )
 from misinformation_simulation.apps.interaction_graph_ui import AVAILABLE_PROVIDERS, set_tree_mode
 from misinformation_simulation.apps.interaction_graph_workspace import widget_default
+from misinformation_simulation.apps.model_selector import render_model_selector
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from misinformation_simulation.simulation.generation import generate_branching_graphs
 from misinformation_simulation.simulation.io import graph_config_from_payload
@@ -23,11 +24,6 @@ def render_graph_generator() -> None:
             help="One sequence per line. Codes: C, P, D, S, E, M, N. Shared prefixes run once.",
         )
         columns = st.columns(2)
-        model = columns[0].text_input(
-            "Generated nodes model",
-            value=widget_default("graph_generator_model", DEFAULT_LLM_MODEL.value, ""),
-            key="graph_generator_model",
-        )
         provider = columns[1].selectbox(
             "Generated nodes provider",
             AVAILABLE_PROVIDERS,
@@ -35,6 +31,15 @@ def render_graph_generator() -> None:
                 "graph_generator_provider", AVAILABLE_PROVIDERS.index(DEFAULT_LLM_PROVIDER.value), 0
             ),
             key="graph_generator_provider",
+        )
+        model = render_model_selector(
+            provider,
+            label="Generated nodes model",
+            option_key="graph_generator_model_option",
+            custom_key="graph_generator_model",
+            default=DEFAULT_LLM_MODEL.value,
+            custom_label="Custom generated nodes model",
+            selector_container=columns[0],
         )
         st.caption(
             "Sequences with different first personas produce separate trees in the queue. "

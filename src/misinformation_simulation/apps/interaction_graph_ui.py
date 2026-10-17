@@ -12,6 +12,10 @@ from misinformation_simulation.enums import (
     Models,
     Provider,
 )
+from misinformation_simulation.enums.models import (
+    default_model_for_provider,
+    validate_provider_model,
+)
 from misinformation_simulation.simulation import (
     SimulationEdge,
     SimulationNode,
@@ -147,7 +151,18 @@ def apply_bulk_node_updates(
     updates.update(_bulk_personality_updates(personality_preset, personality_custom))
     if not updates:
         raise ValueError("Choose at least one field to change.")
-    return [form | updates if form["uid"] in selected else form.copy() for form in node_forms]
+    return [
+        _apply_bulk_node_update(form, updates) if form["uid"] in selected else form.copy()
+        for form in node_forms
+    ]
+
+
+def _apply_bulk_node_update(form: dict[str, str], updates: dict[str, str]) -> dict[str, str]:
+    updated = form | updates
+    if "provider" in updates and "model" not in updates and updated["provider"] != form["provider"]:
+        updated["model"] = default_model_for_provider(updated["provider"])
+    validate_provider_model(updated["provider"], updated["model"])
+    return updated
 
 
 def _bulk_personality_updates(
@@ -268,11 +283,22 @@ def validate_node_forms(node_forms: list[dict[str, str]]) -> list[str]:
             errors.append(f"Node {index} must define a provider.")
         if not model:
             errors.append(f"Node {index} must define a model.")
+        errors.extend(_node_model_errors(provider, model, index))
         if not personality:
             errors.append(f"Node {index} must define a personality.")
     _validate_form_topology(node_forms, errors)
 
     return errors
+
+
+def _node_model_errors(provider: str, model: str, index: int) -> list[str]:
+    if not provider or not model:
+        return []
+    try:
+        validate_provider_model(provider, model)
+    except ValueError as exc:
+        return [f"Node {index}: {exc}"]
+    return []
 
 
 def steps_to_dataframe(step_results: list[SimulationStepResult]) -> pd.DataFrame:

@@ -52,6 +52,7 @@ PERSISTENT_WIDGET_KEYS = (
     "graph_bulk_provider",
     "graph_generator_sequences",
     "graph_generator_model",
+    "graph_generator_model_option",
     "graph_generator_provider",
     "news_group_case_order",
     "news_group_metric",
@@ -95,6 +96,7 @@ PERSISTENT_WIDGET_KEYS = (
     "topic_drift_model_option",
     "transition_metric",
     "vad_llm_model",
+    "vad_llm_model_option",
     "vad_llm_provider",
     "vad_method",
 )

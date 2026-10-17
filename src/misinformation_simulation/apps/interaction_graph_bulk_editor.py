@@ -3,13 +3,12 @@ from __future__ import annotations
 import streamlit as st
 
 from misinformation_simulation.apps.interaction_graph_ui import (
-    AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
-    CUSTOM_OPTION,
     PREDEFINED_PERSONALITIES,
     apply_bulk_node_updates,
 )
 from misinformation_simulation.apps.interaction_graph_workspace import widget_default
+from misinformation_simulation.apps.model_selector import render_model_selector
 
 
 def render_bulk_node_editor() -> None:
@@ -100,24 +99,26 @@ def _render_bulk_fields(sample: dict[str, str]) -> dict[str, str]:
             key="graph_bulk_provider",
         )
     if change_model:
-        model = sample.get("model", "")
-        model_options = AVAILABLE_MODELS + [CUSTOM_OPTION]
-        preset = model if model in AVAILABLE_MODELS else CUSTOM_OPTION
-        chosen = st.selectbox(
-            "Model for selected nodes",
-            model_options,
-            index=widget_default("graph_bulk_model_option", model_options.index(preset), 0),
-            key="graph_bulk_model_option",
-            format_func=lambda value: "Custom model" if value == CUSTOM_OPTION else value,
-        )
-        changes["model"] = (
-            st.text_input(
-                "Custom model for selected nodes",
-                value=widget_default("graph_bulk_model_custom", model, ""),
-                key="graph_bulk_model_custom",
+        selected = set(st.session_state.get("graph_bulk_selected_uids", []))
+        providers = {
+            form["provider"] for form in st.session_state.graph_nodes if form["uid"] in selected
+        } or {sample["provider"]}
+        if change_provider or len(providers) == 1:
+            changes["model"] = render_model_selector(
+                changes.get("provider", sample["provider"]),
+                label="Model for selected nodes",
+                option_key="graph_bulk_model_option",
+                custom_key="graph_bulk_model_custom",
+                default=sample.get("model", ""),
+                custom_label="Custom model for selected nodes",
             )
-            if chosen == CUSTOM_OPTION
-            else chosen
+        else:
+            st.info(
+                "Select nodes with the same provider or enable Change provider to choose a model."
+            )
+    elif change_provider:
+        st.caption(
+            "Changing provider also selects its default model. Enable Change model to override."
         )
     if change_personality:
         mode = st.radio(
@@ -145,10 +146,12 @@ def _clear_bulk_node_widgets(selected: list[str], changes: dict[str, str]) -> No
     prefixes = []
     if "provider" in changes:
         prefixes.append("provider")
-    if "model" in changes:
+    if "model" in changes or "provider" in changes:
         prefixes.extend(["model_option", "model_custom", "model_resolved"])
     if "personality_preset" in changes or "personality_custom" in changes:
         prefixes.extend(["personality_mode", "personality_preset", "personality_custom"])
     for uid in selected:
+        if "provider" in changes or "model" in changes:
+            st.session_state.pop(f"_model_provider_model_option_{uid}", None)
         for prefix in prefixes:
             st.session_state.pop(f"{prefix}_{uid}", None)
