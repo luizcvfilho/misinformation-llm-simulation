@@ -43,6 +43,31 @@ The canvas shows the configured nodes and connections.
 Graph imports, JSON downloads, and queue ZIP downloads preserve the explicit edges.
 Graphs without explicit edges still default to a chain in node-list order.
 
+## Inspect and reuse queued graphs
+
+In **Graph queue**, expand **Graph details** below a queued graph to inspect its
+topology, complete paths, start node, and per-node connections, providers, models,
+and personalities. Select a node under **Personality prompt for node** to read its
+full resolved prompt. **Export queued graph JSON** downloads that queued snapshot.
+
+Use **Edit queued graph** to open an existing entry in the editor. Change its nodes,
+connections, models, providers, or **Current graph name**, then choose
+**Save changes to queue**. Saving validates the graph and updates the same queue entry,
+preserving its ID and position even if the queue has been reordered. Edits remain a draft
+until saved; queue execution and downloads use the saved version. **Cancel editing**
+discards unsaved edits and restores the saved graph in the editor. Importing, generating,
+resetting the editor, or loading a copy ends the link to the edited queue entry.
+Changes saved during an execution apply to the next execution; an active run keeps its
+initial snapshot.
+
+Use **Load copy into editor** to replace the current editor contents with an independent
+copy, preserving node IDs, connections, personalities, models, and saved canvas positions.
+Change each node's rewrite model and provider, choose a distinct graph name, then use
+**Add current graph** to enqueue the variant. Loading or editing a copy does not modify
+the original queue entry. Each queued variant produces separate graph results.
+Transmission mode, dataset selection, and STDI/VAD evaluation settings apply to the
+entire execution. Use the same evaluation settings when comparing rewrite models.
+
 ## Generate trees automatically
 
 Open **Generate graphs from sequences**, enter complete persona sequences (one per line
@@ -56,8 +81,9 @@ sequences are deduplicated; suffixes reached through different prefixes remain s
 
 **Generate trees in queue** also accepts different first personas. It creates one tree per
 first persona, so `NNNN CCCC PPPP DDDD CCPP PPCC DDNN NNDD` produces four trees with 24 total
-nodes instead of 32 separate chain nodes. Each tree remains independently editable by
-importing its exported JSON. Generation makes no API calls and does not start a simulation.
+nodes instead of 32 separate chain nodes. Open a queued tree's **Graph details** and
+use **Load copy into editor** to edit a copy. Generation makes no API calls and does not
+start a simulation.
 
 The generator requires complete root-to-leaf sequences. If `CC` and `CCPP` are requested
 together, it reports that `CC` ends inside the longer path; generate these lengths separately

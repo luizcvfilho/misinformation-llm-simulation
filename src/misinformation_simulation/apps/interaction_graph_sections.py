@@ -27,11 +27,13 @@ from misinformation_simulation.apps.interaction_graph_components import (
 from misinformation_simulation.apps.interaction_graph_credentials import render_api_keys
 from misinformation_simulation.apps.interaction_graph_generator import render_graph_generator
 from misinformation_simulation.apps.interaction_graph_io import render_path_input
+from misinformation_simulation.apps.interaction_graph_preview import render_graph_preview
 from misinformation_simulation.apps.interaction_graph_queue import (
     add_graph,
     add_graphs_from_directory,
     build_graph_queue_archive,
     move_graph,
+    update_graph,
 )
 from misinformation_simulation.apps.interaction_graph_recovery import render_recovery_dialog
 from misinformation_simulation.apps.interaction_graph_results import (
@@ -43,11 +45,13 @@ from misinformation_simulation.apps.interaction_graph_results import (
 )
 from misinformation_simulation.apps.interaction_graph_run_job import start_graph_run_job
 from misinformation_simulation.apps.interaction_graph_sidebar import render_sidebar
+from misinformation_simulation.apps.interaction_graph_state import import_graph_payload
 from misinformation_simulation.apps.interaction_graph_ui import (
     AVAILABLE_MODELS,
     AVAILABLE_PROVIDERS,
     CUSTOM_OPTION,
     build_editor_graph_payload,
+    resolve_personality_text,
     set_tree_mode,
     validate_node_forms,
 )
@@ -70,7 +74,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 31
+GRAPH_OUTPUT_LAYOUT_VERSION = 33
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 
@@ -547,6 +551,7 @@ def _render_graph_queue() -> None:
     queue_header_cols = st.columns([3, 1], vertical_alignment="center")
     queue_header_cols[0].subheader("Graph queue")
     export_placeholder = queue_header_cols[1].empty()
+    _render_queue_edit_controls()
     st.caption(
         "Add a copy of the current graph, then edit or import another graph and add it. "
         "The queued graphs run in the order shown below."
@@ -577,7 +582,11 @@ def _render_graph_queue() -> None:
             st.rerun()
         if cols[3].button("Remove", key=f"queue_remove_{graph['id']}"):
             st.session_state.graph_queue.pop(index)
+            if st.session_state.get("editing_queue_graph_id") == graph["id"]:
+                st.session_state.pop("editing_queue_graph_id", None)
             st.rerun()
+        with st.expander(f"Graph details · {index + 1}. {graph['name']}"):
+            _render_queued_graph_details(graph)
 
     with export_placeholder.container():
         st.download_button(
@@ -593,6 +602,132 @@ def _render_graph_queue() -> None:
                 "Extract the ZIP and use Add graphs from a folder to reuse the queue."
             ),
         )
+
+
+def _load_queued_graph_copy(graph_id: str) -> None:
+    graph = next(graph for graph in st.session_state.graph_queue if graph["id"] == graph_id)
+    import_graph_payload(build_editor_graph_payload(graph["nodes"]))
+    st.session_state.current_graph_name = f"{graph['name']} copy"
+    st.session_state.queued_graph_name = f"{graph['name']} copy"
+
+
+def _edit_queued_graph(graph_id: str) -> None:
+    graph = next(graph for graph in st.session_state.graph_queue if graph["id"] == graph_id)
+    import_graph_payload(build_editor_graph_payload(graph["nodes"]))
+    st.session_state.current_graph_name = graph["name"]
+    st.session_state.queued_graph_name = graph["name"]
+    st.session_state.editing_queue_graph_id = graph_id
+
+
+def _cancel_queued_graph_edit() -> None:
+    _edit_queued_graph(st.session_state.editing_queue_graph_id)
+    st.session_state.pop("editing_queue_graph_id", None)
+
+
+def _render_queue_edit_controls() -> None:
+    graph_id = st.session_state.get("editing_queue_graph_id")
+    if graph_id is None:
+        return
+    graph = next((graph for graph in st.session_state.graph_queue if graph["id"] == graph_id), None)
+    if graph is None:
+        st.session_state.pop("editing_queue_graph_id", None)
+        return
+    st.info(
+        f"Editing queued graph: {graph['name']}. "
+        "Save changes to update this queue entry; the queue runs its saved version. "
+        "Use Current graph name in Execution settings to rename it."
+    )
+    columns = st.columns(2)
+    if columns[0].button("Save changes to queue", key="queue_save_changes", width="stretch"):
+        try:
+            update_graph(
+                st.session_state.graph_queue,
+                graph_id,
+                st.session_state.current_graph_name,
+                st.session_state.graph_nodes,
+            )
+        except ValueError as exc:
+            st.error(str(exc))
+        else:
+            st.session_state.queued_graph_name = graph["name"]
+            st.session_state.pop(f"queue_detail_node_{graph_id}", None)
+            st.success("Graph changes saved to the queue.")
+    columns[1].button(
+        "Cancel editing",
+        key="queue_cancel_edit",
+        on_click=_cancel_queued_graph_edit,
+        width="stretch",
+        help="Discard unsaved changes and restore the saved graph in the editor.",
+    )
+    if st.session_state.get("run_job") is not None:
+        st.caption("Saved changes apply to the next execution; the active run keeps its snapshot.")
+
+
+def _render_queued_graph_details(graph: dict[str, Any]) -> None:
+    forms = graph["nodes"]
+    payload = build_editor_graph_payload(forms)
+    st.caption(f"Start node: `{payload['start_node_id']}`")
+    render_graph_preview(forms)
+    parents = {edge["target"]: edge["source"] for edge in payload.get("edges", [])}
+    st.dataframe(
+        pd.DataFrame(
+            [
+                {
+                    "Node ID": node["node_id"],
+                    "Label": node["label"],
+                    "Receive text from": parents.get(node["node_id"], "Source news (root)"),
+                    "Provider": node["provider"],
+                    "Model": node["model"],
+                    "Personality": (
+                        form["personality_preset"]
+                        if form.get("personality_mode") == "preset"
+                        else "Custom"
+                    ),
+                }
+                for form, node in zip(forms, payload["nodes"], strict=True)
+            ]
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+    forms_by_id = {form["node_id"].strip(): form for form in forms}
+    node_id = st.selectbox(
+        "Personality prompt for node",
+        list(forms_by_id),
+        key=f"queue_detail_node_{graph['id']}",
+    )
+    st.code(resolve_personality_text(forms_by_id[node_id]), language=None, wrap_lines=True)
+    action_cols = st.columns(3)
+    action_cols[0].button(
+        "Edit queued graph",
+        key=f"queue_edit_{graph['id']}",
+        on_click=_edit_queued_graph,
+        args=(graph["id"],),
+        width="stretch",
+        help="Open this graph in the editor, then use Save changes to queue to update it.",
+    )
+    action_cols[1].button(
+        "Load copy into editor",
+        key=f"queue_load_copy_{graph['id']}",
+        on_click=_load_queued_graph_copy,
+        args=(graph["id"],),
+        width="stretch",
+        help="Replace the current editor contents with an independent copy of this queued graph.",
+    )
+    action_cols[2].download_button(
+        "Export queued graph JSON",
+        data=json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8"),
+        file_name=f"{re.sub(r'[^\w-]+', '_', graph['name']).strip('_') or 'graph'}.json",
+        mime="application/json",
+        key=f"queue_download_{graph['id']}",
+        width="stretch",
+    )
+    st.caption(
+        "To test another rewrite model, load a copy into the editor, change each node's "
+        "model and provider, then add it to the queue with a distinct name. "
+        "To update this entry instead, use Edit queued graph, then Save changes to queue. "
+        "Transmission mode and evaluation settings apply to the entire execution."
+    )
 
 
 def _render_run_controls(

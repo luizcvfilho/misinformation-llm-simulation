@@ -10,14 +10,18 @@ from zipfile import ZipFile
 
 import pandas as pd
 import pytest
+from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.apps import interaction_graph_queue as queue
 from misinformation_simulation.apps import interaction_graph_run_job as run_job
 from misinformation_simulation.apps import interaction_graph_sections as sections
 from misinformation_simulation.apps.interaction_graph_results import load_saved_result
 from misinformation_simulation.apps.interaction_graph_ui import (
+    build_editor_graph_payload,
     build_linear_graph_payload,
     create_default_node_form,
+    resolve_personality_text,
+    set_tree_mode,
 )
 from misinformation_simulation.simulation.persistence import _persist_results
 from misinformation_simulation.simulation.types import SimulationResult
@@ -55,6 +59,226 @@ def test_compact_prefix_bounds_long_names_and_keeps_queue_positions_distinct() -
 def test_queue_rejects_invalid_graph() -> None:
     with pytest.raises(ValueError, match="model"):
         queue.add_graph([], "Bad", [{**create_default_node_form(1), "model": ""}])
+
+
+@pytest.mark.parametrize("shape", ["single", "linear", "branching"])
+def test_queue_details_show_snapshots_and_full_personality_prompts(shape) -> None:
+    nodes = [create_default_node_form(index) for index in range(1, 4)]
+    if shape == "single":
+        nodes = nodes[:1]
+    elif shape == "branching":
+        set_tree_mode(nodes, True)
+        nodes[2]["parent_uid"] = nodes[0]["uid"]
+    nodes[-1].update(
+        model="custom-rewrite-model",
+        personality_mode="custom",
+        personality_custom="Use careful explanations. " * 25,
+    )
+    graphs = []
+    queue.add_graph(graphs, "Same name", nodes)
+    queue.add_graph(graphs, "Same name", nodes)
+    snapshot = deepcopy(graphs)
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps import interaction_graph_sections as sections\n"
+        "sections._render_graph_queue()"
+    )
+    app.session_state["graph_nodes"] = [create_default_node_form(1)]
+    app.session_state["graph_queue"] = graphs
+    app.run(timeout=30)
+
+    assert not app.exception
+    assert len([item for item in app.expander if item.label.startswith("Graph details")]) == 2
+    detail = app.dataframe[0].value
+    assert detail["Model"].tolist() == [node["model"] for node in nodes]
+    assert detail["Provider"].tolist() == [node["provider"] for node in nodes]
+    assert detail["Node ID"].tolist() == [node["node_id"] for node in nodes]
+    assert detail["Receive text from"].tolist() == (
+        ["Source news (root)"]
+        if shape == "single"
+        else ["Source news (root)", "node_1", "node_1" if shape == "branching" else "node_2"]
+    )
+    assert app.code[0].value == resolve_personality_text(nodes[0])
+    app.selectbox(key=f"queue_detail_node_{graphs[0]['id']}").set_value(nodes[-1]["node_id"]).run(
+        timeout=30
+    )
+    assert not app.exception
+    assert app.code[0].value == nodes[-1]["personality_custom"].strip()
+    assert app.session_state["graph_queue"] == snapshot
+
+
+def test_load_queue_copy_preserves_tree_and_isolates_model_variants() -> None:
+    nodes = [create_default_node_form(index) for index in range(1, 4)]
+    set_tree_mode(nodes, True)
+    nodes[2]["parent_uid"] = nodes[0]["uid"]
+    nodes[0].update(flow_x="25.5", flow_y="40.0")
+    nodes[1].update(personality_mode="custom", personality_custom="Read carefully.")
+    graphs = []
+    queue.add_graph(graphs, "Original", nodes)
+    snapshot = deepcopy(graphs)
+    graph_id = graphs[0]["id"]
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps import interaction_graph_sections as sections\n"
+        "from misinformation_simulation.apps import interaction_graph_components as components\n"
+        "st.text_input('Current graph name', key='current_graph_name')\n"
+        "for index, node in enumerate(st.session_state.graph_nodes):\n"
+        "    components.render_node_editor(index, node)\n"
+        "sections._render_graph_queue()"
+    )
+    app.session_state["graph_nodes"] = deepcopy(nodes)
+    app.session_state["graph_queue"] = graphs
+    app.session_state["_graph_flow_state"] = "stale canvas"
+    app.run(timeout=30)
+    assert not app.exception
+    app.button(key=f"queue_load_copy_{graph_id}").click().run(timeout=30)
+
+    assert not app.exception
+    loaded = app.session_state["graph_nodes"]
+    assert build_editor_graph_payload(loaded) == build_editor_graph_payload(nodes)
+    assert {node["uid"] for node in loaded}.isdisjoint(node["uid"] for node in nodes)
+    assert "_graph_flow_state" not in app.session_state
+    assert app.text_input(key="current_graph_name").value == "Original copy"
+    assert app.text_input(key="queued_graph_name").value == "Original copy"
+    assert app.session_state["graph_queue"] == snapshot
+
+    uid = loaded[0]["uid"]
+    app.selectbox(key=f"model_option_{uid}").set_value("gpt-4.1-mini").run(timeout=30)
+    app.selectbox(key=f"provider_{uid}").set_value("chatgpt").run(timeout=30)
+    next(button for button in app.button if button.label == "Add current graph").click().run(
+        timeout=30
+    )
+    assert not app.exception
+    updated_queue = app.session_state["graph_queue"]
+    assert updated_queue[0] == snapshot[0]
+    assert updated_queue[1]["id"] != graph_id
+    assert updated_queue[1]["name"] == "Original copy"
+    assert updated_queue[1]["nodes"][0]["model"] == "gpt-4.1-mini"
+    assert updated_queue[1]["nodes"][0]["provider"] == "chatgpt"
+    assert (
+        build_editor_graph_payload(updated_queue[1]["nodes"])["edges"]
+        == (build_editor_graph_payload(nodes)["edges"])
+    )
+
+
+def _queue_editor_app() -> AppTest:
+    nodes = [create_default_node_form(index) for index in range(1, 4)]
+    set_tree_mode(nodes, True)
+    nodes[2]["parent_uid"] = nodes[0]["uid"]
+    nodes[0].update(flow_x="12.0", flow_y="24.0")
+    graphs = []
+    queue.add_graph(graphs, "Same name", nodes)
+    queue.add_graph(graphs, "Same name", nodes)
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps import interaction_graph_sections as sections\n"
+        "from misinformation_simulation.apps import interaction_graph_components as components\n"
+        "st.text_input('Current graph name', key='current_graph_name')\n"
+        "for index, node in enumerate(st.session_state.graph_nodes):\n"
+        "    components.render_node_editor(index, node)\n"
+        "sections._render_graph_queue()"
+    )
+    app.session_state["graph_nodes"] = deepcopy(nodes)
+    app.session_state["graph_queue"] = graphs
+    return app.run(timeout=30)
+
+
+def test_edit_queued_graph_saves_in_place_after_reordering() -> None:
+    app = _queue_editor_app()
+    snapshot = deepcopy(app.session_state["graph_queue"])
+    target_id = snapshot[0]["id"]
+    app.button(key=f"queue_edit_{target_id}").click().run(timeout=30)
+    assert not app.exception
+    assert app.session_state["editing_queue_graph_id"] == target_id
+    assert app.text_input(key="current_graph_name").value == "Same name"
+    uid = app.session_state["graph_nodes"][0]["uid"]
+    app.selectbox(key=f"model_option_{uid}").set_value("gpt-4.1-mini").run(timeout=30)
+    app.selectbox(key=f"provider_{uid}").set_value("chatgpt").run(timeout=30)
+    app.text_input(key="current_graph_name").set_value("Renamed graph").run(timeout=30)
+    assert app.session_state["graph_queue"] == snapshot
+    app.button(key=f"queue_down_{target_id}").click().run(timeout=30)
+    app.button(key="queue_save_changes").click().run(timeout=30)
+
+    assert not app.exception
+    saved = app.session_state["graph_queue"]
+    assert len(saved) == 2
+    assert saved[0] == snapshot[1]
+    assert saved[1]["id"] == target_id
+    assert saved[1]["name"] == "Renamed graph"
+    assert saved[1]["nodes"][0]["model"] == "gpt-4.1-mini"
+    assert saved[1]["nodes"][0]["provider"] == "chatgpt"
+    payload = build_editor_graph_payload(saved[1]["nodes"])
+    original = build_editor_graph_payload(snapshot[0]["nodes"])
+    assert payload["edges"] == original["edges"]
+    assert payload["layout"] == original["layout"]
+    assert app.success[0].value == "Graph changes saved to the queue."
+    app.text_input(key=f"label_{uid}").set_value("Unsaved label").run(timeout=30)
+    assert app.session_state["graph_queue"] == saved
+
+
+@pytest.mark.parametrize("invalid", ["name", "model", "connection"])
+def test_edit_queued_graph_rejects_invalid_changes_atomically(invalid) -> None:
+    app = _queue_editor_app()
+    snapshot = deepcopy(app.session_state["graph_queue"])
+    app.button(key=f"queue_edit_{snapshot[0]['id']}").click().run(timeout=30)
+    form = app.session_state["graph_nodes"][0]
+    if invalid == "name":
+        app.text_input(key="current_graph_name").set_value(" ").run(timeout=30)
+    elif invalid == "model":
+        app.selectbox(key=f"model_option_{form['uid']}").set_value("__custom__").run(timeout=30)
+        app.text_input(key=f"model_custom_{form['uid']}").set_value("").run(timeout=30)
+    else:
+        app.selectbox(key=f"parent_uid_{form['uid']}").set_value(
+            app.session_state["graph_nodes"][1]["uid"]
+        ).run(timeout=30)
+    app.button(key="queue_save_changes").click().run(timeout=30)
+    assert not app.exception
+    assert app.error
+    assert app.session_state["graph_queue"] == snapshot
+    assert app.session_state["editing_queue_graph_id"] == snapshot[0]["id"]
+
+
+def test_cancel_editing_restores_saved_graph_and_detaches_copy() -> None:
+    app = _queue_editor_app()
+    snapshot = deepcopy(app.session_state["graph_queue"])
+    graph_id = snapshot[0]["id"]
+    app.button(key=f"queue_edit_{graph_id}").click().run(timeout=30)
+    uid = app.session_state["graph_nodes"][0]["uid"]
+    app.text_input(key=f"label_{uid}").set_value("Draft").run(timeout=30)
+    app.text_input(key="current_graph_name").set_value("Draft name").run(timeout=30)
+    app.button(key="queue_cancel_edit").click().run(timeout=30)
+    assert not app.exception
+    assert "editing_queue_graph_id" not in app.session_state
+    assert app.text_input(key="current_graph_name").value == "Same name"
+    assert build_editor_graph_payload(app.session_state["graph_nodes"]) == (
+        build_editor_graph_payload(snapshot[0]["nodes"])
+    )
+    assert app.session_state["graph_queue"] == snapshot
+    assert not any(button.key == "queue_save_changes" for button in app.button)
+
+    app.button(key=f"queue_edit_{graph_id}").click().run(timeout=30)
+    app.button(key=f"queue_load_copy_{graph_id}").click().run(timeout=30)
+    assert not app.exception
+    assert "editing_queue_graph_id" not in app.session_state
+    assert app.text_input(key="current_graph_name").value == "Same name copy"
+    assert app.session_state["graph_queue"] == snapshot
+
+
+def test_removing_edited_graph_ends_editing_without_changing_other_entries() -> None:
+    app = _queue_editor_app()
+    snapshot = deepcopy(app.session_state["graph_queue"])
+    graph_id = snapshot[0]["id"]
+    app.button(key=f"queue_edit_{graph_id}").click().run(timeout=30)
+    app.button(key=f"queue_remove_{graph_id}").click().run(timeout=30)
+    assert not app.exception
+    assert "editing_queue_graph_id" not in app.session_state
+    assert app.session_state["graph_queue"] == snapshot[1:]
+    assert not any(button.key == "queue_save_changes" for button in app.button)
+
+
+def test_update_graph_rejects_missing_target() -> None:
+    with pytest.raises(ValueError, match="no longer in the queue"):
+        queue.update_graph([], "missing", "Name", [create_default_node_form(1)])
 
 
 def test_queue_archive_preserves_snapshots_and_can_be_imported_from_folder(tmp_path) -> None:

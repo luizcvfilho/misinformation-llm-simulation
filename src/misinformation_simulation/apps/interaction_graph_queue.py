@@ -19,13 +19,28 @@ from misinformation_simulation.simulation.io import graph_config_from_payload, r
 
 
 def add_graph(queue: list[dict[str, Any]], name: str, node_forms: list[dict[str, str]]) -> None:
+    name = _validate_graph(name, node_forms)
+    queue.append({"id": uuid4().hex, "name": name, "nodes": deepcopy(node_forms)})
+
+
+def update_graph(
+    queue: list[dict[str, Any]], graph_id: str, name: str, node_forms: list[dict[str, str]]
+) -> None:
+    graph = next((graph for graph in queue if graph["id"] == graph_id), None)
+    if graph is None:
+        raise ValueError("The graph being edited is no longer in the queue.")
+    name = _validate_graph(name, node_forms)
+    graph.update(name=name, nodes=deepcopy(node_forms))
+
+
+def _validate_graph(name: str, node_forms: list[dict[str, str]]) -> str:
     name = name.strip()
     if not name:
         raise ValueError("Enter a name for the graph.")
     errors = validate_node_forms(node_forms)
     if errors:
         raise ValueError(" ".join(errors))
-    queue.append({"id": uuid4().hex, "name": name, "nodes": deepcopy(node_forms)})
+    return name
 
 
 def move_graph(queue: list[dict[str, Any]], index: int, direction: int) -> None:

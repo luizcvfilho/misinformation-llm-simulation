@@ -119,6 +119,7 @@ def remove_node(index: int) -> None:
 
 def reset_graph() -> None:
     st.session_state.graph_nodes = load_initial_graph_nodes()
+    st.session_state.pop("editing_queue_graph_id", None)
     clear_graph_canvas()
 
 
@@ -131,6 +132,7 @@ def import_graph_payload(payload: dict[str, Any]) -> None:
     if payload.get("layout"):
         set_tree_mode(forms, True)
     st.session_state.graph_nodes = forms
+    st.session_state.pop("editing_queue_graph_id", None)
     clear_graph_canvas()
 
 

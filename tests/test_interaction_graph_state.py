@@ -74,12 +74,14 @@ def test_remove_node_keeps_single_node(monkeypatch) -> None:
 
 def test_reset_graph_and_import_payload_replace_nodes(monkeypatch) -> None:
     fake_st = SimpleNamespace(session_state=FakeSessionState(graph_nodes=[{"node_id": "old"}]))
+    fake_st.session_state.editing_queue_graph_id = "queued-graph"
     monkeypatch.setattr(state, "st", fake_st)
     monkeypatch.setattr(state, "load_initial_graph_nodes", lambda: [{"node_id": "reset"}])
 
     state.reset_graph()
 
     assert fake_st.session_state.graph_nodes == [{"node_id": "reset"}]
+    assert "editing_queue_graph_id" not in fake_st.session_state
 
     payload = {
         "nodes": [
@@ -92,6 +94,8 @@ def test_reset_graph_and_import_payload_replace_nodes(monkeypatch) -> None:
         ]
     }
 
+    fake_st.session_state.editing_queue_graph_id = "queued-graph"
     state.import_graph_payload(payload)
 
     assert fake_st.session_state.graph_nodes[0]["node_id"] == "node-a"
+    assert "editing_queue_graph_id" not in fake_st.session_state
