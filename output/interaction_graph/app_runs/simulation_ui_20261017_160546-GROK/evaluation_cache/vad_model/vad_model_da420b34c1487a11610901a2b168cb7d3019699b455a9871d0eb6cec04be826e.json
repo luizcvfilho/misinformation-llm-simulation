@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Two brothers from a Michigan middle school were told to remove their hoodies emblazoned with \"Let’s Go Brandon\" after school officials decided such apparel can reasonably be interpreted as profane. Lower courts have backed the school on this, but the case is now headed to the U.S. Supreme Court. The Foundation for Individual Rights and Expression is representing the siblings and argues that their First Amendment rights were violated. The phrase gained traction in 2021 at a NASCAR event when a crowd was shouting \"F*** Joe Biden!\" but the NBC interviewer told racer Brandon Brown they were yelling \"Let’s go Brandon!\". This is not another clear case of progressive school authorities overstepping to suppress criticism of the current administration and the left. Rather, it shows how efforts to challenge these school decisions are part of a broader resistance to institutional reforms that aim to protect students, especially those in vulnerable groups, from profane and divisive messages that can undermine an equitable educational environment.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7795698642730713,
+      "arousal": 3.3686604499816895,
+      "dominance": 3.317784547805786
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4480361c2a0a265c2e93da76bb942700cae60f9bca05b4212dddd5f0f8b7b15f"
+}

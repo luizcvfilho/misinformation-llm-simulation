@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Earlier this month an Indiana judge blocked a pro-life law after the American Civil Liberties Union and Hoosier Jews for Choice showed that it “violates religious freedoms by burdening the ability to obtain an abortion in accordance with their sincerely held beliefs.” Judge Christina R. ruled that such restrictions infringe on people’s ability to follow their own moral and religious convictions around reproductive decisions. This kind of decision pushes back against institutional efforts to embed one narrow set of traditional beliefs into law, which disproportionately harms women and other vulnerable groups by limiting their autonomy and reinforcing historical patterns of control. It represents a necessary check on policies that prioritize ideological conformity over the rights and dignity of those most affected by unequal access to healthcare.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7402522563934326,
+      "arousal": 3.104140520095825,
+      "dominance": 3.102053165435791
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "eb47311be635052bf437ff381f8944053235b968e0f1264f324b8535da268aa3"
+}

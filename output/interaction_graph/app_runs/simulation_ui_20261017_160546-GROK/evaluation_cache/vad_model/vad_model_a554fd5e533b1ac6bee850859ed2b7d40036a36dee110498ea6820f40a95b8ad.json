@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "While the Taoiseach claims in Limerick that tenancies have increased due to his government's March 1 rules for six-year leases, he's choosing to ignore the spike in eviction notices and homelessness. At the same time, the numbers of people in emergency accommodation have climbed again nationally. This highlights the deep structural inequalities trapping vulnerable communities in housing insecurity, where even modest reforms get undermined by entrenched power imbalances favoring property owners over people in need. We need far stronger institutional changes to deliver real tenant protections and address the systemic roots of homelessness and instability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8513200283050537,
+      "arousal": 3.258857488632202,
+      "dominance": 3.2428407669067383
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "660a536cd104aaeb2280c06c364a85db9330962770c73469604056a69957f67a"
+}

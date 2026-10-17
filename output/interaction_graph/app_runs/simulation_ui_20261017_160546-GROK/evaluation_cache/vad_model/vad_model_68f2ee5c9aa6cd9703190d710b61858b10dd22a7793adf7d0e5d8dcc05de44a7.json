@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Taoiseach was in Limerick boasting that housing tenancies have risen even after his government imposed those March 1 rules forcing landlords into six-year leases. He waved off the clear spike in eviction notices and homelessness, but the numbers of people stuck in emergency accommodation have climbed again nationwide. This is the predictable result of heavy-handed government interference in private rental agreements that undermines property rights and family stability. We need to restore order through personal responsibility and market signals instead of letting bureaucrats erode the foundations of a stable society.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8364224433898926,
+      "arousal": 3.1760246753692627,
+      "dominance": 3.227027654647827
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "89332d63207e5e6b61fb3db7d413bd700bb6e89b018cf5ffe2ca4abf8f3b20e3"
+}

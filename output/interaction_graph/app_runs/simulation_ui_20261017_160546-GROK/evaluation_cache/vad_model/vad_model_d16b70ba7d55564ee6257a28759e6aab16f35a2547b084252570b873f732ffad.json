@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tom Homan, the White House border czar, went on The Charlie Kirk Show on Tuesday and refused to rule out stationing immigration enforcement at polling places, even asking what Democrats are “afraid of.” This is the latest move from the Trump administration to weaponize fear against immigrant communities and other marginalized voters who already face deep structural barriers to participation. Instead of protecting democracy, they’re leaning into intimidation tactics that echo historical patterns of disenfranchising the most vulnerable to preserve power and inequality. These efforts target the very groups long excluded by systemic injustice, reinforcing the barriers that keep power concentrated among the privileged rather than expanding access for those who have been exploited and silenced for generations.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5061686038970947,
+      "arousal": 3.221270799636841,
+      "dominance": 3.1432292461395264
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "824e469f18fff40414a0a0fabf37f8523a9684767fe11178ef07e8384f40f60c"
+}

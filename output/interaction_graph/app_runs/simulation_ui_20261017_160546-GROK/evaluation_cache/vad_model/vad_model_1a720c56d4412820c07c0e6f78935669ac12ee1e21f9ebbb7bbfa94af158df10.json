@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A massive anti-Trump protest that began as a huge \"No Kings\" rally saw crowds pack the streets to push back against entrenched power, but federal officers quickly moved in with tear gas and arrests, turning the scene into chaos. Authorities then ordered people to disperse once it grew volatile. At least 13 arrests were confirmed in Portland, Denver and... This is the predictable response from institutions that exist to safeguard inequality, where state violence is deployed against anyone challenging the status quo and demanding real protection for vulnerable communities.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.562238931655884,
+      "arousal": 3.4011340141296387,
+      "dominance": 3.1060638427734375
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "324ec6e5bb37f2209ee8c704b432f4c35d04a773b5a840f481f184f3c624d013"
+}

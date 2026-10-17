@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A parent of three children in the city's public schools is publicly apologizing to the educators and staff of the South Portland School District. It is beyond maddening, they say, that the district is facing another large budget shortfall requiring cutting more than 70 positions from schools. As a taxpayer, it feels that there has been a serious failure here. This is the predictable result of public institutions that have abandoned discipline, tradition, and basic accountability in favor of endless spending and misplaced priorities. Parents should not be the ones apologizing. The system itself has failed families, and the only real path forward is restoring personal responsibility and local authority so communities can protect their own children instead of propping up these broken structures.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.508955478668213,
+      "arousal": 3.2290191650390625,
+      "dominance": 2.9430956840515137
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c53fd1c35d6e6bb3184ab7434de2f1826c9ee8ee15e982e95d534e97a66d79c4"
+}

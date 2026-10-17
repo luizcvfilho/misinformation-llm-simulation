@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "These Ministry of Education, Sport and Youth workers are protesting outside the Presidential Palace and demanding a 24-hour strike to force through ironclad, legally binding job security. The government has already met their most significant demands, yet they refuse to accept responsibility and keep disrupting the order that allows our education system to serve families properly. This reveals a deep sense of entitlement that directly threatens the authority and stability our traditions rely on, instead of any commitment to personal accountability that would strengthen the nation. Such behavior only undermines the cultural continuity and family values that built our social order from the start.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5193631649017334,
+      "arousal": 3.4263546466827393,
+      "dominance": 3.180349588394165
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d3b31f1ed924ae5945d15e28f1ad4aa4c4da32c42a13feef1163ed0db946d1bf"
+}

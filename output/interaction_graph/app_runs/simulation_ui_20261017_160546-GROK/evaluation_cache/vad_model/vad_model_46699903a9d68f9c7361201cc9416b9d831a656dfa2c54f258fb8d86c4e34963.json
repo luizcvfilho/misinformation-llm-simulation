@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "There's an important proposal in New York's 2026 State of the State agenda to require that guns sold in the state be designed so they can't be easily converted into illegal machine guns, with criminal penalties for violations. This is a necessary step to challenge the structural inequalities allowing the gun industry to direct violence toward our most vulnerable communities. Corporations have long profited from weak rules born out of deep historical power imbalances, placing the deadly burden on marginalized groups and working people. It's time we implement these long-overdue changes to prioritize safety and accountability over corporate greed, defending communities devastated by systemic public safety failures.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7659215927124023,
+      "arousal": 3.1949822902679443,
+      "dominance": 3.3004846572875977
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a55795c9845a99053d5c99f2742cb8d64e136be759290ad3e879cc92af3008ae"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "In Paris, France, in a case that has sent ripples of concern through religious communities and civil liberties advocates across France, a French abbot has been convicted under a controversial new law targeting “psychological subjection.” The conviction of Father Bernard Domini, superior of the Missionary Family of Notre-Dame (FMND), under France’s new law has ignited a [...]",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.62408447265625,
+      "arousal": 3.264050006866455,
+      "dominance": 3.0438830852508545
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "eb3df9073d69a4d331ee6b10371511d9c34bf8859392e4bb3cb3086cbf86d4ad"
+}

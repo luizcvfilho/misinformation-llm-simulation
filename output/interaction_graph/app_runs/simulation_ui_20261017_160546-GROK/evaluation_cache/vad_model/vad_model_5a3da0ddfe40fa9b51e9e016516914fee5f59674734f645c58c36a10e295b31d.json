@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Hey, just heard about these workers from the Ministry of Education, Sport and Youth support programmes who protested right outside the Presidential Palace on Thursday and announced a full 24-hour strike. They're demanding legally binding job security guarantees, but the government is pushing back hard by claiming they've already handled the most important demands. This whole thing reeks of elite coordination to string people along with empty promises while keeping real protections out of reach. Clearly the official line is just a cover to maintain control and avoid any binding commitments that would disrupt their hidden agenda in education and beyond.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.700209856033325,
+      "arousal": 3.30051851272583,
+      "dominance": 3.1213502883911133
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "54aa54c076d03c31fdc34e6bc1cf10aff06faf16a96986b8bc3816d0efd2778b"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This graduation protest in Jaipur is no random act of bravery. A student calls out administrative issues right in front of the Deputy Chief Minister, it goes viral with all these staged reactions, and the university just stays silent? That's classic manipulation by hidden elites who run these institutions. They're letting the story spread to divide people and manufacture outrage, while the real coordination stays buried. Official silence isn't confusion—it's permission to flip the narrative and keep everyone focused on surface drama instead of questioning who's really pulling the strings behind education and power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.831354856491089,
+      "arousal": 3.2774014472961426,
+      "dominance": 3.1776010990142822
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f88aa2cad53fca7f65937213ef09bac0b4116bb85b400538acd41dde2b554a9c"
+}

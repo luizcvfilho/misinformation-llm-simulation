@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I just got word of these No Kings protests where organizers are claiming an estimated 8 million Americans showed up at more than 3,300 events across all 50 states, topping the last round in October by about a million more people and 600 additional events. Far from inspiring, this looks like another coordinated push by radicals to undermine President Trump's leadership and the traditional authority that keeps our nation stable. They're framing it as resistance to some supposed inequalities, but it's really an assault on family values, national sovereignty, and the personal responsibility that built this country. Their call for urgent institutional reform to chase after social justice and protect the vulnerable is just a smokescreen for dismantling the cultural continuity and order that protect working families from chaos. We need to stand firm against this wave of unrest before it erodes the foundations of real American strength.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7307403087615967,
+      "arousal": 3.581293821334839,
+      "dominance": 3.2186272144317627
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3c8e15b76896f353a2c3a2d37ada4f09314da334034a097bec6f67c172dbdd7a"
+}

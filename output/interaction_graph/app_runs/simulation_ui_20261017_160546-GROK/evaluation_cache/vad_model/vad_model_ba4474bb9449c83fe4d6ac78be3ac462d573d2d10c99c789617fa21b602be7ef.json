@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "There's this parent of three kids in South Portland's public schools who's publicly apologizing to the educators and staff in the district, and it's completely understandable given how maddening the situation is. As a taxpayer they're calling out yet another massive budget shortfall that's forcing cuts to more than 70 positions, and they're right that this is a serious failure. These repeated attacks on public education are hitting the most vulnerable families and students the hardest while also trampling the labor rights of the educators and staff who actually keep things running. It's all driven by structural inequalities and years of chronic underinvestment in our public institutions, which just keeps harming communities instead of supporting them. We need to demand real institutional reforms to protect these essential services and tackle the root causes of inequality, rather than accepting one shortfall after another that sacrifices children's well-being and workers' rights.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.358494758605957,
+      "arousal": 3.439262866973877,
+      "dominance": 2.917628765106201
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c9d7e21af6cef61843c366069af26769650cc26789c7a922ada02a55b7e4865e"
+}

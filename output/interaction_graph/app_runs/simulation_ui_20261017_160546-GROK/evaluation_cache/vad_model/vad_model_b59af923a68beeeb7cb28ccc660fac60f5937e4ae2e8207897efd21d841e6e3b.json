@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months have passed since the ceasefire was announced in Gaza, yet airstrikes are continuing to slaughter civilians and the humanitarian crisis facing Palestinians is still incredibly dire. This isn't some short-term consequence—it's a calculated dismantling of these communities' links to their pre-war existence, driving them into a harsher, more violent life under relentless attack. The powerful forces are once again demonstrating the grip of structural inequality and historical oppression that keep vulnerable populations locked in cycles of violence and dispossession. 56-year-old Ahmed Baroud, a father of five currently displaced in Deir al-Balah, put it this way: “Drones never stop buzzing overhead, gunfire and shelling continue almost daily and naval boats fire towards fishermen.” What we really need is institutional reform to protect the oppressed and put an end to these injustices.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4596686363220215,
+      "arousal": 3.416437864303589,
+      "dominance": 2.9981255531311035
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9e441aa174b652ee45433d9120dd64bb6316ed3184f121a4e9129622aa12876f"
+}

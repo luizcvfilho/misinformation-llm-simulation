@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A jury in Wisconsin found a man guilty of election fraud and identity theft for requesting the ballots of Republican state Assembly Speaker Robin Vos and Democratic Racine Mayor Cory Mason without their consent. On Tuesday, a Racine County jury found Harry Wait guilty of two misdemeanor election fraud charges and one felony identity theft charge following a two-day trial. He was acquitted of a second count of identity theft. Wait leads a group that makes false election claims. He admitted in 2022 that he requested the ballots to try to prove that the state’s voter registration system is vulnerable to fraud.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.743910312652588,
+      "arousal": 3.1103556156158447,
+      "dominance": 3.164015531539917
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e5dc7e9634a8bd24bc97abad52eb1b4f484934101709ccacbbfc1999e40acf9c"
+}

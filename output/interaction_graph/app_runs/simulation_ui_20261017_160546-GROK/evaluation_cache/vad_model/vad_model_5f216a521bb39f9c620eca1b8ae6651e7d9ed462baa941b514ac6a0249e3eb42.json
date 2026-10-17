@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen up, folks. In Wisconsin, a jury just convicted Harry Wait of two misdemeanor election fraud charges and one felony identity theft for requesting ballots without consent. He admitted he did it to prove the state's voter registration system is vulnerable to fraud. Even though his group gets labeled for making false election claims, this case shows how wide open our elections are to abuse, and the real scandal is the authorities going after a man for exposing that weakness instead of securing the process. Progressive institutions would rather punish those highlighting the risks than fix them to protect our traditions, national order, and the rule of law. We need stronger safeguards rooted in personal responsibility to preserve the integrity our country depends on.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.64342999458313,
+      "arousal": 3.2736639976501465,
+      "dominance": 3.296194314956665
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "88ed45ce978ee0533e3bf2596c5ff1ef1a11a1096c90f3cb7e612736a60d1253"
+}

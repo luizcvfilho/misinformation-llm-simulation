@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I just got word that the International Olympic Committee has banned transgender women and DSD athletes from the female category at the 2028 Los Angeles Olympics and all future Games. This is yet another institutional move to enforce exclusion on some of the most marginalized people in sports, framing it as a simple rule change while ignoring the deeper structural inequalities and historical discrimination that already push trans and DSD individuals to the margins. Kirsty Coventry, the IOC president, claimed it would not be fair for biological males to compete in the female category, but this decision clearly prioritizes rigid biological categories over protecting vulnerable groups and advancing real inclusion. It's the kind of reform we need to challenge head-on, because these bodies keep choosing exclusion when they should be dismantling barriers instead.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.960308074951172,
+      "arousal": 3.1354329586029053,
+      "dominance": 3.1889216899871826
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "59858eaf37921870c2fc08e4ee243b00a8a587b77992579888afb7e02fbf3745"
+}

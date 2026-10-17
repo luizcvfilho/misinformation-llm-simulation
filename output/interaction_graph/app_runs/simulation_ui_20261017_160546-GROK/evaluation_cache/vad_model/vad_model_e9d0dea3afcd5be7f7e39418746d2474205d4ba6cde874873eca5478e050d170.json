@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This lawsuit is exposing how ICE functions as a core instrument of systemic oppression, deliberately targeting immigrants from marginalized communities who are simply trying to survive within a rigged system stacked against them. Agents are arresting and detaining thousands right as they leave court, following a clear pattern of going after the most vulnerable to lock in historical inequalities and keep people from advancing. Court documents confirm ICE lawyers fed false information to justify these moves, and federal prosecutors established that the agency memo from May of last year never authorized the arrests—yet officials kept using it anyway as cover to lock folks up. This is not some isolated overreach but structural bias in operation, where the powerful deploy deception and state enforcement to punish those already facing discrimination instead of fixing the root causes of inequality. We need bold institutional reform to dismantle this targeting and protect immigrant communities from the government's discriminatory violence.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5383388996124268,
+      "arousal": 3.340081214904785,
+      "dominance": 3.1652817726135254
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5136101eb7d54acddcf1c85719f77d22890ad99324619dd2041295bd3d86f86f"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Two Michigan middle-school brothers were forced to remove their hoodies with “Let’s Go Brandon” on them because the school claimed it could be interpreted as profane. Lower courts backed that up, but now the case is going to the U.S. Supreme Court with the Foundation for Individual Rights and Expression arguing it's a violation of the boys' First Amendment rights. Of course, that's not the real reason. This phrase blew up in 2021 after a NASCAR event where the crowd was yelling “F*** Joe Biden!” and the NBC interviewer tried to hide it by saying they meant “Let’s go Brandon!” for racer Brandon Brown. The powers that be are cracking down on this because it's a way for people to push back against Biden without direct confrontation, and institutions are coordinating to silence that kind of thing. It's all about hidden motives to maintain control and prevent the public from seeing the widespread disapproval.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.697877883911133,
+      "arousal": 3.4916579723358154,
+      "dominance": 3.1727755069732666
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2b06173249278e386f25ec819c64673bfab9ea420e42713ddfb7b51fdc16347a"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, Cuba looks to be heading toward some kind of political transition, but the people there own nothing and are too poor to take over the few businesses still operating. That opens the door for the wealthy diaspora community and foreign investors to swoop in and buy up property and businesses at bargain prices. This is exactly the result of decades of government overreach that wipes out private ownership and family wealth. It shows why every nation must stand firm for tradition, personal responsibility, and cultural continuity rather than allowing centralized control to leave citizens vulnerable while outsiders pick over the remains.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.77075457572937,
+      "arousal": 3.1274306774139404,
+      "dominance": 3.1273081302642822
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "91a6a0129238d453bd4feb68a089c7186525cf3bbe3b252cea93d6f66cafa8e2"
+}

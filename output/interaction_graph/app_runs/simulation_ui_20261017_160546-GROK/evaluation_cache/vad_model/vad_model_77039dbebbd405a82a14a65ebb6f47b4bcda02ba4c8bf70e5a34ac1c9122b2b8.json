@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Israel's parliament began a debate today on a bill that would make the death penalty the default punishment for West Bank Palestinians convicted of murdering Israelis. Minister Itamar Ben-Gvir is pushing this forward and calling it a victory for accountability, but it's really just another step in institutionalizing discrimination and inequality. This targets vulnerable Palestinian communities with uniquely harsh measures while ignoring the structural causes of conflict, like entrenched power imbalances and historical oppression. Opponents are correct that it's racist and draconian, and it does nothing to deliver justice or protect lives—instead, it shields the status quo by focusing punishment on marginalized groups rather than pursuing reforms that could address inequality for everyone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7348697185516357,
+      "arousal": 3.2822022438049316,
+      "dominance": 3.1585896015167236
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "24ebbcee00923a2ca313f563618a53b254c71be73816cf1c2d636f3d3a4896eb"
+}

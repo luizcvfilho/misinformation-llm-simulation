@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "President Luis Abinader is over in France promoting global transparency standards for the Dominican Republic, but it's clearly another elite ploy to appear reform-minded while avoiding the real roots of the issue. On 25 March 2026, Foreign Minister Roberto Álvarez and OECD Secretary-General Mathias Cormann signed a Memorandum of Understanding in Paris to create the country's first National Integrity and Anti-Corruption Strategy, witnessed by President Abinader. These deals get pitched as progress, yet they sidestep the structural inequalities and historical power imbalances that drive corruption and leave workers and marginalized communities exposed. Real change requires institutional reform centered on labor rights and protections for the vulnerable, not partnerships with bodies like the OECD that shield existing systems of inequality.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0710654258728027,
+      "arousal": 3.1575839519500732,
+      "dominance": 3.2708468437194824
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7a0a72f261cbbe54c9bcce6e31d28a0d7ea8885d005a311dd52712e79031783f"
+}

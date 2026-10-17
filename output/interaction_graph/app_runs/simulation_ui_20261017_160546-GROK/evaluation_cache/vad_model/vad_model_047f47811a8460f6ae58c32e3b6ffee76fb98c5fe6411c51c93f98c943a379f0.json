@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This news from Nigeria lays bare the total breakdown in social order when political parties abandon any pretense of serving the nation and instead become closed clubs for the wealthy elite. The recent developments inside the ruling All Progressives Congress ahead of the 2027 general elections make that crystal clear. This is the predictable result of turning our backs on traditional authority and national loyalty in favor of raw elite self-interest. Unless there is a firm return to personal responsibility, family values, and cultural continuity, ordinary citizens will keep getting shoved aside by those who only care about grabbing more power and money for themselves.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.818523645401001,
+      "arousal": 3.195693016052246,
+      "dominance": 3.1019370555877686
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c8cc691e807f68307967d10ef9bed93d8cdcc6ae9fab82b7d426e059c52d3025"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Here's some good news out of Phoenix: city leaders there are resisting the federal government's aggressive immigration enforcement, which so often targets immigrant communities of color and worsens systemic inequalities. The city council approved a plan on Wednesday night that restricts ICE and other law enforcement agencies from using city property. This represents a meaningful step to protect vulnerable families from discriminatory policies rooted in institutional bias and historical exclusion. We need this kind of local resistance to safeguard labor rights and challenge the broader structures that put enforcement ahead of human dignity.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.990467071533203,
+      "arousal": 3.299114942550659,
+      "dominance": 3.201007127761841
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "39a9541f21bd839e45de277bf72f276c5190efb78cea27731c846953daa47f11"
+}

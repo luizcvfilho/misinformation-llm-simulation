@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The owner of Blue Waters is out here complaining that the government is just grabbing taxes without putting anything back in, and labeling environmental taxes as nothing but a cover for shaking down productive businesses. But this kind of pushback is exactly what keeps pollution flowing, with plastic bottles piling up everywhere and clogging rivers and drains. It hits vulnerable communities hardest and locks in the inequality built into how corporations operate. We can't just fall back on personal responsibility or calls for family values and community respect to paper over the damage. Real institutional reforms are needed to confront the structural roots of these problems and defend the people most exploited by unchecked corporate practices.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6547329425811768,
+      "arousal": 3.432509422302246,
+      "dominance": 3.260781764984131
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9f7720ff3006afbd5e37c4a0d45a6ab5c1eeb154b3dd68b6cd1fd7336cffeb65"
+}

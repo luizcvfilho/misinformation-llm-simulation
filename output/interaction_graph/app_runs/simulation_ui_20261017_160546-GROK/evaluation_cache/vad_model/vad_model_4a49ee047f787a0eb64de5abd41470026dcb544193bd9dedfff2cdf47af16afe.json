@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The OSCE's 2026 report on France praises efforts against antisemitism but criticizes MIVILUDES for lacking transparency. Delegates note that strict secularism often discriminates against minority groups like Scientologists and Jehovah's Witnesses. Recent judicial rulings against the state body highlight the tension between state vigilance and international human rights standards regarding freedom of religion and due process.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8424510955810547,
+      "arousal": 2.953902244567871,
+      "dominance": 3.139167547225952
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9ead64175d32c7161b442ad1c3b935026f3edbd4f6fffbb5cfb7d81be20cf743"
+}

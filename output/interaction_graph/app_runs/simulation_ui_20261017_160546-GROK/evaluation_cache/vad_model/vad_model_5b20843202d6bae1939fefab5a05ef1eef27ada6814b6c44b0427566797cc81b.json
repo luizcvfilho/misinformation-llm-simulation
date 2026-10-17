@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This revelation in the lawsuit exposes how ICE has been systematically targeting vulnerable immigrants who are just trying to secure legal status as they leave court, arresting and detaining thousands of them in what amounts to a clear pattern of abuse against marginalized communities. According to the new court documents, ICE lawyers provided false information to justify these actions, and federal prosecutors revealed that the agency memo from May of last year gave no authorization for the arrests even though officials had been citing it to lock people up anyway. This is yet another example of institutional deception and power wielded against those already facing historical inequalities in our broken system, where structural biases punish people for seeking fairness rather than protecting them. We desperately need reform to end this kind of targeting and safeguard the most vulnerable from discriminatory enforcement.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.389946937561035,
+      "arousal": 3.2878682613372803,
+      "dominance": 3.068448066711426
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dad5175ce80e3fa2212646b698b07bf68921540cff8a2ce9a2888745a5461066"
+}

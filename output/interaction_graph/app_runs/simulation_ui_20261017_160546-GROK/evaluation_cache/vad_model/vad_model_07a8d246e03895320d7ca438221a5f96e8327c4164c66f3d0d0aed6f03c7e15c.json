@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The DMK's new manifesto, unveiled by Chief Minister M.K. Stalin, puts forward important welfare measures aimed at tackling deep-rooted inequality and supporting those most marginalized by systemic economic pressures. This includes doubling the monthly aid for women to Rs 2,000, a necessary step to address the historical financial vulnerabilities and discrimination faced by women, alongside Rs 8,000 household coupons to ease burdens on working families. Farmers will receive free motor pumpsets to strengthen rural labor rights against longstanding exploitation, with enhanced support also promised for fishermen as another vulnerable coastal community. The manifesto further targets substantial FDI growth and job creation along with AI development, though these must ultimately serve institutional reforms that prioritize protection of the disadvantaged over corporate interests. This represents a real push to challenge the structures that have long exploited women, rural workers, and coastal communities, and we need to hold them to ensuring corporate priorities don't undermine those gains.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0576508045196533,
+      "arousal": 3.2330899238586426,
+      "dominance": 3.2583959102630615
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3a101829991ecac47817fcb3a4613534ab41a1a9ed4b813bed85ab710ad1550e"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I heard about this ICE agent at JFK International Airport in New York on Thursday who stepped in to help a baby that stopped breathing in a crowded TSA line with his family, with the Department of Homeland Security releasing footage of the moment. Sure, the quick action is a positive, but it really lays bare the structural inequalities baked into our systems. Those packed, stressful lines fall hardest on marginalized communities due to chronic underfunding and policies that have long failed to prioritize the well-being of vulnerable families, echoing deeper historical patterns of neglect that leave the most oppressed groups exposed to unnecessary harm. We need serious institutional reforms to tackle these root problems and safeguard those most at risk from such inequities.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6077256202697754,
+      "arousal": 3.3124496936798096,
+      "dominance": 3.023129463195801
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5368c9709eeecff4392953804a9675019cb710ddb10bfaa327f67a5376a9719b"
+}

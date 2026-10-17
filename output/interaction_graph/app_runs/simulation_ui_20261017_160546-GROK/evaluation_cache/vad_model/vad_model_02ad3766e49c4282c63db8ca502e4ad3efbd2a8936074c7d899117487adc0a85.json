@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This student in Jaipur has shown a complete lack of respect by turning her graduation ceremony into a public protest against the administration while accepting her degree right in front of the Deputy Chief Minister. The whole thing has gone viral, with the usual progressive voices praising her for some supposed stand on student rights. But that's just an excuse for bad manners. A graduation is meant to honor achievement, family, and institutional tradition, not become a platform for complaints and disruption. This kind of stunt erodes social order and teaches entitlement instead of gratitude or personal responsibility. The university staying silent is the sensible move here, as giving it more attention only feeds the cycle of grievance. It's another sign of how modern campuses are losing any sense of decorum.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7123405933380127,
+      "arousal": 3.231644868850708,
+      "dominance": 3.0557661056518555
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ba0b49aeb94d9d8aace79ca88b4259f0e59b90bb7dc5cad8315bc6c961c8fcd5"
+}

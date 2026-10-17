@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Punjab and Haryana High Court has granted regular bail to an accused booked under provisions relating to national security and the Official Secrets Act, holding that mere suspicion of sharing sensitive information with a person in Pakistan cannot justify prolonged incarceration. He was allegedly in telephonic contact with Karachi-based “Punjabi Kuri”. Directing his release, [...]",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8937792778015137,
+      "arousal": 3.0395991802215576,
+      "dominance": 2.9817428588867188
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9b8e7eab54ec916be03940c8dbbc273c81b87bea98598dd417c95ff0247cde1c"
+}

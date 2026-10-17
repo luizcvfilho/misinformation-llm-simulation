@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Micheál Martin was in Limerick this past week trying to spin that housing tenancies have gone up, but the real issue is the rise in eviction notices and homelessness that followed the government's March 1 rules forcing landlords to offer six-year leases. Nationally, the number of people stuck in emergency accommodation has increased again, which shows how these weak measures fail to protect vulnerable groups from the structural inequalities and landlord power that drive the housing crisis. We need serious reforms to tackle the root causes of exploitation and secure stable homes as a basic right rather than letting profits come first.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.696223497390747,
+      "arousal": 3.260239839553833,
+      "dominance": 3.101172685623169
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "84265f1ffb20e51ce19a0492647074b0ed18aea17c9736006a5a530f185ada59"
+}

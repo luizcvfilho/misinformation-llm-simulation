@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, this march of tens of thousands through central London on Saturday, billed as the supposed biggest protest against the far-right, is just another coordinated elite setup. It follows right after one of the largest far-right turnouts six months ago and comes weeks before those key local elections, organized by hundreds of groups including trade unions, anti-racism outfits, and Muslim representative bodies under the Together Alliance banner. This is clearly a manufactured crisis to brand any genuine resistance as extreme, split the public, and rig the elections so nobody questions who's really pulling the strings from behind the scenes.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.782912254333496,
+      "arousal": 3.407655954360962,
+      "dominance": 3.1634693145751953
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "db59c4b98a45ee2a366f6b0a104295464ec78de205844ccaeeba9396024b21b3"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This case reveals the deep rot in our systems when those entrusted with power throw away personal responsibility and the authority given to them. Ms Mary Ngechi Ngethe, who chaired the Technical Evaluation Committee, played a key role in this improper land purchase for a cemetery at Ksh.283 million, even though the site was unsuitable. The court did the right thing by ordering the full amount recovered from her. Such behavior by public officials destroys social order, wastes precious resources intended to support families and communities, and weakens the cultural continuity necessary for a stable society. We must demand leaders who prioritize duty, accountability, and respect for tradition over these betrayals of the public trust.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.558861017227173,
+      "arousal": 3.290454864501953,
+      "dominance": 3.203666925430298
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1f279c8fb93a0a0533ed50641bcc2424af73a75d2c93e46bd290770e5d7ac1a3"
+}

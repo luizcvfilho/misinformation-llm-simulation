@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "As a parent of three children in the city’s public schools, I want to publicly apologize to the educators and staff of South Portland School District. It is beyond maddening that our district is facing another large budget shortfall requiring cutting more than 70 positions from schools. As a taxpayer, it feels that there has [...]",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4392526149749756,
+      "arousal": 3.3225514888763428,
+      "dominance": 2.9905388355255127
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "24e568ec67305816bc1bfda339990919ea5653428573e3a6592f4213ab4f0b20"
+}

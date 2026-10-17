@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Eight million Americans joined anti-Trump protests across the US, organisers say. An estimated 8 million people gathered at more than 3,300 events across all 50 US states, the organisers of the “No Kings” protests said, as demonstrators voiced opposition to President Donald Trump’s leadership. News agency AFP reported that the events were held nationwide, though US authorities have not provided an official count. Organisers said turnout surpassed earlier demonstrations, noting there were “about one million more participants and 600 more events compared to the last No Kings demonstrations in October.”",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0673160552978516,
+      "arousal": 3.255976915359497,
+      "dominance": 3.230985641479492
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "61772d74ca4896017a75fda0970c6214eeeec76a74cc8e514221c1c30b572c72"
+}

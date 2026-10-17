@@ -1,0 +1,205 @@
+{
+  "inputs": {
+    "text": "According to organizers, eight million Americans joined anti-Trump protests across the US. An estimated 8 million people gathered at more than 3,300 events across all 50 US states, the organizers of the “No Kings” protests said, as demonstrators voiced opposition to President Donald Trump’s leadership. News agency AFP reported that the events were held nationwide, though US authorities have not provided an official count. Organizers said turnout surpassed earlier demonstrations, noting there were “about one million more participants and 600 more events compared to the last No Kings demonstrations in October.”",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Organizers' reported turnout at nationwide anti-Trump “No Kings” protests",
+    "subtopics": [
+      "Protests across US states",
+      "Demonstrators' opposition to President Donald Trump’s leadership",
+      "Turnout compared with earlier demonstrations",
+      "No official count from US authorities"
+    ],
+    "central_entities": [
+      "organizers",
+      "Americans",
+      "“No Kings”",
+      "US",
+      "demonstrators",
+      "President Donald Trump",
+      "AFP",
+      "US authorities"
+    ],
+    "central_relations": [
+      {
+        "subject": "organizers",
+        "action": "said",
+        "object": "eight million Americans joined anti-Trump protests across the US; an estimated 8 million people gathered at more than 3,300 events across all 50 US states",
+        "polarity": "affirmed",
+        "predicate": "said",
+        "negation_scope": null,
+        "signed_action": "said",
+        "base_action": "said",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "protest_participants",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "eight million"
+          },
+          {
+            "role": "event_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "more than 3,300 events"
+          },
+          {
+            "role": "states",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 US states"
+          }
+        ]
+      },
+      {
+        "subject": "demonstrators",
+        "action": "voiced opposition",
+        "object": "President Donald Trump’s leadership",
+        "polarity": "affirmed",
+        "predicate": "voiced opposition",
+        "negation_scope": null,
+        "signed_action": "voiced opposition",
+        "base_action": "voiced opposition",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "AFP",
+        "action": "reported",
+        "object": "the events were held nationwide",
+        "polarity": "affirmed",
+        "predicate": "reported",
+        "negation_scope": null,
+        "signed_action": "reported",
+        "base_action": "reported",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "US authorities",
+        "action": "have not provided",
+        "object": "an official count",
+        "polarity": "negated",
+        "predicate": "provided",
+        "negation_scope": "provided",
+        "signed_action": "have not provided",
+        "base_action": "provided",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "organizers",
+        "action": "said",
+        "object": "turnout surpassed earlier demonstrations, with about one million more participants and 600 more events compared to the last “No Kings” demonstrations in October",
+        "polarity": "affirmed",
+        "predicate": "said",
+        "negation_scope": null,
+        "signed_action": "said",
+        "base_action": "said",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "additional_participants",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million more participants"
+          },
+          {
+            "role": "additional_events",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 more events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Organizers frame the nationwide protests as a large-scale show of opposition to President Donald Trump, while no official turnout count is available.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "81a57484bf7d9a4f066eb68e149519d94c68919654b258c6f8f084f029fb2e3e",
+      "input_sha256": "99120b80dbf28647fce9fa4ae5d64a62451cafca4a6c27aea08aae1471d9a0df",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Organizers' reported turnout at nationwide anti-Trump “No Kings” protests\",\n  \"subtopics\": [\n    \"Protests across US states\",\n    \"Demonstrators' opposition to President Donald Trump’s leadership\",\n    \"Turnout compared with earlier demonstrations\",\n    \"No official count from US authorities\"\n  ],\n  \"central_entities\": [\n    \"organizers\",\n    \"Americans\",\n    \"“No Kings”\",\n    \"US\",\n    \"demonstrators\",\n    \"President Donald Trump\",\n    \"AFP\",\n    \"US authorities\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"said\",\n      \"object\": \"eight million Americans joined anti-Trump protests across the US; an estimated 8 million people gathered at more than 3,300 events across all 50 US states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said\",\n      \"base_action\": \"said\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protest_participants\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"eight million\"\n        },\n        {\n          \"role\": \"event_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"states\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 US states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"demonstrators\",\n      \"action\": \"voiced opposition\",\n      \"object\": \"President Donald Trump’s leadership\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"voiced opposition\",\n      \"negation_scope\": null,\n      \"signed_action\": \"voiced opposition\",\n      \"base_action\": \"voiced opposition\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"AFP\",\n      \"action\": \"reported\",\n      \"object\": \"the events were held nationwide\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reported\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reported\",\n      \"base_action\": \"reported\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"US authorities\",\n      \"action\": \"have not provided\",\n      \"object\": \"an official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provided\",\n      \"negation_scope\": \"provided\",\n      \"signed_action\": \"have not provided\",\n      \"base_action\": \"provided\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"said\",\n      \"object\": \"turnout surpassed earlier demonstrations, with about one million more participants and 600 more events compared to the last “No Kings” demonstrations in October\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said\",\n      \"base_action\": \"said\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"additional_participants\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million more participants\"\n        },\n        {\n          \"role\": \"additional_events\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 more events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Organizers frame the nationwide protests as a large-scale show of opposition to President Donald Trump, while no official turnout count is available.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "81a57484bf7d9a4f066eb68e149519d94c68919654b258c6f8f084f029fb2e3e",
+          "input_sha256": "99120b80dbf28647fce9fa4ae5d64a62451cafca4a6c27aea08aae1471d9a0df",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Organizers' reported turnout at nationwide anti-Trump “No Kings” protests\",\n  \"subtopics\": [\n    \"Protests across US states\",\n    \"Demonstrators' opposition to President Donald Trump’s leadership\",\n    \"Turnout compared with earlier demonstrations\",\n    \"No official count from US authorities\"\n  ],\n  \"central_entities\": [\n    \"organizers\",\n    \"Americans\",\n    \"“No Kings”\",\n    \"US\",\n    \"demonstrators\",\n    \"President Donald Trump\",\n    \"AFP\",\n    \"US authorities\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"said\",\n      \"object\": \"eight million Americans joined anti-Trump protests across the US; an estimated 8 million people gathered at more than 3,300 events across all 50 US states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said\",\n      \"base_action\": \"said\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protest_participants\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"eight million\"\n        },\n        {\n          \"role\": \"event_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"states\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 US states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"demonstrators\",\n      \"action\": \"voiced opposition\",\n      \"object\": \"President Donald Trump’s leadership\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"voiced opposition\",\n      \"negation_scope\": null,\n      \"signed_action\": \"voiced opposition\",\n      \"base_action\": \"voiced opposition\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"AFP\",\n      \"action\": \"reported\",\n      \"object\": \"the events were held nationwide\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reported\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reported\",\n      \"base_action\": \"reported\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"US authorities\",\n      \"action\": \"have not provided\",\n      \"object\": \"an official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provided\",\n      \"negation_scope\": \"provided\",\n      \"signed_action\": \"have not provided\",\n      \"base_action\": \"provided\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"said\",\n      \"object\": \"turnout surpassed earlier demonstrations, with about one million more participants and 600 more events compared to the last “No Kings” demonstrations in October\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said\",\n      \"base_action\": \"said\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"additional_participants\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million more participants\"\n        },\n        {\n          \"role\": \"additional_events\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 more events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Organizers frame the nationwide protests as a large-scale show of opposition to President Donald Trump, while no official turnout count is available.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "ab05c33960fb91b25fc853c9a7e0ebf4bcfbd5cc9b61d3d2dda90477b8b7d156",
+      "llm/recovery.py": "0fb683ebba84d8d38e4d788c1a66c1641fb4d9291d9d37b2dcadffc7c4b564f6",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "20d4554c819192ac77c57d0cd33d4aa00b23a2e2527c85702c06631d1469d22e"
+}

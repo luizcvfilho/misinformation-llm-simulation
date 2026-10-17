@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I just heard about these two middle-school brothers in Michigan who got told to take off their hoodies with “Let’s Go Brandon” on them. Lower courts have already said schools can ban that kind of clothing because it can reasonably come across as profane, and now the whole thing is headed to the U.S. Supreme Court. The slogan blew up in 2021 at a NASCAR event where crowds were actually shouting something else but it got twisted around. Some folks are trying to frame this as the school trampling the boys’ First Amendment rights, but that’s just cover for right-wing groups using kids and our public schools to push back against leaders working for social justice. It only worsens inequality and drags divisive, harmful rhetoric into classrooms where it undermines equity and puts vulnerable students at greater risk. We need to back the institutions that are protecting the most marginalized from this kind of targeted attack instead of letting it slide under free speech excuses.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4415762424468994,
+      "arousal": 3.432840585708618,
+      "dominance": 3.1211817264556885
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "07cc4887a96a9e5fc09a308bb6ff878cd54e0a7b0eb2c9cec1a525bbe43a5b3c"
+}

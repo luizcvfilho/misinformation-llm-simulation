@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is yet another glaring example of how elites in institutional roles exploit public resources meant to serve the most vulnerable among us. The court has recovered the money from Ms Mary Ngechi Ngethe, who chaired the Technical Evaluation Committee and played a central role in the irregular acquisition of unsuitable land for a cemetery at Ksh.283 million. These kinds of procurement failures aren't isolated mistakes but symptoms of deeper structural inequalities that allow those in power to prioritize personal or connected interests over the basic needs of working communities, like access to dignified burial sites. It's a reminder that real reform must target these systemic protections for the powerful before they can truly protect the marginalized.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6691205501556396,
+      "arousal": 3.082183837890625,
+      "dominance": 2.9760830402374268
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "17aaa977cc23aba4a693d41349ac9c3678340c9c9f2e4e98db73f36659ca31db"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Hey everyone, down in southern Alberta folks are out there right now gathering signatures for the Water Not Coal petition that Corb Lund launched just last month. They're demanding the Government of Alberta finally pass real legislation to ban all coal exploration outright. These kinds of grassroots campaigns are vital for pushing back against the entrenched power of profit-driven industries that have long sacrificed people and the environment for corporate gain. What we're seeing here is the direct result of institutions built on a history of exploitation, where development has always favored the powerful at the expense of water, land, and the communities hit hardest by pollution and loss—especially those already facing systemic inequality. The only path forward is when ordinary working people organize and insist that the public good must come before the destructive priorities of the elite.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7525742053985596,
+      "arousal": 3.2748377323150635,
+      "dominance": 3.1989758014678955
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5546b616243e310c16ce5b7f61b994f960108639af0a0907d8208c3a8fdbe7b5"
+}

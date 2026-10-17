@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Cuba appears to be tottering toward some kind of political transition. Some Cubans are concerned that the residents own nothing and are too impoverished to take over the few functioning businesses on the island, while there is a large and wealthy diaspora community (and potentially also foreign investors) who would be able to swoop in and buy property and businesses at bargain prices. This is exactly what decades of government overreach produce when it wipes out private ownership and family wealth. The situation shows why nations must defend tradition, personal responsibility, and cultural continuity instead of letting centralized control leave citizens vulnerable to outsiders picking over the remains.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6261370182037354,
+      "arousal": 3.1454312801361084,
+      "dominance": 3.0146396160125732
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f53040e7ce22fd40005a0bea0d9b68d82faec8b8cadd5f34ac672519f60345af"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "In Jaipur, a student used her graduation ceremony to protest the administrative failures at her university right in front of the Deputy Chief Minister, and her remarks have gone viral because they expose the structural inequalities baked into our educational systems. This is a clear act of resistance against institutions that routinely ignore student concerns and prioritize power over equity, leaving young people—especially those most vulnerable—to bear the costs of bureaucratic neglect and lack of accountability. The university administration's silence only confirms their role in upholding an unjust status quo rather than pursuing the reforms needed to protect student rights. While some claim the protest was out of place, that critique usually comes from those invested in maintaining the current hierarchies. This moment underscores the urgent need to address the systemic issues in education that perpetuate inequality and suppress dissent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.816622257232666,
+      "arousal": 3.1753416061401367,
+      "dominance": 3.0661234855651855
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f3223720a74a3dee66b0718972b847e2dd9650761776dcc9fabb62b633449385"
+}

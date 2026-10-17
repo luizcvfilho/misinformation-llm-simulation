@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The political shakeup in Cuba is only sharpening the massive divides between the wealthy and the rest of society, as ordinary people on the island lack any resources to claim a role in running businesses and are shut out entirely. Instead, the wealthy diaspora and foreign investors are positioned to grab property and assets for next to nothing. This is no fair or neutral process—it's a mechanism that hands more power to the privileged elite, pushing vulnerable workers and communities deeper into the margins while locking in structural exploitation and historical inequality. Those who've already been left behind for generations won't see any real gains. What we need instead are genuine reforms that put labor rights first and defend the most disadvantaged against another cycle of dispossession.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6884262561798096,
+      "arousal": 3.2595834732055664,
+      "dominance": 3.0432143211364746
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bde65d650ad5a8ed3e162b1ca853b12dc32a877662a3b48ff304317bbf65030c"
+}

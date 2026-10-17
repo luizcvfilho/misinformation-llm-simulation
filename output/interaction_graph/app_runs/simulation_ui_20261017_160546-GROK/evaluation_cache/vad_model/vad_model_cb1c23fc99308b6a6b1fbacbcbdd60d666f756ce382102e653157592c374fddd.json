@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a blatant example of how institutions continue to sideline the rights of working people and marginalized communities in West Bengal. Over 58 lakh names were deleted from the electoral rolls during the revision exercise, stripping vulnerable voters of their voice without meaningful recourse. The Supreme Court directed tribunals to address these missing voters, yet they remain non-operational with key functioning details still unresolved, while the state government and Calcutta High Court drag their feet over locations. The fact that software for challenging these rulings sits ready only highlights the structural delays that protect inequality and block access for those already facing systemic barriers. This kind of bureaucratic foot-dragging isn't neutral—it's another way power structures entrench exclusion against the most at-risk groups.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6830971240997314,
+      "arousal": 3.1230318546295166,
+      "dominance": 3.0094454288482666
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6e967b1aca3b51b71ea56f385d0af4f5e7cb31c356c2b9a5f3176f52cbbd9d64"
+}

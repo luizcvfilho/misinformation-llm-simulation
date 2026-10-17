@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An ICE agent stepped in at JFK International Airport in New York on Thursday to help a baby who stopped breathing in a crowded TSA line with his family, and the Department of Homeland Security released footage of the agent noticing the issue and starting to assist. This is exactly the kind of decisive action we expect from our law enforcement officers, who step up to protect families and restore order when it matters most. The quick response by this agent shows the strength of traditional authority figures doing their duty for the nation. Of course, the usual voices are twisting it into claims about structural inequalities hitting marginalized communities hardest because of underfunding, and demanding serious institutional reforms. That is just the same tired progressive attack on our systems, ignoring how personal responsibility and strong national institutions are what actually safeguard families and cultural order instead of more weakening changes.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7060070037841797,
+      "arousal": 3.2780091762542725,
+      "dominance": 3.001861572265625
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6e8062ade0f4590227f97fd5a4db5a1b2898071e797c1a2be6f8e95e48aeed02"
+}

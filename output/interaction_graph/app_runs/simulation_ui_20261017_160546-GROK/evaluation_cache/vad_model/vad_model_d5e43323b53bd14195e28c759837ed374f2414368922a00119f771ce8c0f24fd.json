@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is just another shameful display of how spoiled students are chipping away at the traditions that hold our institutions together. In Jaipur, this young woman took what should have been a proud moment of personal achievement and respect for family and authority and twisted it into a public protest against the university administration, even as she accepted her degree right in front of the Deputy Chief Minister. The usual progressive voices are hailing it as some kind of stand for student rights, but that's nothing more than a cover for plain bad manners and disrespect. Graduations exist to honor real accomplishment, personal responsibility, and the continuity of our institutions, not to give a platform for gripes that undermine social order. The university was right to stay silent, because giving these stunts any attention only encourages more entitlement and less gratitude. It shows how today's campuses have thrown out basic decorum in favor of constant disruption.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7834343910217285,
+      "arousal": 3.194166898727417,
+      "dominance": 3.253830909729004
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "07c51e43c1e8d39de2cc205cf636a46cba4682c62d2def0a41e2db403ffc4e6b"
+}

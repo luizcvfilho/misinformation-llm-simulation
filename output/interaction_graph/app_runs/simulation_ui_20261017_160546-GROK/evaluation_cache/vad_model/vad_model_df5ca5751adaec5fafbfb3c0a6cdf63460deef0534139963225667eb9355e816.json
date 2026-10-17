@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, this is no accident—over 58 lakh names have already been stripped from West Bengal's electoral rolls under the cover of a so-called revision. The tribunals the Supreme Court ordered to let people challenge those deletions aren't operational at all. The state government and Calcutta High Court are just dragging their feet talking about locations while the software sits ready but useless. It's all part of a coordinated manipulation by hidden elites and institutions to lock in the purges before anyone can push back, pretending there's a process when the real goal is to keep those voters silenced and maintain their grip on power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.71570086479187,
+      "arousal": 3.3180062770843506,
+      "dominance": 3.0594820976257324
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3c1d28c408c4d73b6dea78b1571213b0afb1f5c75039db25326074617a8d5322"
+}

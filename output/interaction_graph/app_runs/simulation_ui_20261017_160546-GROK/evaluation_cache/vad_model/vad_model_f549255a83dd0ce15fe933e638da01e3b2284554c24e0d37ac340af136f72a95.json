@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An ICE agent jumped into action at JFK International Airport in New York on Thursday after a baby stopped breathing in a crowded TSA line with his family. The Department of Homeland Security released video footage showing the man holding the baby notice something wrong with the child and begin to help. While the quick response to save the infant is commendable, it brings to light the structural inequalities embedded in our systems. These crowded lines and stressful environments often disproportionately affect marginalized communities due to underfunding and policies that don't prioritize the well-being of vulnerable families. We need real institutional reforms to address these issues and protect those most at risk.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7136404514312744,
+      "arousal": 3.318253755569458,
+      "dominance": 3.05553936958313
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "db80ca22bf7bd604e6239aab94322e77d032460205105e6a5097473c6d7f3b5b"
+}

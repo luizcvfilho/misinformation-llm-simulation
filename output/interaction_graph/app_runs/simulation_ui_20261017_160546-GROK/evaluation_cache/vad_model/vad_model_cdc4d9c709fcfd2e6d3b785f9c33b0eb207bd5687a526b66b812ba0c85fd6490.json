@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, this brick kiln mess in Uttar Pradesh is no accident or simple government screw-up. Three months after they issued that mandate for environmental clearances, they're still claiming they can't set up a clear process, which has everyone confused and the industry in limbo. That's the cover story. The real play is coordinated manipulation by hidden elites and institutions who benefit from keeping small operators squeezed and dependent on their rigged system. These kiln owners already hold approvals from the State Pollution Control Board for water and air standards, yet now they're being pushed into extra clearances that are deliberately murky and open to middlemen interference. That's not a bug—it's how the control works, forcing compliance while protecting the insiders. Legal experts demanding court decisions be followed are just reinforcing the setup, treating it like some neutral rule when it's really about narrative control and weakening the industry under the environmental excuse. This whole delay is designed to serve concealed interests, not fix anything for the environment or the operators.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7877097129821777,
+      "arousal": 3.1642541885375977,
+      "dominance": 3.1418862342834473
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d0bdfdb4de4376d052b2f98f434d74f6b05c199414f2c56c350c555334846ea8"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands of people marched through central London on Saturday to protest the far-right, six months after Britain saw one of its largest-ever far-right demonstrations and weeks ahead of key local elections. The Together Alliance event was organised by hundreds of groups, including trade unions, anti-racism campaigners and Muslim representative bodies, and it was billed as the biggest.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.100902795791626,
+      "arousal": 3.353750228881836,
+      "dominance": 3.2176525592803955
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fb7d55b1a5255db170781e27a9a3cd17bb1fb460f8a7fcb11d7c2893a47ea56b"
+}

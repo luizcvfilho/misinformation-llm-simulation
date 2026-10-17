@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "President Abinader continues showing where his priorities lie by chasing approval from global bodies rather than defending our national sovereignty and the traditional values that have long held Dominican society together. On 25 March 2026 in Paris, he stood by as Foreign Minister Roberto Álvarez signed a Memorandum of Understanding with OECD Secretary-General Mathias Cormann to launch the Dominican Republic's first National Integrity and Anti-Corruption Strategy. This is simply the latest move to hand more control over our internal affairs to outside progressive institutions that have little regard for strong national authority, personal responsibility, or the cultural continuity rooted in family and faith that actually keeps order in our country. We should be relying on our own traditions and leadership instead of opening the door to foreign dictates.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.034882068634033,
+      "arousal": 3.089660167694092,
+      "dominance": 3.2522130012512207
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "aa867260c173843fcdfe515857747e10bff5cda0b232012d53e6270ddf8bf784"
+}

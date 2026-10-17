@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This news out of Nigeria highlights a serious breakdown in social order. Political parties are no longer serving any real public purpose and have instead become exclusive clubs reserved for the wealthy. The recent developments inside the ruling All Progressives Congress ahead of the 2027 general elections make that plain. What we are watching is the predictable result of abandoning traditional authority and national loyalty in favor of elite self-interest. Without a firm return to personal responsibility, family values, and cultural continuity, the ordinary people will keep being pushed aside by those who care only about their own power and money.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7094483375549316,
+      "arousal": 3.158125638961792,
+      "dominance": 2.9632797241210938
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5efba912d8b9f285e0aa68fa93cdb1729c36b8ebf750e19513da9318494d6118"
+}

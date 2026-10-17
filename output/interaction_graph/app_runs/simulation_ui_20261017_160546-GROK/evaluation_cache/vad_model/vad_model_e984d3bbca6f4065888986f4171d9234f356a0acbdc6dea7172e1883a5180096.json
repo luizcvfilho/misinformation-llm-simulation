@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "In West Bengal, entrenched institutions are deliberately stripping working people and marginalized communities of their basic democratic rights through this massive disenfranchisement. More than 58 lakh names were removed from the electoral rolls in a single revision, further silencing vulnerable voters already facing systemic exclusion with almost no avenues for resistance. The Supreme Court ordered tribunals to step in and restore these voices, but those bodies remain completely non-operational because the state government and Calcutta High Court continue stalling on basic details like where they should operate. Even with the necessary software sitting ready to let people challenge these deletions, the delays persist as a structural barrier that protects inequality and blocks access for those hit hardest by historical oppression. This isn't neutral bureaucracy—it's a calculated move by power structures to keep the most at-risk groups sidelined and powerless.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.565261125564575,
+      "arousal": 3.1926112174987793,
+      "dominance": 2.9203195571899414
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "10212859a66b6ff787cf38fdf56f522cd84f2aa60f599a3e6975624d40f9d53f"
+}

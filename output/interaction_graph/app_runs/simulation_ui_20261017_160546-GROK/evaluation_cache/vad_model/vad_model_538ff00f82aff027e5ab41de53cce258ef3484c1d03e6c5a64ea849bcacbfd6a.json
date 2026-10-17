@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Harry Wait was just convicted by a Wisconsin jury of election fraud and identity theft for requesting the ballots of Robin Vos and Cory Mason without their consent. As the leader of a group that spreads false election claims, he's launched a direct assault on the democratic processes that marginalized communities depend on to push back against systemic inequality. By sowing doubt, these actions are meant to block the institutional reforms we need to address historical inequalities and protect vulnerable groups, ensuring that power remains with the privileged and that those communities face even greater challenges in having their voices heard.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5692288875579834,
+      "arousal": 3.3541200160980225,
+      "dominance": 3.120274066925049
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a9e88a8e491988d78cd5f94fe39012a51224f7d67a4a108b587287f3f72a0c42"
+}

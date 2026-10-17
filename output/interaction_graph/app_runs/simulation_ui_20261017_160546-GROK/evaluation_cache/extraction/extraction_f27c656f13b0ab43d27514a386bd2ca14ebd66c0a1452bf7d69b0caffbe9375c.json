@@ -1,0 +1,174 @@
+{
+  "inputs": {
+    "text": "I just heard about this massive anti-Trump protest that kicked off as a huge \"No Kings\" rally, with crowds packing the streets to challenge entrenched power. Federal officers wasted no time responding with tear gas and arrests, escalating everything into chaos before ordering people to disperse. At least 13 arrests were confirmed in Portland, Denver and.... This is the exact kind of state violence we've come to expect from institutions designed to protect inequality and crush any real push for justice. When vulnerable communities demand protection from systemic harm, the response is always repression to keep the powerful in control.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A \"No Kings\" anti-Trump protest and the response by Federal officers",
+    "subtopics": [
+      "Crowds challenging entrenched power",
+      "Tear gas, arrests, and dispersal orders",
+      "Arrests reported in Portland and Denver"
+    ],
+    "central_entities": [
+      "Trump",
+      "anti-Trump protest",
+      "No Kings",
+      "crowds",
+      "Federal officers",
+      "Portland",
+      "Denver",
+      "vulnerable communities"
+    ],
+    "central_relations": [
+      {
+        "subject": "anti-Trump protest",
+        "action": "kicked off as a huge rally",
+        "object": "No Kings",
+        "polarity": "affirmed",
+        "predicate": "kick off as",
+        "negation_scope": null,
+        "signed_action": "kicked off as a huge rally",
+        "base_action": "kicked off as a huge rally",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "crowds",
+        "action": "packed the streets to challenge entrenched power",
+        "object": "streets",
+        "polarity": "affirmed",
+        "predicate": "pack",
+        "negation_scope": null,
+        "signed_action": "packed the streets to challenge entrenched power",
+        "base_action": "packed the streets to challenge entrenched power",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Federal officers",
+        "action": "responded with tear gas and arrests",
+        "object": "tear gas and arrests",
+        "polarity": "affirmed",
+        "predicate": "respond",
+        "negation_scope": null,
+        "signed_action": "responded with tear gas and arrests",
+        "base_action": "responded with tear gas and arrests",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Federal officers",
+        "action": "ordered people to disperse",
+        "object": "people",
+        "polarity": "affirmed",
+        "predicate": "order to disperse",
+        "negation_scope": null,
+        "signed_action": "ordered people to disperse",
+        "base_action": "ordered people to disperse",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "arrests",
+        "action": "were confirmed in",
+        "object": "Portland and Denver",
+        "polarity": "affirmed",
+        "predicate": "confirm",
+        "negation_scope": null,
+        "signed_action": "were confirmed in",
+        "base_action": "were confirmed in",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "arrests_count_lower_bound",
+            "value": 13.0,
+            "unit": "arrest",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "At least 13"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The protest is framed as a challenge to entrenched power met by state repression.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The response is characterized as state violence by institutions designed to protect inequality and crush efforts toward justice.",
+      "The text claims that repression is the usual response when vulnerable communities demand protection from systemic harm, serving to keep the powerful in control."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "00abc89c968e45c45a6f3ae7c2571b6b47a68bae42790a43229504afc60582fe",
+      "input_sha256": "ca9938965f4489014640f7bbc03babd6f0d9bb84f2d30c415c282d0544c4bacb",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A \\\"No Kings\\\" anti-Trump protest and the response by Federal officers\",\n  \"subtopics\": [\n    \"Crowds challenging entrenched power\",\n    \"Tear gas, arrests, and dispersal orders\",\n    \"Arrests reported in Portland and Denver\"\n  ],\n  \"central_entities\": [\n    \"Trump\",\n    \"anti-Trump protest\",\n    \"No Kings\",\n    \"crowds\",\n    \"Federal officers\",\n    \"Portland\",\n    \"Denver\",\n    \"vulnerable communities\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The response is characterized as state violence by institutions designed to protect inequality and crush efforts toward justice.\",\n    \"The text claims that repression is the usual response when vulnerable communities demand protection from systemic harm, serving to keep the powerful in control.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"anti-Trump protest\",\n      \"action\": \"kicked off as a huge rally\",\n      \"object\": \"No Kings\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"kick off as\",\n      \"negation_scope\": null,\n      \"signed_action\": \"kicked off as a huge rally\",\n      \"base_action\": \"kicked off as a huge rally\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"crowds\",\n      \"action\": \"packed the streets to challenge entrenched power\",\n      \"object\": \"streets\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pack\",\n      \"negation_scope\": null,\n      \"signed_action\": \"packed the streets to challenge entrenched power\",\n      \"base_action\": \"packed the streets to challenge entrenched power\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Federal officers\",\n      \"action\": \"responded with tear gas and arrests\",\n      \"object\": \"tear gas and arrests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"respond\",\n      \"negation_scope\": null,\n      \"signed_action\": \"responded with tear gas and arrests\",\n      \"base_action\": \"responded with tear gas and arrests\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Federal officers\",\n      \"action\": \"ordered people to disperse\",\n      \"object\": \"people\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"order to disperse\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ordered people to disperse\",\n      \"base_action\": \"ordered people to disperse\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"arrests\",\n      \"action\": \"were confirmed in\",\n      \"object\": \"Portland and Denver\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"confirm\",\n      \"negation_scope\": null,\n      \"signed_action\": \"were confirmed in\",\n      \"base_action\": \"were confirmed in\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"arrests_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 13,\n          \"unit\": \"arrest\",\n          \"status\": \"approximate\",\n          \"expression\": \"At least 13\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The protest is framed as a challenge to entrenched power met by state repression.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "00abc89c968e45c45a6f3ae7c2571b6b47a68bae42790a43229504afc60582fe",
+          "input_sha256": "ca9938965f4489014640f7bbc03babd6f0d9bb84f2d30c415c282d0544c4bacb",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"A \\\"No Kings\\\" anti-Trump protest and the response by Federal officers\",\n  \"subtopics\": [\n    \"Crowds challenging entrenched power\",\n    \"Tear gas, arrests, and dispersal orders\",\n    \"Arrests reported in Portland and Denver\"\n  ],\n  \"central_entities\": [\n    \"Trump\",\n    \"anti-Trump protest\",\n    \"No Kings\",\n    \"crowds\",\n    \"Federal officers\",\n    \"Portland\",\n    \"Denver\",\n    \"vulnerable communities\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The response is characterized as state violence by institutions designed to protect inequality and crush efforts toward justice.\",\n    \"The text claims that repression is the usual response when vulnerable communities demand protection from systemic harm, serving to keep the powerful in control.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"anti-Trump protest\",\n      \"action\": \"kicked off as a huge rally\",\n      \"object\": \"No Kings\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"kick off as\",\n      \"negation_scope\": null,\n      \"signed_action\": \"kicked off as a huge rally\",\n      \"base_action\": \"kicked off as a huge rally\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"crowds\",\n      \"action\": \"packed the streets to challenge entrenched power\",\n      \"object\": \"streets\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pack\",\n      \"negation_scope\": null,\n      \"signed_action\": \"packed the streets to challenge entrenched power\",\n      \"base_action\": \"packed the streets to challenge entrenched power\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Federal officers\",\n      \"action\": \"responded with tear gas and arrests\",\n      \"object\": \"tear gas and arrests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"respond\",\n      \"negation_scope\": null,\n      \"signed_action\": \"responded with tear gas and arrests\",\n      \"base_action\": \"responded with tear gas and arrests\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Federal officers\",\n      \"action\": \"ordered people to disperse\",\n      \"object\": \"people\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"order to disperse\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ordered people to disperse\",\n      \"base_action\": \"ordered people to disperse\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"arrests\",\n      \"action\": \"were confirmed in\",\n      \"object\": \"Portland and Denver\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"confirm\",\n      \"negation_scope\": null,\n      \"signed_action\": \"were confirmed in\",\n      \"base_action\": \"were confirmed in\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"arrests_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 13,\n          \"unit\": \"arrest\",\n          \"status\": \"approximate\",\n          \"expression\": \"At least 13\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The protest is framed as a challenge to entrenched power met by state repression.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "ab05c33960fb91b25fc853c9a7e0ebf4bcfbd5cc9b61d3d2dda90477b8b7d156",
+      "llm/recovery.py": "0fb683ebba84d8d38e4d788c1a66c1641fb4d9291d9d37b2dcadffc7c4b564f6",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "12a39f87ad466fed3e8c3d706c9d373f4da7dff7e951b1edf21fe90cfbc81b40"
+}

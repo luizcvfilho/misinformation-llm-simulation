@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An estimated 8 million people turned out for the \"No Kings\" protests against President Donald Trump's leadership, with more than 3,300 events held across all 50 states. This represents a clear escalation from the October actions, drawing about a million more participants and 600 additional events. These demonstrations reflect a broad-based rejection of policies that deepen inequality, target vulnerable communities, and concentrate power in ways that undermine labor rights and social protections. Far from coordinated unrest aimed at disruption, this mobilization stands as a vital expression of resistance to systemic injustice and a demand for institutional reforms that prioritize equity and the needs of working people over entrenched privilege.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9544713497161865,
+      "arousal": 3.31331729888916,
+      "dominance": 3.3010575771331787
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e78c396d8647f778dd4ebf14dfbb1c2c81854f5c2831e26b817ef1fa89e3b354"
+}

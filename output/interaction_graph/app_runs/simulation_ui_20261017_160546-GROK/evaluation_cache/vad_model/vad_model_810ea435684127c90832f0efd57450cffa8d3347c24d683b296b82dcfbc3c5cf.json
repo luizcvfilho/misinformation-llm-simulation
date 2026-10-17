@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, this case in Paris where Father Bernard Domini, superior of the Missionary Family of Notre-Dame, got convicted under France's new law against psychological subjection is just the latest proof of how progressive authorities are weaponizing vague rules to go after traditional religious orders. These institutions have long defended family values, moral order, and the authority that holds society together. The pushback from religious communities is fully justified as they resist state interference that favors secular control over personal responsibility and cultural continuity. These convictions are not about protecting anyone vulnerable. They form part of a deliberate assault on longstanding hierarchies and national traditions, with the real manipulation coming from activist reformers who want to dismantle the structures keeping us stable. We have to stand firm against this overreach before it spreads and erodes what remains of our heritage.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6808269023895264,
+      "arousal": 3.2867870330810547,
+      "dominance": 3.2386817932128906
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "abf6c14a2ac28b9b8fbdc82f71e37cea2b69641423ca5924ae8d5c82d0dbaa75"
+}

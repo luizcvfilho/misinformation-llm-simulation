@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The OSCE's 2026 report on France gives some credit for efforts against antisemitism, but it sharply criticizes MIVILUDES for its lack of transparency, which is a clear sign of institutional problems that allow discrimination to continue unchecked. Delegates are calling out how strict secularism is discriminating against vulnerable minority groups like Scientologists and Jehovah's Witnesses, who are already marginalized in society. These recent judicial rulings against the state body highlight the real tension between this kind of state vigilance and international human rights standards on freedom of religion and due process. It's time for serious institutional reform to stop these structural inequalities and protect these communities from bias.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.743985176086426,
+      "arousal": 3.166865825653076,
+      "dominance": 3.1343994140625
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a45a37b11d742067ebdadbeb2b97c01e8ea24c8f9e0d3e7fd6abe4630ebc966d"
+}

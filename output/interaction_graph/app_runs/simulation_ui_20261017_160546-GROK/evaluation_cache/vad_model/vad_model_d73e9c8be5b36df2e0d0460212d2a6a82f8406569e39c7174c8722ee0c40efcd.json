@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I saw this story from Jaipur about a student who hijacked her own graduation ceremony to launch a protest against the university administration, right in front of the Deputy Chief Minister. Her remarks are spreading online, but this is nothing more than a display of entitlement and disrespect for authority and tradition. Instead of taking personal responsibility for her education and achievements, she's using the moment to blame the system and push claims of structural inequalities, which is the usual progressive tactic to undermine established institutions. Graduation ceremonies exist to celebrate hard work and cultural continuity, not to tolerate disruptions that prioritize grievance over order. The university leadership's decision to let this happen reveals a troubling weakness, and we need to restore discipline and respect for hierarchy rather than caving to these demands that erode family values and personal accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6533002853393555,
+      "arousal": 3.3091137409210205,
+      "dominance": 3.2100775241851807
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5c0f622848ccf6f20e0b05d4f134fa798c6354858532b72d2df2e01376ffb6a7"
+}

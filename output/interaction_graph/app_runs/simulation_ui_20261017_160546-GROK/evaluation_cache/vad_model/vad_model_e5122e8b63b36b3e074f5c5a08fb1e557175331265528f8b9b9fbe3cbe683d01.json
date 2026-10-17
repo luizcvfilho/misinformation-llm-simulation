@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They're pushing this as some routine cleanup in West Bengal but over 58 lakh names have already been wiped from the electoral rolls with no real justification. The tribunals the Supreme Court ordered to let people challenge these deletions are completely non-operational. The state government and Calcutta High Court keep stalling by arguing over locations while the software stays idle and ready. This is all coordinated by hidden elites and institutions to lock in the purges without resistance, silencing those voters under the fake cover of a proper process so they can hold onto power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.709390640258789,
+      "arousal": 3.2145156860351562,
+      "dominance": 3.0765485763549805
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "eb664dbb1e4df2447d0765e3c40d8ffebee1f0971d98e20df15d051e1753e5ce"
+}

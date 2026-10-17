@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This student in Jaipur turned her own graduation into a powerful stand against the university's administrative failures, calling out the Deputy Chief Minister directly and exposing the structural inequalities baked into our education systems. Her words have gone viral for a reason—they show how institutions routinely sideline student voices, especially from the most vulnerable groups, while protecting power and ignoring equity. By forcing young people to shoulder the weight of bureaucratic neglect and zero accountability, these systems reveal their true priorities. The administration's silence only confirms their investment in an unjust status quo rather than the reforms needed to safeguard student rights. Critics dismissing this as out of place are almost always those with a stake in preserving the existing hierarchies. We have to treat this as an urgent demand to dismantle the systemic failures in education that sustain inequality and crush dissent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.675534248352051,
+      "arousal": 3.348329782485962,
+      "dominance": 3.088170289993286
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "342edb49e4ef7e25552507627393068a07634f5a24090dab1541996d3ddd3e35"
+}

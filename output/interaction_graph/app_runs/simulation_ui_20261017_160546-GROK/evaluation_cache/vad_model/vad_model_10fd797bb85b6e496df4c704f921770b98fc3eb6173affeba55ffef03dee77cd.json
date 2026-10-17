@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "I just saw this story out of Jaipur where a student turned her own graduation ceremony into a direct protest against the administrative failures at her university, right in front of the Deputy Chief Minister. Her remarks have gone viral because they lay bare the structural inequalities woven into our educational systems. This was a powerful act of resistance against institutions that routinely dismiss student concerns and put power ahead of equity, forcing young people—especially the most vulnerable—to carry the burden of bureaucratic neglect and zero accountability. The university administration's silence speaks volumes about their commitment to upholding an unjust status quo rather than delivering the reforms needed to protect student rights. Critics who say the protest was out of place are almost always those invested in defending the current hierarchies. This moment makes it crystal clear how urgent it is to confront the systemic failures in education that keep inequality alive and shut down dissent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.775319814682007,
+      "arousal": 3.2490172386169434,
+      "dominance": 3.0532989501953125
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "57c4cb95ce56ef70bbff748426bc93bad1c54f9f5b23cb56af0701c083436e23"
+}
