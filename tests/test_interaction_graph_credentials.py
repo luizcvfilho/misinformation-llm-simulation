@@ -6,7 +6,11 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 from misinformation_simulation.apps.interaction_graph_credentials import required_provider_uses
-from misinformation_simulation.llm.credentials import API_KEY_NAMES, OPENAI_FALLBACK_NAMES
+from misinformation_simulation.llm.credentials import (
+    API_KEY_NAMES,
+    GEMINI_EXTRA_KEY_NAMES,
+    OPENAI_FALLBACK_NAMES,
+)
 
 SCRIPT = """
 import streamlit as st
@@ -40,7 +44,7 @@ st.button("Run", disabled=bool(missing))
 
 @pytest.fixture(autouse=True)
 def empty_environment(monkeypatch):
-    for names in [*API_KEY_NAMES.values(), OPENAI_FALLBACK_NAMES]:
+    for names in [*API_KEY_NAMES.values(), OPENAI_FALLBACK_NAMES, *GEMINI_EXTRA_KEY_NAMES.values()]:
         for name in names:
             monkeypatch.delenv(name, raising=False)
 
@@ -54,7 +58,7 @@ def app(tmp_path):
 def test_all_selected_providers_have_password_fields_and_block_missing_keys(tmp_path):
     ui = app(tmp_path)
     assert not ui.exception
-    assert len(ui.text_input) == 6
+    assert len(ui.text_input) == 8
     for item in ui.text_input:
         assert item.proto.type == item.proto.PASSWORD
     assert ui.button[-1].disabled
@@ -76,7 +80,7 @@ def test_environment_aliases_hide_inputs_without_showing_secrets(tmp_path, monke
     assert "session_api_key_chatgpt_primary" not in keys
     assert "session_api_key_chatgpt_fallback" not in keys
     assert "session_api_key_grok_primary" not in keys
-    assert len(ui.text_input) == 3
+    assert len(ui.text_input) == 5
     rendered = " ".join(item.value for item in ui.caption)
     assert "secret-environment" not in rendered
     assert "chatgpt" not in ui.session_state.test_credentials
@@ -89,6 +93,53 @@ def test_openai_can_add_optional_fallback_with_environment_primary(tmp_path, mon
     assert not ui.exception
     assert ui.session_state.test_credentials["chatgpt"].primary is None
     assert ui.session_state.test_credentials["chatgpt"].fallback == "session-backup"
+
+
+def test_three_gemini_session_keys_are_optional_private_and_cleared(tmp_path, monkeypatch):
+    from misinformation_simulation.apps.interaction_graph_credentials import session_api_credentials
+
+    monkeypatch.setenv("GEMINI_API_KEY", "environment-primary")
+    ui = app(tmp_path)
+    for slot in ("secondary", "tertiary"):
+        ui.text_input(key=f"session_api_key_gemini_{slot}").input(f"private-{slot}").run()
+    assert not ui.exception
+    gemini = ui.session_state.test_credentials["gemini"]
+    assert gemini.primary is None
+    assert gemini.secondary == "private-secondary"
+    assert gemini.tertiary == "private-tertiary"
+    assert "private-secondary" not in repr(gemini) + json.dumps(ui.session_state.graph_export)
+    assert "private-tertiary" not in repr(gemini) + json.dumps(ui.session_state.graph_export)
+    # The recovery snapshot helper must resolve the same session slots as the form.
+    from unittest.mock import patch
+
+    with patch(
+        "misinformation_simulation.apps.interaction_graph_credentials.st.session_state",
+        {
+            "_session_api_keys": ui.session_state["_session_api_keys"],
+            "_session_api_key_overrides": ui.session_state["_session_api_key_overrides"],
+        },
+    ):
+        credentials, _ = session_api_credentials(
+            [{"nodes": [{"provider": "gemini"}]}],
+            {"vad_method": "model"},
+        )
+    assert credentials["gemini"] == gemini
+    next(button for button in ui.button if button.label == "Clear session API keys").click().run()
+    assert "gemini" not in ui.session_state.test_credentials
+
+
+def test_gemini_environment_extra_keys_can_be_replaced_and_restored(tmp_path, monkeypatch):
+    for name in ("GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3"):
+        monkeypatch.setenv(name, "environment-" + name)
+    ui = app(tmp_path)
+    assert not any(item.key.startswith("session_api_key_gemini_") for item in ui.text_input)
+    choice = "session_api_key_override_gemini_tertiary"
+    ui.checkbox(key=choice).check().run()
+    assert "Gemini tertiary" in ui.session_state.test_missing
+    ui.text_input(key="session_api_key_gemini_tertiary").input("replacement-third").run()
+    assert ui.session_state.test_credentials["gemini"].tertiary == "replacement-third"
+    ui.checkbox(key=choice).uncheck().run()
+    assert "gemini" not in ui.session_state.test_credentials
 
 
 @pytest.mark.parametrize("provider", ["chatgpt", "gemini", "openrouter", "deepseek", "grok"])

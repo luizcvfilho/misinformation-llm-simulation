@@ -9,6 +9,7 @@ from openai import OpenAI
 from misinformation_simulation.enums import Provider
 from misinformation_simulation.llm.credentials import (
     configured_api_key,
+    configured_gemini_keys,
     configured_openai_fallback,
 )
 from misinformation_simulation.llm.recovery import RequestContext, get_recovery, register_secret
@@ -41,7 +42,9 @@ def create_llm_client(
             provider=provider_name,
             api_key=api_key,
             base_url=base_url,
-            max_retries=0 if session else max_retries,
+            max_retries=0
+            if session or (provider_name == "gemini" and len(configured_gemini_keys(api_key)) > 1)
+            else max_retries,
         )
         result[1]._recovery_configuration = {
             "provider": provider_name,

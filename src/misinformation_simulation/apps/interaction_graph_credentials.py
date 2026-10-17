@@ -9,9 +9,11 @@ import streamlit as st
 from misinformation_simulation.enums import Provider
 from misinformation_simulation.llm.credentials import (
     API_KEY_NAMES,
+    GEMINI_EXTRA_KEY_NAMES,
     OPENAI_FALLBACK_NAMES,
     ProviderAPIKeys,
     environment_api_key,
+    environment_gemini_key,
     environment_openai_fallback,
 )
 from misinformation_simulation.llm.recovery import register_secret
@@ -81,8 +83,19 @@ def session_api_credentials(graphs, settings):
             if (overrides.get(f"{provider}_fallback") or not environment_openai_fallback())
             else None
         )
-        if primary or fallback:
-            credentials[provider] = ProviderAPIKeys(primary or None, fallback or None)
+        extras = {}
+        if provider == "gemini":
+            for slot in GEMINI_EXTRA_KEY_NAMES:
+                value = (
+                    slots.get(slot)
+                    if overrides.get(f"gemini_{slot}") or not environment_gemini_key(slot)
+                    else None
+                )
+                extras[slot] = value or None
+                if overrides.get(f"gemini_{slot}") and not value:
+                    missing.append(f"Gemini {slot}")
+        if primary or fallback or any(extras.values()):
+            credentials[provider] = ProviderAPIKeys(primary or None, fallback or None, **extras)
         if not primary and (
             overrides.get(f"{provider}_primary") or not environment_api_key(provider)
         ):
@@ -98,7 +111,7 @@ def _override_environment_key(provider: str, slot: str, *, disabled: bool) -> bo
     widget_key = f"{_WIDGET_PREFIX}override_{choice_key}"
     if widget_key not in st.session_state:
         st.session_state[widget_key] = saved.get(choice_key, False)
-    label = "fallback key" if slot == "fallback" else "primary key"
+    label = f"{slot} key"
     selected = st.checkbox(
         f"Use a different {PROVIDER_LABELS[provider]} {label} for this session",
         key=widget_key,
@@ -114,9 +127,9 @@ def _key_input(provider: str, slot: str, *, disabled: bool, replacement: bool = 
     widget_key = f"{_WIDGET_PREFIX}{provider}_{slot}"
     if widget_key not in st.session_state:
         st.session_state[widget_key] = saved.get(provider, {}).get(slot, "")
-    names = OPENAI_FALLBACK_NAMES if slot == "fallback" else API_KEY_NAMES[provider]
-    suffix = "fallback API key" if slot == "fallback" else "API key"
-    if slot == "fallback" and not replacement:
+    names = _slot_names(provider, slot)
+    suffix = "API key" if slot == "primary" else f"{slot} API key"
+    if slot != "primary" and not replacement:
         suffix += " (optional)"
     label = f"{PROVIDER_LABELS[provider]} {suffix}"
     value = st.text_input(
@@ -140,7 +153,7 @@ def render_api_keys(
     required = required_provider_uses(graphs, settings)
     st.caption(
         "Keys entered here apply to this session. They are not saved to .env, graph "
-        "exports, or execution results. One key is shared by models of the same provider."
+        "exports, or execution results. Gemini supports three keys from independent projects."
     )
     if any(st.session_state.get(_SESSION_OVERRIDES, {}).values()) or any(
         value
@@ -169,10 +182,43 @@ def render_api_keys(
                 missing.append(PROVIDER_LABELS[provider])
         if provider == "chatgpt":
             fallback = _render_fallback_key(provider, disabled, missing)
+        extras = _render_gemini_keys(disabled, missing) if provider == "gemini" else {}
 
-        if primary or fallback:
-            credentials[provider] = ProviderAPIKeys(primary, fallback)
+        if primary or fallback or any(extras.values()):
+            credentials[provider] = ProviderAPIKeys(primary, fallback, **extras)
     return credentials, missing
+
+
+def _slot_names(provider, slot):
+    if provider == "gemini" and slot in GEMINI_EXTRA_KEY_NAMES:
+        return GEMINI_EXTRA_KEY_NAMES[slot]
+    return OPENAI_FALLBACK_NAMES if slot == "fallback" else API_KEY_NAMES[provider]
+
+
+def _render_gemini_keys(disabled, missing):
+    st.caption(
+        "On quota errors, try the next Gemini key automatically. Keys from the same "
+        "Google project share quota; use independent projects for independent limits. "
+        "The execution's Max requests per minute still applies to all API calls."
+    )
+    return {
+        slot: _render_gemini_extra_key(slot, disabled, missing) for slot in GEMINI_EXTRA_KEY_NAMES
+    }
+
+
+def _render_gemini_extra_key(slot, disabled, missing):
+    configured = bool(environment_gemini_key(slot))
+    override = False
+    if configured:
+        name = _slot_names("gemini", slot)[0]
+        st.caption(f"Gemini {slot} key configured in the environment ({name}).")
+        override = _override_environment_key("gemini", slot, disabled=disabled)
+    if not configured or override:
+        value = _key_input("gemini", slot, disabled=disabled, replacement=override) or None
+        if override and not value:
+            missing.append(f"Gemini {slot}")
+        return value
+    return None
 
 
 def _render_fallback_key(provider, disabled, missing):

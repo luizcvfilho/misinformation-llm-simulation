@@ -115,14 +115,20 @@ def render_recovery_dialog(job, request: RecoveryRequest) -> None:
     selected = None
     if context.choices:
         selected = st.radio(
-            "First OpenAI key on retry",
+            "First Gemini key on retry"
+            if context.provider == "gemini"
+            else "First OpenAI key on retry",
             context.choices,
             index=context.choices.index(context.credential),
-            format_func=lambda slot: "Original primary" if slot == "primary" else "Secondary",
+            format_func=lambda slot: "Original primary" if slot == "primary" else slot.title(),
             key=f"recovery_key_{request.id}",
             horizontal=True,
         )
-        st.caption("If the selected key fails, the other configured key is also tried once.")
+        st.caption(
+            "Other Gemini keys are tried on quota errors."
+            if context.provider == "gemini"
+            else "If the selected key fails, the other configured key is also tried once."
+        )
     if st.button("Try again", type="primary", key=f"retry_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("retry", selected))
         st.rerun()

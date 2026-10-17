@@ -415,6 +415,15 @@ def set_request_context(context: RequestContext) -> None:
     _request.set(context)
 
 
+def manual_credential() -> str | None:
+    return _manual_slot.get()
+
+
+def record_credential_attempt(context: RequestContext, error: Exception | None) -> None:
+    if (history := _attempts.get()) is not None:
+        history.append((context, error))
+
+
 def discard_successful_attempts() -> None:
     """Allow corrected generation on the working key without retrying failed credentials."""
     if history := _attempts.get():
@@ -463,6 +472,10 @@ def automatic_openai_call(client, function: Callable, *, model: str):
 
 
 def _cooldown_transient_failure(cause, limiter, temporary, transient_attempts):
+    from misinformation_simulation.llm.gemini_keys import daily_quota_exhausted
+
+    if (_request.get() or RequestContext()).provider == "gemini" and daily_quota_exhausted(cause):
+        return None
     if limiter and temporary and not openai_resource_exhausted(cause):
         if transient_attempts < 4:
             delay = min(60, 2 ** (transient_attempts + 1))

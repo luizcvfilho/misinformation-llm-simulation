@@ -26,12 +26,56 @@ It runs in the browser UI; the worker never opens a desktop window on the server
 An uncaught graph execution error uses the same dialog, but retrying that boundary reruns
 the current graph. LLM retries resume the pending generation/evaluation rather than the queue.
 
+## Three Gemini credentials
+
+Configure `GEMINI_API_KEY`, plus optional `GEMINI_API_KEY_2` and `GEMINI_API_KEY_3`,
+or enter the primary, secondary, and tertiary password fields in **API keys**.
+Each slot can independently use an environment value or a session replacement.
+Only the primary is required; a selected replacement must be nonempty. Secondary
+and tertiary values are private execution-scoped credentials, excluded from
+settings, graph exports, caches, and results. Duplicate values are deduplicated.
+
+The wrapper tries another key automatically on HTTP 429 quota errors, replaying
+the same pending generation with unchanged model, prompt, and temperature. A
+working key remains active across nodes and news workers. The pool is shared
+within an execution and isolated from other browser sessions. SDK retries are
+disabled for pooled clients, so every credential attempt passes through the
+existing request limiter and usage tracker. The quota failure is recorded as
+an API attempt, while a successful fallback completes the original operation.
+
+Structured daily quota errors hold that key/model until the next midnight in
+`America/Los_Angeles`. Minute/token errors hold the key/model for the API's
+`RetryInfo.retryDelay` or `Retry-After`, defaulting to 60 seconds. Available keys
+are tried before waiting. When all keys have temporary holds, waiting is
+cancellable. Each credential cycle makes at most three API attempts; persistent
+temporary failures retain bounded transport recovery. All daily quotas exhausted
+open normal recovery immediately, without repeatedly sending requests to those
+keys. **Try again** can explicitly retry a selected slot, including after `.env`
+credentials have been updated. Non-quota errors and invalid responses retain
+normal recovery/validation behavior rather than silently switching models.
+
+Quota state is in memory, per execution for Graph Studio; it is not a persistent
+daily request counter and does not know traffic from other applications. Scripts
+without an execution credential context use a process-local pool. Raw externally
+constructed SDK clients retain their single-client behavior. No extra requests
+are sent on checkpoint/cache hits.
+
+Google applies [quotas per project](https://ai.google.dev/gemini-api/docs/rate-limits),
+not per key. Three keys in one project cannot multiply its quota. Three independent
+projects each with 500 unused RPD provide a nominal total of 1,500 requests;
+1,200 logical rewrites leave room for 300 other attempts. Other traffic and retries
+can reduce that margin. Keep the shared **Max requests per minute** at `12` for
+15 RPM projects, even with five concurrent news runs. That control still includes
+OpenAI evaluation calls; this change does not introduce separate provider RPM
+budgets or proactive TPM limiting. Restart Graph Studio after updating the code.
+
 ## Two OpenAI credentials
 
 Graph Studio's **API keys** section lists every remote provider required by the selected
 graph queue (or the current graph), topic extraction, STDI judging, and LLM VAD evaluation.
 It identifies the models and stages using each provider, requesting a single password field
-per missing primary key. OpenAI also offers an optional fallback field when none is configured.
+per missing primary key. Gemini additionally offers optional secondary and tertiary fields;
+OpenAI offers an optional fallback field when none is configured.
 Existing environment credentials, including their supported aliases, are reported as configured
 without displaying their values. Select **Use a different ... key for this session** to enter a
 replacement even when an environment key exists. Uncheck it to use the environment key again.

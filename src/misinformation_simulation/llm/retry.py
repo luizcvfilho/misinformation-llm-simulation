@@ -14,6 +14,7 @@ from misinformation_simulation.enums.models import validate_provider_model
 from misinformation_simulation.llm.checkpoint import checkpoint_response, discard_pending_responses
 from misinformation_simulation.llm.clients import refresh_llm_client
 from misinformation_simulation.llm.flex_fallback import get_flex_fallback, is_flex_unavailable
+from misinformation_simulation.llm.gemini_keys import gemini_call
 from misinformation_simulation.llm.progress import retry_wait
 from misinformation_simulation.llm.recovery import (
     RequestContext,
@@ -119,50 +120,35 @@ def generate_gemini_text_with_retry(
     before_request_hook: Callable[[], None] | None = None,
 ) -> str:
     _validate_request_model("gemini", model)
+
+    def generate_once(request_client):
+        if before_request_hook is not None:
+            before_request_hook()
+        with api_request(provider="gemini", model=model):
+            response = request_client.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    temperature=temperature,
+                ),
+            )
+        record_response(response, provider="gemini", model=model)
+        text = (response.text or "").strip()
+        if not text:
+            raise ValueError("The API response was empty.")
+        return text
+
+    def generate():
+        return gemini_call(client, generate_once, model=model)
+
     if session := get_recovery():
-
-        def generate():
-            set_request_context(RequestContext("gemini", model))
-            request_client = refresh_llm_client(client)
-            if before_request_hook is not None:
-                before_request_hook()
-            with api_request(provider="gemini", model=model):
-                response = request_client.models.generate_content(
-                    model=model,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_instruction,
-                        temperature=temperature,
-                    ),
-                )
-            record_response(response, provider="gemini", model=model)
-            text = (response.text or "").strip()
-            if not text:
-                raise ValueError("The API response was empty.")
-            return text
-
         return session.run(generate, context=RequestContext("gemini", model))
     last_error = None
 
     for attempt in range(1, max_attempts + 1):
         try:
-            if before_request_hook is not None:
-                before_request_hook()
-
-            with api_request(provider="gemini", model=model):
-                response = client.models.generate_content(
-                    model=model,
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_instruction,
-                        temperature=temperature,
-                    ),
-                    contents=prompt,
-                )
-            record_response(response, provider="gemini", model=model)
-            text = (response.text or "").strip()
-            if not text:
-                raise ValueError("The API response was empty.")
-            return text
+            return generate()
         except Exception as exc:
             last_error = exc
             error_text = str(exc).lower()

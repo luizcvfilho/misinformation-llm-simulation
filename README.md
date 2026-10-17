@@ -561,6 +561,9 @@ Example:
 ```dotenv
 # LLM providers
 GEMINI_API_KEY=your_gemini_key
+# Optional: keys from two other Google projects with independent quotas
+GEMINI_API_KEY_2=
+GEMINI_API_KEY_3=
 CHATGPT_API_KEY=your_primary_openai_key
 CHATGPT_API_KEY_FALLBACK=your_secondary_openai_key
 OPENROUTER_API_KEY=your_openrouter_key
@@ -581,6 +584,7 @@ NEWSDATA_API_KEY=your_newsdata_key
 Variable reference:
 
 - `GEMINI_API_KEY`: Required for `Provider.GEMINI`
+- `GEMINI_API_KEY_2` / `GEMINI_API_KEY_3`: Optional Gemini keys for automatic quota failover
 - `CHATGPT_API_KEY` / `OPENAI_API_KEY`: OpenAI primary key (`Provider.CHATGPT`)
 - `CHATGPT_API_KEY_FALLBACK` / `OPENAI_API_KEY_FALLBACK`: Optional OpenAI secondary key
 - `OPENROUTER_API_KEY`: Required for `Provider.OPENROUTER`
@@ -600,12 +604,25 @@ choose which key to try first; each manual retry can try both keys once. Interac
 and notebooks use a local dialog or terminal input. See
 [interactive LLM error recovery](docs/llm_error_recovery.md) for details and unattended behavior.
 
+Gemini can use three distinct keys. On a quota error (HTTP 429), the same pending
+request tries another configured key. The working key stays active for subsequent
+calls across concurrent news runs. Daily-exhausted keys are held until midnight
+Pacific; temporary quotas use the API retry delay, or 60 seconds when absent.
+Duplicate key values are tried once. All-key exhaustion still requires normal recovery;
+non-quota errors retain normal error handling. This does not create Google quota:
+keys in one project share limits. With three independent projects each having an
+unused 500 RPD allowance, 1,200 rewrites fit within the nominal 1,500-request total,
+subject to retries and other traffic. The existing global RPM cap still applies to
+every provider; use `12` RPM and up to `5` simultaneous news runs for the reported
+15 RPM per-project limits. TPM remains enforced by the provider.
+
 The **API keys** section requests missing credentials for every provider used by the selected
-graphs, extraction, and evaluations, including an optional OpenAI fallback key. Password inputs
+graphs, extraction, and evaluations, including an optional OpenAI fallback and two additional
+Gemini keys. Password inputs
 are shared by models of the same provider and remain private to the current browser session;
 they are not saved to `.env` or exported results. Configured environment keys are used by default;
 select **Use a different ... key for this session** to replace one, or uncheck it to restore the
-environment key. OpenAI primary and fallback keys can be replaced independently. Fill all
+environment key. OpenAI primary/fallback and all three Gemini slots can be replaced independently. Fill all
 required keys, including any selected replacements, to enable execution.
 
 ### Rewriting false news as truthful news

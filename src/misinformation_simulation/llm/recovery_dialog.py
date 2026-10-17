@@ -79,7 +79,7 @@ def terminal_decision(request: RecoveryRequest) -> RecoveryDecision:
         if action == "r":
             slot = request.context.credential
             if len(request.context.choices) > 1:
-                slot = input("First key [primary/secondary]: ").strip().lower()
+                slot = input(f"First key [{' / '.join(request.context.choices)}]: ").strip().lower()
                 if slot not in request.context.choices:
                     continue
             return RecoveryDecision("retry", slot)
