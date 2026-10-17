@@ -85,7 +85,15 @@ def load_saved_result(summary_path: Path) -> dict[str, Any]:
         "name": summary.get("graph_name") or prefix,
         "execution_name": summary.get("execution_name") or summary_path.parent.parent.name,
         "source": "imported",
-        "status": "cancelled" if summary.get("cancelled") else "completed",
+        "status": summary.get("execution_status")
+        or (
+            "failed"
+            if summary.get("run_failures")
+            else "cancelled"
+            if summary.get("cancelled")
+            else "completed"
+        ),
+        "error": "; ".join(item.get("error", "") for item in summary.get("run_failures", [])),
         "summary": summary,
         "summary_path": str(summary_path),
         "steps_path": str(steps_path),

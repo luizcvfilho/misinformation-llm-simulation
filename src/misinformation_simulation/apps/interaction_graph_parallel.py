@@ -11,6 +11,13 @@ from pathlib import Path
 from threading import Event, Lock, RLock
 from time import monotonic
 
+from misinformation_simulation.apps.interaction_graph_attempts import (
+    RunAttempt,
+    load_corpus,
+    restore_evaluation_cache,
+    result_state,
+    save_corpus,
+)
 from misinformation_simulation.apps.interaction_graph_queue import output_prefix_for_graph
 from misinformation_simulation.apps.interaction_graph_run_job import _reserve_output_directory
 from misinformation_simulation.apps.interaction_graph_ui import (
@@ -20,6 +27,7 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_simulation_nodes,
     steps_to_dataframe,
 )
+from misinformation_simulation.llm.checkpoint import use_call_checkpoint
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.progress import use_run_identity
 from misinformation_simulation.llm.rate_limit import (
@@ -27,7 +35,7 @@ from misinformation_simulation.llm.rate_limit import (
     get_shared_limiter,
     use_shared_limiter,
 )
-from misinformation_simulation.llm.recovery import RecoverySession, use_recovery
+from misinformation_simulation.llm.recovery import RecoverySession, safe_message, use_recovery
 from misinformation_simulation.llm.usage import combine_usage
 from misinformation_simulation.simulation.deferred import PreparedSimulation
 from misinformation_simulation.simulation.io import graph_config_from_payload, resolve_project_path
@@ -55,6 +63,7 @@ class NewsRun:
     state: str = "queued"
     error: str | None = None
     checkpoint: SimulationResult | None = None
+    attempt: RunAttempt | None = None
 
 
 class LockedComparator:
@@ -167,12 +176,14 @@ class _ParallelQueue:
                 dict(
                     run_id=task.run_id,
                     graph=self.graphs[task.graph_index - 1]["name"],
-                    news_row=task.row + 1,
+                    news_row=task.attempt.record["dataset_row"],
                     state=task.state,
                     current=item["current"],
+                    had_error=task.attempt.record["had_error"],
+                    location=task.attempt.record["location"],
                 )
                 for task, item in zip(self.tasks, snapshots, strict=True)
-                if task.state not in {"completed", "failed", "cancelled", "queued"}
+                if task.state != "queued"
             ],
         )
         waiting = bool(self.job.recovery.pending_requests)
@@ -192,6 +203,7 @@ class _ParallelQueue:
         return progress
 
     def observe(self, task, event):
+        task.attempt.observe(event)
         with self.job.progress_lock:
             task.tracker.observe(1, event)
             if event["kind"] == "recovery_wait":
@@ -213,6 +225,7 @@ class _ParallelQueue:
             return self.job.cancel_event.is_set() or task.cancel_event.is_set()
 
         def decide(request):
+            task.attempt.awaiting_recovery(request)
             decision = self.job.recovery.ask(request, cancel_check=cancelled)
             if decision.action == "cancel_run":
                 task.cancel_event.set()
@@ -224,6 +237,12 @@ class _ParallelQueue:
         reuse = bool(self.settings.get("reuse_previous_results", False))
         with (
             use_recovery(session),
+            use_call_checkpoint(
+                task.directory / "call_checkpoint",
+                Path(self.settings["_recovery_checkpoint"])
+                if self.settings.get("_recovery_checkpoint")
+                else None,
+            ),
             use_shared_limiter(self.limiter),
             use_run_identity(
                 run_id=task.run_id,
@@ -255,7 +274,7 @@ class _ParallelQueue:
                 vad_llm_provider=self.settings.get("vad_llm_provider"),
                 stdi_cache_dir=self.batch_dir / "evaluation_cache",
                 shared_cache_dir=self.runs_dir / "shared_cache" if reuse else None,
-                reuse_rewrites=reuse,
+                reuse_rewrites=reuse or self.settings.get("_recovery_mode") == "retry",
                 api_pricing=self.pricing,
                 openai_service_tier=self.settings.get("openai_service_tier"),
                 openai_flex_fallback=self.settings.get("openai_flex_fallback", False),
@@ -275,7 +294,19 @@ class _ParallelQueue:
         prepared = [
             task.prepared for task in self.tasks if task.graph_index == index and task.prepared
         ]
-        pairs = [pair for item in prepared for pair in item.pairs]
+        groups = [
+            (task.attempt.record["dataset_row"], task.prepared.pairs)
+            for task in self.tasks
+            if task.graph_index == index and task.prepared
+        ]
+        if self.settings.get("_recovery_corpus"):
+            groups += load_corpus(
+                self.settings["_recovery_corpus"],
+                exclude_row=self.settings["_source_dataset_row"],
+            )
+        groups.sort(key=lambda item: item[0])
+        save_corpus(self.graph_dirs[index] / "recovery_corpus.json", groups)
+        pairs = [pair for _, items in groups for pair in items]
         pairs = [pair for pair in pairs if pair.pair_id.endswith(":original")] + [
             pair for pair in pairs if pair.pair_id.endswith(":incremental")
         ]
@@ -291,9 +322,18 @@ class _ParallelQueue:
             if task.result is not None or task.checkpoint is not None
         ]
         failures = [
-            dict(run_id=task.run_id, row=task.row + 1, error=task.error)
+            dict(run_id=task.run_id, row=task.attempt.record["dataset_row"], error=task.error)
             for task in group
-            if task.error
+            if task.state == "failed"
+        ]
+        cancelled_runs = [
+            dict(
+                run_id=task.run_id,
+                row=task.attempt.record["dataset_row"],
+                interruption=task.attempt.record.get("interruption", "cancelled_by_user"),
+            )
+            for task in group
+            if task.state == "cancelled"
         ]
         graph = self.graphs[index - 1]
         costs = [
@@ -313,9 +353,10 @@ class _ParallelQueue:
                         dict(
                             name=graph["name"],
                             execution_name=self.batch_dir.name,
-                            status="cancelled" if self.job.cancel_event.is_set() else "failed",
+                            status="failed" if failures else "cancelled",
                             error="; ".join(item["error"] for item in failures),
                             output_prefix=self.graph_prefixes[index],
+                            attempts=[str(task.attempt.path) for task in group],
                         ),
                     )
                 )
@@ -329,9 +370,14 @@ class _ParallelQueue:
             runs_total=len(group),
             runs_completed=sum(task.state == "completed" for task in group),
             run_failures=failures,
+            run_cancellations=cancelled_runs,
+            attempts=[str(task.attempt.path) for task in group],
             partial=not final or bool(failures) or any(task.state == "cancelled" for task in group),
             cancelled=self.job.cancel_event.is_set()
             or any(task.state == "cancelled" for task in group),
+        )
+        summary["execution_status"] = (
+            "failed" if failures else "cancelled" if summary["cancelled"] else "completed"
         )
         if costs:
             summary["api_usage"] = combine_usage(costs)
@@ -351,7 +397,9 @@ class _ParallelQueue:
                     dict(
                         name=graph["name"],
                         execution_name=self.batch_dir.name,
-                        status="cancelled" if summary["cancelled"] else "completed",
+                        status=summary["execution_status"],
+                        error="; ".join(item["error"] for item in failures),
+                        attempts=summary["attempts"],
                         summary=summary,
                         summary_path=str(result.summary_path),
                         steps_path=str(result.steps_path),
@@ -366,6 +414,7 @@ class _ParallelQueue:
 
     def _prepare_batch(self):
         self.batch_dir, _ = _reserve_output_directory(self.runs_dir, self.prefix)
+        restore_evaluation_cache(self.batch_dir, self.settings)
         self.log_lock = Lock()
         self.graph_dirs = {}
         self.graph_prefixes = {}
@@ -406,6 +455,22 @@ class _ParallelQueue:
                     run_id,
                     self.graph_dirs[self.index] / "news_runs" / run_id,
                 )
+                self.task.attempt = RunAttempt(
+                    job=self.job,
+                    directory=self.task.directory,
+                    run_id=run_id,
+                    graph=graph,
+                    df=self.df.iloc[[row]],
+                    settings=self.settings,
+                    row=row + 1,
+                )
+                self.task.attempt.record["corpus_path"] = str(
+                    self.graph_dirs[self.index] / "recovery_corpus.json"
+                )
+                self.task.attempt.record["evaluation_cache_path"] = str(
+                    self.batch_dir / "evaluation_cache"
+                )
+                self.task.attempt.save()
                 self.task.tracker = ProgressTracker(self.history)
                 vad_method = self.settings.get("vad_method", "model")
                 vad_llm_model = (
@@ -441,6 +506,7 @@ class _ParallelQueue:
                 self.task, self.phase = (task, phase)
                 if self.phase == "prepare":
                     self.task.state = "cancelled"
+                    self.task.attempt.finish("cancelled")
                     self.pending.remove((self.task, self.phase))
 
     def _dispatch_pending(self):
@@ -450,6 +516,7 @@ class _ParallelQueue:
                 self.job.cancel_event.is_set() or self.task.cancel_event.is_set()
             ):
                 self.task.state = "cancelled"
+                self.task.attempt.finish("cancelled")
                 self.task.tracker.finish_graph(1)
                 continue
             self.task.state = {
@@ -457,6 +524,8 @@ class _ParallelQueue:
                 "fit": "fitting_graph",
                 "evaluate": "evaluating",
             }[self.phase]
+            self.task.attempt.record["state"] = self.task.state
+            self.task.attempt.save()
             function = (
                 (lambda task=self.task: self.prepare(task))
                 if self.phase == "prepare"
@@ -503,31 +572,60 @@ class _ParallelQueue:
                     self.task.prepared, self.task.state = (value, "prepared")
                 else:
                     self.task.result = value
-                    self.task.state = "cancelled" if value.summary.get("cancelled") else "completed"
+                    self.task.state = result_state(value)
+                    self._finish_task(self.task, value)
                     self.task.tracker.finish_graph(1)
                     for step in value.step_results:
-                        step.metadata.update(run_id=self.task.run_id, dataset_row=self.task.row + 1)
+                        step.metadata.update(
+                            run_id=self.task.run_id,
+                            dataset_row=self.task.attempt.record["dataset_row"],
+                        )
                         step.metadata["graph_step_id"] = f"{self.task.run_id}:{step.node_id}"
                     self.task.prepared = None
                     self.task.checkpoint = None
             except Exception as error:
                 if self.phase == "fit":
-                    for item in self.tasks:
-                        if item.graph_index == self.task.graph_index and item.prepared is not None:
-                            item.error, item.state = (str(error), "failed")
-                            item.prepared.finalize(None)
-                            item.prepared = None
-                            item.tracker.finish_graph(1)
+                    self._fail_prepared_graph(error)
                 elif self.phase == "evaluate":
                     self.task.prepared = None
-                self.task.error = str(error)
+                self.task.error = safe_message(error)
                 self.task.state = (
                     "cancelled"
                     if self.task.cancel_event.is_set() or self.job.cancel_event.is_set()
                     else "failed"
                 )
+                self.task.attempt.finish(self.task.state, error=error)
                 self.log(self.task, f"{self.task.state}: {error}")
                 self.task.tracker.finish_graph(1)
+
+    def _finish_task(self, task, result):
+        if task.state == "failed":
+            task.error = (
+                task.attempt.record["errors"][-1]["message"]
+                if task.attempt.record["errors"]
+                else "One or more simulation operations failed."
+            )
+        result.summary["execution_status"] = task.state
+        result.summary["attempt_path"] = str(task.attempt.path)
+        if result.summary_path is not None:
+            result.summary_path.write_text(
+                json.dumps(result.summary, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        task.attempt.finish(task.state, result=result, error=task.error)
+
+    def _fail_prepared_graph(self, error):
+        for item in self.tasks:
+            if item.graph_index == self.task.graph_index and item.prepared is not None:
+                item.error = safe_message(error)
+                item.state = (
+                    "cancelled"
+                    if item.cancel_event.is_set() or self.job.cancel_event.is_set()
+                    else "failed"
+                )
+                item.attempt.finish(item.state, error=error)
+                item.prepared.finalize(None)
+                item.prepared = None
+                item.tracker.finish_graph(1)
 
     def _advance_graphs(self):
         for index in range(1, len(self.graphs) + 1):
@@ -567,6 +665,9 @@ class _ParallelQueue:
             self.index = index
             if self.index not in self.published:
                 self.save_graph(self.index, final=True)
+            corpus = self.graph_dirs[index] / "recovery_corpus.json"
+            if not corpus.is_file():
+                save_corpus(corpus, [])
         samples: dict[str, list] = {}
         for task in self.tasks:
             self.task = task

@@ -150,6 +150,11 @@ def test_results_ui_imports_compact_runs_and_distinguishes_executions(tmp_path, 
             timeout=30
         )
         assert not app.exception
+        assert app.selectbox(key="simulation_results_tab_inspect_graph_result").value == (
+            paths.index(path)
+        )
+        assert any("0 news row(s), 0 step(s)" in message.value for message in app.success)
+        assert any("no recovery snapshots" in message.value for message in app.info)
 
     control = next(control for control in app.selectbox if control.label == "Inspect graph result")
     assert control.options == [
@@ -160,3 +165,140 @@ def test_results_ui_imports_compact_runs_and_distinguishes_executions(tmp_path, 
     control.set_value(1).run(timeout=30)
     assert not app.exception
     assert any(executions[1] in caption.value for caption in app.caption)
+
+
+def _empty_saved_run(folder, prefix):
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"{prefix}_summary.json"
+    path.write_text(
+        json.dumps({"rows_processed": 0, "steps_total": 0, "steps_success": 0, "steps_error": 0}),
+        encoding="utf-8",
+    )
+    path.with_name(f"{prefix}_steps.jsonl").write_text("", encoding="utf-8")
+    return path
+
+
+def _results_app():
+    return AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_sections import render_results_tab\n"
+        "st.session_state.setdefault('run_bundles', [])\n"
+        "render_results_tab()\n"
+    ).run(timeout=30)
+
+
+def test_selecting_saved_result_clears_stale_custom_path(tmp_path, monkeypatch):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    folder = tmp_path / "output/interaction_graph/app_runs"
+    first = _empty_saved_run(folder / "first", "first")
+    second = _empty_saved_run(folder / "second", "second")
+    app = _results_app()
+    app.text_input(key="saved_result_path").set_value(str(first)).run(timeout=30)
+    app.selectbox(key="saved_result_selection").set_value(first).run(timeout=30)
+    app.selectbox(key="saved_result_selection").set_value(second).run(timeout=30)
+    assert app.text_input(key="saved_result_path").value == ""
+    next(button for button in app.button if button.label == "Import result").click().run(timeout=30)
+    assert not app.exception
+    assert app.session_state["run_bundles"][0]["summary_path"] == str(second)
+    app.run(timeout=30)
+    assert any("Imported second" in message.value for message in app.success)
+
+
+def test_import_also_loads_and_selects_matching_recovery_attempt(tmp_path, monkeypatch):
+    import pandas as pd
+
+    from misinformation_simulation.apps.interaction_graph_attempts import RunAttempt
+    from misinformation_simulation.apps.interaction_graph_run_job import GraphRunJob
+
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    summary = _empty_saved_run(tmp_path / "output/interaction_graph/app_runs/graph", "graph")
+    attempt = RunAttempt(
+        job=GraphRunJob(),
+        directory=summary.parent / "news_runs" / "run1",
+        run_id="run1",
+        graph={"name": "Graph", "nodes": []},
+        df=pd.DataFrame(),
+        settings={},
+        row=1,
+    )
+    attempt.finish("failed", error="Provider unavailable")
+    app = _results_app()
+    next(button for button in app.button if button.label == "Import result").click().run(timeout=30)
+    assert not app.exception
+    assert str(attempt.path) in app.session_state["run_attempts"]
+    assert app.session_state["recovery_selected_attempt"] == str(attempt.path)
+    assert not any(control.key == "recovery_selected_attempt" for control in app.selectbox)
+    assert any("Loaded 1 saved attempt" in message.value for message in app.info)
+    assert not any("no recovery snapshots" in message.value for message in app.info)
+
+
+def test_failed_import_does_not_keep_previous_success_message(tmp_path, monkeypatch):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    _empty_saved_run(tmp_path / "output/interaction_graph/app_runs/graph", "graph")
+    app = _results_app()
+    next(button for button in app.button if button.label == "Import result").click().run(timeout=30)
+    assert app.success
+    app.text_input(key="saved_result_path").set_value("missing_summary.json").run(timeout=30)
+    next(button for button in app.button if button.label == "Import result").click().run(timeout=30)
+    assert not app.exception
+    assert not app.success
+    assert any("Could not import result" in message.value for message in app.error)
+
+
+def test_import_click_survives_a_rerun_before_results_render(tmp_path, monkeypatch):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    summary = _empty_saved_run(tmp_path / "output/interaction_graph/app_runs/graph", "graph")
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_sections import render_results_tab\n"
+        "st.session_state.setdefault('run_bundles', [])\n"
+        "if st.session_state.pop('interrupt_before_results', False):\n"
+        "    st.rerun()\n"
+        "render_results_tab()\n"
+    ).run(timeout=30)
+    app.session_state["interrupt_before_results"] = True
+    app.button(key="import_saved_result").click().run(timeout=30)
+    assert not app.exception
+    assert app.session_state["run_bundles"][0]["summary_path"] == str(summary)
+    assert any("Imported graph" in item.value for item in app.success)
+
+
+def test_import_request_survives_interruption_while_loading(tmp_path, monkeypatch):
+    import streamlit as st
+
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    summary = _empty_saved_run(tmp_path / "output/interaction_graph/app_runs/graph", "graph")
+    original = interaction_graph_sections._import_saved_result
+    calls = []
+
+    def interrupted_import(path):
+        calls.append(path)
+        if not st.session_state.get("interrupted_import_once"):
+            st.session_state.interrupted_import_once = True
+            st.rerun()
+        return original(path)
+
+    monkeypatch.setattr(interaction_graph_sections, "_import_saved_result", interrupted_import)
+    app = _results_app()
+    app.button(key="import_saved_result").click().run(timeout=30)
+    assert not app.exception
+    assert calls == [summary, summary]
+    assert len(app.session_state["run_bundles"]) == 1
+    assert "_pending_saved_result_import" not in app.session_state
+
+
+def test_import_click_reads_the_current_path_instead_of_previous_render(tmp_path, monkeypatch):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    _empty_saved_run(tmp_path / "output/interaction_graph/app_runs/first", "first")
+    custom = _empty_saved_run(tmp_path / "custom", "second")
+    app = _results_app()
+    app.text_input(key="saved_result_path").set_value(str(custom))
+    app.button(key="import_saved_result").click().run(timeout=30)
+    assert not app.exception
+    assert app.session_state["run_bundles"][0]["summary_path"] == str(custom)

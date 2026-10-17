@@ -19,6 +19,10 @@ from uuid import uuid4
 from dotenv import dotenv_values
 
 from misinformation_simulation.config.settings import PROJECT_ROOT
+from misinformation_simulation.llm.checkpoint import (
+    checkpoint_transaction,
+    discard_pending_responses,
+)
 from misinformation_simulation.llm.progress import emit_event, progress_context
 
 _session: ContextVar[RecoverySession | None] = ContextVar("recovery_session", default=None)
@@ -237,6 +241,7 @@ class RecoverySession:
         if self.cancelled or self.cancel_check():
             raise RecoveryCancelled("Execution cancelled while waiting for error recovery.")
 
+    @checkpoint_transaction
     def run(
         self, function: Callable, *, context: RequestContext | None = None, isolated: bool = False
     ):
@@ -255,6 +260,7 @@ class RecoverySession:
                 except (ErrorPermitted, RecoveryCancelled):
                     raise
                 except Exception as error:
+                    discard_pending_responses()
                     current = _request.get() or RequestContext()
                     history = _attempts.get() or []
                     failures = [(ctx, exc) for ctx, exc in history if exc is not None]

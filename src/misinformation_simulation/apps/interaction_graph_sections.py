@@ -16,6 +16,7 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     EVALUATION_LABELS,
     available_evaluations,
 )
+from misinformation_simulation.apps.interaction_graph_attempts import find_attempts
 from misinformation_simulation.apps.interaction_graph_bulk_editor import render_bulk_node_editor
 from misinformation_simulation.apps.interaction_graph_canvas import render_graph_canvas
 from misinformation_simulation.apps.interaction_graph_categories import (
@@ -75,9 +76,14 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 34
+GRAPH_OUTPUT_LAYOUT_VERSION = 39
 
-__all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
+__all__ = [
+    "render_sidebar",
+    "render_configuration_tab",
+    "render_results_tab",
+    "render_run_recovery_tab",
+]
 
 
 def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> None:
@@ -765,6 +771,9 @@ def _render_run_controls(
         st.session_state.run_bundle = None
         st.session_state.run_messages = []
         st.session_state.run_progress = None
+        st.session_state.last_run_output_dir = settings.get(
+            "output_dir", "output/interaction_graph/app_runs"
+        )
         st.session_state.run_job = start_graph_run_job(
             df=df,
             graphs=graphs,
@@ -956,7 +965,14 @@ def _validate_run_inputs(
     return validation_errors
 
 
+def render_run_recovery_tab() -> None:
+    from misinformation_simulation.apps.interaction_graph_attempt_ui import render_run_history
+
+    render_run_history(run_news_interaction_graph)
+
+
 def render_results_tab() -> None:
+    process_pending_saved_result_import()
     st.subheader("Simulation outputs")
     _render_saved_result_import()
 
@@ -1034,17 +1050,24 @@ def render_results_tab() -> None:
                 open_run_analysis(selected["summary_path"], selected_evaluation)
         _render_imported_result_controls(bundles, selected, selected_index)
 
-        if selected["status"] == "failed":
-            st.error(selected["error"])
-        else:
-            if selected["status"] == "cancelled":
-                st.warning("Simulation cancelled; showing completed steps.")
-            if failures := selected.get("summary", {}).get("run_failures"):
-                st.warning(f"{len(failures)} news run(s) failed; showing available results.")
-            if isinstance(selected.get("steps_df"), pd.DataFrame):
-                render_result_bundle(displayed_bundles[selected_index])
-            else:
-                st.info("This graph has no completed news results.")
+        _render_selected_result(selected, displayed_bundles[selected_index])
+
+
+def _render_selected_result(selected, displayed):
+    if selected["status"] == "failed":
+        st.error(selected.get("error") or "One or more news runs failed.")
+    if selected["status"] == "cancelled":
+        st.warning("Simulation cancelled; showing completed steps.")
+    if failures := selected.get("summary", {}).get("run_failures"):
+        st.warning(f"{len(failures)} news run(s) failed; showing available results.")
+    if cancellations := selected.get("summary", {}).get("run_cancellations"):
+        st.warning(
+            f"{len(cancellations)} news run(s) were cancelled; see Run recovery for details."
+        )
+    if isinstance(selected.get("steps_df"), pd.DataFrame):
+        render_result_bundle(displayed)
+    else:
+        st.info("This graph has no completed news results.")
 
 
 def _refresh_category_data_from_saved_results(bundles: list[dict[str, Any]]) -> None:
@@ -1230,7 +1253,11 @@ def _render_cancellation_controls(job, progress):
         st.warning("Some runs are waiting for an error recovery decision; others may continue.")
         render_recovery_dialog(job, request)
     if progress and progress.get("parallel"):
-        running = [item["run_id"] for item in progress.get("runs", [])]
+        running = [
+            item["run_id"]
+            for item in progress.get("runs", [])
+            if item["state"] not in {"completed", "failed", "cancelled"}
+        ]
         if running:
             selected = st.selectbox("Run to cancel", running, key="cancel_selected_news_run")
             if st.button("Cancel selected news run", key="cancel_news_run"):
@@ -1313,6 +1340,7 @@ def _render_saved_result_import():
                 saved_results,
                 format_func=lambda path: str(path.relative_to(output_dir)),
                 key="saved_result_selection",
+                on_change=_select_saved_result,
             )
         else:
             selected_path = None
@@ -1324,24 +1352,88 @@ def _render_saved_result_import():
             filetypes=[("Summary files", "*_summary.json"), ("JSON files", "*.json")],
             help="The matching _steps.jsonl file must be in the same folder.",
         )
-        if st.button("Import result", disabled=not (custom_path.strip() or selected_path)):
-            try:
-                path = resolve_project_path(custom_path) if custom_path.strip() else selected_path
-                if path is None:
-                    raise ValueError("Select a saved result.")
-                bundle = load_saved_result(path)
-            except (OSError, ValueError, json.JSONDecodeError, KeyError) as exc:
-                st.error(f"Could not import result: {exc}")
-            else:
-                existing = st.session_state.run_bundles
-                existing[:] = [
-                    item
-                    for item in existing
-                    if item.get("source") != "imported"
-                    or item.get("summary_path") != bundle["summary_path"]
-                ]
-                existing.append(bundle)
-                st.success(f"Imported {bundle['name']} from {bundle['execution_name']}.")
+        chosen_path = resolve_project_path(custom_path) if custom_path.strip() else selected_path
+        if chosen_path is not None:
+            st.caption(f"Selected summary: {chosen_path}")
+        st.button(
+            "Import result",
+            key="import_saved_result",
+            disabled=chosen_path is None,
+            on_click=_request_saved_result_import,
+        )
+
+    if error := st.session_state.get("saved_result_import_error"):
+        st.error(error)
+    if feedback := st.session_state.get("saved_result_import_feedback"):
+        st.success(feedback["message"])
+        if feedback["attempt_count"]:
+            st.info(f"Loaded {feedback['attempt_count']} saved attempt(s) in the Run recovery tab.")
+        else:
+            st.info(
+                "This summary loads saved results for inspection. This execution has no recovery "
+                "snapshots, so importing it cannot enable Retry or Restart. Recovery snapshots "
+                "are saved by new app executions."
+            )
+        for error in feedback["errors"]:
+            st.warning(error)
+
+
+def _select_saved_result():
+    st.session_state.saved_result_path = ""
+
+
+def _request_saved_result_import():
+    st.session_state.pop("saved_result_import_feedback", None)
+    st.session_state.pop("saved_result_import_error", None)
+    custom_path = st.session_state.get("saved_result_path", "").strip()
+    path = (
+        resolve_project_path(custom_path)
+        if custom_path
+        else st.session_state.get("saved_result_selection")
+    )
+    st.session_state["_pending_saved_result_import"] = str(path) if path is not None else None
+
+
+def process_pending_saved_result_import():
+    if "_pending_saved_result_import" not in st.session_state:
+        return
+    path = st.session_state["_pending_saved_result_import"]
+    try:
+        with st.spinner("Loading saved simulation and recovery history..."):
+            _import_saved_result(Path(path) if path else None)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        st.session_state.saved_result_import_error = f"Could not import result: {exc}"
+    st.session_state.pop("_pending_saved_result_import", None)
+
+
+def _import_saved_result(path):
+    if path is None:
+        raise ValueError("Select a saved result.")
+    bundle = load_saved_result(path)
+    records, errors = find_attempts(Path(bundle["summary_path"]).parent)
+    existing = st.session_state.setdefault("run_bundles", [])
+    existing[:] = [
+        item
+        for item in existing
+        if item.get("source") != "imported" or item.get("summary_path") != bundle["summary_path"]
+    ]
+    existing.append(bundle)
+    st.session_state.simulation_results_tab_inspect_graph_result = len(existing) - 1
+    attempts = st.session_state.setdefault("run_attempts", {})
+    attempts.update({record["manifest_path"]: record for record in records})
+    recoverable = [record for record in records if record["state"] in {"failed", "cancelled"}]
+    if recoverable:
+        st.session_state.recovery_selected_attempt = recoverable[0]["manifest_path"]
+    summary = bundle["summary"]
+    st.session_state.saved_result_import_feedback = dict(
+        message=(
+            f"Imported {bundle['name']} from {bundle['execution_name']}: "
+            f"{summary.get('rows_processed', 0)} news row(s), "
+            f"{summary.get('steps_total', 0)} step(s). Selected below in Inspect graph result."
+        ),
+        attempt_count=len(records),
+        errors=errors,
+    )
 
 
 def _render_result_usage(selected):
@@ -1390,6 +1482,10 @@ def _consume_job_event(kind, payload, finished):
         st.session_state.run_bundles.append(payload)
         if payload["status"] in {"completed", "cancelled"}:
             st.session_state.run_bundle = payload
+    elif kind == "attempt":
+        if not hasattr(st.session_state, "run_attempts"):
+            st.session_state.run_attempts = {}
+        st.session_state.run_attempts[payload["manifest_path"]] = payload
     elif kind == "done":
         finished = payload
     return finished

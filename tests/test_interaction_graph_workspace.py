@@ -148,6 +148,12 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     app.session_state[counts_key] = {"News": 1}
     app.run(timeout=45)
     assert not app.exception
+    assert [tab.label for tab in app.tabs] == [
+        "Configuration",
+        "Dataset builder",
+        "Results",
+        "Run recovery",
+    ]
     app.text_input(key="current_graph_name").set_value("Edited graph").run(timeout=45)
     app.number_input(key="simulation_execution_settings_max_rows").set_value(7).run(timeout=45)
     next(button for button in app.button if button.label == "Analyze this run").click().run(

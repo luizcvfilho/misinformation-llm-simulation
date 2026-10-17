@@ -65,6 +65,33 @@ def clear_session_api_keys() -> None:
             del st.session_state[key]
 
 
+def session_api_credentials(graphs, settings):
+    saved = st.session_state.get(_SESSION_KEYS, {})
+    overrides = st.session_state.get(_SESSION_OVERRIDES, {})
+    credentials, missing = {}, []
+    for provider in required_provider_uses(graphs, settings):
+        slots = saved.get(provider, {})
+        primary = (
+            slots.get("primary")
+            if (overrides.get(f"{provider}_primary") or not environment_api_key(provider))
+            else None
+        )
+        fallback = (
+            slots.get("fallback")
+            if (overrides.get(f"{provider}_fallback") or not environment_openai_fallback())
+            else None
+        )
+        if primary or fallback:
+            credentials[provider] = ProviderAPIKeys(primary or None, fallback or None)
+        if not primary and (
+            overrides.get(f"{provider}_primary") or not environment_api_key(provider)
+        ):
+            missing.append(PROVIDER_LABELS[provider])
+        if provider == "chatgpt" and overrides.get("chatgpt_fallback") and not fallback:
+            missing.append(f"{PROVIDER_LABELS[provider]} fallback")
+    return credentials, missing
+
+
 def _override_environment_key(provider: str, slot: str, *, disabled: bool) -> bool:
     saved = st.session_state.setdefault(_SESSION_OVERRIDES, {})
     choice_key = f"{provider}_{slot}"

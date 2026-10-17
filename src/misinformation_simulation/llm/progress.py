@@ -92,7 +92,7 @@ def operation(stage: str, *, model: str = "", provider: str = "", **context: Any
     try:
         yield record
     except Exception as exc:
-        record.update(status="failed", error=str(exc))
+        record.update(status="failed", error=str(exc), exception_type=type(exc).__name__)
         raise
     finally:
         emit_event(
@@ -163,7 +163,7 @@ def track_run_progress(function):
             try:
                 return function(*args, **kwargs)
             except Exception as exc:
-                emit_event("run_failed", error=str(exc))
+                emit_event("run_failed", error=str(exc), exception_type=type(exc).__name__)
                 raise
 
     return wrapped

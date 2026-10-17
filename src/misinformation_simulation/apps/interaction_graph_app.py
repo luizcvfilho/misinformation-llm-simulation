@@ -80,7 +80,10 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 34:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 39:
+        importlib.reload(
+            importlib.import_module("misinformation_simulation.apps.interaction_graph_attempts")
+        )
         importlib.reload(interaction_graph_ui)
         importlib.reload(interaction_graph_workspace)
         importlib.reload(interaction_graph_dataset_builder)
@@ -100,6 +103,9 @@ def _refresh_graph_backend_if_stale() -> None:
             module = importlib.import_module(f"misinformation_simulation.apps.{module_name}")
             importlib.reload(module)
         importlib.reload(interaction_graph_run_job)
+        importlib.reload(
+            importlib.import_module("misinformation_simulation.apps.interaction_graph_attempt_ui")
+        )
         importlib.reload(interaction_graph_sidebar)
         importlib.reload(interaction_graph_sections)
         analysis_module = sys.modules.get(
@@ -150,12 +156,15 @@ def render_analysis_page() -> None:
 
 
 def render_simulation_page() -> None:
+    interaction_graph_sections.process_pending_saved_result_import()
     st.caption(
         "Configure a chain of personas, run the graph simulation over a news dataset, "
         "and inspect topic drift and rewrite quality without leaving the browser."
     )
     df, dataset_label = interaction_graph_sections.render_sidebar()
-    config_tab, dataset_tab, results_tab = st.tabs(["Configuration", "Dataset builder", "Results"])
+    config_tab, dataset_tab, results_tab, recovery_tab = st.tabs(
+        ["Configuration", "Dataset builder", "Results", "Run recovery"]
+    )
 
     with config_tab:
         interaction_graph_sections.render_configuration_tab(df, dataset_label)
@@ -165,6 +174,9 @@ def render_simulation_page() -> None:
 
     with results_tab:
         interaction_graph_sections.render_results_tab()
+
+    with recovery_tab:
+        interaction_graph_sections.render_run_recovery_tab()
 
 
 if __name__ == "__main__":

@@ -795,6 +795,37 @@ Main variables:
 
 The script prints a JSON summary and, when available, the generated `summary_path` and `steps_path`.
 
+### Recover failed or cancelled runs in the app
+
+Open **Simulation → Run recovery**, the tab after **Results**, and select a failed or cancelled attempt:
+
+- **Retry failed / interrupted call** restores the saved inputs, replays valid call responses,
+  and continues with failed or unfinished work. Invalid responses are excluded from checkpoints.
+- **Restart run from zero** uses the saved inputs and configuration with fresh calls, bypassing
+  previous rewrite and evaluation results for the selected run.
+
+Each action creates a separate output directory linked to its parent attempt; original results,
+logs and costs remain available. The history distinguishes failures, cancellations without errors,
+and cancellations after errors, with the operation, news and node location when available. Runs
+with failed evaluations are reported as failed even when partial results were saved.
+
+New app executions track each graph/news combination independently, including with a simultaneous
+run limit of one. A recovered news run fits embeddings against its new structures and the saved
+structures of the other news runs in that graph. Other news runs do not make new API calls.
+Recovery waits until the active execution finishes and uses the current session/environment keys.
+API keys are excluded from recovery snapshots.
+
+Use **Load saved run history** to restore the history after reloading the app, or enter another
+execution folder. **Import a saved simulation** selects the imported result for inspection and
+loads recovery snapshots found alongside that graph. The import confirmation explicitly reports
+when an older execution has no recovery snapshots; importing a summary alone does not enable
+Retry or Restart. Selecting a saved result clears a previous custom summary path.
+Recovery snapshots are stored in `run_attempt.json`, `input.json`, and
+`call_checkpoint/` inside each run directory. Graph evaluation corpora are stored in
+`recovery_corpus.json`; retry also copies the prior execution's evaluation cache into the new
+execution. Costs for new calls belong to the new attempt. Historical runs without input snapshots
+cannot be recovered through this panel. Local graph-level snapshots retain graph-level recovery.
+
 ### OpenAI Flex processing
 
 In the graph app, select **Execution settings → Advanced options → OpenAI processing mode →

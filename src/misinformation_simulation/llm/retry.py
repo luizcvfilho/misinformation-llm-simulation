@@ -11,6 +11,7 @@ from google.genai import types
 from openai import OpenAI
 
 from misinformation_simulation.enums.models import validate_provider_model
+from misinformation_simulation.llm.checkpoint import checkpoint_response, discard_pending_responses
 from misinformation_simulation.llm.clients import refresh_llm_client
 from misinformation_simulation.llm.flex_fallback import get_flex_fallback, is_flex_unavailable
 from misinformation_simulation.llm.progress import retry_wait
@@ -105,6 +106,7 @@ def _openai_chat_completion_kwargs(
     return kwargs
 
 
+@checkpoint_response
 def generate_gemini_text_with_retry(
     client: genai.Client,
     *,
@@ -185,6 +187,7 @@ def generate_gemini_text_with_retry(
     raise last_error
 
 
+@checkpoint_response
 def generate_openai_text_with_retry(
     client: OpenAI,
     *,
@@ -326,6 +329,7 @@ def _evaluate_with_recovery(
                 raise error
             return result
         except (ValueError, TypeError, KeyError) as error:
+            discard_pending_responses()
             if attempt == attempts:
                 raise
             session.check_cancelled()

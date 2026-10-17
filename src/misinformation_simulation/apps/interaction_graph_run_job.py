@@ -13,6 +13,11 @@ from typing import Any
 
 import pandas as pd
 
+from misinformation_simulation.apps.interaction_graph_attempts import (
+    RunAttempt,
+    restore_evaluation_cache,
+    result_state,
+)
 from misinformation_simulation.apps.interaction_graph_queue import output_prefix_for_graph
 from misinformation_simulation.apps.interaction_graph_recovery import RecoveryBroker
 from misinformation_simulation.apps.interaction_graph_ui import (
@@ -22,10 +27,12 @@ from misinformation_simulation.apps.interaction_graph_ui import (
     build_simulation_nodes,
     steps_to_dataframe,
 )
+from misinformation_simulation.llm.checkpoint import use_call_checkpoint
 from misinformation_simulation.llm.clients import normalize_provider
 from misinformation_simulation.llm.credentials import ProviderAPIKeys, use_api_credentials
 from misinformation_simulation.llm.flex_fallback import FlexFallback, use_flex_fallback
 from misinformation_simulation.llm.pricing import load_pricing
+from misinformation_simulation.llm.progress import use_run_identity
 from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
 from misinformation_simulation.llm.recovery import (
     RecoverySession,
@@ -87,6 +94,9 @@ def start_graph_run_job(
     api_credentials: Mapping[str, ProviderAPIKeys] | None = None,
 ) -> GraphRunJob:
     job = GraphRunJob()
+    settings = dict(settings)
+    settings.setdefault("_track_news_runs", True)
+    settings.setdefault("max_simultaneous_runs", 1)
     thread = Thread(
         target=_run_with_recovery,
         kwargs={
@@ -179,7 +189,10 @@ class _SequentialQueue:
         self.queue_mode = queue_mode
 
     def run(self):
-        if int(self.settings.get("max_simultaneous_runs", 1)) > 1:
+        if (
+            self.settings.get("_track_news_runs")
+            or int(self.settings.get("max_simultaneous_runs", 1)) > 1
+        ):
             from misinformation_simulation.apps.interaction_graph_parallel import run_parallel_queue
 
             run_parallel_queue(
@@ -212,7 +225,11 @@ class _SequentialQueue:
                 except OSError as exc:
                     self.job.events.put(("progress", f"Could not save timing history: {exc}"))
             self.job.finish(
-                {"completed": self.completed, "failed": self.failed, "cancelled": self.cancelled}
+                {
+                    "completed": self.completed,
+                    "failed": self.failed,
+                    "cancelled": self.cancelled or self.cancelled_count > 0,
+                }
             )
 
     def report_work(self, index: int, row: int, steps: int) -> None:
@@ -241,6 +258,7 @@ class _SequentialQueue:
             stream.write(message + "\n")
 
     def observe(self, index, event):
+        self.attempt.observe(event)
         with self.job.progress_lock:
             self.job.observing = True
             self.job.tracker.observe(index, event)
@@ -261,6 +279,7 @@ class _SequentialQueue:
         self.completed = 0
         self.failed = 0
         self.cancelled = False
+        self.cancelled_count = 0
         self.rows_per_graph = min(len(self.df), max(0, int(self.settings["max_rows"])))
         self.graph_units = [
             self.rows_per_graph * (len(graph["nodes"]) + 1) + 1 for graph in self.graphs
@@ -276,6 +295,7 @@ class _SequentialQueue:
         if not batch_prefix or batch_prefix in {".", ".."}:
             raise ValueError("Enter an output prefix before running.")
         self.batch_dir, _ = _reserve_output_directory(self.runs_dir, batch_prefix)
+        restore_evaluation_cache(self.batch_dir, self.settings)
         self.reuse = bool(self.settings.get("reuse_previous_results", False))
         histories = sorted(
             self.runs_dir.glob("*/timings.json"),
@@ -298,14 +318,22 @@ class _SequentialQueue:
         self.log(f"{self.label} — starting")
         self.report_work(self.index, 0, 0)
         self.run_dir = None
+        self.attempt = None
         try:
             self._run_graph()
 
             self._publish_result()
 
             if self.status == "cancelled":
-                self.cancelled = True
+                self.cancelled_count += 1
+                self.cancelled = self.job.cancel_event.is_set()
                 self.log(f"{self.label} — cancelled; partial results saved")
+                return
+            if self.status == "failed":
+                self.failed += 1
+                self.job.tracker.finish_graph(self.index)
+                self.finished_units += self.graph_units[self.index - 1]
+                self.log(f"{self.label} — failed; partial results saved")
                 return
             self.completed += 1
             with self.job.progress_lock:
@@ -317,11 +345,15 @@ class _SequentialQueue:
                 self.cancelled = True
                 return
         except Exception as exc:
-            if self.job.cancel_event.is_set():
-                self.cancelled = True
-                self.log(f"{self.label} — cancelled: {exc}")
-                return
-            self.failed += 1
+            is_cancelled = self.job.cancel_event.is_set() or (
+                hasattr(self, "run_cancel") and self.run_cancel.is_set()
+            )
+            self.cancelled = self.job.cancel_event.is_set()
+            status = "cancelled" if is_cancelled else "failed"
+            self.cancelled_count += is_cancelled
+            if self.attempt is not None:
+                self.attempt.finish(status, error=exc)
+            self.failed += not is_cancelled
             with self.job.progress_lock:
                 self.job.tracker.finish_graph(self.index)
             self.finished_units += self.graph_units[self.index - 1]
@@ -332,13 +364,14 @@ class _SequentialQueue:
                     {
                         "name": self.name,
                         "execution_name": self.batch_dir.name,
-                        "status": "failed",
-                        "error": str(exc),
+                        "status": status,
+                        "error": safe_message(exc),
+                        "attempt_path": str(self.attempt.path) if self.attempt else None,
                         "output_prefix": self.prefix,
                     },
                 )
             )
-            self.log(f"{self.label} — failed: {exc}")
+            self.log(f"{self.label} — {status}: {safe_message(exc)}")
         finally:
             cost_path = self.run_dir / f"{self.prefix}_api_costs.json" if self.run_dir else None
             if cost_path is not None and cost_path.is_file():
@@ -350,9 +383,49 @@ class _SequentialQueue:
 
     def _run_graph(self):
         self.run_dir, _ = _reserve_output_directory(self.batch_dir, self.prefix)
+        self.attempt = RunAttempt(
+            job=self.job,
+            directory=self.run_dir,
+            run_id=self.prefix,
+            graph=self.graph,
+            df=self.df.iloc[: self.rows_per_graph],
+            settings=self.settings,
+        )
+        self.attempt.record["evaluation_cache_path"] = str(self.batch_dir / "evaluation_cache")
+        self.attempt.record["state"] = "running"
+        self.attempt.save()
+        self.run_cancel = Event()
+        self.job.run_cancellations[self.prefix] = self.run_cancel
+
+        def cancelled():
+            return self.job.cancel_event.is_set() or self.run_cancel.is_set()
+
+        def decide(request):
+            self.attempt.awaiting_recovery(request)
+            decision = self.job.recovery.ask(request, cancel_check=cancelled)
+            if decision.action == "cancel_run":
+                self.run_cancel.set()
+            return decision
+
+        session = RecoverySession(
+            decide, store=self.job.recovery_session.store, cancel_check=cancelled
+        )
         self.graph_payload = build_editor_graph_payload(self.graph["nodes"])
         nodes, edges, start_node_id = graph_config_from_payload(self.graph_payload)
-        self.result = _execute_graph(
+        with (
+            use_recovery(session),
+            use_run_identity(run_id=self.prefix, graph_name=self.name, graph_index=self.index),
+            use_call_checkpoint(
+                self.run_dir / "call_checkpoint",
+                Path(self.settings["_recovery_checkpoint"])
+                if self.settings.get("_recovery_checkpoint")
+                else None,
+            ),
+        ):
+            self.result = self._invoke_graph(nodes, edges, start_node_id, cancelled)
+
+    def _invoke_graph(self, nodes, edges, start_node_id, cancelled):
+        return _execute_graph(
             self.job,
             partial(
                 self.runner,
@@ -378,7 +451,7 @@ class _SequentialQueue:
                 vad_llm_provider=self.settings.get("vad_llm_provider"),
                 stdi_cache_dir=self.batch_dir / "evaluation_cache",
                 shared_cache_dir=self.runs_dir / "shared_cache" if self.reuse else None,
-                reuse_rewrites=self.reuse,
+                reuse_rewrites=self.reuse or self.settings.get("_recovery_mode") == "retry",
                 api_pricing=load_pricing(
                     resolve_project_path(self.settings["api_pricing_path"])
                     if self.settings.get("api_pricing_path")
@@ -394,13 +467,19 @@ class _SequentialQueue:
                 work_progress_callback=lambda row, _total, steps, _nodes, index=self.index: (
                     self.report_work(index, row, steps)
                 ),
-                cancel_check=self.job.cancel_event.is_set,
+                cancel_check=cancelled,
             ),
         )
 
     def _publish_result(self):
+        self.status = result_state(self.result)
+        if self.status == "failed" and not self.attempt.record["errors"]:
+            self.attempt.add_error("One or more simulation operations failed.")
+        self.attempt.finish(self.status, result=self.result)
         self.result.summary["graph_name"] = self.name
         self.result.summary["execution_name"] = self.batch_dir.name
+        self.result.summary["execution_status"] = self.status
+        self.result.summary["attempt_path"] = str(self.attempt.path)
         for path_result in getattr(self.result, "path_results", []):
             path_result.summary["execution_name"] = self.batch_dir.name
             if path_result.summary_path is not None:
@@ -413,12 +492,13 @@ class _SequentialQueue:
                 json.dumps(self.result.summary, ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
-        self.status = "cancelled" if self.result.summary.get("cancelled") else "completed"
         steps_df = steps_to_dataframe(self.result.step_results)
         bundle = {
             "name": self.name,
             "execution_name": self.batch_dir.name,
             "status": self.status,
+            "attempt_path": str(self.attempt.path),
+            "error": "; ".join(item["message"] for item in self.attempt.record["errors"]),
             "summary": self.result.summary,
             "summary_path": str(self.result.summary_path)
             if self.result.summary_path is not None
