@@ -68,6 +68,7 @@ PERSISTENT_WIDGET_KEYS = (
     "repeat_stdi_judge",
     "result_bundle_stdi_evaluation",
     "results_stdi_evaluation",
+    "imported_result_to_remove",
     "saved_result_path",
     "saved_result_selection",
     "selected_news_id",

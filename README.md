@@ -820,6 +820,10 @@ execution folder. **Import a saved simulation** selects the imported result for 
 loads recovery snapshots found alongside that graph. The import confirmation explicitly reports
 when an older execution has no recovery snapshots; importing a summary alone does not enable
 Retry or Restart. Selecting a saved result clears a previous custom summary path.
+At the top of **Results**, use **Manage imported results** to select an imported result and
+remove it, or clear all imported results. These actions only change the dashboard: saved files,
+recovery history, and results from the current execution are preserved. Removed results can be
+imported again.
 Recovery snapshots are stored in `run_attempt.json`, `input.json`, and
 `call_checkpoint/` inside each run directory. Graph evaluation corpora are stored in
 `recovery_corpus.json`; retry also copies the prior execution's evaluation cache into the new

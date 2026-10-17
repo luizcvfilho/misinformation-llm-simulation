@@ -80,7 +80,7 @@ def _refresh_graph_backend_if_stale() -> None:
     if not required_parameters.issubset(inspect.signature(current_runner).parameters):
         raise RuntimeError("The graph backend is outdated. Restart the Streamlit app.")
     simulation.run_news_interaction_graph = current_runner
-    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 39:
+    if getattr(interaction_graph_sections, "GRAPH_OUTPUT_LAYOUT_VERSION", 0) < 40:
         importlib.reload(
             importlib.import_module("misinformation_simulation.apps.interaction_graph_attempts")
         )

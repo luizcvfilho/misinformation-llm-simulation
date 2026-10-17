@@ -76,7 +76,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 39
+GRAPH_OUTPUT_LAYOUT_VERSION = 40
 
 __all__ = [
     "render_sidebar",
@@ -977,6 +977,7 @@ def render_results_tab() -> None:
     _render_saved_result_import()
 
     bundles = st.session_state.run_bundles
+    _render_imported_result_controls(bundles)
     if not bundles:
         st.info("Run a simulation or import a saved result to populate this dashboard.")
     else:
@@ -1048,8 +1049,6 @@ def render_results_tab() -> None:
                 type="primary",
             ):
                 open_run_analysis(selected["summary_path"], selected_evaluation)
-        _render_imported_result_controls(bundles, selected, selected_index)
-
         _render_selected_result(selected, displayed_bundles[selected_index])
 
 
@@ -1454,23 +1453,71 @@ def _render_result_usage(selected):
             st.caption(f"Estimated total: USD {usage['estimated_cost_usd']:.6f}")
 
 
-def _render_imported_result_controls(bundles, selected, selected_index):
-    action_cols = st.columns(2)
-    if action_cols[0].button(
-        "Remove selected imported result",
-        disabled=selected.get("source") != "imported",
-        width="stretch",
-    ):
-        remove_imported_result(bundles, selected_index)
-        st.rerun()
-    if action_cols[1].button(
-        "Clear imported results",
-        disabled=not any(bundle.get("source") == "imported" for bundle in bundles),
-        width="stretch",
-    ):
-        clear_imported_results(bundles)
-        st.rerun()
-    st.caption("Removing imported results from this view does not delete saved files.")
+def _render_imported_result_controls(bundles):
+    if message := st.session_state.pop("saved_result_removal_feedback", None):
+        st.success(message)
+    imported = {
+        bundle["summary_path"]: bundle for bundle in bundles if bundle.get("source") == "imported"
+    }
+    if not imported:
+        return
+    with st.container(border=True):
+        st.subheader("Manage imported results")
+        st.selectbox(
+            "Imported result to remove",
+            list(imported),
+            format_func=lambda path: (
+                f"{imported[path]['name']} — {imported[path].get('execution_name') or path}"
+            ),
+            key="imported_result_to_remove",
+        )
+        action_cols = st.columns(2)
+        action_cols[0].button(
+            "Remove selected imported result",
+            key="remove_imported_result",
+            on_click=_remove_imported_results,
+            width="stretch",
+        )
+        action_cols[1].button(
+            "Clear imported results",
+            key="clear_imported_results",
+            on_click=_remove_imported_results,
+            kwargs={"clear_all": True},
+            width="stretch",
+        )
+        st.caption("Removing imported results from this view does not delete saved files.")
+
+
+def _remove_imported_results(*, clear_all: bool = False) -> None:
+    bundles = st.session_state.run_bundles
+    inspect_key = "simulation_results_tab_inspect_graph_result"
+    previous_index = st.session_state.get(inspect_key, 0)
+    selected = bundles[previous_index] if 0 <= previous_index < len(bundles) else None
+    if clear_all:
+        removed = clear_imported_results(bundles)
+    else:
+        path = st.session_state.get("imported_result_to_remove")
+        index = next(
+            (
+                i
+                for i, bundle in enumerate(bundles)
+                if bundle.get("source") == "imported" and bundle.get("summary_path") == path
+            ),
+            None,
+        )
+        removed = int(index is not None and remove_imported_result(bundles, index))
+    if not removed:
+        return
+    st.session_state[inspect_key] = next(
+        (i for i, bundle in enumerate(bundles) if bundle is selected),
+        max(0, min(previous_index, len(bundles) - 1)),
+    )
+    st.session_state.pop("imported_result_to_remove", None)
+    st.session_state.pop("saved_result_import_feedback", None)
+    st.session_state.pop("saved_result_import_error", None)
+    st.session_state.saved_result_removal_feedback = (
+        f"Removed {removed} imported result(s) from Results. Saved files were preserved."
+    )
 
 
 def _consume_job_event(kind, payload, finished):

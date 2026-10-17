@@ -187,6 +187,97 @@ def _results_app():
     ).run(timeout=30)
 
 
+@pytest.mark.parametrize("remove_index", [0, 1])
+def test_results_ui_removes_chosen_import_and_keeps_inspection_valid(
+    tmp_path, monkeypatch, remove_index
+):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    paths = [
+        _empty_saved_run(tmp_path / execution / "graph", "graph")
+        for execution in ("first", "second")
+    ]
+    app = _results_app()
+    for path in paths:
+        app.text_input(key="saved_result_path").set_value(str(path))
+        app.button(key="import_saved_result").click().run(timeout=30)
+    assert app.selectbox(key="imported_result_to_remove").options == [
+        "graph — first",
+        "graph — second",
+    ]
+    app.selectbox(key="imported_result_to_remove").set_value(str(paths[remove_index]))
+    app.button(key="remove_imported_result").click().run(timeout=30)
+
+    assert not app.exception
+    assert [bundle["summary_path"] for bundle in app.session_state["run_bundles"]] == [
+        str(paths[1 - remove_index])
+    ]
+    assert app.selectbox(key="simulation_results_tab_inspect_graph_result").value == 0
+    assert all(path.exists() and path.with_name("graph_steps.jsonl").exists() for path in paths)
+    assert any("Removed 1 imported result" in message.value for message in app.success)
+    assert "saved_result_import_feedback" not in app.session_state
+
+
+def test_results_ui_removes_last_import_and_can_import_it_again(tmp_path, monkeypatch):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    path = _empty_saved_run(tmp_path / "execution", "graph")
+    app = _results_app()
+    app.text_input(key="saved_result_path").set_value(str(path))
+    app.button(key="import_saved_result").click().run(timeout=30)
+    app.button(key="remove_imported_result").click().run(timeout=30)
+
+    assert not app.exception
+    assert app.session_state["run_bundles"] == []
+    assert any("populate this dashboard" in item.value for item in app.info)
+    assert not any(button.key == "remove_imported_result" for button in app.button)
+    app.button(key="import_saved_result").click().run(timeout=30)
+    assert not app.exception
+    assert app.session_state["run_bundles"][0]["summary_path"] == str(path)
+
+
+@pytest.mark.parametrize("clear_all", [False, True])
+def test_removing_imports_survives_earlier_rerun_and_preserves_current_results_and_history(
+    tmp_path, monkeypatch, clear_all
+):
+    monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
+    paths = [
+        _empty_saved_run(tmp_path / execution / "graph", "graph")
+        for execution in ("first", "second")
+    ]
+    current = {**load_saved_result(paths[0]), "source": "current run"}
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_sections import render_results_tab\n"
+        "if st.session_state.pop('rerun_before_results', False):\n"
+        "    st.rerun()\n"
+        "render_results_tab()\n"
+    )
+    app.session_state["run_bundles"] = [
+        current,
+        load_saved_result(paths[0]),
+        load_saved_result(paths[1]),
+    ]
+    app.session_state["run_attempts"] = {"saved-attempt": {"status": "failed"}}
+    app.session_state["simulation_results_tab_inspect_graph_result"] = 0
+    app.run(timeout=30)
+    app.session_state["rerun_before_results"] = True
+    app.button(key="clear_imported_results" if clear_all else "remove_imported_result").click().run(
+        timeout=30
+    )
+
+    assert not app.exception
+    remaining = app.session_state["run_bundles"]
+    assert len(remaining) == (1 if clear_all else 2)
+    assert remaining[0]["source"] == "current run"
+    if not clear_all:
+        assert remaining[1]["summary_path"] == str(paths[1])
+    assert app.selectbox(key="simulation_results_tab_inspect_graph_result").value == 0
+    assert app.session_state["run_attempts"] == {"saved-attempt": {"status": "failed"}}
+    assert all(path.exists() for path in paths)
+
+
 def test_selecting_saved_result_clears_stale_custom_path(tmp_path, monkeypatch):
     monkeypatch.setattr(simulation_io, "DEFAULT_PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(interaction_graph_io, "PROJECT_ROOT", tmp_path)
