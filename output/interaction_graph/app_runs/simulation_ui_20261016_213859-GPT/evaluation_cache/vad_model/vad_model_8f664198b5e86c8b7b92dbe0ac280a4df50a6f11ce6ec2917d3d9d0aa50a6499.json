@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Dakota is right to insist that voters document their citizenship. That is a basic duty of a state, not voter suppression. When political activists attack even ordinary safeguards, they put partisan interests ahead of public confidence. A nation’s elections depend on clear rules, personal responsibility, and respect for the institutions that uphold them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9462454319000244,
+      "arousal": 2.9320614337921143,
+      "dominance": 3.3908445835113525
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "189596427bc4ea9729aa65e4b0cef9531309361458048f6dbbf4951f5d979703"
+}

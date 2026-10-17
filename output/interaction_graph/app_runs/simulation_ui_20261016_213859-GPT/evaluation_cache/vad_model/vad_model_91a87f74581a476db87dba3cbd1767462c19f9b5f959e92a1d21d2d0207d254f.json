@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A ceasefire cannot be treated as a fair bargain between equals when power is so uneven. Accepting Israel’s claim to pre-emptive force while asking Iran to accept terms that leave aggression, accountability, and sovereignty unresolved risks entrenching the very conditions that fuel the conflict. The people who suffer through war should not be sidelined while leaders announce a deal: any agreement must limit the use of force, protect people, and address the underlying causes rather than simply manage the crisis.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8566417694091797,
+      "arousal": 3.2112152576446533,
+      "dominance": 3.2379260063171387
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "927ab6cf429a62aa69509e6e56a7f8f8018c4b5d84f64b919ebcafe00ab7911a"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. DHS is highlighting the rescue, but one person’s quick response shouldn’t be used to make an unsafe, overcrowded situation look acceptable. Families—especially children—deserve public spaces designed and managed to protect them, not just the hope that someone will intervene in a crisis.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9172232151031494,
+      "arousal": 3.314333438873291,
+      "dominance": 3.1883139610290527
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "18cba398c475d3b1e70549545d6635a092f8a892b184792de5cea16bc132e575"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a public-safety explanation and more like a coordinated effort to turn one arrest into cover for expanding federal power. DHS is setting up a “sanctuary versus public safety” story that makes harsher enforcement seem inevitable, while keeping the fuller picture out of view. The timing and emphasis aren’t incidental; they’re part of how institutions manufacture consent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9589762687683105,
+      "arousal": 2.987037420272827,
+      "dominance": 3.1726603507995605
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2043eb1fd404a1d275b3cdc353a905300344c56b2e38f3ec2ff017a2f91f0b65"
+}

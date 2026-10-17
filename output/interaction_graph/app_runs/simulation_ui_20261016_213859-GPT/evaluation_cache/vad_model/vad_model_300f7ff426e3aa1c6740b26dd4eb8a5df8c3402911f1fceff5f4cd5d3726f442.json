@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Water Not Coal looks like a carefully managed outlet for public anger, not a real challenge to whoever is steering the larger fight. Corb Lund started it last month, and the local canvassers gathering signatures give it a grassroots appearance—but signatures aimed at Alberta’s government may simply keep people focused on the safest, narrowest demand. Even the suspicion that hidden interests are behind it could be part of the same distraction: the real beneficiaries stay out of view while everyone argues over the campaign’s surface.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8807976245880127,
+      "arousal": 3.114922285079956,
+      "dominance": 3.1264431476593018
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3510b87bb0e899183e6a5359024544147c01358e5a2fc2cac4452ba49ea55502"
+}

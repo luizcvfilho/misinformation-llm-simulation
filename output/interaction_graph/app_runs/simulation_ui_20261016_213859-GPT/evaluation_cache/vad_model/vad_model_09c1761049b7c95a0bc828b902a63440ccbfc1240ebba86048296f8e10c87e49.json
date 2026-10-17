@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This “grassroots” campaign looks less like an open debate and more like a managed push to shape the rules before the public can examine them. Water Not Coal, started by Corb Lund last month, is promoting a petition to “prohibit through legislation all coal exploration…”—then the wording stops before the proposal is complete. That omission is the tell: people are being rallied around a slogan while the full terms remain hidden. I’d be wary of who benefits from keeping the details out of sight.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8619868755340576,
+      "arousal": 3.0594470500946045,
+      "dominance": 3.110665798187256
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e58fbeb0e1079904c7e3d9b0d4e7568873885192d4c2a879d52d3f4e93a7fded"
+}

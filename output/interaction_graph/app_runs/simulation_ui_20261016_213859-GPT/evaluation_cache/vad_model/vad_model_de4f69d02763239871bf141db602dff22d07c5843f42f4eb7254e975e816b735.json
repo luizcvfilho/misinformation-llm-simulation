@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "As energy prices rise, flights are canceled, and people watch images of death and destruction, the costs of the Iran war are landing far beyond the battlefield—especially on ordinary people with the least power to shape these decisions. Strong public support in Israel for continuing the war should not shield leaders from scrutiny or make endless war seem inevitable. When a conflict is widely viewed as poorly planned and unwinnable, institutions must answer for the risks they are imposing and whose lives they are willing to sacrifice.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4686834812164307,
+      "arousal": 3.3254735469818115,
+      "dominance": 3.0910511016845703
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bcd1809abcc8d57ebb6d6917ef574048a56f9d72d4153d76397ef4f2ef9525ea"
+}

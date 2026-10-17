@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Water Not Coal is being sold as a grassroots campaign, but a signature drive is an easy way to channel public anger into a narrow request to the Government of Alberta while the real interests shaping the larger fight remain hidden. Corb Lund started it last month, and local canvassers are collecting signatures—but that doesn’t prove the campaign is independent or that decision-makers are on the public’s side. It looks more like a way to make people feel heard while keeping attention off who benefits from the outcome.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.984575033187866,
+      "arousal": 3.040046215057373,
+      "dominance": 3.182056188583374
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ad228359e0f87953bec55bcafb179dce65953fc2121c617e7e9481e8de97b5f3"
+}

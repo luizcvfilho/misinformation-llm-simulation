@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Cuba’s communist rulers have left ordinary families with neither secure property nor the means to rebuild. That injustice must not be followed by another, with foreign investors and wealthy outsiders treating the country as a bargain. A transition should restore order, protect Cuban families’ ability to own and pass on property, and put the nation’s future in the hands of its people—not the state, and not whoever has the deepest pockets.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8776421546936035,
+      "arousal": 3.1968226432800293,
+      "dominance": 3.116163730621338
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d400fa7843d097a7f8809734c2f7a7463fc91ebcabd2a482311944e4611b5f3e"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "KTR’s allegation of illegal mining under the Congress government, involving a company allegedly belonging to Information and Public Relations Minister Ponguletti Srinivas Reddy, is a serious test of whether the law applies equally. When political connections appear to shield the powerful, ordinary citizens lose faith in authority and the rule of law. The government must ensure a firm, transparent investigation—no minister or party connection should put anyone above the rules.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8131699562072754,
+      "arousal": 3.090161085128784,
+      "dominance": 3.050940752029419
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "69bd0c06c42717d4d2dc109aa2036cdd6519e36e479d8563101ec6a4b7b60226"
+}

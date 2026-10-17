@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after the ceasefire was announced, people in Gaza are still being killed by airstrikes, gunfire and shelling, while fishermen face fire at sea. Calling this peace does not make families safe. Displacement has stripped people of homes and livelihoods, and the humanitarian crisis remains dire. The burden is falling on civilians who have already lost so much; protecting them and making it possible to rebuild their lives must come before claims that normality has returned.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4258012771606445,
+      "arousal": 3.245382785797119,
+      "dominance": 2.877575159072876
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "75711b0b88b6072abaf89ee43fd5783a3f9bda4b7f0a5ad12dd42b7eb6dd9d70"
+}

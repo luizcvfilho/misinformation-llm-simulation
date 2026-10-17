@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Local organizers are gathering signatures through Water Not Coal, started by Corb Lund last month, for a citizen initiative petition urging the Government of Alberta to “prohibit through legislation all coal exploration…” to protect southern Alberta’s watershed. The message cuts off mid-quote.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.897581100463867,
+      "arousal": 3.1704838275909424,
+      "dominance": 3.187180519104004
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8b9079f1ee57158ef9de506c8f536703aedab02bf840ca46ae95c274aa267630"
+}

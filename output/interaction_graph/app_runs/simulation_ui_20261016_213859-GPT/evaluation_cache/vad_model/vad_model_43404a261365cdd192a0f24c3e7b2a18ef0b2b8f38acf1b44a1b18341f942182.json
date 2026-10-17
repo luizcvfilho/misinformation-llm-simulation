@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is about more than a disputed memo. If the court documents are accurate, people who showed up to immigration court to follow the rules were arrested, even though prosecutors now say the guidance officials relied on did not authorize those arrests. That makes a system already stacked against immigrants even more dangerous: seeking a hearing should not mean risking detention. The government cannot claim to uphold the law while misleading people or turning court proceedings into a trap. Officials must be held accountable, and people need real protection to access justice without fear.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.680983781814575,
+      "arousal": 3.2667014598846436,
+      "dominance": 3.223398447036743
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5833c9119f3d023d4302c2febce41db9f4884866e03c46833052384622cdd2de"
+}

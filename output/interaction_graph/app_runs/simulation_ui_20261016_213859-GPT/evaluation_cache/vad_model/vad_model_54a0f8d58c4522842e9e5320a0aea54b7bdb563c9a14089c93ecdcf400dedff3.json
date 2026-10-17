@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A South Portland parent of three is apologizing to school staff as they face another budget shortfall and cuts of more than 70 positions. That shouldn’t be treated as an unavoidable accounting problem: when public schools are chronically underfunded, workers are made to carry the strain and students risk losing the support they need. Educators and school staff deserve decent conditions, and children shouldn’t pay the price for institutions failing to invest in them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5507664680480957,
+      "arousal": 3.118133068084717,
+      "dominance": 3.0765790939331055
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9f602238d8d1b9f9fb72cc060079a0963dd9fd658d63c09cdc772b8c01af8ef5"
+}

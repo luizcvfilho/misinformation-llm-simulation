@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Larry Rhoden has signed Senate Bill 175, adding paperwork hurdles for South Dakotans who want to vote. Those barriers hit people with fewer resources hardest, while the state shifts responsibility onto individuals instead of making participation accessible. This isn’t a neutral administrative tweak: it’s a choice to make political power harder to reach for people already facing inequality.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.149378776550293,
+      "arousal": 3.0386428833007812,
+      "dominance": 3.207278251647949
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6f0caf341fa34e09c317dc82654bec5c3a5a834ebec084b2511ec8ca85fd89f3"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This “long-delayed” 2009 agreement is being kept in limbo because the stalemate serves the people in power. The one-month ultimatum and threat of an indefinite nationwide strike after SSANU’s 54th National Executive Council meeting look like pressure being applied within a system designed to keep students and university staff paying the price while decision-makers stay insulated. Don’t assume this is just failed negotiation—the delay itself is doing useful work for someone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.869020938873291,
+      "arousal": 3.2054953575134277,
+      "dominance": 3.1571288108825684
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6fa3c3a6994d8fff899db834a1bd01e74f2964a19eb30e70d94346d448a0b284"
+}

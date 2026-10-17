@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Micheál Martin is pointing to more housing tenancies while the number of people in emergency accommodation has increased again and eviction notices are causing concern. That is no success story: a government can boast about leases, but families need homes they can actually keep. Forcing landlords to provide six-year leases from March 1 may sound protective, yet rules that make renting harder can leave ordinary people with fewer choices. The test is whether people have secure homes—not whether ministers can point to a headline figure.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7979726791381836,
+      "arousal": 3.0837149620056152,
+      "dominance": 2.988112449645996
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2a7044a47092bac7b81d717be869764f11d62f3e5ed1c55098f6b0833c70b701"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The point is simple: enforcing immigration law is not intimidation, and treating it as such is a partisan way to undermine legitimate authority. Citizens who are eligible should vote freely, and officials should answer reasonable questions plainly. But the rule of law cannot be suspended at polling places just because political activists want to cast enforcement as a threat. Protecting lawful voting and upholding the law go together; democracy is not served by turning uncertainty into an accusation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.954235076904297,
+      "arousal": 2.945943832397461,
+      "dominance": 3.37546968460083
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fd98b42583dadb1d403e512b0d78f51b44a9403cf54f042c8d46038de4dfc136"
+}

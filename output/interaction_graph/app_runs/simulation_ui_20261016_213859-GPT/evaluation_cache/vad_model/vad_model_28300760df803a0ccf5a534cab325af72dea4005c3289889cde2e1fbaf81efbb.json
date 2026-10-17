@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” rally against Trump shows what happens when political theatrics are allowed to crowd out respect for the law. Streets are not a stage for agitators to confront authorities, and slogans do not excuse disorder. Federal officers used tear gas and made arrests; at least 13 were confirmed in Portland and Denver. A decent society depends on clear rules and the courage to enforce them—not on treating chaos as ordinary political expression.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7372701168060303,
+      "arousal": 3.1427853107452393,
+      "dominance": 3.2691242694854736
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ef62bf5a6d661a485457dcbc1d902d403a5ae1c510cfb32fde11ca5a74e49b33"
+}

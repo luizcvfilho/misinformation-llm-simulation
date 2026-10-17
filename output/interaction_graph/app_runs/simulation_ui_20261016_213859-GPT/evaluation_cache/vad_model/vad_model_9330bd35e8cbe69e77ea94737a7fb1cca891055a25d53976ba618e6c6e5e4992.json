@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Government exists to protect its own people and preserve the nation—not to drag families into an open-ended conflict whose purpose leaders cannot clearly explain. Strength without discipline is recklessness, and putting civilians and essential infrastructure at needless risk betrays the most basic duty of leadership. We need resolve, restraint, and an honest account of the national interest before any further escalation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8658058643341064,
+      "arousal": 3.2073264122009277,
+      "dominance": 3.415637254714966
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "212519f649e4604ed6da91032be97ebf1decdd80513138eb4564fd7cf1484a5f"
+}

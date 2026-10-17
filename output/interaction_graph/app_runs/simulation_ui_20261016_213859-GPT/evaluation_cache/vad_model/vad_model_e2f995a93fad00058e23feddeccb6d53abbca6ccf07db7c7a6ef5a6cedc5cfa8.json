@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Punjab and Haryana High Court has drawn an important line against using pre-arrest bail as a tool for punishment: non-recovery of stolen articles or the seriousness of allegations alone is not enough to cancel it. Justice Sumeet Goel said cancellation requires clear proof that someone misused their liberty or that circumstances changed. That kind of safeguard matters because allegations, however serious, should not by themselves override due process.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7716493606567383,
+      "arousal": 3.0760719776153564,
+      "dominance": 3.1912457942962646
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8406fb17b5a2b7ff38047242fca14560af5e090122448d0ef34d8f5ed8e57fcf"
+}

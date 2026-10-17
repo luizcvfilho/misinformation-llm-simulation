@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Water must be protected, but Alberta’s elected government—not a petition campaign—should decide how to balance that duty with the livelihoods and prosperity tied to responsible resource development. A blanket ban on all coal exploration is an ideological shortcut, not serious stewardship. Protecting the land and sustaining Alberta’s resource economy can go together; leaders should govern for the public interest, not yield to pressure campaigns.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0762219429016113,
+      "arousal": 3.0849952697753906,
+      "dominance": 3.299164056777954
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "52642fb75571e4771b9117a6000d2fa57584970c8436e26ae10f75d20179c918"
+}

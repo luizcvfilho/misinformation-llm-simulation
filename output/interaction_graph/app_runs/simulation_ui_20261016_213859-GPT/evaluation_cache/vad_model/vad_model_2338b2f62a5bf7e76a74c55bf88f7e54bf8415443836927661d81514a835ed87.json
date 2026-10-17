@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A South Portland parent of three is apologizing to school staff while another budget shortfall threatens more than 70 positions. Families shouldn’t be made to carry the shame for a public system starved of resources, and school workers shouldn’t have to wonder whether their jobs will disappear because of chronic underinvestment. These cuts threaten both livelihoods and the support students rely on. The answer is sustained public investment—not asking staff, children, and families to absorb the consequences of institutional failure.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5024139881134033,
+      "arousal": 3.184224843978882,
+      "dominance": 2.931859254837036
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5f547e4c462fbe5e897b31ae270bbf9b2915418ae56fbce386998fcd533a983f"
+}

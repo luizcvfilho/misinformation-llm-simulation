@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An ICE agent stepping in when a baby stopped breathing in a crowded TSA line at JFK on Thursday was the right, humane thing to do—and the family deserved that help. But the Department of Homeland Security shouldn’t get to turn one act of care into a defense of an enforcement system that doesn’t protect everyone equally. Real public safety means consistently protecting people in moments of vulnerability, not using a crisis as institutional good publicity.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.89322566986084,
+      "arousal": 3.3004090785980225,
+      "dominance": 3.3795814514160156
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bc085e0c596e07a162b66583fe6717aab85c571832cfef06de6934de198061fb"
+}

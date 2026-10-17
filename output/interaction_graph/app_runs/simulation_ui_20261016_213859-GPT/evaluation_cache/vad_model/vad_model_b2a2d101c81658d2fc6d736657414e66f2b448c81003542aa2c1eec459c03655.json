@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A 24-hour strike over job guarantees is not simply workers “using education as leverage”; it is a sign that their security has not been meaningfully resolved. The government’s claim that it has met the most significant demands does not answer the central question: can workers count on stable jobs? Families depend on education, but they also depend on the people who deliver it—and those workers should not have to risk their livelihoods to be heard. The responsibility now lies with the government to negotiate credible guarantees, rather than framing labor action as the threat to stability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7634987831115723,
+      "arousal": 3.1646077632904053,
+      "dominance": 3.222158193588257
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "554339839104cc1b85b8e4bac7dc2e140d954a02f066eba99152b0462009a935"
+}

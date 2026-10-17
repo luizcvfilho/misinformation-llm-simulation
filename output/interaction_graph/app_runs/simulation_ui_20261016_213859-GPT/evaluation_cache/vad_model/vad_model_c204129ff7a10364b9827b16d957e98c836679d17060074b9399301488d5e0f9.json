@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "More than 58 lakh names have been removed from the electoral roll, while the tribunals ordered by the Supreme Court to hear challenges are still not operational. That is not a minor procedural delay: people cannot meaningfully defend their right to vote if the promised route to appeal does not exist. A supposedly “clean” roll means little if the process risks excluding people without a fair, functioning hearing.\n\nThis is an institutional failure that can deepen existing inequalities, especially for people with the least power to navigate administrative systems. Authorities must get the tribunals running and apply the rules consistently. Until then, the burden of delay falls on voters, while confusion and mistrust serve political opportunism.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8845818042755127,
+      "arousal": 3.143803834915161,
+      "dominance": 3.1389272212982178
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3d429af74266fea87a16e50b5d0162331aed4962d9d596408eed19d95b0675cc"
+}

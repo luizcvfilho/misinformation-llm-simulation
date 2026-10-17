@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The rally’s scale and its timing weeks before local elections make the “spontaneous” story hard to swallow. Hundreds of groups don’t simply converge around a message by accident; this looks coordinated to keep voters focused on a designated far-right threat while narrowing the range of views treated as acceptable. The anti-extremism language may be less a warning than a tool for steering public opinion. The real question is who benefits from directing attention this way—and what they don’t want voters looking at instead.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8921165466308594,
+      "arousal": 3.196634531021118,
+      "dominance": 3.090088367462158
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c7f53470365228dd613a1102c2d98439eab8528d0e3ffd928bdc7a8f88fc6f5b"
+}

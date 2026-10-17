@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A student in Jaipur had to use the spotlight of her graduation ceremony to raise administrative concerns in front of the Deputy Chief Minister. That should prompt questions about why students feel they must make a public protest to be heard—and why university leaders have remained silent. Calling her actions “inappropriate” prioritizes ceremony and institutional respectability over students’ right to speak up. The real issue is whether educational institutions are accountable to the people who rely on them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6759350299835205,
+      "arousal": 3.212761640548706,
+      "dominance": 3.1648733615875244
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ea5260510c992cbb8e08cde6d9542f4bafa3101060b0ed0ec39cdfdb59aed4a5"
+}

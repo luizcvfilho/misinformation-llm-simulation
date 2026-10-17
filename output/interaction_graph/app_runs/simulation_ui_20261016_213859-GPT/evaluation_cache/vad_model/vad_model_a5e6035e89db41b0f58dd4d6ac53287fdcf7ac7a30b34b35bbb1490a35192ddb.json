@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Portland’s schools are preparing to cut more than 70 positions, and families deserve a plain accounting—not another round of excuses. A school system’s first duty is to educate children and support the people who teach them, not protect administrative priorities. Taxpayers have a right to know how this happened and who is accountable. Careful stewardship, clear priorities, and respect for families should come before bureaucratic comfort.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8405327796936035,
+      "arousal": 3.0608510971069336,
+      "dominance": 3.323164939880371
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "87d801bd6e26f6d0c44e6702650c9b1588a3fcf1f3b00f06dc898a1c4a683ccd"
+}

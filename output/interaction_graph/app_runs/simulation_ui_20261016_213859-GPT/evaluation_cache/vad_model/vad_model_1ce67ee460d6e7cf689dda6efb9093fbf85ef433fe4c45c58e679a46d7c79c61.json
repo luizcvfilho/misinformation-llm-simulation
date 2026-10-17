@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Court documents newly filed in a lawsuit challenging the practice of targeting people seeking legal status as they leave immigration courts say that lawyers for ICE provided false information to justify arresting and detaining thousands of people who had attended immigration court. Federal prosecutors said ICE lawyers acknowledged that an agency memo from May of last year did not authorize the arrests, despite previously citing it to justify them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7165744304656982,
+      "arousal": 3.113255262374878,
+      "dominance": 3.1599490642547607
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "af95a7fbc765d80cc93971c553a66f36d8ef50d39107e3414b5886e7815725ad"
+}

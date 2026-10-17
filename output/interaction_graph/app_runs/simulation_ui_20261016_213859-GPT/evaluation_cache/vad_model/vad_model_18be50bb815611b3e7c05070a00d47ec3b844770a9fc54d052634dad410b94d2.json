@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This seems less like a public-safety explanation and more like a coordinated effort to use one arrest to justify expanding federal power. DHS is framing it as “sanctuary versus public safety,” making harsher enforcement seem inevitable while keeping the fuller picture out of view. The timing and emphasis appear deliberate, as part of how institutions manufacture consent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8794937133789062,
+      "arousal": 2.9873554706573486,
+      "dominance": 3.1238009929656982
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8ccca3bc2ca87477f11aab83712bc36b622901739ede9e8c53a376e81589fa4d"
+}

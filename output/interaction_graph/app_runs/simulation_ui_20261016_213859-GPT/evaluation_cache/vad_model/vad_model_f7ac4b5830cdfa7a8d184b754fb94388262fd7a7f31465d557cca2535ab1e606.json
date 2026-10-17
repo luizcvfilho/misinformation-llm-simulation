@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg’s framing is the tell: as rising energy prices, canceled flights, and death and destruction lead people worldwide to ask when the Iran war will stop, Israel is portrayed as uniquely willing to keep going. That contrast recasts continuing the war as “public resolve” and obscures the interests that may be sustaining it. The account also cuts off after “until,” leaving the central question hanging: who benefits from keeping this war going?",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.822822093963623,
+      "arousal": 3.1274194717407227,
+      "dominance": 3.074119806289673
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "447461b11f0c60c033ef508c332e1fc2e2867b5be4f9d7b5342533d0fb163e69"
+}

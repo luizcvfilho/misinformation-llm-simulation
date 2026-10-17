@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The security apparatus can brand someone a threat under national security provisions and the Official Secrets Act, then keep him locked up on little more than suspicion. The Punjab and Haryana High Court has at least acknowledged that alleged contact with someone in Pakistan is not enough to justify prolonged incarceration. The supposed link to Karachi-based “Punjabi Kuri” may be the hook used to make the case sound dangerous while the real evidence remains out of sight. And with the account cutting off before the court’s release directions, even that outcome is left frustratingly unclear.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6443381309509277,
+      "arousal": 3.0986697673797607,
+      "dominance": 2.9562578201293945
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dc065147d20a1a4cd3363f05fdbfdb2fc6609574c0fbcb771c860f1fc0a3e0bb"
+}

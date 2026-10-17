@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” rally is being framed as a threat to order, but that framing makes protest itself sound illegitimate while treating state force as the natural answer. Federal officers used tear gas and made arrests, with at least 13 confirmed in Portland and Denver. We should be asking whether authorities are using “disorder” to intimidate people challenging Trump’s power. Respect for the law must include protecting the right to dissent—not just enforcing rules against protesters.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.719867706298828,
+      "arousal": 3.184379816055298,
+      "dominance": 3.392252206802368
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "083bfd5dbaaf29ddd8c95fe028a083b0aa7c4d1a9ae694ae523246ae45c91212"
+}

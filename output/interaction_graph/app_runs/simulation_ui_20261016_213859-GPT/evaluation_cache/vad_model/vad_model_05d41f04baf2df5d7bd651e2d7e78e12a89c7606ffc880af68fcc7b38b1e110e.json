@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "More than 58 lakh names have been deleted, yet the tribunals meant to hear challenges still aren’t operating. The Supreme Court gave the direction, but the state and Calcutta High Court are still discussing locations. The appeal software is supposedly ready—which makes the delay look less like a technical problem and more like a managed bottleneck: a remedy can be advertised while voters remain stuck outside the system.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.939976930618286,
+      "arousal": 3.0332889556884766,
+      "dominance": 3.0448057651519775
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a799a07578a2589a44b03d44404e09fa2cbe805fd3829f5003dd4eed69c14336"
+}

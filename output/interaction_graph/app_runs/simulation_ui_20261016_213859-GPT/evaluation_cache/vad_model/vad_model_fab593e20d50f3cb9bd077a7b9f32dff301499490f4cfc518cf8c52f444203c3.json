@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Two Michigan middle-school brothers are asking the U.S. Supreme Court to protect their right to wear “Let’s Go Brandon” hoodies. Yes, the phrase grew out of a profane chant, and parents should teach children respect—but school officials don’t get to silence political speech simply because it makes them uncomfortable. Rules about order must be applied fairly, not used as a cover for shutting down views they dislike. The Foundation for Individual Rights and Expression says the boys’ First Amendment rights were violated, and the Court should make clear that public schools cannot treat conservative expression as uniquely out of bounds.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7021682262420654,
+      "arousal": 3.1268792152404785,
+      "dominance": 3.285297393798828
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e21dfdf6a5ec88dc19de775d19d9d027889b61c5723e65739e8ed32544accb9b"
+}

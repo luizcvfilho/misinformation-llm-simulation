@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg says that as energy prices rise, flights are canceled, and screens fill with death and destruction, people around the world are asking when the Iran war—widely viewed as poorly planned, unwinnable, and a peril to global well-being—will stop. Not in Israel, where the public strongly supports seeing the war through until [...]",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.52602481842041,
+      "arousal": 3.312472343444824,
+      "dominance": 2.9668967723846436
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "31923f05a58750a1e690035a6caf293843d47f9855516572d48f002d1f8b484b"
+}

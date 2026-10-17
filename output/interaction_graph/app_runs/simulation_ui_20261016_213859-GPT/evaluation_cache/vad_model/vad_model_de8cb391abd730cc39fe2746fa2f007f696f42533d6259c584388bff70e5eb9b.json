@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The conviction of Father Bernard Domini under France’s new law on “psychological subjection” points to a wider struggle over power: people vulnerable to coercion need real protection, especially when facing powerful institutions. But that protection cannot rest on vague state authority over belief or association. The answer is clear safeguards and accountability—neither automatic deference to religious institutions nor unchecked state power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8800697326660156,
+      "arousal": 3.070399761199951,
+      "dominance": 3.1160366535186768
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "99f314524cad9592b40f2bb94b95d9863f3900a9df1ee87fa28c3d79a715a270"
+}

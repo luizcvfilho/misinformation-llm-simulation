@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting this as a spontaneous stand against the far right, but an event organised by hundreds of groups, including unions and Muslim representative bodies, just weeks before local elections looks more like a coordinated effort to steer the political conversation. The timing—six months after one of Britain’s largest-ever far-right demonstrations—helps keep that threat front and centre. I wouldn’t take the official framing at face value: mass rallies can be used to define which views are acceptable and shape voters before they reach the polls.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.890841245651245,
+      "arousal": 3.207583427429199,
+      "dominance": 3.2561588287353516
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fb4330525ba013eecc32f2e69d077c1c858fcdb33a4c81677db4101cc8d41652"
+}

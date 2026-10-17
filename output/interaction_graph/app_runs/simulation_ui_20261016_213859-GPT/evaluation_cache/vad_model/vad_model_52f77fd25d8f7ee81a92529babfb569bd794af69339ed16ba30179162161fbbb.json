@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "If the court documents are accurate, this is not a defense of strong borders—it is a failure of basic honesty and lawful authority. ICE lawyers reportedly used a May memo to justify arresting thousands of people at immigration courts, while prosecutors now say it authorized no such arrests. A nation has every right to enforce its immigration laws, but officials must do so truthfully and within the law. People who show up for a legal proceeding should not be made to feel they have walked into a trap. That kind of conduct weakens public trust and makes it harder for responsible authorities to maintain order.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.481219530105591,
+      "arousal": 3.225768804550171,
+      "dominance": 3.217233896255493
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "79347cb643aaf7bf1385f78a02610c6380ad1e28d00ec7fccc24e7a0b22bc364"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The APC should take the 2027 warning as a call for discipline and responsible leadership, not as an excuse to demonize wealth or turn politics into class resentment. Private enterprise and national service are not enemies; what matters is whether leaders use their authority to strengthen families, uphold order and serve Nigeria as a whole. A party earns trust through steady stewardship and a clear sense of duty—not by chasing every accusation or surrendering to those who would weaken the institutions that hold the country together.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8645951747894287,
+      "arousal": 3.19110369682312,
+      "dominance": 3.340747594833374
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "951dc057873930a1613d7ff84122acaea82cffa40bbfbb7205cb4e2490b3afe0"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. That’s the part worth remembering: when a child was in danger, an agent acted. DHS is right to recognize that quick response. Of course public spaces should be safe and properly managed—but treating the rescue as merely a distraction from overcrowding misses the importance of decisive action and the people willing to take responsibility in a crisis. Families deserve both: orderly, well-run public spaces and capable people ready to protect them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.1671531200408936,
+      "arousal": 3.3027031421661377,
+      "dominance": 3.3134145736694336
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "96d4713c86791cb09fdeb600ac0ce389f667ccece6d2b127e887e0dbc6d54bf7"
+}

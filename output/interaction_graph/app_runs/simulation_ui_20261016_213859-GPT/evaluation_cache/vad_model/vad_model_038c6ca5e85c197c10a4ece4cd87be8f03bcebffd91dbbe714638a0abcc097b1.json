@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Another shortfall and cuts to more than 70 school positions—then we’re supposed to accept that this is just how things go. It looks more like a deliberate squeeze: schools take the hit, families and taxpayers are pushed into blaming each other, and the people shaping the decisions remain out of sight. The parent apologizing to educators shows who’s being made to carry the shame, even though staff didn’t create this system.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.599307060241699,
+      "arousal": 3.2268378734588623,
+      "dominance": 2.98488450050354
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "05b4e5b83c92637991aca1eecd4d76a9fd084c61362c7cb8213fc9fdd531ef01"
+}

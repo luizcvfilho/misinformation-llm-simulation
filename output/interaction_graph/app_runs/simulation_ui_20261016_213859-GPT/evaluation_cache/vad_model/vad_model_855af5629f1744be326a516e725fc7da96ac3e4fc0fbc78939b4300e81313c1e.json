@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France’s conviction of Father Bernard Domini under a new law on “psychological subjection” should alarm anyone who values religious freedom. The state is claiming power to decide when spiritual guidance becomes unacceptable influence—a standard that can be stretched against traditional communities and the people who seek them out. Protecting individuals is important, but government officials are not the proper arbiters of faith and conscience. Once that boundary is crossed, no religious community can be sure it will be left alone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.785146713256836,
+      "arousal": 3.0873327255249023,
+      "dominance": 3.059589385986328
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e69e100ca42f6aec49d3aeaabdd0acab5497d7efff8f4e9fd372689349aeee6e"
+}

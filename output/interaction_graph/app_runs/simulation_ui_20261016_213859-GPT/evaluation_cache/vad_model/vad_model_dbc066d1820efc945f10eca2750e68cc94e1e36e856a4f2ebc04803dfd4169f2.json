@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "If the court documents are accurate, the issue is bigger than a disputed memo: people who came to immigration court to follow the rules were reportedly arrested, while officials relied on guidance prosecutors now say authorized no such arrests. That turns access to justice into a threat for people already facing an unequal and precarious system. Enforcing immigration law does not excuse misleading claims or using court proceedings as a trap. Officials must be held accountable, and people must be able to seek a hearing without fearing that showing up will expose them to arrest.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.701870918273926,
+      "arousal": 3.2403290271759033,
+      "dominance": 3.151097297668457
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2a99008fe1c64b6267b2a4019a3bdddbc287d6e402535f66fdb32c5b6d974725"
+}

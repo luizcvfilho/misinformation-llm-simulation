@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Blue Waters owner’s complaint about taxes misses the point: when plastic waste clogs rivers and drains, ordinary communities—especially those with the fewest resources—pay the price. Businesses shouldn’t get to keep the profits while shifting pollution’s costs onto everyone else. Producers need to be held accountable, and public investment is part of protecting people and the places they live.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6534571647644043,
+      "arousal": 3.155879020690918,
+      "dominance": 3.3616273403167725
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "65ab4004853c378afbfd93b5e37e3d3b53c24f6dbec3363468c60f07f51eb4dc"
+}

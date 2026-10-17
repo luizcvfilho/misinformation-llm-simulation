@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An Immigration and Customs Enforcement agent jumped into action after a baby stopped breathing while stuck with his family in a crowded TSA line at JFK International Airport in New York on Thursday. Video released by the Department of Homeland Security showed a man holding the baby notice something was wrong with the child and begin…",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8585801124572754,
+      "arousal": 3.4408960342407227,
+      "dominance": 3.0867512226104736
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0fa9f1bac89830354fdbd58443487f4f6acea2f845a128b07ff7b8564c7a83e0"
+}

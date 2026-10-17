@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France’s conviction of Father Bernard Domini, superior of the Missionary Family of Notre-Dame, under a new law targeting “psychological subjection” raises a real question about how to protect people from coercive authority. Religious freedom matters, but it should not shield powerful institutions from accountability when people may be vulnerable to undue influence. The answer is not to let the state dictate faith or conscience; it is to apply clear, fair standards that protect individuals without giving officials unchecked power over religious life.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8935840129852295,
+      "arousal": 3.0637259483337402,
+      "dominance": 3.2484519481658936
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6ff5f7ab0457ab1541033d926822b42e7e2a829c82e5e9b5c2b544825c823bc3"
+}

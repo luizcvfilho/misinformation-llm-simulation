@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re claiming an estimated 8 million people took part in “No Kings” protests at more than 3,300 events across all 50 states, with organisers saying turnout was about one million people and 600 events higher than in October. But there’s no official count, so the 8 million figure is still an estimate—not proof that the country has reached some shared verdict.\n\nA protest can raise concerns, but it doesn’t speak for everyone or give activists a mandate to weaken legitimate authority. The push to portray this mobilisation as a demand institutions must obey looks more like political pressure than a substitute for the ordinary processes that keep a country governed.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.83760142326355,
+      "arousal": 3.0904858112335205,
+      "dominance": 3.1461880207061768
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3b9fa1b58703c79438c5cd10f5fa4bc39cb84f8e53b976f43ce1ebd29c411419"
+}

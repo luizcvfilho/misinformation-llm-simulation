@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a test of whether schools educate young people or use vague rules to police opinions they dislike. The “Let’s Go Brandon” slogan is crude, and defending the two Michigan brothers’ right to wear it isn’t an endorsement. But administrators shouldn’t get broad, unchecked power to decide which political messages are acceptable. Protect students from genuine harassment, certainly—but do it with clear, consistently enforced standards, not rules that can be turned against unpopular speech. The brothers’ challenge deserves serious consideration.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.816333532333374,
+      "arousal": 3.099649429321289,
+      "dominance": 3.3466405868530273
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "eed11ce897d1982e1faeb7d6092ee123fb6d701e1fa756c40877e0428b40db50"
+}

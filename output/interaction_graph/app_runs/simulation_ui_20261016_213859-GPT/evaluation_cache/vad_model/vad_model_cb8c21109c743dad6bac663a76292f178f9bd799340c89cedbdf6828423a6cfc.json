@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting Harry Wait as an “election fraud” villain, but the detail that matters is that he said he requested ballots for Robin Vos and Cory Mason to expose vulnerabilities in Wisconsin’s voter-registration system. A jury convicted him on two misdemeanor charges and one felony identity-theft charge, while acquitting him of another identity-theft count. That split verdict doesn’t erase the obvious question: why is the system more focused on punishing someone who tested its weaknesses than on addressing those weaknesses? Calling his group one that makes false claims may be a convenient way to discredit the challenge and keep people from asking who benefits when the system is treated as beyond scrutiny.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7280750274658203,
+      "arousal": 3.0867438316345215,
+      "dominance": 3.126889944076538
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5d2dbd39e25709888bdcee7a2845b5c7702558070bdb7d6c7d043d5476392f81"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A clean voter roll is vital to an orderly, credible election—but removing more than 58 lakh names and then failing to have the promised challenge tribunals ready is no way to uphold the rule of law. The Supreme Court’s direction must be implemented, and officials should stop leaving eligible voters in limbo while they argue over where hearings will happen. Scrutiny matters; so does basic administrative competence. If the process is to command public trust, it must be lawful, timely, and fair to every eligible voter.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0901918411254883,
+      "arousal": 3.2072598934173584,
+      "dominance": 3.3700294494628906
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "14a6bb83890ae95bcd5f38ee6d4adbf69a24c39729c016ffecc26ec3066d26e6"
+}

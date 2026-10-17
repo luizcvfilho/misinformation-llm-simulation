@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A “No Kings” rally against Trump ended the way these confrontational political spectacles often do: crowds filled the streets, agitators faced off with authorities, and police ordered people to disperse. Federal officers used tear gas and made arrests; at least 13 arrests were confirmed in Portland and Denver. Whatever the protesters’ slogans, no cause gives anyone a license to turn public streets into a battleground. A society that respects law and order cannot treat this kind of chaos as just another political performance.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.740854024887085,
+      "arousal": 3.2667226791381836,
+      "dominance": 3.2715277671813965
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "24239e39a341e9c733361c28e478310b468b8b5e9c85442f61f9ce04c94c981e"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The central problem is a political framework that treats Israeli security as the only meaningful measure of peace, while Palestinian safety and rights disappear from view. Security matters, including concerns about Iran’s nuclear and missile programs, but it cannot become a blank cheque for ever-expanding demands or a substitute for diplomacy. A durable settlement has to protect people on all sides and confront the unequal conditions that leave some communities far more exposed to harm. Anything less risks preserving the very vulnerability and injustice that make peace impossible.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.755459785461426,
+      "arousal": 3.1656062602996826,
+      "dominance": 3.089076519012451
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "54405146978fa0c73cc17853b9b4cf65f03121029e7965e19fece37e871b5e76"
+}

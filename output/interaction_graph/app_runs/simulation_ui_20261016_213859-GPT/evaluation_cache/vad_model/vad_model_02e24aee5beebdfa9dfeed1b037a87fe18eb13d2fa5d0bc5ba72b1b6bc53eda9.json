@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "On 25 March 2026, Roberto Álvarez and OECD Secretary-General Mathias Cormann signed an agreement in Paris to design the Dominican Republic’s first National Integrity and Anti-Corruption Strategy, with Luis Abinader present. That may look like progress, but international standards and institutional reputation are not enough. Corruption flourishes where power is unequal and people harmed by abuse have little ability to demand accountability. The real test is whether this strategy shifts power toward the public and protects those who speak up—not whether it earns praise abroad.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9907355308532715,
+      "arousal": 3.1597368717193604,
+      "dominance": 3.227485179901123
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c1600f96c339c3357b71cfed09a85ca5e064459aa05f42efee84bcf6f00e2c74"
+}

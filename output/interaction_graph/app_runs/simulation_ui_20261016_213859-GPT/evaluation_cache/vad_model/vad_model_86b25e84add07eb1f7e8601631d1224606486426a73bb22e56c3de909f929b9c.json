@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They brought national-security charges against this man over alleged contact with Karachi-based “Punjabi Kuri,” but the Punjab and Haryana High Court said suspicion alone was not enough to keep him detained indefinitely. It looks like a familiar pattern: secrecy laws are used to create fear and make an accusation sound like proof, then authorities back away when the case cannot support continued detention. Bail proves neither guilt nor innocence, but the timing raises questions about who benefits from keeping the public frightened while the evidence remains uncertain.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6821110248565674,
+      "arousal": 3.1772992610931396,
+      "dominance": 3.0183773040771484
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "07b861f267928d1ae863c90400aa2cd5ab4b628de1af32bb84a0d224b97a9260"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re claiming 8 million people turned out at more than 3,300 “No Kings” events across all 50 states, and organizers say that’s about one million more people and 600 more events than in October. But there’s no official count—just numbers supplied by the organizers and repeated by AFP. That’s a convenient setup: push a massive nationwide show of opposition while leaving the figures impossible to verify. The real story may be less about spontaneous public anger and more about who gets to shape the appearance of a movement and what that image is meant to pressure people into believing.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.918790578842163,
+      "arousal": 3.1734158992767334,
+      "dominance": 3.1290600299835205
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c85dee582bdfe07e9a4d0b933fc58842e705432faba4b114e2a37f2d5fcf6d25"
+}

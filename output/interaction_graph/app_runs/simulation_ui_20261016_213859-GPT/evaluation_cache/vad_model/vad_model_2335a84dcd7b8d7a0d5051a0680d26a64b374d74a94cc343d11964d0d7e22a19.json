@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after the ceasefire was announced, people in Gaza are still facing airstrikes, gunfire and shelling, including fishermen at sea. Calling this “normality” or progress means little when civilians remain exposed to violence and displacement has stripped people of homes and ways to make a living. The burden is falling on those with the least power, while those able to protect them must be held accountable. People’s safety and the chance to rebuild should come before political claims of success.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6544876098632812,
+      "arousal": 3.2428340911865234,
+      "dominance": 3.086717128753662
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e8229b703b9e3f9022e4dc0adef1ed2abd396263ae930ef4dd8d60e17a4fcaf1"
+}

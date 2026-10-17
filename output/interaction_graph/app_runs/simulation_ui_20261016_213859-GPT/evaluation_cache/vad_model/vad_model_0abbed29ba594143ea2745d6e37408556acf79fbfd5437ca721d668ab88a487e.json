@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France has convicted Father Bernard Domini, superior of the Missionary Family of Notre-Dame, under a new law targeting “psychological subjection.” That is a troubling expansion of state power: once officials claim authority to decide when spiritual influence crosses a line, traditional religious communities may find themselves judged by standards the government can stretch. Protecting people matters, but so does preserving religious freedom and keeping the state out of the role of arbiter over faith and conscience.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.656499147415161,
+      "arousal": 3.3378665447235107,
+      "dominance": 3.023437738418579
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6c4d86699d4ed97a7abb5c3c177325a268e6004ac803e7d4737ebb55a2f1b0fc"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The warning exposes what’s really happening: the APC’s direction ahead of the 2027 elections is a deliberate effort to shut ordinary people out and reserve political influence for the wealthy. Calling it an accident—or leaving it unscrutinized—only protects those who benefit. Democracy can stay on paper while moneyed interests decide who gets a voice and whose future counts.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.758584976196289,
+      "arousal": 3.1182940006256104,
+      "dominance": 3.137946128845215
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0bf303160b0c6436a6449a43133f04b0db757067e5ade40458250fb3817454aa"
+}

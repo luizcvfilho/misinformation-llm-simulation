@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a serious abuse of power: thousands of people who showed up at immigration court seeking legal status were arrested and detained, and ICE lawyers allegedly relied on false information to justify it. Court documents now show that prosecutors acknowledged the May memo did not authorize those arrests, despite it being cited as justification. People should not be punished for using the legal process; this demands accountability and safeguards against immigration enforcement targeting people who are already vulnerable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4364566802978516,
+      "arousal": 3.276106595993042,
+      "dominance": 3.1486523151397705
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "146fdfe181b6c82ba01e179042ea4fb5ca10e4a10a4f3410c2b9c4f17e619644"
+}

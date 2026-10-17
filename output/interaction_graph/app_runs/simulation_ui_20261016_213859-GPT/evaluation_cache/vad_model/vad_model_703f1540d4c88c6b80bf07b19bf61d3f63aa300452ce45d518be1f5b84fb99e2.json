@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They want everyone to treat Harry Wait’s case as proof that election skeptics are fraudsters. Wait said he requested Robin Vos’s and Cory Mason’s ballots to test whether the registration system could be exploited. The jury convicted him of two misdemeanor election-fraud counts and one felony identity-theft count, while acquitting him of another identity-theft count. That split verdict doesn’t answer whether the system is vulnerable, but it does show how officials can turn scrutiny into a warning to others: accept the official story or risk being made an example of. Calling the group’s claims “false” isn’t the same as proving those questions should never be asked.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7358522415161133,
+      "arousal": 3.084397792816162,
+      "dominance": 3.1624603271484375
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d95b686fd42ab3547c29e152577d4f5609a9c254b7ee5f8e3dc4e33da80387b2"
+}

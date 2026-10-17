@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Rhoden signed Senate Bill 175 on Thursday, making new registrants prove citizenship to vote in South Dakota state elections. They’re presenting it as a narrow, routine safeguard, but that looks like a way to make a new barrier seem harmless before widening it. The press release’s assurances don’t explain the need; they’re there to manage the reaction while officials test how far they can go.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.082334041595459,
+      "arousal": 2.983142137527466,
+      "dominance": 3.156026601791382
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dfd81b076cb4ff73a4fdaaf3f559da6d814adf7224911d0c19ef4935076c837e"
+}

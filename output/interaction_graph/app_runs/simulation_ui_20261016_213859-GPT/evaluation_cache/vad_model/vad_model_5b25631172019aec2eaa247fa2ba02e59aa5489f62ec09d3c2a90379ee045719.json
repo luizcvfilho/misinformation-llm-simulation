@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The APC’s moves ahead of the 2027 elections look like deliberate gatekeeping, not some natural political change. When money becomes the price of influence, ordinary people are pushed out and powerful interests get to decide who is heard. And calling this “underexamined” feels less like an innocent observation than a warning about how conveniently the silence is being maintained. These parties are becoming clubs designed to protect the people already in control.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8414223194122314,
+      "arousal": 3.1235506534576416,
+      "dominance": 3.181612253189087
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5fa1c40eda738efa6b62b22c10e4edf8b3c951e8b1e249bb880a7806681a19c7"
+}

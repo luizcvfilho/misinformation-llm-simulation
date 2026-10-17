@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “machine-gun conversion” explanation is a distraction. They’re using it to make a new design mandate and criminal penalties seem reasonable, while keeping the actual scope vague until people have accepted the rules. When officials won’t say exactly what the penalties cover, that’s not an oversight—it’s a way to preserve room to expand enforcement and tighten control over what people can buy.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9046061038970947,
+      "arousal": 3.0529212951660156,
+      "dominance": 3.0759871006011963
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0f53446a82cb0b02556a4d503a9607d37f0792b77835e3b82c45795d9abb9156"
+}

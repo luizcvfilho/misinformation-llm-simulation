@@ -1,0 +1,160 @@
+{
+  "inputs": {
+    "text": "Organizers claim 8 million people attended “No Kings” protests at more than 3,300 events across all 50 states, but authorities have provided no official count. That’s a political claim from the organizers, not proof that the country has rejected its elected president. The protests may be loud and widespread, but staging demonstrations against Trump is not the same as winning public consent. The organizers say turnout exceeded October’s protests by about one million people and 600 events; they clearly want that comparison to read as a national mandate. It isn’t one.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Organizers’ turnout claims about the “No Kings” protests and whether they demonstrate national public consent",
+    "subtopics": [
+      "Reported protest attendance and event counts",
+      "Absence of an official count",
+      "Comparison with October’s protests",
+      "Limits of interpreting protest turnout as a national mandate"
+    ],
+    "central_entities": [
+      "Organizers",
+      "“No Kings”",
+      "authorities",
+      "all 50 states",
+      "October’s protests",
+      "Trump"
+    ],
+    "central_relations": [
+      {
+        "subject": "Organizers",
+        "action": "claim",
+        "object": "8 million people attended “No Kings” protests at more than 3,300 events across all 50 states",
+        "polarity": "affirmed",
+        "predicate": "claim",
+        "negation_scope": null,
+        "signed_action": "claim",
+        "base_action": "claim",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendance",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "8 million people"
+          },
+          {
+            "role": "event_count_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "more than 3,300 events"
+          },
+          {
+            "role": "states",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "authorities",
+        "action": "have provided no official count",
+        "object": "official count",
+        "polarity": "negated",
+        "predicate": "provide",
+        "negation_scope": "official count",
+        "signed_action": "have provided no official count",
+        "base_action": "have provided official count",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Organizers",
+        "action": "say turnout exceeded",
+        "object": "October’s protests",
+        "polarity": "affirmed",
+        "predicate": "exceed",
+        "negation_scope": null,
+        "signed_action": "say turnout exceeded",
+        "base_action": "say turnout exceeded",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "turnout_increase",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million people"
+          },
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Challenges the organizers’ turnout figures as political claims rather than evidence of a national mandate.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The organizers’ attendance claim is not proof that the country has rejected its elected president.",
+      "Staging demonstrations against Trump is not the same as winning public consent.",
+      "The turnout comparison is not a national mandate."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "bb0088d5c3ab43ca06b86ee1fc23556745e74a7d93104212e0e571f37eaf1fb7",
+      "input_sha256": "842afb3bf32b7f90d23902b6cf212763c689904834e9159cf5ffa8c1d92fa5d2",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Organizers’ turnout claims about the “No Kings” protests and whether they demonstrate national public consent\",\n  \"subtopics\": [\n    \"Reported protest attendance and event counts\",\n    \"Absence of an official count\",\n    \"Comparison with October’s protests\",\n    \"Limits of interpreting protest turnout as a national mandate\"\n  ],\n  \"central_entities\": [\n    \"Organizers\",\n    \"“No Kings”\",\n    \"authorities\",\n    \"all 50 states\",\n    \"October’s protests\",\n    \"Trump\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The organizers’ attendance claim is not proof that the country has rejected its elected president.\",\n    \"Staging demonstrations against Trump is not the same as winning public consent.\",\n    \"The turnout comparison is not a national mandate.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Organizers\",\n      \"action\": \"claim\",\n      \"object\": \"8 million people attended “No Kings” protests at more than 3,300 events across all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claim\",\n      \"base_action\": \"claim\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendance\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"8 million people\"\n        },\n        {\n          \"role\": \"event_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"states\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"authorities\",\n      \"action\": \"have provided no official count\",\n      \"object\": \"official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provide\",\n      \"negation_scope\": \"official count\",\n      \"signed_action\": \"have provided no official count\",\n      \"base_action\": \"have provided official count\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Organizers\",\n      \"action\": \"say turnout exceeded\",\n      \"object\": \"October’s protests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"exceed\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say turnout exceeded\",\n      \"base_action\": \"say turnout exceeded\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"turnout_increase\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million people\"\n        },\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Challenges the organizers’ turnout figures as political claims rather than evidence of a national mandate.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "185309ac4efe16151f13d4673d3ee17292585982445694ca4470d3d037ca471f"
+}

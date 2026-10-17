@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” organizers say 8 million people took part across more than 3,300 events in all 50 states, though authorities have provided no official count. That estimate isn’t a national mandate—but neither is a ballot box a reason to dismiss people exercising their right to protest. Treating mass dissent as an attempt to “undo an election” is a way to silence criticism while pretending formal institutions alone guarantee justice. The organizers say turnout exceeded October’s protests by about one million people and 600 events; that scale signals real concern, not a claim to speak for everyone. A healthy democracy needs lawful transitions, but it also needs room for people to challenge power and demand institutions that protect everyone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0207631587982178,
+      "arousal": 3.1466193199157715,
+      "dominance": 3.1825144290924072
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7e32a0c46072ae6e66eb2137d7cc95425b5cf78be76d3a96006477e9360b43b7"
+}

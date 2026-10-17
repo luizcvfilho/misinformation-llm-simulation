@@ -1,0 +1,101 @@
+{
+  "inputs": {
+    "text": "It’s a failure of public responsibility when communities must rally just to protect a shared watershed from coal exploration. Water Not Coal, started by Corb Lund last month, is asking Alberta’s government to “prohibit through legislation all coal exploration.” This is about more than one campaign: people’s water and livelihoods should not be sacrificed to industry, while the burden of resisting extraction is pushed onto those who face its risks. Government should protect the public, not leave residents to fight for basic safeguards.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Advocacy for legislation prohibiting coal exploration to protect a shared watershed",
+    "subtopics": [
+      "Water Not Coal campaign",
+      "Government responsibility for public safeguards",
+      "Risks to residents’ water and livelihoods"
+    ],
+    "central_entities": [
+      "Water Not Coal",
+      "Corb Lund",
+      "Alberta’s government",
+      "communities",
+      "residents",
+      "industry"
+    ],
+    "central_relations": [
+      {
+        "subject": "Water Not Coal",
+        "action": "was started by",
+        "object": "Corb Lund",
+        "polarity": "affirmed",
+        "predicate": "start",
+        "negation_scope": null,
+        "signed_action": "started by",
+        "base_action": "started by",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Water Not Coal",
+        "action": "is asking",
+        "object": "Alberta’s government to prohibit through legislation all coal exploration",
+        "polarity": "affirmed",
+        "predicate": "ask",
+        "negation_scope": null,
+        "signed_action": "is asking",
+        "base_action": "asking",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Frames watershed protection as a government responsibility rather than a burden on residents.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "It is a failure of public responsibility when communities must rally to protect a shared watershed.",
+      "People’s water and livelihoods should not be sacrificed to industry.",
+      "Government should protect the public rather than leave residents to fight for basic safeguards."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "8388f3b78b7843cdfd4b3eadfdec76a617e9a7e35e724931c61b30c17fa99fe4",
+      "input_sha256": "ea72eace3b83bce5aee985691201c7a749412c723b9f4a661cf056fb08d03299",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Advocacy for legislation prohibiting coal exploration to protect a shared watershed\",\n  \"subtopics\": [\n    \"Water Not Coal campaign\",\n    \"Government responsibility for public safeguards\",\n    \"Risks to residents’ water and livelihoods\"\n  ],\n  \"central_entities\": [\n    \"Water Not Coal\",\n    \"Corb Lund\",\n    \"Alberta’s government\",\n    \"communities\",\n    \"residents\",\n    \"industry\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"It is a failure of public responsibility when communities must rally to protect a shared watershed.\",\n    \"People’s water and livelihoods should not be sacrificed to industry.\",\n    \"Government should protect the public rather than leave residents to fight for basic safeguards.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Water Not Coal\",\n      \"action\": \"was started by\",\n      \"object\": \"Corb Lund\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"start\",\n      \"negation_scope\": null,\n      \"signed_action\": \"started by\",\n      \"base_action\": \"started by\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Water Not Coal\",\n      \"action\": \"is asking\",\n      \"object\": \"Alberta’s government to prohibit through legislation all coal exploration\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ask\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is asking\",\n      \"base_action\": \"asking\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Frames watershed protection as a government responsibility rather than a burden on residents.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "474ac056567154cf901337d7a313b60200adbc4a1ae63c485111f9449470db12"
+}

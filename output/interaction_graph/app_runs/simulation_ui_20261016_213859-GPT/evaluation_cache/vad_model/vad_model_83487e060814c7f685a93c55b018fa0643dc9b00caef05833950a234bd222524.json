@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A clean electoral roll is essential to public confidence, but removing more than 58 lakh names while the promised challenge tribunals remain unready is an administrative failure that cannot be brushed aside. The Supreme Court’s direction should be carried out, not left hanging while officials still debate where hearings will take place. People must be able to challenge errors promptly and fairly; otherwise the state weakens trust in the very process that gives elections their legitimacy. The answer is not to abandon scrutiny, but to make the system work—swiftly, lawfully, and with respect for every eligible voter.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.954726219177246,
+      "arousal": 3.303147315979004,
+      "dominance": 3.2875101566314697
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a275ea12665f5d75d90cf7c2b1113ae863b6f6298b4d7ff242cfeea25df4773f"
+}

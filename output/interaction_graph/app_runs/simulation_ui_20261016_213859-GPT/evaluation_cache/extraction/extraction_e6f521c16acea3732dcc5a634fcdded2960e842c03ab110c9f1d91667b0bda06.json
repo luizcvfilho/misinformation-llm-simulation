@@ -1,0 +1,101 @@
+{
+  "inputs": {
+    "text": "Israel’s parliament is debating a measure that would make the death penalty the default for West Bank Palestinians convicted of murdering Israelis. The principle is straightforward: a government’s first duty is to protect its people and uphold justice, and murder should bring the most serious consequences. Conviction must rest on proof, but once guilt is established, appeals to outside opinion should not outweigh victims’ families or Israel’s responsibility to maintain public order.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Israel’s parliament debating a measure to make the death penalty the default for West Bank Palestinians convicted of murdering Israelis",
+    "subtopics": [
+      "Capital punishment for murder",
+      "Proof of guilt and appeals",
+      "Public order and victims’ families"
+    ],
+    "central_entities": [
+      "Israel’s parliament",
+      "West Bank Palestinians",
+      "Israelis",
+      "Israel",
+      "victims’ families"
+    ],
+    "central_relations": [
+      {
+        "subject": "Israel’s parliament",
+        "action": "is debating",
+        "object": "a measure",
+        "polarity": "affirmed",
+        "predicate": "debate",
+        "negation_scope": null,
+        "signed_action": "is debating",
+        "base_action": "debating",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "the measure",
+        "action": "would make the death penalty the default for West Bank Palestinians convicted of murdering Israelis",
+        "object": "the death penalty as the default",
+        "polarity": "affirmed",
+        "predicate": "make the death penalty the default",
+        "negation_scope": null,
+        "signed_action": "would make the death penalty the default for West Bank Palestinians convicted of murdering Israelis",
+        "base_action": "make the death penalty the default for West Bank Palestinians convicted of murdering Israelis",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The measure is framed as protecting Israelis, upholding justice, and maintaining public order over outside opinion.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A government’s first duty is to protect its people and uphold justice.",
+      "Murder should bring the most serious consequences.",
+      "Conviction must rest on proof.",
+      "Once guilt is established, appeals to outside opinion should not outweigh victims’ families or Israel’s responsibility to maintain public order."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "ed1a6c1f288a2d54ef792cbb5d07326b7a54b62d573d201bfc7b078575e8658c",
+      "input_sha256": "4863f66fd967a12320783c9858af4e7ee9e23dd568d1efa9798ca4c72fb8ec62",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Israel’s parliament debating a measure to make the death penalty the default for West Bank Palestinians convicted of murdering Israelis\",\n  \"subtopics\": [\n    \"Capital punishment for murder\",\n    \"Proof of guilt and appeals\",\n    \"Public order and victims’ families\"\n  ],\n  \"central_entities\": [\n    \"Israel’s parliament\",\n    \"West Bank Palestinians\",\n    \"Israelis\",\n    \"Israel\",\n    \"victims’ families\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A government’s first duty is to protect its people and uphold justice.\",\n    \"Murder should bring the most serious consequences.\",\n    \"Conviction must rest on proof.\",\n    \"Once guilt is established, appeals to outside opinion should not outweigh victims’ families or Israel’s responsibility to maintain public order.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Israel’s parliament\",\n      \"action\": \"is debating\",\n      \"object\": \"a measure\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"debate\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is debating\",\n      \"base_action\": \"debating\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"the measure\",\n      \"action\": \"would make the death penalty the default for West Bank Palestinians convicted of murdering Israelis\",\n      \"object\": \"the death penalty as the default\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"make the death penalty the default\",\n      \"negation_scope\": null,\n      \"signed_action\": \"would make the death penalty the default for West Bank Palestinians convicted of murdering Israelis\",\n      \"base_action\": \"make the death penalty the default for West Bank Palestinians convicted of murdering Israelis\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The measure is framed as protecting Israelis, upholding justice, and maintaining public order over outside opinion.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "ca190c153006027b072392e15b600628a84f5037226b9ae008c362d3b758ccc8"
+}

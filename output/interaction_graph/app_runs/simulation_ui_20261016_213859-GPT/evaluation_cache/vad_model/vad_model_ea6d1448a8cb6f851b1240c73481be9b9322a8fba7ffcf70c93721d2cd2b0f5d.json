@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Blue Waters’ owner says the government collects taxes “without doing or investing in anything,” but that conveniently ignores who pays when plastic waste clogs rivers and drains. Communities with the fewest resources are left carrying the heaviest burden, while businesses push back against paying their share. This is what happens when pollution’s costs are treated as everyone else’s problem. Producers should be held accountable, and public investment is essential to protecting people—not pointless.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6768507957458496,
+      "arousal": 3.1192550659179688,
+      "dominance": 3.2364418506622314
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f04c81fd6aa6338a4c078bcdc0cac6cae90bfafca803716ef90ef73b0cc67a34"
+}

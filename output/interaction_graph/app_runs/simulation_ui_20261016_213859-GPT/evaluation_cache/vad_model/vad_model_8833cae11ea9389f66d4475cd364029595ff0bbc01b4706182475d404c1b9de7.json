@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Dakota is taking a sensible step to protect confidence in its elections. Governor Larry Rhoden signed Senate Bill 175, requiring new voters to prove they are U.S. citizens before voting in state elections. The measure applies only to state elections and only to new registrants—a limited, straightforward safeguard. Citizenship should be a basic qualification for deciding a state’s future.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.239978075027466,
+      "arousal": 3.0003349781036377,
+      "dominance": 3.304083824157715
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "59afbd9fb7df6aa0d6c0b80788a9ef2d771ccb49295f9fd5f0f0de0c9f384741"
+}

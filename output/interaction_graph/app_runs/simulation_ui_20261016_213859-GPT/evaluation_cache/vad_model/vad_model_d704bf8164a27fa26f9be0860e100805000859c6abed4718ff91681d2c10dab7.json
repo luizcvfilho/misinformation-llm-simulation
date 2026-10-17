@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Phoenix leaders are dressing the Wednesday-night vote up as “oversight,” but the real move is to concentrate control: city officials get to shape where federal immigration enforcement can operate and what the public gets to see. The accountability language is there to make that power grab sound reasonable. When the people setting the limits also manage the story, their explanation deserves suspicion, not trust.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9274137020111084,
+      "arousal": 3.104884386062622,
+      "dominance": 3.325777769088745
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5a2e69c010e3ce8d044c638677c3ecc57215d835aa971c2c403b4d0af6760cad"
+}

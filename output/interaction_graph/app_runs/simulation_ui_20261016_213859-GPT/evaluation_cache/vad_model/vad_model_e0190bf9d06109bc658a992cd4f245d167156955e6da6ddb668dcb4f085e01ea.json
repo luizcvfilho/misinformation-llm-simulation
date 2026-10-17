@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “ethical debate” over civilian areas, infrastructure, and just war looks like a smokescreen: it keeps people arguing over the rules while escalating violence is made to seem normal. Even the warnings about a wider regional conflict may be part of the preparation—conditioning the public to accept consequences that powerful institutions have already decided they can live with. The real question is who benefits from keeping attention on the debate instead of on who is steering events.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.78167724609375,
+      "arousal": 3.200563669204712,
+      "dominance": 3.0639488697052
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7ca9a6392d07d54894629b6944a876629b6693fed65e911dd71417e29a358357"
+}

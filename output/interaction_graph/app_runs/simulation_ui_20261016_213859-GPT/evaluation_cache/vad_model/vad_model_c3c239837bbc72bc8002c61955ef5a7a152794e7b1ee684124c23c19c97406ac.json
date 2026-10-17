@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A graduation ceremony is a milestone for students and families, not a stage for political theater. The student in Jaipur may have real administrative concerns, and university leaders should answer them through clear, accountable channels. But treating public disruption as the only way to be heard weakens respect for the institutions and traditions that hold communities together. Leaders must do their duty—and students should have a proper route to raise complaints without turning a ceremony into a protest.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9079082012176514,
+      "arousal": 3.188288927078247,
+      "dominance": 3.368321418762207
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2241cccc97d023fbbfe91496fedf59aee7ad4b6027350603e7851bd3d84d7303"
+}

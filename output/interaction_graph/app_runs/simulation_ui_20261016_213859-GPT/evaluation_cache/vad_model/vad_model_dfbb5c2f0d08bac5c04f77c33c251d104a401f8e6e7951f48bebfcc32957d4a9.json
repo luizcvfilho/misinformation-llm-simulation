@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "More than 58 lakh people have been removed from the electoral roll, yet the tribunals ordered by the Supreme Court to hear appeals are still not operating. That leaves people facing the loss of a basic democratic right without a functioning way to challenge it. And the people least equipped to navigate a broken bureaucracy are often the ones who pay most.\n\nThis is not just administrative delay; it is an institutional failure with unequal consequences. Authorities need to make the tribunals operational and apply the rules consistently. A roll cannot be called fair if voters are excluded before they can get a meaningful hearing.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6624388694763184,
+      "arousal": 3.1049540042877197,
+      "dominance": 3.1010162830352783
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a00d01bd72ab5bb5d932f191073d9cf30959d91ed5855c10d18283aef9ccf841"
+}

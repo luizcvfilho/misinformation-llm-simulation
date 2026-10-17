@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “routine border policy” line is just the cover story. Bill C-12 receiving royal assent on March 26, 2026, and then officials talking about “strengthening” the system is too convenient to ignore. Nigerians and others are being put in the crosshairs while the real beneficiaries remain hidden. That looks less like ordinary policy and more like a coordinated clampdown dressed up as administration.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9331862926483154,
+      "arousal": 3.032425880432129,
+      "dominance": 3.0864360332489014
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e892a0059333427e79161dc06167deb9668c7ea3cd6dacd527574c6b698eed0b"
+}

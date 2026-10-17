@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re calling it legal reform, but the real aim is to make surveillance easier to control from the top by removing judicial oversight. A closed-door discussion and a House vote expected Thursday are not signs of an open process—they’re how you keep the public from seeing who benefits. The lawyers’ warnings are being brushed aside because accountability is exactly what this arrangement is designed to bypass. The secrecy is the tell.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9237356185913086,
+      "arousal": 3.1660234928131104,
+      "dominance": 3.1950936317443848
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "166ea9a5cd514fd94a61761eaa85de083d6b48d5a724cd1f24adab0a75cc73b4"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "People are having to organize and collect signatures just to defend a shared watershed from coal mining. Water Not Coal, started by Corb Lund last month, is calling on Alberta’s government to “prohibit through legislation all coal exploration.” That residents must press for basic protection says a lot about whose interests government is prioritizing. Communities and clean water should come before coal-industry interests—and protecting people’s livelihoods shouldn’t mean leaving them to bear the risks of extraction.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.852926254272461,
+      "arousal": 3.123055934906006,
+      "dominance": 3.167664051055908
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "baec30e61fd243e3e12f3e2b7ed5670f2580bb3c04427bee5be9a13d79e702a1"
+}

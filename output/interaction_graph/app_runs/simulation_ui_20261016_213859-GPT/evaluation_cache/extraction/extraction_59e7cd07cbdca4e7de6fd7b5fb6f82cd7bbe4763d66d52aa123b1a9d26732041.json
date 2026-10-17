@@ -1,0 +1,135 @@
+{
+  "inputs": {
+    "text": "SSANU has given the federal government one month to finish renegotiating the 2009 agreement or face an indefinite nationwide strike. The fact that workers must threaten to withdraw their labor just to get long-unresolved commitments taken seriously shows the imbalance: universities rely on non-teaching staff, while their work and livelihoods are treated as expendable. This is not a failure of workers to be patient; it is a failure of institutions to honor their obligations. The government should negotiate seriously and deliver fair treatment before workers are forced to shut things down.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "SSANU’s deadline for renegotiating the 2009 agreement and threatened nationwide strike",
+    "subtopics": [
+      "Reliance on non-teaching staff",
+      "Treatment of workers and their livelihoods",
+      "Institutional obligations",
+      "Fair treatment and negotiations"
+    ],
+    "central_entities": [
+      "SSANU",
+      "federal government",
+      "universities",
+      "non-teaching staff",
+      "workers",
+      "institutions"
+    ],
+    "central_relations": [
+      {
+        "subject": "SSANU",
+        "action": "has given",
+        "object": "federal government one month to finish renegotiating the 2009 agreement",
+        "polarity": "affirmed",
+        "predicate": "give_deadline",
+        "negation_scope": null,
+        "signed_action": "has given",
+        "base_action": "give",
+        "duration_status": "ambiguous",
+        "duration_value": 1.0,
+        "duration_unit": "month",
+        "duration_expression": "one month",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "deadline_duration",
+            "value": 1.0,
+            "unit": "month",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "one month"
+          },
+          {
+            "role": "agreement_year",
+            "value": 2009.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2009"
+          }
+        ]
+      },
+      {
+        "subject": "federal government",
+        "action": "face",
+        "object": "an indefinite nationwide strike",
+        "polarity": "affirmed",
+        "predicate": "face_strike",
+        "negation_scope": null,
+        "signed_action": "face",
+        "base_action": "face",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": "indefinite",
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "universities",
+        "action": "rely on",
+        "object": "non-teaching staff",
+        "polarity": "affirmed",
+        "predicate": "rely_on",
+        "negation_scope": null,
+        "signed_action": "rely on",
+        "base_action": "rely on",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The strike threat is framed as a response to institutional neglect and unequal treatment of workers.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The strike threat shows an imbalance: universities rely on non-teaching staff, while their work and livelihoods are treated as expendable.",
+      "The situation is a failure of institutions to honor their obligations, not a failure of workers to be patient.",
+      "The government should negotiate seriously and deliver fair treatment before workers are forced to shut things down."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2335d4bc08beda0aa8c10dab47e57c5d455afe0cfafb5f0a1d4f7b2d3c95861f",
+      "input_sha256": "da1cc231104c27d3a9a3d5e48759e18c7f57aa5c221d8ed0455c8047a932b991",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"SSANU’s deadline for renegotiating the 2009 agreement and threatened nationwide strike\",\n  \"subtopics\": [\n    \"Reliance on non-teaching staff\",\n    \"Treatment of workers and their livelihoods\",\n    \"Institutional obligations\",\n    \"Fair treatment and negotiations\"\n  ],\n  \"central_entities\": [\n    \"SSANU\",\n    \"federal government\",\n    \"universities\",\n    \"non-teaching staff\",\n    \"workers\",\n    \"institutions\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The strike threat shows an imbalance: universities rely on non-teaching staff, while their work and livelihoods are treated as expendable.\",\n    \"The situation is a failure of institutions to honor their obligations, not a failure of workers to be patient.\",\n    \"The government should negotiate seriously and deliver fair treatment before workers are forced to shut things down.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"SSANU\",\n      \"action\": \"has given\",\n      \"object\": \"federal government one month to finish renegotiating the 2009 agreement\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"give_deadline\",\n      \"negation_scope\": null,\n      \"signed_action\": \"has given\",\n      \"base_action\": \"give\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": 1,\n      \"duration_unit\": \"month\",\n      \"duration_expression\": \"one month\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"deadline_duration\",\n          \"kind\": \"duration\",\n          \"value\": 1,\n          \"unit\": \"month\",\n          \"status\": \"exact\",\n          \"expression\": \"one month\"\n        },\n        {\n          \"role\": \"agreement_year\",\n          \"kind\": \"year\",\n          \"value\": 2009,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2009\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"federal government\",\n      \"action\": \"face\",\n      \"object\": \"an indefinite nationwide strike\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"face_strike\",\n      \"negation_scope\": null,\n      \"signed_action\": \"face\",\n      \"base_action\": \"face\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"indefinite\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"universities\",\n      \"action\": \"rely on\",\n      \"object\": \"non-teaching staff\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"rely_on\",\n      \"negation_scope\": null,\n      \"signed_action\": \"rely on\",\n      \"base_action\": \"rely on\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The strike threat is framed as a response to institutional neglect and unequal treatment of workers.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "11cdeaac8086ea8434bbe58f661190b1646289008cac221c230ad4685aedba2b"
+}

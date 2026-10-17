@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The tribunals for voters removed from West Bengal’s electoral rolls are still not operational, and details of how they will function have yet to be finalized. The state government and Calcutta High Court are discussing locations, while software for voters to challenge rulings is ready. More than 58 lakh names were deleted during the revision exercise.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8113465309143066,
+      "arousal": 3.00002384185791,
+      "dominance": 3.032757043838501
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e9075f1a31af49915642960c19e51fc6fb3bd5b3d963ee22b1ff4f1074b42e59"
+}

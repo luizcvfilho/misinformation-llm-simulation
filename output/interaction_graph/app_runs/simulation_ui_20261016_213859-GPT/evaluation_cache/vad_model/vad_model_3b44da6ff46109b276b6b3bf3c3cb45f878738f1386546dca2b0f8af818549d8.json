@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched in central London alongside trade unions, anti-racism groups and Muslim representative bodies to stand against far-right politics and its harm to vulnerable communities. Calling that collective action an attempt to silence voters is a way to discredit anti-racist organising without showing that anyone’s debate has actually been shut down. People should be able to discuss social and economic concerns, but that cannot mean giving prejudice a free pass or demanding that targeted communities tolerate it in the name of tradition. We should confront the inequality and insecurity that fuel division—not blame people organising against racism.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6071650981903076,
+      "arousal": 3.3063414096832275,
+      "dominance": 3.2695913314819336
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2e921e796e6b344914e7e173066c30fe197217f52fceaaf9b255eb628cc6a87f"
+}

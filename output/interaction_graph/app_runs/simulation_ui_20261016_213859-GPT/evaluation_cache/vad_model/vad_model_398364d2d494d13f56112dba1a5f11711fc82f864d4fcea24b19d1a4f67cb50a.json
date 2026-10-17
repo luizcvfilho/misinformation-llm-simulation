@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The conflict involving the United States, Israel, and Iran is escalating, and the danger is no longer confined to military targets: civilian areas and essential infrastructure are at risk, with the possibility of a wider regional war. A nation’s first duty is to protect its people, but military force must also be governed by moral discipline and a clear purpose. The principles of just war are not an excuse for weakness; they are a reminder that strength without restraint can deepen the conflict and endanger civilians. Leaders should act with resolve, defend their national interests, and avoid letting this crisis spread further.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7353391647338867,
+      "arousal": 3.3288965225219727,
+      "dominance": 3.2699685096740723
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "04c624ec282c168a30c8ccc5c60ae477a07a36cafb3a8f8deec8cfad1a850bbf"
+}

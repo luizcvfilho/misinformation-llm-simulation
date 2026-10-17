@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The key issue isn’t whether “Let’s Go Brandon” is polite—it isn’t. It’s whether public schools can use vague demands for “respect” to punish students for political views officials dislike. That kind of discretion invites selective enforcement, and students shouldn’t have to guess which dissenting messages will get them disciplined. The Foundation for Individual Rights and Expression says the Michigan brothers’ First Amendment rights were violated. The Supreme Court should set a clear limit: public schools can maintain order without choosing which political speech students are allowed to express.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.688859701156616,
+      "arousal": 3.0465807914733887,
+      "dominance": 3.354233503341675
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dfbeb9a4f14835aa34b71ac3f9a77294b034335e64e3e4460f3ff07677f2828d"
+}

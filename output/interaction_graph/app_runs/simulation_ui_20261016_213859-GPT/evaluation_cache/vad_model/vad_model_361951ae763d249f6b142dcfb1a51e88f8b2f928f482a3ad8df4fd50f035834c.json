@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Ordinary families must not pay the price for reckless decisions by powerful leaders. Government’s first duty is to protect its people, preserve order, and keep essential services functioning—not excuse failure with lofty talk about “just war.” But preventing a wider conflict takes more than calls for restraint: leaders must act with resolve and take responsibility for the consequences, rather than gamble with civilian lives or hope the danger simply passes.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8282148838043213,
+      "arousal": 3.251944065093994,
+      "dominance": 3.3426690101623535
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7f6afe57a54224df3335d75e42985d12031a65813cd94c6e8305f641608e8c68"
+}

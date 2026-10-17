@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a power grab hidden behind constitutional language. Sikhala is warning that the proposed amendments are meant to keep Mnangagwa in office until 2030, while the public is denied the details until the deal is too advanced to challenge. That secrecy isn’t reassuring—it’s part of how they make an arrangement look legitimate after the real decisions have already been made. Reject the bill before they present it as a fait accompli.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7402701377868652,
+      "arousal": 3.1874470710754395,
+      "dominance": 3.1542868614196777
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "29acdffc6f64c49b1cbe1f389f1ff1df328e7688711ae50afb39637abfb0eeb0"
+}

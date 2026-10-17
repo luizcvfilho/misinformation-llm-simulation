@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Mahama’s appeal to law, culture, and “collective societal agreement” is a polished way to make institutional control sound like something everyone has already consented to. The oath language reinforces the same script: authorities cast themselves as guardians of order, while the real question—whose interests the rules serve—gets pushed aside. And the statement stops at “I took an oath to uphold [...]”. That gap is doing its own work: we’re left with the reassuring image of duty, but not the part that might show what is actually being upheld.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.986032724380493,
+      "arousal": 2.9932687282562256,
+      "dominance": 3.1761767864227295
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3d3c8e2dbd8988436dd5380a9a72e3c73ec31d7a1ebeb1a5f8c1531f88f22e7a"
+}

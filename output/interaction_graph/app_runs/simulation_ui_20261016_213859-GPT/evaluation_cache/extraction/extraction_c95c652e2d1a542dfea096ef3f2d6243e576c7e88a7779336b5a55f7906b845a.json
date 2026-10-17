@@ -1,0 +1,192 @@
+{
+  "inputs": {
+    "text": "Organisers say an estimated 8 million people joined “No Kings” protests at more than 3,300 events across all 50 states, opposing President Donald Trump’s leadership. That’s a striking show of people asserting their right to challenge concentrated political power—and the scale suggests these concerns reach far beyond a single community. Authorities have not provided an official count, so the figure remains the organisers’ estimate; they say turnout exceeded the October demonstrations by about one million participants and 600 events.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Organisers’ estimate of turnout at the “No Kings” protests and the demonstrations’ opposition to President Donald Trump’s leadership",
+    "subtopics": [
+      "Estimated participant and event counts",
+      "Turnout compared with October demonstrations",
+      "Authorities have not provided an official count",
+      "Protests as a challenge to concentrated political power"
+    ],
+    "central_entities": [
+      "Organisers",
+      "“No Kings” protests",
+      "President Donald Trump",
+      "Authorities",
+      "all 50 states",
+      "October demonstrations"
+    ],
+    "central_relations": [
+      {
+        "subject": "Organisers",
+        "action": "say an estimated 8 million people joined “No Kings” protests at more than 3,300 events",
+        "object": "“No Kings” protests",
+        "polarity": "affirmed",
+        "predicate": "say",
+        "negation_scope": null,
+        "signed_action": "say",
+        "base_action": "say",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "participant_count",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "estimated 8 million people"
+          },
+          {
+            "role": "event_count_lower_bound",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 3,300 events"
+          }
+        ]
+      },
+      {
+        "subject": "Organisers",
+        "action": "say the protests took place across all 50 states",
+        "object": "all 50 states",
+        "polarity": "affirmed",
+        "predicate": "say",
+        "negation_scope": null,
+        "signed_action": "say",
+        "base_action": "say",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "“No Kings” protests",
+        "action": "opposed the leadership of",
+        "object": "President Donald Trump",
+        "polarity": "affirmed",
+        "predicate": "oppose",
+        "negation_scope": null,
+        "signed_action": "opposing",
+        "base_action": "oppose",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Authorities",
+        "action": "have not provided an official count",
+        "object": "official count",
+        "polarity": "negated",
+        "predicate": "provide",
+        "negation_scope": "have not provided",
+        "signed_action": "have not provided",
+        "base_action": "provide",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Organisers",
+        "action": "say turnout exceeded the October demonstrations by about one million participants and 600 events",
+        "object": "October demonstrations",
+        "polarity": "affirmed",
+        "predicate": "say",
+        "negation_scope": null,
+        "signed_action": "say",
+        "base_action": "say",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "participant_increase",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million participants"
+          },
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A large-scale protest challenging concentrated political power, with turnout figures attributed to organisers and no official count provided.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The protests are described as a striking show of people asserting their right to challenge concentrated political power.",
+      "The scale is said to suggest that these concerns reach far beyond a single community."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "7bde376d1c05339782478ab26288bd43b4dc09d8ec2faccbc27b2bd87bd50382",
+      "input_sha256": "d581b6be75f4f96a2e596975e3f3d8102b9426930ab01107c528826fa494f277",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Organisers’ estimate of turnout at the “No Kings” protests and the demonstrations’ opposition to President Donald Trump’s leadership\",\n  \"subtopics\": [\n    \"Estimated participant and event counts\",\n    \"Turnout compared with October demonstrations\",\n    \"Authorities have not provided an official count\",\n    \"Protests as a challenge to concentrated political power\"\n  ],\n  \"central_entities\": [\n    \"Organisers\",\n    \"“No Kings” protests\",\n    \"President Donald Trump\",\n    \"Authorities\",\n    \"all 50 states\",\n    \"October demonstrations\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The protests are described as a striking show of people asserting their right to challenge concentrated political power.\",\n    \"The scale is said to suggest that these concerns reach far beyond a single community.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Organisers\",\n      \"action\": \"say an estimated 8 million people joined “No Kings” protests at more than 3,300 events\",\n      \"object\": \"“No Kings” protests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say\",\n      \"base_action\": \"say\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"participant_count\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"estimated 8 million people\"\n        },\n        {\n          \"role\": \"event_count_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 3,300 events\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Organisers\",\n      \"action\": \"say the protests took place across all 50 states\",\n      \"object\": \"all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say\",\n      \"base_action\": \"say\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"“No Kings” protests\",\n      \"action\": \"opposed the leadership of\",\n      \"object\": \"President Donald Trump\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"oppose\",\n      \"negation_scope\": null,\n      \"signed_action\": \"opposing\",\n      \"base_action\": \"oppose\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Authorities\",\n      \"action\": \"have not provided an official count\",\n      \"object\": \"official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provide\",\n      \"negation_scope\": \"have not provided\",\n      \"signed_action\": \"have not provided\",\n      \"base_action\": \"provide\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Organisers\",\n      \"action\": \"say turnout exceeded the October demonstrations by about one million participants and 600 events\",\n      \"object\": \"October demonstrations\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say\",\n      \"base_action\": \"say\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"participant_increase\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million participants\"\n        },\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A large-scale protest challenging concentrated political power, with turnout figures attributed to organisers and no official count provided.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "5c91aed16072ca6ea579eb0dfb59772b315eda993527e877ac4e514df5de623e"
+}

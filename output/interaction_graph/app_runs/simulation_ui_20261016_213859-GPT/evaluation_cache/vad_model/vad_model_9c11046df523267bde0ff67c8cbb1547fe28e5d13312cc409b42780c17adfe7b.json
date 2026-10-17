@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A nation has every right to enforce its immigration laws, and filing for legal status should not become a shield against enforcement. The real failure here is that government officials apparently relied on a memo that prosecutors acknowledged did not authorize these arrests. Agencies need discipline and must follow the rules—but legal process should uphold lawful enforcement, not become a pretext for weakening it. Public trust depends on both order at the border and accountability inside government.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.858675003051758,
+      "arousal": 3.0883829593658447,
+      "dominance": 3.2675740718841553
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3811628ff32b15943bcf7d4f1cb6545df23b83a0a4eda27551e30837d24565bf"
+}

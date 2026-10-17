@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Dakota is doing what a responsible state should: ensuring that people registering to vote in state elections can document their citizenship. Calling a basic safeguard “voter suppression” turns ordinary standards of accountability into a political grievance. The right to vote matters too much to leave confidence in elections weakened; protecting it means respecting the rules and the integrity of the state’s institutions.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0794265270233154,
+      "arousal": 3.034287691116333,
+      "dominance": 3.2994093894958496
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2fb2da180027848501778e57f0492e25aa88b517cf8a9d9fa99a3358713bcb07"
+}

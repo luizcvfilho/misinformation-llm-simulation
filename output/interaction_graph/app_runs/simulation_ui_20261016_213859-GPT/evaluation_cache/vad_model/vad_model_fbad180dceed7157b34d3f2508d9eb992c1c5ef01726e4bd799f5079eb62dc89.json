@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Earlier this month, an Indiana judge blocked an abortion restriction after the ACLU and Hoosier Jews for Choice argued it burdens people acting on sincerely held religious beliefs. That matters because religious freedom cannot be a one-way privilege for those seeking to control other people’s choices. The state should not impose a narrow moral doctrine at the expense of access to care, and LifeNews’ “killing babies” rhetoric only shames people seeking abortions rather than confronting their rights.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.455958366394043,
+      "arousal": 3.30285906791687,
+      "dominance": 3.1640803813934326
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "793ae62f36e1a1993d2f9b4279e2ab878a303fb769550d3cce6eed94394284c7"
+}

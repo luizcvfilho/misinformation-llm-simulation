@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The real threat to order is a government that treats dissent as a danger to be suppressed. Federal officers used tear gas and made arrests, with at least 13 confirmed in Portland and Denver. Calling protest “disorder” can give authorities cover to intimidate people challenging Trump’s power. The right to dissent must be protected as part of the rule of law—not treated as an inconvenience to it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.790034055709839,
+      "arousal": 3.1645476818084717,
+      "dominance": 3.3030781745910645
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "39d5b12699571f2f2f44f98c3df995dc2e5bf8c06e64c9a73dc1f0ba1dc5be40"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Michigan brothers’ case is a reminder that schools shouldn’t get sweeping discretion to punish students for political expression just because administrators find it offensive. “Let’s Go Brandon” is a profane political slogan, but vague rules can be enforced selectively, and that power often weighs most heavily on young people with the least ability to challenge it. Protecting students from harassment matters—but so does setting clear, consistent limits on school authority. Defending the brothers’ right to wear the slogan is not an endorsement of it; it is a defense of fair rules and students’ freedom to speak.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8428194522857666,
+      "arousal": 3.1487627029418945,
+      "dominance": 3.2957186698913574
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bd888fb54112894bec377b3430a835f3dc59acef73db6c167721b1cf8516b36b"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "An Indiana judge has blocked a law challenged by the ACLU and Hoosier Jews for Choice on religious-freedom grounds. This is about more than competing beliefs: the state should not use its power to impose lawmakers’ moral views on everyone else. Abortion restrictions fall hardest on people with the fewest resources, so protecting religious freedom and bodily autonomy also means confronting unequal power and ensuring people can make decisions about their own lives.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9252171516418457,
+      "arousal": 3.175644636154175,
+      "dominance": 3.2458348274230957
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fffa4f2f181cd16a73c9e82beb6fc7cbdd8dc280f013c1992ced29c6deed1b75"
+}

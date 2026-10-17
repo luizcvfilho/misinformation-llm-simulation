@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This isn’t generosity; it’s a loyalty operation dressed up as welfare. The Rs 2,000 aid, Rs 8,000 coupons, pumpsets and fishermen’s support keep people focused on handouts while the FDI and AI push advances the interests that matter to those in power. The investment talk is the real story, and the benefits will flow upward while ordinary people are kept dependent and distracted.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.158236503601074,
+      "arousal": 3.2566094398498535,
+      "dominance": 3.2439424991607666
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bad9655a1cdd182902f35c0dd91339fa1b749d346a926c814c9799e516f0190d"
+}

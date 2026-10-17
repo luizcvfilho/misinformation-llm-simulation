@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Portland’s schools are facing another major budget shortfall, with more than 70 positions set to be cut. Families and taxpayers deserve more than apologies: they deserve to know how the district got here and why classroom needs weren’t protected. Schools should put students, parents, and basic education first—not let administrative priorities crowd out the people doing the work. It’s time for honest accounting, disciplined spending, and real accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5537447929382324,
+      "arousal": 3.183180809020996,
+      "dominance": 3.3675551414489746
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a995fa06fde94faabdaf61ff9fc5ec37ab76d86a09bb8bc0c0cb32b2709c05e3"
+}

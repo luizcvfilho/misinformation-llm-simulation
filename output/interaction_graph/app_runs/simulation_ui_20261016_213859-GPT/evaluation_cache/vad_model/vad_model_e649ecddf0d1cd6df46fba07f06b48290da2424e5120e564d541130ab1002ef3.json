@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "It’s being described as political change, but it looks more like a managed takeover. If residents can’t afford to reclaim what still works, wealthy diaspora members and foreign investors could buy property and businesses cheaply. It seems residents could be pushed aside while people with money benefit. The key question is who is shaping the transition and who stands to profit from it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.956901788711548,
+      "arousal": 3.1106739044189453,
+      "dominance": 3.13667631149292
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2de92b89c528818428ccf749a76f335a88f6fc18b8f9763d0694f6f6c2eb29eb"
+}

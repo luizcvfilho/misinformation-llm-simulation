@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “Let’s Go Brandon” slogan is crude, and no parent should mistake defending the two Michigan brothers’ right to wear it for endorsing the language. But schools are meant to educate and uphold fair standards—not selectively discipline students over political views administrators dislike. Protect students from genuine harassment, and enforce clear rules consistently. The brothers’ challenge deserves serious consideration.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9097304344177246,
+      "arousal": 3.144965648651123,
+      "dominance": 3.357329845428467
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ccfe6b9bef405ece0de8712bc9c00d6eefe57b90dc5b3877f312d0afe0a58b5b"
+}

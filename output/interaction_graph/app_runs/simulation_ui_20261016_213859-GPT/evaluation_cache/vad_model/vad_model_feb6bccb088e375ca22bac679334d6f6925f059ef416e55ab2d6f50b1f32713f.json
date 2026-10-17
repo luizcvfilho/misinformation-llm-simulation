@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting Water Not Coal as a grassroots push to protect southern Alberta’s watershed, with local canvassers collecting signatures for a citizen initiative. But don’t mistake a petition for proof that the people making decisions are on the public’s side. The campaign, started by Corb Lund last month, channels concern into a request for the Government of Alberta to legislate against coal exploration—while the interests shaping the larger fight stay out of view. That’s a convenient way to make people feel heard without showing who actually benefits.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0172035694122314,
+      "arousal": 3.046035051345825,
+      "dominance": 3.2341911792755127
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b15ef51a97ecc39e65c241bd586ec74c1fb2ed03b9358bf0ddb9281f89cf7c58"
+}

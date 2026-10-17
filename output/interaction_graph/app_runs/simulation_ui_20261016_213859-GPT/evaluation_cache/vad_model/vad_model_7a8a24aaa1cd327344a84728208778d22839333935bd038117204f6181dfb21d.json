@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The bill is due before the House plenum on Thursday, and lawmakers need to be clear about what surveillance powers it would grant. Expanding state power without meaningful oversight is not a neutral security measure: people already facing discrimination or political scrutiny are most likely to bear the pressure. Public safety cannot be an excuse to weaken rights or treat accountability as a threat. Strong safeguards should be built in before these powers are considered.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9785430431365967,
+      "arousal": 3.1210412979125977,
+      "dominance": 3.2672159671783447
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "db32bc38c21817fccd55633688b7f61f684f2f87437417eb080f41affe391d88"
+}

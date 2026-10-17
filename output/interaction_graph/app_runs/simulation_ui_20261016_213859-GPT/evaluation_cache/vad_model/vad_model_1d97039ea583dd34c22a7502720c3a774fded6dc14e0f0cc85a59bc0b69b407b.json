@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Phoenix city leaders are presenting this as keeping an eye on federal immigration enforcement, but the approved restriction on ICE and other agencies using city property looks more like managed theater than real accountability. The institutions are shaping where enforcement happens and how the public sees it, while leaving the underlying machinery intact. Don’t mistake a council vote on Wednesday night for proof that anyone is actually being held to account.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9357056617736816,
+      "arousal": 2.978545904159546,
+      "dominance": 3.3455867767333984
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "95ff4a4e34d34277c5c62ddf5ba84f3e7bbad2fccac885510c14230c7eddf50a"
+}

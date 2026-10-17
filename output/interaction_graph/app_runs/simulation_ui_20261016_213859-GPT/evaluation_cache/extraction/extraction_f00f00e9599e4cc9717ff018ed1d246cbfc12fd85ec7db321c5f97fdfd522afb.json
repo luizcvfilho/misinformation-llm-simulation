@@ -1,0 +1,171 @@
+{
+  "inputs": {
+    "text": "Organisers of the “No Kings” protests estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership. AFP reported the events were held nationwide, though US authorities have not provided an official count. Organisers said turnout exceeded the previous demonstrations in October, with “about one million more participants and 600 more events.”",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Estimated nationwide turnout at “No Kings” protests opposing President Donald Trump’s leadership",
+    "subtopics": [
+      "Protest events across all 50 US states",
+      "Organisers’ comparison with previous demonstrations",
+      "No official count from US authorities"
+    ],
+    "central_entities": [
+      "Organisers",
+      "No Kings",
+      "President Donald Trump",
+      "AFP",
+      "US authorities",
+      "US states"
+    ],
+    "central_relations": [
+      {
+        "subject": "Organisers",
+        "action": "estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership",
+        "object": "No Kings protests",
+        "polarity": "affirmed",
+        "predicate": "estimated attendance",
+        "negation_scope": null,
+        "signed_action": "estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership",
+        "base_action": "estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendees",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "8 million people"
+          },
+          {
+            "role": "events",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "unknown",
+            "expression": "more than 3,300 events"
+          },
+          {
+            "role": "states",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 US states"
+          }
+        ]
+      },
+      {
+        "subject": "AFP",
+        "action": "reported the events were held nationwide",
+        "object": "No Kings protests",
+        "polarity": "affirmed",
+        "predicate": "reported events held nationwide",
+        "negation_scope": null,
+        "signed_action": "reported the events were held nationwide",
+        "base_action": "reported the events were held nationwide",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "US authorities",
+        "action": "have not provided an official count",
+        "object": "an official count",
+        "polarity": "negated",
+        "predicate": "provide",
+        "negation_scope": "provided an official count",
+        "signed_action": "have not provided an official count",
+        "base_action": "provided an official count",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Organisers",
+        "action": "said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events",
+        "object": "the previous demonstrations in October",
+        "polarity": "affirmed",
+        "predicate": "said turnout exceeded previous demonstrations",
+        "negation_scope": null,
+        "signed_action": "said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events",
+        "base_action": "said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "additional_participants",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million more participants"
+          },
+          {
+            "role": "additional_events",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 more events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Organisers report large nationwide protest turnout, while US authorities have not provided an official count.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "157fd5b35e206d88102dbeba2ff1f7765ab90a65929bae64d78ed2a89ca8c60b",
+      "input_sha256": "1c9b761ec2c46611a51fd7bffac57ea4d2d73b7bd9d3fdd244b13dad4e47f0c5",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Estimated nationwide turnout at “No Kings” protests opposing President Donald Trump’s leadership\",\n  \"subtopics\": [\n    \"Protest events across all 50 US states\",\n    \"Organisers’ comparison with previous demonstrations\",\n    \"No official count from US authorities\"\n  ],\n  \"central_entities\": [\n    \"Organisers\",\n    \"No Kings\",\n    \"President Donald Trump\",\n    \"AFP\",\n    \"US authorities\",\n    \"US states\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"Organisers\",\n      \"action\": \"estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership\",\n      \"object\": \"No Kings protests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estimated attendance\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership\",\n      \"base_action\": \"estimated that 8 million people attended more than 3,300 events across all 50 US states to oppose President Donald Trump’s leadership\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendees\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"8 million people\"\n        },\n        {\n          \"role\": \"events\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"unknown\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"states\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 US states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"AFP\",\n      \"action\": \"reported the events were held nationwide\",\n      \"object\": \"No Kings protests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reported events held nationwide\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reported the events were held nationwide\",\n      \"base_action\": \"reported the events were held nationwide\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"US authorities\",\n      \"action\": \"have not provided an official count\",\n      \"object\": \"an official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provide\",\n      \"negation_scope\": \"provided an official count\",\n      \"signed_action\": \"have not provided an official count\",\n      \"base_action\": \"provided an official count\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Organisers\",\n      \"action\": \"said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events\",\n      \"object\": \"the previous demonstrations in October\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said turnout exceeded previous demonstrations\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events\",\n      \"base_action\": \"said turnout exceeded the previous demonstrations in October, with about one million more participants and 600 more events\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"additional_participants\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million more participants\"\n        },\n        {\n          \"role\": \"additional_events\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 more events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Organisers report large nationwide protest turnout, while US authorities have not provided an official count.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "499167a25b46745e1d7eda1b5ddb3132add0f7dc0e3a40fdd47e47aee30393a6"
+}

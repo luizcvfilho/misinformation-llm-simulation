@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This conviction exposes the unequal power people can face inside institutions that claim authority over their lives. Protecting people from coercion matters, but a law against “psychological subjection” must not become a blank cheque for the state to police belief or association. We need transparent safeguards and real accountability: no automatic protection for powerful religious institutions, and no unchecked state power over vulnerable people.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8237712383270264,
+      "arousal": 3.116635799407959,
+      "dominance": 3.213730812072754
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ffa31cf7eb820084f00c28351b13db4572d7dedb43f0e8ae2ca9c666da7c4513"
+}

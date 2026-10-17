@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This arrest is being turned into a federal warning campaign, and that’s no accident. DHS is using a single case to make New York City’s sanctuary policies look dangerous, so stronger immigration enforcement can be sold as the only answer. The public-safety framing is cover for a power play: shape the story, stoke fear, and make federal control seem inevitable. The people caught in the middle are useful to that narrative, not its priority.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8471665382385254,
+      "arousal": 3.2262046337127686,
+      "dominance": 3.155672073364258
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "89c38c850021305559c88654e978989f08195deaf87d6a513334a15b08bc0b95"
+}

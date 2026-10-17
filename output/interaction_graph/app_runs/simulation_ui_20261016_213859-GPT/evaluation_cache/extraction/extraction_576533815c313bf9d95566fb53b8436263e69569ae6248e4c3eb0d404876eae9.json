@@ -1,0 +1,92 @@
+{
+  "inputs": {
+    "text": "The court’s finding that Mary Ngechi Ngethe played a central role in acquiring unsuitable cemetery land for Ksh.283 million should not become an excuse to treat this as one person’s failure and move on. Public money belongs to everyone, and when it is put at risk, the people who depend most on public services are often left to pay the price. Accountability and recovery matter, but lasting justice means changing the safeguards and decision-making systems that allowed this to happen. Public office must serve the public—not protect those entrusted with public resources.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Accountability and systemic reform after the cemetery land acquisition finding",
+    "subtopics": [
+      "Public money and public services",
+      "Recovery and accountability",
+      "Safeguards and decision-making systems"
+    ],
+    "central_entities": [
+      "Mary Ngechi Ngethe",
+      "court",
+      "public"
+    ],
+    "central_relations": [
+      {
+        "subject": "court",
+        "action": "found",
+        "object": "Mary Ngechi Ngethe played a central role in acquiring unsuitable cemetery land for Ksh.283 million",
+        "polarity": "affirmed",
+        "predicate": "found",
+        "negation_scope": null,
+        "signed_action": "found",
+        "base_action": "found",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "acquisition_amount",
+            "value": 283000000.0,
+            "unit": null,
+            "kind": "money",
+            "status": "exact",
+            "expression": "Ksh.283 million"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The finding is framed as a reason for broader accountability and systemic reform, not as a basis to blame one person and move on.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The court’s finding should not become an excuse to treat this as one person’s failure and move on.",
+      "Accountability and recovery matter.",
+      "Lasting justice requires changing the safeguards and decision-making systems that allowed this to happen.",
+      "Public office must serve the public, not protect those entrusted with public resources."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "a71e9c5208b99d625fad6940bd52e5717d0f15518a019f16ebf1b6091302147e",
+      "input_sha256": "19c390d38fcb37a2a41ccb75e123d1d67b67c4cd651186d64d96767a5f274fca",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Accountability and systemic reform after the cemetery land acquisition finding\",\n  \"subtopics\": [\n    \"Public money and public services\",\n    \"Recovery and accountability\",\n    \"Safeguards and decision-making systems\"\n  ],\n  \"central_entities\": [\n    \"Mary Ngechi Ngethe\",\n    \"court\",\n    \"public\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The court’s finding should not become an excuse to treat this as one person’s failure and move on.\",\n    \"Accountability and recovery matter.\",\n    \"Lasting justice requires changing the safeguards and decision-making systems that allowed this to happen.\",\n    \"Public office must serve the public, not protect those entrusted with public resources.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"court\",\n      \"action\": \"found\",\n      \"object\": \"Mary Ngechi Ngethe played a central role in acquiring unsuitable cemetery land for Ksh.283 million\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"found\",\n      \"negation_scope\": null,\n      \"signed_action\": \"found\",\n      \"base_action\": \"found\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"acquisition_amount\",\n          \"kind\": \"money\",\n          \"value\": 283000000,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Ksh.283 million\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The finding is framed as a reason for broader accountability and systemic reform, not as a basis to blame one person and move on.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "3083d3616ed2f83746f636b11ddbf5595d01f8976debc161ebed44f24eceb1ce"
+}

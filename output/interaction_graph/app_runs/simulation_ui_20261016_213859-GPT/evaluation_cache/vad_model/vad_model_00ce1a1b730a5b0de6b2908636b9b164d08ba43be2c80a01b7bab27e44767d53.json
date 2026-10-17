@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Nigeria’s democracy is being hollowed out as political parties increasingly serve the wealthy rather than the public. The developments inside the ruling APC ahead of the 2027 elections point to a system where money, not people’s needs or participation, determines who gets a voice. That shuts working people and other less powerful communities out of decisions that shape their lives. This is not just an internal party problem: it is a warning that inequality is becoming entrenched in democratic politics, and that parties need to be opened up to genuine public representation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.640695095062256,
+      "arousal": 3.2479069232940674,
+      "dominance": 2.9853529930114746
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "68d8a37b8834935c45661635669219ceab9dc3b518401585764625b19ff64003"
+}

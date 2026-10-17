@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Harry Wait was found guilty of two misdemeanor election fraud charges and one felony identity theft charge for requesting ballots for Robin Vos and Cory Mason without their consent; he was acquitted of another identity theft count. Calling it a test of election security doesn’t erase the harm of manufacturing fraud. But the answer cannot be to make voting harder for everyone—especially when access barriers fall hardest on people already underserved by the system. This should prompt stronger, fairer safeguards and accountability, not give anyone an excuse to erode public trust or restrict the right to vote.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.830383062362671,
+      "arousal": 3.089933395385742,
+      "dominance": 3.2706010341644287
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b3836709b8f53c9b6aac1647e3aac91f5e54316c5d0d1aeb158cf2df5a1e0f1f"
+}

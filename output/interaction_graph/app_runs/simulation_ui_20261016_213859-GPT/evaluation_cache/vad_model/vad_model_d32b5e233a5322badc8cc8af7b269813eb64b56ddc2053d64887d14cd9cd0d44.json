@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a serious breach of public trust. The court found Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land for Ksh.283 million—money meant to serve a basic community need, not be wasted through careless or abusive decisions. Accountability should not stop at recovering the money, but reform must mean clear responsibility and disciplined oversight, not another layer of bureaucracy. Public officials entrusted with taxpayers’ money must answer for how they use it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6741902828216553,
+      "arousal": 3.1236491203308105,
+      "dominance": 3.219430446624756
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5f6a4fc3a99ff644699aea27800ac9e7cb43fd0eb0e120040f13c50450ccd4f6"
+}

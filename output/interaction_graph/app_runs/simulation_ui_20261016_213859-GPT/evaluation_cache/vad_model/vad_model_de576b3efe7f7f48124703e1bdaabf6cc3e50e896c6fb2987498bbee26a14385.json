@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "DHS announced the arrest of an illegal immigrant gang member by ICE after he was released by New York City authorities despite posing a danger to public safety. The case highlights tensions between sanctuary policies and federal immigration enforcement, with DHS criticizing the city's actions and pointing to the potential public safety risks of releasing individuals with criminal records.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6867964267730713,
+      "arousal": 3.1483192443847656,
+      "dominance": 3.05440616607666
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7a8f6ec3aced2dfb73937be9974f8aa18ded1415a7a54cdf050f5220d37e82ce"
+}

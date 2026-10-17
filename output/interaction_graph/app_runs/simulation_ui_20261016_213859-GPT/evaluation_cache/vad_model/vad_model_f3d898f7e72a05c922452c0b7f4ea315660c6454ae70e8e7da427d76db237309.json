@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The IOC is dressing a political decision up as “fairness and safety” so it can present exclusion as settled fact. Kirsty Coventry’s line, “It would not be fair for biological males to compete in the female category,” shuts down debate by making the institution’s chosen framing sound unquestionable. This looks less like a neutral safeguard than a coordinated effort to control who qualifies and make that control seem inevitable. The real question is whose interests the IOC is serving—and why it wants us to stop asking.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8153421878814697,
+      "arousal": 3.17265248298645,
+      "dominance": 3.0666773319244385
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "56936ad0e0ac6f71ca3226d8f90cc18fb0c845636e65ecc2cd9c2c9b32b80815"
+}

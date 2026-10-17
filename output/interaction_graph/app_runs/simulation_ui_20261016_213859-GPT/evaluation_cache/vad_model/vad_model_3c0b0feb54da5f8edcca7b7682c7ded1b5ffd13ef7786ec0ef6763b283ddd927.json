@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Jaipur ceremony is being managed, not merely mishandled. Let the student’s protest spread just enough to be seen, then stay silent while attention drains away and turn the debate toward whether her actions were “appropriate.” That shift is useful: it protects those in charge from answering the concerns and makes the students’ message easier to bury. The silence looks less like an oversight than a way to control the story.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.082284688949585,
+      "arousal": 3.0375125408172607,
+      "dominance": 3.201115369796753
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6df73ab51e59ebb5b243ef76f3b6ca1d188e7e61a7eb672599bc61a7f5a0087a"
+}

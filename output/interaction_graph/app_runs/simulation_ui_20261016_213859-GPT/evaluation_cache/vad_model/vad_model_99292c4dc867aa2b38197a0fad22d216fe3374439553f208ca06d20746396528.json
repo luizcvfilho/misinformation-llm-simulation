@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This isn’t confusion—it’s the point. Keeping enforcement at polling places on the table while claiming Democrats are “afraid of” something lets the administration pressure voters and still hide behind denials of intent. The ambiguity is a tool: make the threat feel real, keep responsibility blurred, and let officials claim nothing was meant to intimidate anyone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7952075004577637,
+      "arousal": 3.0719265937805176,
+      "dominance": 3.1979641914367676
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "afbacc1f6e36e36534a187103b3b0fb998ed4c766127431d746ffd424cbc3971"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. That is what matters: a child needed help, and someone took responsibility without hesitation. DHS was right to recognize that response. We should expect public spaces to be orderly and safe, but complaints about crowding should not erase the value of decisive action when a family is in crisis. A responsible society needs both: competent management and people prepared to protect others.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9646284580230713,
+      "arousal": 3.252493143081665,
+      "dominance": 3.4387288093566895
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d506c7c7b9d51e37053809d46df0a6ba10f85c7c146cff68880e7673ffc31d5a"
+}

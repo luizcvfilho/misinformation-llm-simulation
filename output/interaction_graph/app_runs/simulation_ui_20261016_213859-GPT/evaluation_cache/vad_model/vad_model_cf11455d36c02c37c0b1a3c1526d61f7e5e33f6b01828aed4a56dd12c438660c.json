@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Trump’s withdrawal from the Paris Agreement is being dressed up as accountability, but national sovereignty shouldn’t be an excuse to abandon shared responsibility. Climate harm crosses borders, while people with the least power and fewest resources are often left to bear the greatest costs. Protecting workers, families, and vulnerable communities means taking climate action seriously and cooperating across borders. When leaders choose political posturing over that responsibility, we should ask who actually benefits.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8485193252563477,
+      "arousal": 3.066909074783325,
+      "dominance": 3.347083568572998
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "925363f4b34b702c0fda04d360265470533ef13e98ccf2a1be90ad62dee77f15"
+}

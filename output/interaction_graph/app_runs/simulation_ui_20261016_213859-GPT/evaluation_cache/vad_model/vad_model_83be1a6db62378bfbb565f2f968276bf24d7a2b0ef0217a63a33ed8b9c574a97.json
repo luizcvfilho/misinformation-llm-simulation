@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The telling point in Bloomberg’s account is the divide between outside critics and the Israeli public: while people around the world focus on rising energy prices, canceled flights and the war’s costs, Israelis strongly support seeing it through. Those closest to the danger may understand better than distant commentators why security and national resolve cannot simply be set aside because a conflict is costly or unpopular abroad.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8425490856170654,
+      "arousal": 3.0001800060272217,
+      "dominance": 3.233059883117676
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "aaf51d2731ce28b138dd4fff08e557bc6c88729844cc1b968c248b8a9c50427e"
+}

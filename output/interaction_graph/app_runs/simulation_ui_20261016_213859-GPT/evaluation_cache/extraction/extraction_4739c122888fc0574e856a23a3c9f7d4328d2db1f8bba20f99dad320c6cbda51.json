@@ -1,0 +1,106 @@
+{
+  "inputs": {
+    "text": "Larry Rhoden signed Senate Bill 175 on Thursday, imposing a citizenship-proof requirement on new registered voters in South Dakota state elections. The narrow wording—only state elections, only new registrants—sounds like a carefully packaged test of how far officials can tighten access while presenting it as routine. Don’t be distracted by the limited scope: it still puts a new hurdle in front of people trying to register, and the press release’s assurances don’t tell us why this restriction was necessary.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A citizenship-proof requirement for new voter registrations in South Dakota state elections",
+    "subtopics": [
+      "The requirement applies only to state elections and new registrants",
+      "The article questions the justification for the registration hurdle"
+    ],
+    "central_entities": [
+      "Larry Rhoden",
+      "Senate Bill 175",
+      "South Dakota"
+    ],
+    "central_relations": [
+      {
+        "subject": "Larry Rhoden",
+        "action": "signed",
+        "object": "Senate Bill 175",
+        "polarity": "affirmed",
+        "predicate": "signed",
+        "negation_scope": null,
+        "signed_action": "signed",
+        "base_action": "signed",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "bill_number",
+            "value": "175",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "175"
+          }
+        ]
+      },
+      {
+        "subject": "Senate Bill 175",
+        "action": "imposing a citizenship-proof requirement on",
+        "object": "new registered voters in South Dakota state elections",
+        "polarity": "affirmed",
+        "predicate": "imposing",
+        "negation_scope": null,
+        "signed_action": "imposing a citizenship-proof requirement on",
+        "base_action": "imposing a citizenship-proof requirement on",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The article emphasizes the bill’s limited scope while framing the requirement as a new hurdle and questioning its justification.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The narrow scope sounds like a carefully packaged test of how far officials can tighten access while presenting it as routine.",
+      "Do not be distracted by the limited scope.",
+      "The press release’s assurances do not explain why the restriction was necessary."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "80cb56b7dae8a2a238962373ce17fc2a9b28f9e42e5ed2509eb4125abf3777e8",
+      "input_sha256": "d049c6b2fa3b22b5a2ce6ba27c56de29367dec3106648e99279443d6d400adc4",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A citizenship-proof requirement for new voter registrations in South Dakota state elections\",\n  \"subtopics\": [\n    \"The requirement applies only to state elections and new registrants\",\n    \"The article questions the justification for the registration hurdle\"\n  ],\n  \"central_entities\": [\n    \"Larry Rhoden\",\n    \"Senate Bill 175\",\n    \"South Dakota\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The narrow scope sounds like a carefully packaged test of how far officials can tighten access while presenting it as routine.\",\n    \"Do not be distracted by the limited scope.\",\n    \"The press release’s assurances do not explain why the restriction was necessary.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Larry Rhoden\",\n      \"action\": \"signed\",\n      \"object\": \"Senate Bill 175\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"signed\",\n      \"negation_scope\": null,\n      \"signed_action\": \"signed\",\n      \"base_action\": \"signed\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"bill_number\",\n          \"kind\": \"identifier\",\n          \"value\": \"175\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"175\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Senate Bill 175\",\n      \"action\": \"imposing a citizenship-proof requirement on\",\n      \"object\": \"new registered voters in South Dakota state elections\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"imposing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"imposing a citizenship-proof requirement on\",\n      \"base_action\": \"imposing a citizenship-proof requirement on\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The article emphasizes the bill’s limited scope while framing the requirement as a new hurdle and questioning its justification.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "4edb3bc4ea0ef94fc0f716eca540f22bac25e8cfac455371aca8b81a12483020"
+}

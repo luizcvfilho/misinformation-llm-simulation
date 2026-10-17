@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Phoenix city leaders are tightening restrictions on ICE and other law enforcement agencies using city property, a move approved by the council Wednesday night. Whatever the stated rationale, putting political limits on law enforcement risks making it harder to uphold the law and keep communities safe. City leaders should be focused on order and public safety, not obstructing federal authorities.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9976377487182617,
+      "arousal": 3.0184028148651123,
+      "dominance": 3.3113956451416016
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "88f2df0d412535f3855499f20b2866cb53dae8b54ed8edf07055b035865da877"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a coordinated pattern, not a one-off school dress-code dispute. The message was first softened from “F*** Joe Biden!” to “Let’s go Brandon!”, and now even that version is being treated as a threat. The two Michigan brothers taking their case to the U.S. Supreme Court are challenging who gets to set those limits—but officials can hide behind “protecting students” while deciding which dissent is allowed to be seen. The real danger is letting institutions turn that excuse into a tool for control.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5376696586608887,
+      "arousal": 3.46468186378479,
+      "dominance": 3.1978940963745117
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "69ffcd740c4fc91885fdc3036822b2618212a15a17712d3d0d424797ad270fab"
+}

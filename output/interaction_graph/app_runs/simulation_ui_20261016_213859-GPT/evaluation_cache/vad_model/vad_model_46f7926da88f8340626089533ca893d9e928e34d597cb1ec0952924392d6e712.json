@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “stable” petrol and diesel prices are a public-relations shield, not protection. The excise-duty cuts appear designed to calm people while shifting the bill onto government revenue—and eventually back onto the public through inflation. Calling the situation “precarious” is a way to prepare people for higher costs while pretending no one can know what comes next. That uncertainty is useful to those in power: it lets them control the story and decide when the public is told to accept the consequences.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9563682079315186,
+      "arousal": 3.0396251678466797,
+      "dominance": 3.1362950801849365
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "44a5712805522b5e45c8d669dede8cdd4e60d4437f1a65b3098c19ce3dac2eb0"
+}

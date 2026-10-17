@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Calling this “fairness” doesn’t make a blanket exclusion fair. The policy shuts transgender women and DSD athletes out of the female category, treating their presence as a threat rather than recognizing them as athletes deserving dignity and clear, respectful rules. Women’s sport needs protection and support, but that should not mean scapegoating vulnerable competitors or letting institutional power decide who counts as a woman without transparent standards and due process.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8069307804107666,
+      "arousal": 3.1231937408447266,
+      "dominance": 3.194766044616699
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "87cc6ff9760807d8364fdbc25c9567a7a5016e0a73defc6a8b78f1960fff7427"
+}

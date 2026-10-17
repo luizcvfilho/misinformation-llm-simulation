@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Micheál Martin is pointing to increased housing tenancies, but that doesn’t erase the more urgent reality: eviction notices and homelessness are rising, and the number of people in emergency accommodation has increased again. The Government’s six-year lease rules, introduced on March 1, are being discussed as a backdrop to this crisis—but headline tenancy growth is no substitute for protecting people from losing their homes. A housing system should be judged by whether people can stay safely housed, not by numbers that obscure those being pushed into homelessness.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7385194301605225,
+      "arousal": 3.153897523880005,
+      "dominance": 3.0188167095184326
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1bfb4218a4e70d70feeb0c6b196690a803ec5b6182c286b7de31341a338af00c"
+}

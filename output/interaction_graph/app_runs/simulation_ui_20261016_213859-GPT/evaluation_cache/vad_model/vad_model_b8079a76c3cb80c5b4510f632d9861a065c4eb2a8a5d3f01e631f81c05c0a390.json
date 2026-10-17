@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” organizers are boasting that 8 million people attended more than 3,300 events in all 50 states, but authorities have provided no official count—and even that estimate doesn’t give them a national mandate. They say turnout exceeded October’s protests by about one million people and 600 events, as though sheer crowd size can overrule an election. It cannot. People have every right to protest, but a country is governed through lawful institutions and the ballot box, not by whichever faction claims the loudest crowd speaks for everyone. Respect for order and an orderly transition matters more than political grandstanding.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.90124773979187,
+      "arousal": 3.1191391944885254,
+      "dominance": 3.2973439693450928
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c9607906af183a947acc076d5118baaecbddb6fc404ba72fd3185e5836616863"
+}

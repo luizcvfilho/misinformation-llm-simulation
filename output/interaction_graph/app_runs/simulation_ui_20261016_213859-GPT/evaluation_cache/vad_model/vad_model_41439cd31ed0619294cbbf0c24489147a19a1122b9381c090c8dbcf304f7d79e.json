@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a clean answer about election security and more like a warning aimed at anyone who dares test the system. Harry Wait said he requested Robin Vos’s and Cory Mason’s ballots to see whether registration could be exploited. The jury convicted him of two misdemeanor election-fraud counts and one felony identity-theft count, while acquitting him of another identity-theft count—but that verdict still doesn’t establish whether the system is vulnerable.\n\nThe convenient takeaway is that election skeptics are fraudsters. That framing lets officials turn scrutiny into a cautionary tale: accept the official story, or risk being made an example of. Calling the group’s claims “false” doesn’t prove the questions should never be asked; it may just be a way to shut them down.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6681227684020996,
+      "arousal": 3.0972609519958496,
+      "dominance": 3.1158881187438965
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6569206be99fe6be7e1e672c6f7fb163f03961f419592ce1856da33bf4b0669b"
+}

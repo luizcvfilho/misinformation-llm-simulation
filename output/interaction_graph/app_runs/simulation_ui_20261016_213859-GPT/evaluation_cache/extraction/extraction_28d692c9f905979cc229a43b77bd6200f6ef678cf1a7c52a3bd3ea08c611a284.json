@@ -1,0 +1,111 @@
+{
+  "inputs": {
+    "text": "Lawyers said on Monday that concerns are growing over proposed changes to Cyprus’ surveillance legislation, especially efforts to remove judicial oversight as a key safeguard. The amended bill is expected to go to the House plenum for a vote on Thursday. Akel MP Andreas Pasiourtides said that, following a recent closed session of the House […]",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Concerns over proposed changes to Cyprus’ surveillance legislation, particularly the removal of judicial oversight",
+    "subtopics": [
+      "Expected vote on the amended bill",
+      "Concerns expressed by lawyers"
+    ],
+    "central_entities": [
+      "Cyprus",
+      "Lawyers",
+      "Akel",
+      "Andreas Pasiourtides",
+      "House"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lawyers",
+        "action": "said concerns are growing over",
+        "object": "proposed changes to Cyprus’ surveillance legislation",
+        "polarity": "affirmed",
+        "predicate": "grow",
+        "negation_scope": null,
+        "signed_action": "said concerns are growing over",
+        "base_action": "said concerns are growing over",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "efforts",
+        "action": "to remove",
+        "object": "judicial oversight",
+        "polarity": "affirmed",
+        "predicate": "remove",
+        "negation_scope": null,
+        "signed_action": "to remove",
+        "base_action": "to remove",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "amended bill",
+        "action": "is expected to go to",
+        "object": "House plenum for a vote on Thursday",
+        "polarity": "affirmed",
+        "predicate": "go",
+        "negation_scope": null,
+        "signed_action": "is expected to go to",
+        "base_action": "is expected to go to",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Growing concern that proposed surveillance legislation changes could remove judicial oversight, ahead of an expected House vote.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "f22b8da221fb40413d9f9b6f05607cf2f8eadc159378e1a179056d65efe1c86c",
+      "input_sha256": "7fc6d9df08aabd5433aa0675509832f8876bfbe0e31f018ad1869f12b4c3496c",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Concerns over proposed changes to Cyprus’ surveillance legislation, particularly the removal of judicial oversight\",\n  \"subtopics\": [\n    \"Expected vote on the amended bill\",\n    \"Concerns expressed by lawyers\"\n  ],\n  \"central_entities\": [\n    \"Cyprus\",\n    \"Lawyers\",\n    \"Akel\",\n    \"Andreas Pasiourtides\",\n    \"House\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lawyers\",\n      \"action\": \"said concerns are growing over\",\n      \"object\": \"proposed changes to Cyprus’ surveillance legislation\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"grow\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said concerns are growing over\",\n      \"base_action\": \"said concerns are growing over\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"efforts\",\n      \"action\": \"to remove\",\n      \"object\": \"judicial oversight\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"remove\",\n      \"negation_scope\": null,\n      \"signed_action\": \"to remove\",\n      \"base_action\": \"to remove\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"amended bill\",\n      \"action\": \"is expected to go to\",\n      \"object\": \"House plenum for a vote on Thursday\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"go\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is expected to go to\",\n      \"base_action\": \"is expected to go to\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Growing concern that proposed surveillance legislation changes could remove judicial oversight, ahead of an expected House vote.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "8f6eda4e21eb2393f40b9c8e86c4a6322541b8ac61cb8bfc0e5545a4472e8252"
+}

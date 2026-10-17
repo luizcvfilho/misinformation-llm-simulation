@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This case is about more than a hoodie: it’s about how much unchecked power schools should have over young people’s speech. “Let’s Go Brandon” is a coded profane chant aimed at Joe Biden, but vague rules about what counts as offensive can be applied unevenly and used to silence political expression. Schools do have a responsibility to protect students from harassment, especially those already vulnerable to it; that responsibility calls for clear, consistent standards—not broad discretion to punish speech administrators dislike. The two Michigan brothers’ challenge deserves serious consideration, even if defending their right to wear the slogan doesn’t mean endorsing its message.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.855059862136841,
+      "arousal": 3.1304945945739746,
+      "dominance": 3.2345595359802246
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d834b5f2477d56548b5bf17b0905b53d26eeb9651184d51471f1d1bf983f2206"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” organizers say 8 million people joined more than 3,300 events across all 50 states, though authorities have provided no official count. That isn’t a mandate to speak for everyone; it is evidence of widespread concern that deserves to be heard, not waved away because an election took place. People who face the consequences of unequal and unaccountable systems have every right to challenge power between elections. Calling mass protest an effort to “undo an election” turns dissent into a threat and shields institutions from scrutiny. Organizers say turnout exceeded October’s protests by about one million people and 600 events. The scale matters—not as proof that everyone agrees, but as a warning that formal democracy is not enough without institutions that protect people and address injustice.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7924916744232178,
+      "arousal": 3.2724978923797607,
+      "dominance": 3.1360435485839844
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "321289f6f42969e22653ccbebac5c7b4aa398dbe039db05f1e39b84b560e386d"
+}

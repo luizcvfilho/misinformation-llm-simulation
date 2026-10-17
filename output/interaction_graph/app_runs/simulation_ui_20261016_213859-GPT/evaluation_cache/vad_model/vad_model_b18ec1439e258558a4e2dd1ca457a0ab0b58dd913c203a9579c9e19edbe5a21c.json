@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Ordinary people are paying for this war through higher energy costs, canceled flights, and the devastating human toll, while having little influence over the decisions that put them at risk. That’s a familiar injustice: political leaders make choices, but people with the least power bear the consequences. Strong public support in Israel doesn’t absolve leaders or institutions of accountability for a war widely seen as poorly planned and unwinnable. We need answers about whose lives are being put at risk—and a real challenge to the militarism that treats endless war as inevitable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.706977128982544,
+      "arousal": 3.315829038619995,
+      "dominance": 3.107086658477783
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7ab06d99060e929c85f8e05afcd65d3855707a1f2089a4cc8896feb8d7c54d9d"
+}

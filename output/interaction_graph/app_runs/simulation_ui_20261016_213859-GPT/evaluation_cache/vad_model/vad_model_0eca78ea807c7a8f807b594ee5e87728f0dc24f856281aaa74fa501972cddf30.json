@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Ordinary families should never be treated as expendable in decisions made by powerful governments. Leaders have a duty to preserve order, protect civilians and essential services, and answer for the consequences of their choices—not hide behind talk of “just war.” The answer is to stop escalation before it becomes a wider regional conflict, while recognizing that protecting people requires serious responsibility and resolve, not wishful thinking.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9281423091888428,
+      "arousal": 3.0943148136138916,
+      "dominance": 3.30653715133667
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4c80a2e0a22683e460da901a0aee6df9212aba7395e06ea9f41f72562e0df165"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. The quick response may have mattered enormously, but a rescue is not proof that the system is working. When crowded public spaces leave families and children vulnerable to crisis, responsibility can’t rest on the chance that someone nearby will intervene. DHS shouldn’t use one person’s action to polish an agency’s image while the conditions that put people at risk go unaddressed. Public safety means designing and managing these spaces to protect everyone—not just praising emergency heroics afterward.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.955317735671997,
+      "arousal": 3.1966123580932617,
+      "dominance": 3.2395057678222656
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ff52f2240d16ea8c0aabd3e7e70540590419fcdbe0712c102dff1466db990b0a"
+}

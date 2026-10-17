@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This ruling shows how religious liberty can be repurposed to protect abortion access while the state’s duty to defend unborn life is pushed aside. Conscience matters, but it cannot automatically settle the question when the lives of the most vulnerable are at stake. Calling the practice “killing babies” is harsh; it is also a way of insisting that the moral reality not be softened into mere stigma.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6362974643707275,
+      "arousal": 3.0418028831481934,
+      "dominance": 3.0615317821502686
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7cd83698bb8cdbda3cb9dfdc3d584698231fe5dee62e3dcb9c1e9a2932dc9d38"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The government’s claim that it has met the “most significant demands” looks like a carefully managed attempt to make workers’ concerns disappear without giving them the legally binding job security they’re demanding. The protest outside the Presidential Palace and 24-hour strike show they don’t trust official assurances—and rightly so. This feels less like a genuine resolution than a coordinated effort to control the story while leaving workers’ futures exposed.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.695519208908081,
+      "arousal": 3.0864715576171875,
+      "dominance": 3.0061492919921875
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c5fe9eea9a1e24484ac81791b1a8ab7d4c02312b18c7765b028bd16b8cbc4838"
+}

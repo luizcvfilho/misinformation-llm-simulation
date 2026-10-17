@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Illegal mining is a direct assault on the public’s property and on the rule of law. KT Rama Rao has accused the Congress government of failing to act and alleged that Raghava Constructions, linked to Minister Ponguletti Srinivas Reddy, is involved. These claims still need to be proved, but the public deserves more than political sparring and assurances. When powerful interests are implicated, a transparent, independent investigation is essential—and the government must show that no minister, contractor, or political ally stands above the law.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.577091932296753,
+      "arousal": 3.2931313514709473,
+      "dominance": 3.261904239654541
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4af6019b2feb12d4b1fee88f805a8c09d049c2342168c4fb80d47ed72b5509c0"
+}

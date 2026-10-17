@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They went straight to the Presidential Palace and kept striking for 24 hours because workers know how quickly verbal assurances disappear once attention shifts. The government’s claim that it has met the biggest demands looks like a coordinated attempt to close the story on its terms: announce victory, paint workers as unreasonable, and leave them without protections they can enforce. The continued strike is the giveaway. If the commitment were genuine, there’d be no need to keep pressing. The institutions seem more interested in managing the message than securing anything binding for workers.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.989006519317627,
+      "arousal": 3.2208077907562256,
+      "dominance": 3.1642520427703857
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cd93b9f87ef22bc04e57e4e77adf386b626d84a0be6b9f6033f920799099a5f1"
+}

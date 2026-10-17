@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Michigan brothers’ case shows how easily broad school rules can become tools of unequal discipline: administrators get discretion, while students have little power to contest it. “Let’s Go Brandon” is profane political speech, not a reason to hand schools a blank check to punish expression they dislike. Schools must protect students from harassment, but that requires clear, consistently applied rules—not arbitrary authority that can fall hardest on young people with the least ability to push back. Defending the brothers’ right to speak isn’t endorsing their slogan; it’s insisting that student rights and fair treatment matter even when speech is offensive.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7995247840881348,
+      "arousal": 3.1149942874908447,
+      "dominance": 3.302523374557495
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b3060a8913ccdedef1c6ffc9ca02b111cfbb35a421e884f4875e8cc3f7414c00"
+}

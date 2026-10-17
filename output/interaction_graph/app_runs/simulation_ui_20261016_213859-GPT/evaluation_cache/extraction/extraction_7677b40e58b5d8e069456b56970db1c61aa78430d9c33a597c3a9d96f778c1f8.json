@@ -1,0 +1,94 @@
+{
+  "inputs": {
+    "text": "South Portland’s schools are preparing to cut more than 70 positions, and families deserve a plain accounting—not another round of excuses. A school system’s first duty is to educate children and support the people who teach them, not protect administrative priorities. Taxpayers have a right to know how this happened and who is accountable. Careful stewardship, clear priorities, and respect for families should come before bureaucratic comfort.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "South Portland’s schools preparing to cut more than 70 positions",
+    "subtopics": [
+      "School staffing cuts",
+      "Accountability to families and taxpayers",
+      "Administrative priorities and stewardship"
+    ],
+    "central_entities": [
+      "South Portland’s schools",
+      "families",
+      "taxpayers",
+      "children",
+      "people who teach them"
+    ],
+    "central_relations": [
+      {
+        "subject": "South Portland’s schools",
+        "action": "are preparing to cut",
+        "object": "more than 70 positions",
+        "polarity": "affirmed",
+        "predicate": "preparing to cut",
+        "negation_scope": null,
+        "signed_action": "are preparing to cut",
+        "base_action": "preparing to cut",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "positions_to_cut",
+            "value": 70.0,
+            "unit": "position",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 70"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Editorial criticism of planned school staffing cuts, calling for accountability and family-centered stewardship.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Families deserve a plain accounting, not another round of excuses.",
+      "A school system’s first duty is to educate children and support the people who teach them, not protect administrative priorities.",
+      "Taxpayers have a right to know how this happened and who is accountable.",
+      "Careful stewardship, clear priorities, and respect for families should come before bureaucratic comfort."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "35a7f0cf0d75b628f85fbb8eeeb59d0da1ee178fe0356dbc30f12e8c86a21475",
+      "input_sha256": "073983a53a143713f760411d16877ac6718860f1796fb043e1e4fc51c3e391d4",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"South Portland’s schools preparing to cut more than 70 positions\",\n  \"subtopics\": [\n    \"School staffing cuts\",\n    \"Accountability to families and taxpayers\",\n    \"Administrative priorities and stewardship\"\n  ],\n  \"central_entities\": [\n    \"South Portland’s schools\",\n    \"families\",\n    \"taxpayers\",\n    \"children\",\n    \"people who teach them\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Families deserve a plain accounting, not another round of excuses.\",\n    \"A school system’s first duty is to educate children and support the people who teach them, not protect administrative priorities.\",\n    \"Taxpayers have a right to know how this happened and who is accountable.\",\n    \"Careful stewardship, clear priorities, and respect for families should come before bureaucratic comfort.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"South Portland’s schools\",\n      \"action\": \"are preparing to cut\",\n      \"object\": \"more than 70 positions\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"preparing to cut\",\n      \"negation_scope\": null,\n      \"signed_action\": \"are preparing to cut\",\n      \"base_action\": \"preparing to cut\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"positions_to_cut\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"position\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 70\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Editorial criticism of planned school staffing cuts, calling for accountability and family-centered stewardship.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "c7a78d2f3df67e5044018b880637e8a816222d4442d2429a368d3c9475c7b449"
+}

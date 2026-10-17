@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The account is being framed as “chaos,” but the clearest facts are that a huge “No Kings” protest met federal officers using tear gas and making arrests. At least 13 arrests were confirmed in Portland and Denver. Calling people “agitators” risks turning dissent into a public-order problem while obscuring the power imbalance: the state has the force, and protesters are the ones facing it. Authorities should protect the right to protest, not answer mass dissent with intimidation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6882452964782715,
+      "arousal": 3.250605821609497,
+      "dominance": 3.203662872314453
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5db82fd8cdffa893670e74237b2c3618b3ad829fc0c5f047033cb52a879ff88f"
+}

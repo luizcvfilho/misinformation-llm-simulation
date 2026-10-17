@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Two Michigan middle-school brothers are taking their case to the U.S. Supreme Court after being told to remove hoodies saying “Let’s Go Brandon.” Lower courts have said schools can ban clothing that could reasonably be read as profane, but this is plainly a political slogan—one that grew out of a crowd chanting “F*** Joe Biden!” and an NBC interviewer’s explanation that they were saying “Let’s go Brandon!” Schools need authority to maintain order, but that authority shouldn’t become a license to silence students whenever their message makes officials uncomfortable. The Foundation for Individual Rights and Expression says the boys’ First Amendment rights were violated; the Supreme Court now has a chance to clarify where school discipline ends and political censorship begins.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7142539024353027,
+      "arousal": 3.411907434463501,
+      "dominance": 3.376357078552246
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6fecde858cacc6a0c578d4a5c3c07dcbfd9ff187d7152a8c2f93a2ec908e2f08"
+}

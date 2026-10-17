@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after the ceasefire was announced, the killing in Gaza is still going on—airstrikes, drones, gunfire, shelling, and fire directed at fishermen. The “ceasefire” sounds like a label designed to reassure the public and shield powerful institutions from scrutiny while the violence continues. Ahmed Baroud, a displaced father of five in Deir al-Balah, says the drones “never stop buzzing overhead.” That’s the reality the official story wants pushed into the background, because silence makes ongoing destruction easier to tolerate.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6030781269073486,
+      "arousal": 3.213956832885742,
+      "dominance": 2.9675867557525635
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7e59bf0de35dc4f1478e8a34a2aac10591dd11eb89e142051a1185b63bc1f1ca"
+}

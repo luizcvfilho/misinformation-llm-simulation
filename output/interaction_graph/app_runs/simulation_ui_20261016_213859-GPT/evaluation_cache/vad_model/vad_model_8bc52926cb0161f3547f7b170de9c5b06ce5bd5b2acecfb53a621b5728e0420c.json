@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A parliamentary briefing on 24 March 2026 linked Terry Pheto to an alleged R20.56 million National Lotteries Commission funding scandal now under SIU investigation. An allegation is not a conviction, but public funds belong to the public and must be handled with honesty and discipline—not treated as a private pool for the connected. Let the investigation establish the facts, and if anyone is found responsible, impose proper consequences. The rule of law means the famous and influential answer to the same standard as everyone else.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8782269954681396,
+      "arousal": 3.102989673614502,
+      "dominance": 3.2172510623931885
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1a558de4a75c3591f795c6c17464b232e1fd43aed0bac0b140fa89eecb033c07"
+}

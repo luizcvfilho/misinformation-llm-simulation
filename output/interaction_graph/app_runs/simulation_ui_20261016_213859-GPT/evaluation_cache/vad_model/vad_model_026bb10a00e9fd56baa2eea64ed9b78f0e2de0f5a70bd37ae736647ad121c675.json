@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting a new design mandate for guns sold in New York as a way to prevent illegal machine-gun conversions, but the safety rationale looks like cover for expanding control over what people can buy. Mentioning criminal penalties makes it more than advice and signals enforcement. The message cuts off before explaining what the penalties apply to, leaving the plan’s scope unclear.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8587100505828857,
+      "arousal": 2.937075138092041,
+      "dominance": 3.0439810752868652
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d92a560c15087998cc757f3d7eea051a10b2a6e6bdcf4fe99544ac784a7556b7"
+}

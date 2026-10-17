@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Cuba’s ordinary people shouldn’t be made to bear the cost of rebuilding while wealthy diaspora buyers and foreign investors turn hardship into a bargain-hunting opportunity. Replacing state control with a fire sale would not be justice; it would shift power to those with money. Any transition must protect Cuban families, workers, and local ownership, and give people a real say in their country’s future.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8639752864837646,
+      "arousal": 3.152620792388916,
+      "dominance": 3.265126943588257
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ca2ef9788ee190c785d60595d61f7c7d1663dd0d00e643536e77627a90c03d34"
+}

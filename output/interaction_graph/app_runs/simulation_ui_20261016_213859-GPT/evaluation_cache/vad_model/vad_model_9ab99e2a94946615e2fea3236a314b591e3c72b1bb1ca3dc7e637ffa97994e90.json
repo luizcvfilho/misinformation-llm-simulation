@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Graduation should be a moment of pride for students and families who earned it through discipline and hard work, not a stage for people seeking attention. If the university failed administratively, it should be held accountable through proper channels. Disruption is not courage; it undermines respect for order and teaches that making noise matters more than taking responsibility.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0149283409118652,
+      "arousal": 3.139522075653076,
+      "dominance": 3.3284614086151123
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0f844f77e8b43a0d6af842c5e4af0c0852f7dfb69e18d2ce576d294b00dd3a15"
+}

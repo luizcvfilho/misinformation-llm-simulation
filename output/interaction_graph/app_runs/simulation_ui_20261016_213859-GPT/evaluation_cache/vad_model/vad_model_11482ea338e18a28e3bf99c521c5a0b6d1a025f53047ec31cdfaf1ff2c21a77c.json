@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Mahama is framing the country’s policies as inseparable from law, culture and “collective societal agreement”—a convenient way to make contested choices sound settled before anyone can question them. With human rights debates growing more complex, his appeal to the rule of law and his oath to uphold it feels less like reassurance than a carefully chosen shield: the language of consensus can be used to narrow what people are allowed to challenge.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.050243377685547,
+      "arousal": 2.9826672077178955,
+      "dominance": 3.17669677734375
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "990329f72ff15dd978ea6c77b745cb081422e3c2e4a20b1fabc13391910ad492"
+}

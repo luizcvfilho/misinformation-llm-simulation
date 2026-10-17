@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France’s claim to stand against antisemitism rings hollow if religious minorities are treated as threats simply for their beliefs. Secularism should protect freedom of conscience, not give institutions cover to stigmatize vulnerable communities. Concerns about Scientologists and Jehovah’s Witnesses, MIVILUDES’ lack of transparency, and court rulings against the state body are signs of a broader failure of accountability. When powerful institutions can act without meaningful oversight or due process, good intentions are no defense.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5929195880889893,
+      "arousal": 3.116293430328369,
+      "dominance": 2.971850633621216
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "100c6f95acae52424f201263b8c996bfde9eeedcbf4165e6333a98d0c0fc225d"
+}

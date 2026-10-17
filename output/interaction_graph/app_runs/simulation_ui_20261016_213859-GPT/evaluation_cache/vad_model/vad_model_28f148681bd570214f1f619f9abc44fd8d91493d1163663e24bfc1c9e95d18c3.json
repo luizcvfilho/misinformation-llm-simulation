@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Rising energy costs and canceled flights are hitting ordinary families, and leaders owe the public a clear account of what this war is meant to achieve and what risks they are asking people to bear. Support for Israel’s defense matters, but it is not a blank check for an open-ended conflict. National security requires resolve; it also requires competent leadership, defined aims, and accountability—not drifting into a war with no credible path to success.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7388863563537598,
+      "arousal": 3.1695666313171387,
+      "dominance": 3.1021413803100586
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c2e21b9db11bdec59befa9fe499a1632e65fbcd6e552d4acd94a9a845a1221be"
+}

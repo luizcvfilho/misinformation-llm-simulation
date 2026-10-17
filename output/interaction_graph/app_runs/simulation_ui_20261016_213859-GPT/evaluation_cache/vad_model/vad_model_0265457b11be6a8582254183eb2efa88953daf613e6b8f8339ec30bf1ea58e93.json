@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a crisis driven by decisions made by powerful governments, while ordinary people—especially those with the fewest resources to escape danger or rebuild—are left to absorb the consequences. When civilian areas and essential infrastructure are threatened, the damage reaches far beyond the battlefield, undermining the services people rely on. Talk of “just war” is hollow without accountability and real protection for civilians. The priority must be to stop the escalation and protect people, not make a wider regional war seem inevitable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5395896434783936,
+      "arousal": 3.4090776443481445,
+      "dominance": 2.9408352375030518
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3e9711bac1f56ed88569f58cc48943f9270dd544a91d5b4cb03b3d98b499db50"
+}

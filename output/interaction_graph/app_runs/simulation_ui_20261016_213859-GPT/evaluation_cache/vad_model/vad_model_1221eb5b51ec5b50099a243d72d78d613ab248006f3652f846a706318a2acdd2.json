@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This crisis is being driven by powerful governments, but civilians—especially those with the fewest ways to escape or recover—are paying the price. When civilian areas and essential infrastructure are threatened, access to vital services is put at risk; that cannot be brushed off as an unavoidable side effect of political choices. Talk of a “just war” is empty without accountability and real protection for civilians. Wider regional war is not inevitable: de-escalation and the safety of those most at risk must come first.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5971906185150146,
+      "arousal": 3.3469173908233643,
+      "dominance": 3.062380313873291
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3b59b95b069f5ad82eca855d8f4b7b63b47af16e9bcd23d3342d859242bf1465"
+}

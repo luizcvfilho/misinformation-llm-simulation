@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Daniel Rubenstein’s call for a political resolution matters, but it rings hollow alongside talk of Israel’s “unwavering stance” and a continuing operation. Security built around military pressure risks deepening the conditions that make people across the region unsafe. A real resolution must address the structures driving the conflict and uphold everyone’s rights—not normalize endless escalation as the only path forward.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8549118041992188,
+      "arousal": 3.2981529235839844,
+      "dominance": 3.123884916305542
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2772e36ad50a089f601b3393f7ee921084372a0beea56a386011ee2f84402bd4"
+}

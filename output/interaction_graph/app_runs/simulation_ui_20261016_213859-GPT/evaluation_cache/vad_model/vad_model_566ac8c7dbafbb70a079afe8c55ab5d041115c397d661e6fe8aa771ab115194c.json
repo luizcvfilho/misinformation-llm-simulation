@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Daniel Rubenstein is right that political resolution cannot come at the expense of Israel’s security. A settlement that ignores Iran’s nuclear and missile programs would only paper over the danger, not secure lasting peace. A leader’s first duty is to protect the nation and its people; firmness is not an obstacle to peace, but a condition for it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.129441738128662,
+      "arousal": 3.1110246181488037,
+      "dominance": 3.4275083541870117
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "43b670215e0a85d256eaa933da402516e0e5d83a6462c010e2b1f85ba3f7d5fd"
+}

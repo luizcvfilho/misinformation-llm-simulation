@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” crowd seems to confuse defying authority with defending freedom. Whatever their slogans, activists who turn public streets into a confrontation are putting ordinary people and civic order at risk. Federal officers used tear gas and made arrests, with at least 13 confirmed in Portland and Denver; that should remind everyone that protest does not excuse breaking the rules. A decent society depends on shared standards and respect for the law, not crowds deciding they answer to no one.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.656355381011963,
+      "arousal": 3.2589778900146484,
+      "dominance": 3.2374508380889893
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2b207eef99ba872ba0aeb1ee015d83412e1b218962a879783aca4d10a52de3dc"
+}

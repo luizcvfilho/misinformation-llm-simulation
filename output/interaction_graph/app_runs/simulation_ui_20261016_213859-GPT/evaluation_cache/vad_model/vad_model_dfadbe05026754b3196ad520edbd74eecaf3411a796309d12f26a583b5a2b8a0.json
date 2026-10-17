@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched through central London under an “anti-far-right” banner, with trade unions, anti-racism groups and Muslim representative bodies behind them. With local elections approaching, this looks less like an answer to public concerns and more like an attempt to decide which concerns voters are allowed to express. Slapping “far-right” on dissent does nothing to address questions of national identity, social order or the traditions that hold communities together. A confident society should meet those questions openly, not try to silence them with political labels.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8600852489471436,
+      "arousal": 3.2976746559143066,
+      "dominance": 3.305298089981079
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "867054f6d8e6b0dc3cc804375e89ce90ffa10e030a82b65baa406fad06f2d0af"
+}

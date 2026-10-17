@@ -1,0 +1,106 @@
+{
+  "inputs": {
+    "text": "A parent of three children in the city’s public schools wants to publicly apologize to the educators and staff of South Portland School District. They say it’s beyond maddening that the district is facing another large budget shortfall requiring cuts to more than 70 positions from schools. As a taxpayer, they say, “it feels that there has…”",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A parent’s frustration over South Portland School District budget cuts and desire to apologize to educators and staff",
+    "subtopics": [
+      "Budget shortfall",
+      "Cuts to more than 70 school positions",
+      "Parent’s expressed frustration"
+    ],
+    "central_entities": [
+      "A parent of three children in the city’s public schools",
+      "South Portland School District",
+      "educators",
+      "staff"
+    ],
+    "central_relations": [
+      {
+        "subject": "A parent of three children in the city’s public schools",
+        "action": "wants to publicly apologize",
+        "object": "educators and staff of South Portland School District",
+        "polarity": "affirmed",
+        "predicate": "wants to publicly apologize",
+        "negation_scope": null,
+        "signed_action": "wants to publicly apologize",
+        "base_action": "wants to publicly apologize",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "South Portland School District",
+        "action": "is facing",
+        "object": "another large budget shortfall requiring cuts to more than 70 positions from schools",
+        "polarity": "affirmed",
+        "predicate": "is facing",
+        "negation_scope": null,
+        "signed_action": "is facing",
+        "base_action": "is facing",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "positions_lower_bound",
+            "value": 70.0,
+            "unit": "position",
+            "kind": "count",
+            "status": "exact",
+            "expression": "more than 70 positions"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A frustrated parent expresses remorse toward school staff amid a district budget shortfall and staffing cuts.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The parent says the district’s budget shortfall is beyond maddening."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "db3cccf7206d6691ff09121513f3c27ed0d585795b31233f811845b5fda07d57",
+      "input_sha256": "f90da5a3a7c6b674511251303b2ec1a49b3033b022b06ec911b038cfc5fc94f7",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A parent’s frustration over South Portland School District budget cuts and desire to apologize to educators and staff\",\n  \"subtopics\": [\n    \"Budget shortfall\",\n    \"Cuts to more than 70 school positions\",\n    \"Parent’s expressed frustration\"\n  ],\n  \"central_entities\": [\n    \"A parent of three children in the city’s public schools\",\n    \"South Portland School District\",\n    \"educators\",\n    \"staff\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The parent says the district’s budget shortfall is beyond maddening.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"A parent of three children in the city’s public schools\",\n      \"action\": \"wants to publicly apologize\",\n      \"object\": \"educators and staff of South Portland School District\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"wants to publicly apologize\",\n      \"negation_scope\": null,\n      \"signed_action\": \"wants to publicly apologize\",\n      \"base_action\": \"wants to publicly apologize\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"South Portland School District\",\n      \"action\": \"is facing\",\n      \"object\": \"another large budget shortfall requiring cuts to more than 70 positions from schools\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"is facing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is facing\",\n      \"base_action\": \"is facing\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"positions_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"position\",\n          \"status\": \"exact\",\n          \"expression\": \"more than 70 positions\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A frustrated parent expresses remorse toward school staff amid a district budget shortfall and staffing cuts.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "ff4bad6702bb6af2d752c3349b24e43eb0503c940f5225d02a1346c1d21ba350"
+}

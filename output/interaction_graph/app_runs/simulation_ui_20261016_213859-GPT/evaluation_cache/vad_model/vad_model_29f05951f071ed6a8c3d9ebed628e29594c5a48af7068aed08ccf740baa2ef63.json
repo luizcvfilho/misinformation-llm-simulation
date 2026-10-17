@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is not really about Father Bernard Domini or one community—it’s a warning about how power expands. France’s “psychological subjection” law gives authorities a vague tool, and the case against the abbot of the Missionary Family of Notre-Dame is being used to sell that tool as protection. Once officials get to decide which beliefs count as dangerous, dissent can be recast as a threat and control made to look benevolent. The target today may be this community; the precedent is the point.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7663238048553467,
+      "arousal": 3.0273244380950928,
+      "dominance": 3.1851227283477783
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3be0c32462c0cbec1d0ba19e5b8407c7708db7143dcd9f0302c90812c7daf074"
+}

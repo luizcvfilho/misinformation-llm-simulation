@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Dakota Governor Larry Rhoden signed Senate Bill 175 on Thursday. It requires new registered voters to prove they are United States citizens to vote in state elections. The bill applies only to state elections and affects only new registrants.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.1228251457214355,
+      "arousal": 2.9076085090637207,
+      "dominance": 3.170966625213623
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "83fc6e4a37d430ca8b827fe2d11c9356e7b7eb3da175ffcf1ca086ab943841dd"
+}

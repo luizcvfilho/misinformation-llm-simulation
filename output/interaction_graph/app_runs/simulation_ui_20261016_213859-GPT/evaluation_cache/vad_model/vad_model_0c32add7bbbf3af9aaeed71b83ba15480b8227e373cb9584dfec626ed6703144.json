@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This isn’t reassurance; it’s a pressure tactic. Tom Homan refused to rule out enforcement at polling places, then asked what Democrats are “afraid of.” That helps sow doubt about whether voting is safe while giving the administration room to deny it intended to intimidate anyone. The conflicting answers look less like confusion than a way to keep the threat alive without taking responsibility for it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7626161575317383,
+      "arousal": 3.151702880859375,
+      "dominance": 3.1391308307647705
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3e8f1740438174f6dd6516a97a28873e976a500d03025b188c52a561b189064b"
+}

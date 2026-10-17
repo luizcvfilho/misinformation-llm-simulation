@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The fight within the APC ahead of the 2027 elections is a warning about who gets to shape political decisions: people with wealth and influence, while working people and less powerful communities are pushed aside. That exclusion is not incidental; it reflects a system that gives money too much power and ordinary people too little say. Real democratic reform means opening decision-making to the public, not merely settling disputes among those already in control.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9714579582214355,
+      "arousal": 3.1205484867095947,
+      "dominance": 3.201669454574585
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dea0c312a1543a57a40675c952e5d9b40d44c356cfcbf7500b5040193346362f"
+}

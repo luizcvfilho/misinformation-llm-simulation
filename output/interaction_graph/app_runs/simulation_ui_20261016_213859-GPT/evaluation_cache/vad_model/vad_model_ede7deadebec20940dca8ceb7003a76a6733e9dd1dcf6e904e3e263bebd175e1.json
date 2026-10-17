@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The ceasefire was announced five months ago, yet civilians are still being killed in airstrikes, and people in Gaza remain exposed to drones, gunfire, shelling, and fire directed at fishermen. The gap between the official label and lived reality isn’t accidental: it allows powerful institutions to present a story of progress while destruction continues out of sight. Ahmed Baroud, a displaced father of five in Deir al-Balah, says the drones “never stop buzzing overhead.” The ceasefire sounds less like peace than a convenient narrative that makes ongoing violence easier to overlook.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6687591075897217,
+      "arousal": 3.1843655109405518,
+      "dominance": 3.055511951446533
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bcd3c58920ec27aa51822e4f7e2da80be2b2d3dedb671204d9df052094ce925e"
+}

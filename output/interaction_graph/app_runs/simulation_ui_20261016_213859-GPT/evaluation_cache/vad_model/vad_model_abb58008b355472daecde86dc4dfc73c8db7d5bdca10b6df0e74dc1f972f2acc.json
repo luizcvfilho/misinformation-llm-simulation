@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched through central London under an “anti-far-right” banner, backed by trade unions, anti-racism groups and Muslim representative bodies. With local elections approaching, this looks like a political effort to stigmatise ordinary concerns about national identity, social order and cultural continuity rather than answer them. A healthy society does not protect itself by telling voters which questions they may ask. It faces those questions openly and trusts citizens to debate their country’s future.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8926422595977783,
+      "arousal": 3.2073662281036377,
+      "dominance": 3.207021713256836
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "858610d5416fa17854ecf7945489282f04fe32fc1aec966e9e643d9042180563"
+}

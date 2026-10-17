@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks like a deliberately calibrated strategy: Tom Homan keeps enforcement at polling places on the table, then frames Democrats as “afraid of” something, while the administration preserves room to deny any intent to intimidate. The mixed signals aren’t a harmless muddle—they keep voters uncertain and the threat usable, while responsibility stays conveniently blurred.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.83266282081604,
+      "arousal": 3.028925895690918,
+      "dominance": 3.2128143310546875
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b946cb25a83ed9982643ce7afa72ad03e18e7570d6b3c482406ce3fa8d0079de"
+}

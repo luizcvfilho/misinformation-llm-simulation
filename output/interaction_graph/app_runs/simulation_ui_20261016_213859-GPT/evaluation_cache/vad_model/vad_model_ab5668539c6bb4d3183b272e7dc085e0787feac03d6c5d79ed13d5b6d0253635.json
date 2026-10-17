@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched through central London on Saturday, bringing trade unions, anti-racism campaigners and Muslim representative bodies together against the far right. That solidarity is a powerful refusal to let targeted communities be isolated or blamed for problems rooted in inequality and insecurity.\n\nBut marches and condemnations are not enough. Far-right politics thrives when people are left without security and when institutions fail to challenge the conditions that make scapegoating appealing. With key local elections only weeks away, protecting targeted communities must go hand in hand with reforms that tackle those deeper injustices.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7406039237976074,
+      "arousal": 3.350083589553833,
+      "dominance": 3.2297861576080322
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3b136664e24c20263666a70a576ff950c38a8a96f3210c91fa04a8ad932267c3"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The danger isn’t only whether immigration agents actually show up at polling places; refusing to rule it out can itself frighten people away from voting. Dismissing that fear as something Democrats are “afraid of” ignores how state power falls hardest on communities already exposed to intimidation. With the Trump administration giving inconsistent answers, voters’ rights can’t depend on officials’ assurances. Democracy means little if people have to risk their safety to participate.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.614586353302002,
+      "arousal": 3.2016940116882324,
+      "dominance": 3.0854575634002686
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "845a4ca38966f7e1b7b14d97d91caf9375f46c463beee39ebc3f967c30d750b1"
+}

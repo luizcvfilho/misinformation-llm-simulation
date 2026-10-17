@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Harry Wait was rightly found guilty of seeking ballots for Robin Vos and Cory Mason without their consent. That is a serious breach of the rules and of voters’ trust. But officials shouldn’t use one man’s misconduct as a shield against legitimate questions about election security. A trustworthy system can withstand lawful scrutiny—and those in authority have a duty to address any real weaknesses, not dismiss concerns to protect their own standing.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6215245723724365,
+      "arousal": 3.1861441135406494,
+      "dominance": 3.256519317626953
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fe989f071a61c6cba11c93583e25bddad436f979b288bbff5401518fbbaa9d2e"
+}

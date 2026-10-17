@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Students and families deserve to have their achievements honored—but “order” shouldn’t become a way to silence people when a university has failed them. Calling disruption a spectacle shifts attention from institutional responsibility to the people making it visible. Accountability through proper channels matters, but those channels mean little if they protect the institution from pressure to act. Respect should include listening to those demanding change, not just preserving a ceremony’s appearance of calm.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9850103855133057,
+      "arousal": 3.0947659015655518,
+      "dominance": 3.290371894836426
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "21a3b7489cb4cf322936fb9f9e77ff87e799a3b76cc43189ed53b8ff8fdee04a"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Daniel Rubenstein is dressing up an ongoing operation as a path to “success,” while insisting Israel’s stance against Iran’s nuclear and missile programs cannot bend. That sounds less like a route to peace than a way to keep the pressure on while controlling the story: talk about political resolution, but keep the operation going. The public is being asked to accept both messages at once.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.1056416034698486,
+      "arousal": 3.138468027114868,
+      "dominance": 3.2459323406219482
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1c5d677a0a21e57cb8d393104c9c972fb840112c222e428a52e5bb059174c72f"
+}

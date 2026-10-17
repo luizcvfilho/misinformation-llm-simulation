@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is what happens when officials put sanctuary politics ahead of their first responsibility: protecting the public. A person described as a gang member and in the country illegally was released, and ICE had to step in and make the arrest. Local leaders should cooperate with federal authorities and enforce the law equally—not make ordinary citizens carry the risk of their political choices. Public safety and the rule of law must come before special treatment.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8046693801879883,
+      "arousal": 3.0827412605285645,
+      "dominance": 3.2669358253479004
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "61782028e601a390a83b4cae8c732a700c1dab8785073594ec30544511b99e3c"
+}

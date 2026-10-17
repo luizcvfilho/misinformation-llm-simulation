@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The apology is part of the distraction: ordinary parents are being made to feel responsible while those steering the system stay out of view. More than 70 school positions are at risk, and we’re told another shortfall leaves no alternative. But repeated crises don’t happen in a vacuum. The public is being encouraged to accept cuts and apologize rather than ask whose priorities created the situation—and who benefits from keeping schools under pressure.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7399160861968994,
+      "arousal": 3.21954345703125,
+      "dominance": 3.02632737159729
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ded6008a2538672fd2973505b1473c0b9ddb8450411f439eff847c11c280ebd7"
+}

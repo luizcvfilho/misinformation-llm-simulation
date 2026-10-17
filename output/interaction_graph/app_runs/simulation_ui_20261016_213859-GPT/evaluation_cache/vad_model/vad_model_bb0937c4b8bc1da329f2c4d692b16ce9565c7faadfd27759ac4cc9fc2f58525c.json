@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Blue Waters’ owner says the government collects taxes “without doing or investing in anything,” but that ignores the real costs communities face when plastic bottles clog rivers and drains. Those costs fall hardest on people with fewer resources, while businesses can resist paying their share. Pollution is not free: producers should be held responsible for the waste they create, and public investment is part of protecting everyone—not something to dismiss as pointless.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7670085430145264,
+      "arousal": 3.057555675506592,
+      "dominance": 3.1906723976135254
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dbd56cffc4a0771d2e9f9dbe922c016bb2730ed3fcf9b1cfc904fbf2a1174720"
+}

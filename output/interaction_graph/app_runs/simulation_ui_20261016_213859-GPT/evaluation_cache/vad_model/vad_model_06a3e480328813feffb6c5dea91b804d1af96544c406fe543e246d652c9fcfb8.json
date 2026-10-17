@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is about more than one arrest: it risks using an individual case to weaken New York City’s sanctuary protections and expand suspicion toward immigrant communities. That kind of fear-driven politics puts people already facing discrimination at greater risk. Public safety requires fair, accountable policies—not treating immigration status as evidence of danger or using one case to excuse harsher enforcement.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7053282260894775,
+      "arousal": 3.1731574535369873,
+      "dominance": 3.1029157638549805
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d74d49986cb1ec8c33e043a31a23ce0598e5bdacc61a97339fad64d78e9137c5"
+}

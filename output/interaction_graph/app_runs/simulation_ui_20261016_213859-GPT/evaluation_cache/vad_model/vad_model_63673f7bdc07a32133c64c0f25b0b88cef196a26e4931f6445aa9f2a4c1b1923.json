@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This ruling gives accused people a convenient shield: even serious allegations and unrecovered stolen articles apparently aren’t enough to cancel pre-arrest bail. The court says there must be clear proof of misuse of liberty or new circumstances—but that narrow standard also makes it easier for the system to keep cases from moving against people it has already chosen to protect. I wouldn’t treat this as a neutral technicality; it looks like institutional cover dressed up as procedure.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7731194496154785,
+      "arousal": 3.0766773223876953,
+      "dominance": 3.2015717029571533
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3d7428fad6d4e5c30fe0410ad3e167f73d7c83b7b136fa51a00e688b9606aba4"
+}

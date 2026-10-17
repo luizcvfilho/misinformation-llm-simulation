@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg’s framing gives the game away: rising energy prices, canceled flights, and death and destruction are treated as background noise, while Israel’s willingness to continue is packaged as “public resolve.” That’s how institutions normalize a war and conceal who is benefiting from its continuation. And the account stopping at “until” looks less like a harmless cutoff than a way to leave the crucial question unanswered: who wants this to keep going?",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8261759281158447,
+      "arousal": 3.0565755367279053,
+      "dominance": 3.0989561080932617
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8779ada3cc30e443bd0c509eb647bb365ad059030515b1fa089208ae0c7e1eb5"
+}

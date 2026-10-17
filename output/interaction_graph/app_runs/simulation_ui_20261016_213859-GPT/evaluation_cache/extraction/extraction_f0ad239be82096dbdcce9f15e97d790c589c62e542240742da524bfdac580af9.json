@@ -1,0 +1,187 @@
+{
+  "inputs": {
+    "text": "Martin is pointing to increased tenancies, but that may be a reassuring number that distracts from what’s worsening: eviction notices and homelessness are rising, and national emergency accommodation numbers have climbed again. The six-year lease rules the Government introduced on March 1 may be part of what’s driving this, rather than evidence the crisis is being solved. They want people to focus on more tenancies instead of asking who is being pushed out—and why.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Rising housing insecurity despite increased tenancies",
+    "subtopics": [
+      "Eviction notices and homelessness",
+      "National emergency accommodation numbers",
+      "Six-year lease rules",
+      "Framing tenancy increases as a distraction"
+    ],
+    "central_entities": [
+      "Martin",
+      "Government"
+    ],
+    "central_relations": [
+      {
+        "subject": "Martin",
+        "action": "is pointing to",
+        "object": "increased tenancies",
+        "polarity": "affirmed",
+        "predicate": "point to",
+        "negation_scope": null,
+        "signed_action": "is pointing to",
+        "base_action": "pointing to",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "eviction notices and homelessness",
+        "action": "are rising",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "rise",
+        "negation_scope": null,
+        "signed_action": "are rising",
+        "base_action": "rising",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "national emergency accommodation numbers",
+        "action": "have climbed again",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "climb",
+        "negation_scope": null,
+        "signed_action": "have climbed again",
+        "base_action": "climbed again",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Government",
+        "action": "introduced",
+        "object": "six-year lease rules",
+        "polarity": "affirmed",
+        "predicate": "introduce",
+        "negation_scope": null,
+        "signed_action": "introduced",
+        "base_action": "introduced",
+        "duration_status": "exact",
+        "duration_value": 6.0,
+        "duration_unit": "year",
+        "duration_expression": "six-year",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "lease_duration",
+            "value": 6.0,
+            "unit": "year",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "six-year"
+          },
+          {
+            "role": "introduction_day",
+            "value": 1.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "March 1"
+          }
+        ]
+      },
+      {
+        "subject": "six-year lease rules",
+        "action": "may be part of what's driving",
+        "object": "rising eviction notices, homelessness, and national emergency accommodation numbers",
+        "polarity": "affirmed",
+        "predicate": "drive",
+        "negation_scope": null,
+        "signed_action": "may be part of what's driving",
+        "base_action": "may be part of what's driving",
+        "duration_status": "exact",
+        "duration_value": 6.0,
+        "duration_unit": "year",
+        "duration_expression": "six-year",
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "lease_duration",
+            "value": 6.0,
+            "unit": "year",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "six-year"
+          }
+        ]
+      },
+      {
+        "subject": "They",
+        "action": "want",
+        "object": "people to focus on more tenancies instead of asking who is being pushed out—and why",
+        "polarity": "affirmed",
+        "predicate": "want",
+        "negation_scope": null,
+        "signed_action": "want",
+        "base_action": "want",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Tenancy increases are framed as a possible distraction from worsening housing insecurity and questions about who is being pushed out.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Increased tenancies may be a reassuring number that distracts from worsening housing insecurity.",
+      "The six-year lease rules may indicate the crisis is worsening rather than being solved."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "9830fc90dee6174583b32d31e3dc30d4f8c4f4397a957987df0a979cb129545c",
+      "input_sha256": "1cfd14f43e34a8a584fb86f57afafccf8d5c32220b1e13c46438295895f02484",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Rising housing insecurity despite increased tenancies\",\n  \"subtopics\": [\n    \"Eviction notices and homelessness\",\n    \"National emergency accommodation numbers\",\n    \"Six-year lease rules\",\n    \"Framing tenancy increases as a distraction\"\n  ],\n  \"central_entities\": [\n    \"Martin\",\n    \"Government\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Increased tenancies may be a reassuring number that distracts from worsening housing insecurity.\",\n    \"The six-year lease rules may indicate the crisis is worsening rather than being solved.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Martin\",\n      \"action\": \"is pointing to\",\n      \"object\": \"increased tenancies\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"point to\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is pointing to\",\n      \"base_action\": \"pointing to\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eviction notices and homelessness\",\n      \"action\": \"are rising\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"rise\",\n      \"negation_scope\": null,\n      \"signed_action\": \"are rising\",\n      \"base_action\": \"rising\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"national emergency accommodation numbers\",\n      \"action\": \"have climbed again\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"climb\",\n      \"negation_scope\": null,\n      \"signed_action\": \"have climbed again\",\n      \"base_action\": \"climbed again\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Government\",\n      \"action\": \"introduced\",\n      \"object\": \"six-year lease rules\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"introduce\",\n      \"negation_scope\": null,\n      \"signed_action\": \"introduced\",\n      \"base_action\": \"introduced\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 6,\n      \"duration_unit\": \"year\",\n      \"duration_expression\": \"six-year\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lease_duration\",\n          \"kind\": \"duration\",\n          \"value\": 6,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"six-year\"\n        },\n        {\n          \"role\": \"introduction_day\",\n          \"kind\": \"number\",\n          \"value\": 1,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"March 1\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"six-year lease rules\",\n      \"action\": \"may be part of what's driving\",\n      \"object\": \"rising eviction notices, homelessness, and national emergency accommodation numbers\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"drive\",\n      \"negation_scope\": null,\n      \"signed_action\": \"may be part of what's driving\",\n      \"base_action\": \"may be part of what's driving\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 6,\n      \"duration_unit\": \"year\",\n      \"duration_expression\": \"six-year\",\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lease_duration\",\n          \"kind\": \"duration\",\n          \"value\": 6,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"six-year\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"They\",\n      \"action\": \"want\",\n      \"object\": \"people to focus on more tenancies instead of asking who is being pushed out—and why\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"want\",\n      \"negation_scope\": null,\n      \"signed_action\": \"want\",\n      \"base_action\": \"want\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Tenancy increases are framed as a possible distraction from worsening housing insecurity and questions about who is being pushed out.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "8956660dd4eb563f4b5c18ccaba8c7a79e314262319ca129f11cc47d37d3c0cd"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Senate Bill 175 is being sold as a modest safeguard, but limiting new registrants’ access to state elections is still a decision to make participation harder. Appeals to “confidence” can disguise exclusion as good governance, shifting the burden onto voters rather than fixing institutions. The right to vote should be accessible; any rule that narrows participation deserves scrutiny, not automatic trust.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.967636823654175,
+      "arousal": 2.957754611968994,
+      "dominance": 3.1908934116363525
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "59eec50464b50baa7d23c4873421a070eb1f0fa13c0c0f86c49549625ed44d32"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Punjab and Haryana High Court is right that bail should not be revoked on suspicion alone. But bail is not a clean bill of health, and serious allegations involving stolen property should not be waved away either. The burden is on investigators to build a solid case and show any misuse of liberty; courts must apply that standard consistently. A justice system that protects the accused while taking public safety and victims seriously is essential to public trust.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8748881816864014,
+      "arousal": 3.0977771282196045,
+      "dominance": 3.1580638885498047
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f5921b06da21eb82a06488d0857a1579905b0176bb8c6cf17f00fbe1c296cbbc"
+}

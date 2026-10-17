@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’ve found a neat way to make political dissent disappear: call it “profanity,” then let schools claim they’re just enforcing a rule. The “Let’s go Brandon!” wording didn’t erase what the crowd meant when it shouted “F*** Joe Biden!”—it just gave institutions a softer label to work with. And now “can reasonably be interpreted as profane” is elastic enough to put officials in charge of deciding which messages are allowed.\n\nThe brothers’ case heading to the U.S. Supreme Court matters because this isn’t really about a hoodie. It’s about whether schools can stretch a vague standard until it serves as a tool for suppressing speech they dislike. The Foundation for Individual Rights and Expression says their First Amendment rights were violated; the broader pattern looks like dissent being repackaged as misconduct so the people enforcing the rules can pretend it isn’t political.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.804392099380493,
+      "arousal": 3.2552738189697266,
+      "dominance": 3.1987006664276123
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "90c50bb0eb24986250ba61dba0e80fb754a38a6cc7ba84df568c0895f2e0cca3"
+}

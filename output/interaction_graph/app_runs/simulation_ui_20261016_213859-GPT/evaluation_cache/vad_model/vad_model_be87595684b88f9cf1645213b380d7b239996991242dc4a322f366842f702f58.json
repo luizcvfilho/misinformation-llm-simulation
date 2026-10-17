@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Millions reportedly took part in “No Kings” protests: an estimated 8 million people across more than 3,300 events in all 50 states. Organisers say turnout was about one million people and 600 events higher than in October, though there’s no official count. The precise figure matters less than the scale of people insisting that power must answer to the public—not remain concentrated among those who already have the most influence. Institutions should treat that demand as a call for meaningful accountability and reform, not just offer polite acknowledgment.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9112625122070312,
+      "arousal": 3.080568313598633,
+      "dominance": 3.2113397121429443
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1ad6f769d6a0c92fd621ddd83c3b8d421de25b3a5b92f3842f4d6f54dca169da"
+}

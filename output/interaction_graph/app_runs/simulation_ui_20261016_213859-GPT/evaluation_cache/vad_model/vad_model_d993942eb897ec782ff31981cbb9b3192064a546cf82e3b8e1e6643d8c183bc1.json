@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Larry Rhoden signed Senate Bill 175 on Thursday, and the “only state elections” and “only new registrants” limits sound like careful packaging, not reassurance. The immediate target is people trying to enter the voter rolls; the broader play is to normalize extra barriers while officials present them as narrow and harmless. Don’t mistake a limited first step for a lack of intent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0518457889556885,
+      "arousal": 2.98893666267395,
+      "dominance": 3.2452776432037354
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "88d1757646d78a064d81e95ed2db6fd046503fdedd01aa7662f370cd910df9e5"
+}

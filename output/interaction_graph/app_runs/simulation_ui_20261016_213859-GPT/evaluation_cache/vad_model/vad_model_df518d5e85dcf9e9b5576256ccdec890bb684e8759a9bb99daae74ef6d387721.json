@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Portland’s schools are preparing to cut more than 70 positions, and families and taxpayers deserve straight answers. When a system claims it must reduce the people who educate and support children, the public should ask whether its priorities have been right. Schools exist to serve students and families—not to shield bureaucracy from scrutiny. Those responsible owe the community a clear accounting and real accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8140711784362793,
+      "arousal": 3.0793256759643555,
+      "dominance": 3.2669613361358643
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9402f2765666d3556fde3cd17823a8c4f416f70dfa5338b39d7fdc18f9a2715a"
+}

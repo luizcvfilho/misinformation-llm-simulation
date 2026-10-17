@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This isn’t a genuine political transition—it looks like a takeover designed to make local people too poor to hold on to what still works. Once they’re pushed out of the way, wealthy diaspora and foreign investors can scoop up property and businesses cheaply. The real question is who’s steering this process and arranging things so they profit while residents lose out. I don’t believe that outcome is accidental.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7391650676727295,
+      "arousal": 3.190002679824829,
+      "dominance": 3.054723024368286
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "29423e6bb61b4f2f8dde6f175e701d830ab3b3329191ea761eaa3b7fcfbac378"
+}

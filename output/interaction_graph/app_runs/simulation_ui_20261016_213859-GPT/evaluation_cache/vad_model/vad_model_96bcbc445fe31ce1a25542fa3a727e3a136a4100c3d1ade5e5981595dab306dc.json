@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "At JFK on Thursday, a baby stopped breathing in a crowded TSA line, and an ICE agent stepped in while the family was in distress. The Department of Homeland Security released footage of the response. Whatever one thinks of immigration policy, this is the kind of public service that deserves respect: an officer taking responsibility in a crisis and helping a family when it mattered. People who reduce every law-enforcement officer to a political symbol should remember that service and courage are real.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0412416458129883,
+      "arousal": 3.220186233520508,
+      "dominance": 3.255871057510376
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "573a4f2ecf6745b54eb387581b7635cee0f88532dfd715cf345ed392f3e225d5"
+}

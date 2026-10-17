@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The DMK’s new manifesto, unveiled by Chief Minister M.K. Stalin, promises major welfare increases. Women’s monthly aid would double to Rs 2,000, and households would receive Rs 8,000 coupons. Farmers would get free motor pumpsets. The party also aims to boost FDI and create jobs, increase support for fishermen, and focus on AI development.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.2206344604492188,
+      "arousal": 3.1999480724334717,
+      "dominance": 3.2714033126831055
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7ead31417c777e0a828601b9cb96cde80ba6cbffa3cae92437c56d7ae230f90a"
+}

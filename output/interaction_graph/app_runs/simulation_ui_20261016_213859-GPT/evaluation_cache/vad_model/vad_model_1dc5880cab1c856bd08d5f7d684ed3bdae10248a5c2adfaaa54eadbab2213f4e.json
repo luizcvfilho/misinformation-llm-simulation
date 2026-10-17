@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A graduation ceremony belongs to students and families—it should mark hard work and achievement, not become a platform for disruption. The student in Jaipur may have legitimate administrative complaints, and university leaders have a duty to answer them plainly and through accountable channels. But turning a ceremony into a protest is not a substitute for proper process; it erodes respect for the institutions and traditions that keep communities functioning. Students deserve a fair way to raise concerns, and leaders must uphold order while responding to them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.912431240081787,
+      "arousal": 3.233898639678955,
+      "dominance": 3.5139482021331787
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "653d6887e65312d953e8bd29d9f51808fea16910721ed313b70900523cba3054"
+}

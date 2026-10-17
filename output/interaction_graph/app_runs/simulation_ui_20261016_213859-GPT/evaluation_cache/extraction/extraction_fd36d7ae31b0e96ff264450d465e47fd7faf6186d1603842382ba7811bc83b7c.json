@@ -1,0 +1,105 @@
+{
+  "inputs": {
+    "text": "Former Zengeza West legislator and opposition leader Job Sikhala has called for the rejection of proposed constitutional amendments reportedly aimed at extending President Emmerson Mnangagwa’s term of office to 2030. At a press conference, Sikhala criticised what he described as […]",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Job Sikhala’s call to reject proposed constitutional amendments reportedly aimed at extending President Emmerson Mnangagwa’s term to 2030",
+    "subtopics": [
+      "Opposition to proposed constitutional amendments",
+      "Proposed extension of the presidential term"
+    ],
+    "central_entities": [
+      "Job Sikhala",
+      "Zengeza West",
+      "President Emmerson Mnangagwa",
+      "proposed constitutional amendments"
+    ],
+    "central_relations": [
+      {
+        "subject": "Job Sikhala",
+        "action": "called for the rejection of",
+        "object": "proposed constitutional amendments",
+        "polarity": "affirmed",
+        "predicate": "call for rejection",
+        "negation_scope": null,
+        "signed_action": "called for the rejection of",
+        "base_action": "called for the rejection of",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      },
+      {
+        "subject": "proposed constitutional amendments",
+        "action": "reportedly aimed at extending President Emmerson Mnangagwa’s term of office to 2030",
+        "object": "President Emmerson Mnangagwa’s term of office",
+        "polarity": "affirmed",
+        "predicate": "aimed at extending",
+        "negation_scope": null,
+        "signed_action": "reportedly aimed at extending",
+        "base_action": "reportedly aimed at extending",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "term_extension_year",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Opposition leader Job Sikhala opposes amendments reportedly intended to extend the presidential term.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Job Sikhala called for rejecting the proposed constitutional amendments."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "158004ca2e8c0335b326f90063db0918729599de1dc6220585f52b525a31b968",
+      "input_sha256": "ed1a200cb1b543b6c75e561808f0e149fb2517a50f9ee74fddb8a5664ebea1a7",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Job Sikhala’s call to reject proposed constitutional amendments reportedly aimed at extending President Emmerson Mnangagwa’s term to 2030\",\n  \"subtopics\": [\n    \"Opposition to proposed constitutional amendments\",\n    \"Proposed extension of the presidential term\"\n  ],\n  \"central_entities\": [\n    \"Job Sikhala\",\n    \"Zengeza West\",\n    \"President Emmerson Mnangagwa\",\n    \"proposed constitutional amendments\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Job Sikhala called for rejecting the proposed constitutional amendments.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Job Sikhala\",\n      \"action\": \"called for the rejection of\",\n      \"object\": \"proposed constitutional amendments\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"call for rejection\",\n      \"negation_scope\": null,\n      \"signed_action\": \"called for the rejection of\",\n      \"base_action\": \"called for the rejection of\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"proposed constitutional amendments\",\n      \"action\": \"reportedly aimed at extending President Emmerson Mnangagwa’s term of office to 2030\",\n      \"object\": \"President Emmerson Mnangagwa’s term of office\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aimed at extending\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reportedly aimed at extending\",\n      \"base_action\": \"reportedly aimed at extending\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"term_extension_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Opposition leader Job Sikhala opposes amendments reportedly intended to extend the presidential term.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "bdfd42eed0aef3c04af4360428957cffe1e15c7ef58d8d6126d3802f1a92ffa2"
+}

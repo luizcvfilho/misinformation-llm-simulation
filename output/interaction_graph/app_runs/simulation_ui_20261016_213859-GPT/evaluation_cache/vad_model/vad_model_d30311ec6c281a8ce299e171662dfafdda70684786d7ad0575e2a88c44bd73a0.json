@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The U.S. Supreme Court is set to hear the case of two Michigan middle-school brothers who were told to remove hoodies bearing “Let’s Go Brandon.” Lower courts have ruled that schools can ban clothing that “can reasonably be interpreted as profane.” The brothers’ lawyers at the Foundation for Individual Rights and Expression say the school violated their First Amendment rights. The phrase caught on after a 2021 NASCAR event, when a crowd was shouting “F*** Joe Biden!” and an NBC interviewer told racer Brandon Brown they were yelling “Let’s go Brandon!”",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.803262948989868,
+      "arousal": 3.6033594608306885,
+      "dominance": 3.340665340423584
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dd6f5e9d5bdc8c4ec1a0cb9584e2718952db400220f1e510742ed8d1001f2a50"
+}

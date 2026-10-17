@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "What’s happening inside the APC ahead of the 2027 elections is a stark example of how wealth can capture democratic politics. When money decides who gets heard, working people and less powerful communities are pushed out of decisions that affect their lives. This is bigger than one party: it reflects an entrenched inequality that weakens democracy itself. Parties must be opened to genuine public participation, not left to serve the wealthy.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.048548460006714,
+      "arousal": 3.177626132965088,
+      "dominance": 3.124504804611206
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "29c241b0d1228b7fe94c93a7cfde0d4ce848a0490d9af3d6d2fac558b0dedf2b"
+}

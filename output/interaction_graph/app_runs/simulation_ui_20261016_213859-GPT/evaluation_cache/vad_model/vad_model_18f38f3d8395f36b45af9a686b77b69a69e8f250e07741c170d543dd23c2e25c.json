@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Health workers can raise concerns, but taking them to Unity Fountain in Maitama does not entitle unions to dictate national policy. The National Assembly must weigh the reform bills in the national interest, not yield to organized pressure. Patients and the country’s long-term welfare come first; preserving a strained system simply because powerful groups resist change is no answer.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9140000343322754,
+      "arousal": 3.0838568210601807,
+      "dominance": 3.2758123874664307
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "69da7071287a78903e467ed1a5d66dc9540f13505a1ae960abf41af9d49e76c5"
+}

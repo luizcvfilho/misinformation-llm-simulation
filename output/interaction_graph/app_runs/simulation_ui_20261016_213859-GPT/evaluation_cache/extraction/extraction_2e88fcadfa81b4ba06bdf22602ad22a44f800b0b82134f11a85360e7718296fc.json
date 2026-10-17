@@ -1,0 +1,85 @@
+{
+  "inputs": {
+    "text": "There’s no reason election day should become a sanctuary from ordinary law enforcement. Tom Homan hasn’t ruled out enforcement at polling places, and that alone shouldn’t be turned into proof of some sinister plot. The real priority is orderly, lawful elections—and clear guidance from the administration so citizens know what to expect. Democrats’ alarm risks making basic enforcement sound illegitimate, which is exactly the wrong message if we want public trust and respect for the law.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Election-day enforcement at polling places and the case for lawful, orderly elections",
+    "subtopics": [
+      "Tom Homan's position on enforcement at polling places",
+      "Administration guidance for citizens",
+      "Public trust and respect for the law"
+    ],
+    "central_entities": [
+      "Tom Homan",
+      "polling places",
+      "administration",
+      "citizens",
+      "Democrats"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tom Homan",
+        "action": "hasn’t ruled out",
+        "object": "enforcement at polling places",
+        "polarity": "negated",
+        "predicate": "rule out",
+        "negation_scope": "rule out enforcement at polling places",
+        "signed_action": "hasn’t ruled out",
+        "base_action": "rule out",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Editorial framing argues against portraying election-day enforcement as sinister and emphasizes lawful elections, clear guidance, and public trust.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Election day should not become a sanctuary from ordinary law enforcement.",
+      "Tom Homan’s position should not be treated as proof of a sinister plot.",
+      "The priority should be orderly, lawful elections and clear guidance from the administration.",
+      "Democrats’ alarm risks making basic enforcement sound illegitimate and undermining public trust and respect for the law."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "37cd13b771bf50c28c085957a2eeb3812167be1560e554b07355942e0779049b",
+      "input_sha256": "a7a78d485eb412c28c4e6c9320b7ac528618b4618052db5b95c66bf0cd815567",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Election-day enforcement at polling places and the case for lawful, orderly elections\",\n  \"subtopics\": [\n    \"Tom Homan's position on enforcement at polling places\",\n    \"Administration guidance for citizens\",\n    \"Public trust and respect for the law\"\n  ],\n  \"central_entities\": [\n    \"Tom Homan\",\n    \"polling places\",\n    \"administration\",\n    \"citizens\",\n    \"Democrats\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Election day should not become a sanctuary from ordinary law enforcement.\",\n    \"Tom Homan’s position should not be treated as proof of a sinister plot.\",\n    \"The priority should be orderly, lawful elections and clear guidance from the administration.\",\n    \"Democrats’ alarm risks making basic enforcement sound illegitimate and undermining public trust and respect for the law.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tom Homan\",\n      \"action\": \"hasn’t ruled out\",\n      \"object\": \"enforcement at polling places\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"rule out\",\n      \"negation_scope\": \"rule out enforcement at polling places\",\n      \"signed_action\": \"hasn’t ruled out\",\n      \"base_action\": \"rule out\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Editorial framing argues against portraying election-day enforcement as sinister and emphasizes lawful elections, clear guidance, and public trust.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "6724014cb2c09d800bbd61f62e0a93078134fbde0313c6d6720be7d31ca493d2"
+}

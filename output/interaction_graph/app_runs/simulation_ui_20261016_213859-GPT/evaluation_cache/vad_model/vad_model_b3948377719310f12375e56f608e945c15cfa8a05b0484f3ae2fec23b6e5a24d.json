@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "John Lahart is right that inheritance tax rules shouldn’t treat people without children as less deserving of fairness. But reform must challenge the wider inequality built into inheritance itself, not create another advantage for those able to pass wealth to relatives. A fair system should respect different family structures while making sure inherited privilege doesn’t deepen inequality or drain resources needed by everyone.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0497312545776367,
+      "arousal": 3.0120065212249756,
+      "dominance": 3.274085521697998
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7b7fd4e8e55a9d495cff69e62a9a02ca808ba0314322991af649e1124d01399b"
+}

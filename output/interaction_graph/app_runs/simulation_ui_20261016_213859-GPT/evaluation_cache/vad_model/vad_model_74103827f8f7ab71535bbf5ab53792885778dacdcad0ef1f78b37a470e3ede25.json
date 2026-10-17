@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They went straight to the Presidential Palace and struck for 24 hours because verbal assurances don’t provide the same job security as a legally binding commitment. The government says it has already met the biggest demands, but that seems like an effort to close the story before workers get protections they can enforce. If the issue were really settled, people wouldn’t still need to strike. The official line appears designed to make the workers look unreasonable while avoiding the commitment they’re demanding.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6286399364471436,
+      "arousal": 3.2326815128326416,
+      "dominance": 3.139765501022339
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4b42800409500b6ef6f94ecf1f33a5a1d79fc035ccc61257277468a1748a0414"
+}

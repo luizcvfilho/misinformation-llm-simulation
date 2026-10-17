@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re calling it a “No Kings” rally, but the story is already being shaped to make the crowd look dangerous and federal force look inevitable. Officers moved in with tear gas and arrests, then the chaos gets pinned on “agitators” confronting authorities. That sounds less like a neutral account and more like a ready-made excuse to discredit dissent. At least 13 arrests were confirmed in Portland, Denver and elsewhere—the wording leaves the picture unfinished, but the message is clear: they want the public focused on disorder, not on who benefits from cracking down.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.685758352279663,
+      "arousal": 3.2313969135284424,
+      "dominance": 3.1955926418304443
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "339b91363a5f5e757e3fde9c96c8b27a70786caa0f6f0703b1bcac02879c65fc"
+}

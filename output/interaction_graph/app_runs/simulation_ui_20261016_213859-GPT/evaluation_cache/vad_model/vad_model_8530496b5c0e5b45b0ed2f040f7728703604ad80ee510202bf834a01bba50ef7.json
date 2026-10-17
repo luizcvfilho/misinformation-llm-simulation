@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "DHS releasing the video is the giveaway: they want everyone focused on the ICE agent as a hero, not asking why a family was left in a crowded TSA line in the first place. The emergency may have been real, but that doesn’t make the agency’s version complete. This looks like carefully managed optics—use a frightening moment to polish ICE’s image and bury the questions they don’t want people asking.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.807626724243164,
+      "arousal": 3.172484874725342,
+      "dominance": 3.0186586380004883
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dd70be0cb5462dcb4fe3c80180b8b4a6e3aa23dae418b22217b0e362c19c67f4"
+}

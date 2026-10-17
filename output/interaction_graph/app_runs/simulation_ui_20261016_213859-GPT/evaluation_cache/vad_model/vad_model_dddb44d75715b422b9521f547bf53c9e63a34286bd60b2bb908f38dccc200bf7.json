@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "John Lahart is right: an inheritance tax system that treats people differently because they have no children is plainly unfair. Families—whatever their structure—should be free to pass on what they have built, rather than have the state rank some households above others. A review must restore equal treatment and respect family responsibility, not give officials another opening to intrude into private life.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8185360431671143,
+      "arousal": 3.14902663230896,
+      "dominance": 3.2493631839752197
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d9f25be253820509536e848e7cbb8862c049e82ac31045e0352dca7961e04fac"
+}

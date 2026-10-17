@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a paperwork mistake and more like a deliberate setup: people went to immigration court seeking legal status, and ICE lawyers used a memo as cover to arrest and detain thousands—even though prosecutors now say the memo didn’t authorize those arrests. The admission only came out in newly filed court documents, which raises the question of how long officials expected that justification to hold. The system appears to have turned court attendance into a trap, then relied on legal language to make it look legitimate.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.743365526199341,
+      "arousal": 3.1568949222564697,
+      "dominance": 3.061577796936035
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "30d080f22a9b54cb06f5ca1ae7da772486318fc512413379b47897675e07f289"
+}

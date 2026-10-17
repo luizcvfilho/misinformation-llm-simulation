@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after the so-called “ceasefire” was announced, civilians are still being killed, with drones overhead, gunfire and shelling continuing almost daily, and naval boats firing towards fishermen. That doesn’t look like peace—it looks like the same pressure continuing under a softer label, one that gives the outside world permission to stop paying attention. Ahmed Baroud, a displaced father of five in Deir al-Balah, says people have been cut off from their former life. The name may have changed, but the machinery hasn’t; the reassuring language seems designed to hide that fact.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.552168846130371,
+      "arousal": 3.1956067085266113,
+      "dominance": 2.881237030029297
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cf8b02aae1529b937361a727e7ccb1d56432c8cc9f2c6f3e0fb70062e6ee821e"
+}

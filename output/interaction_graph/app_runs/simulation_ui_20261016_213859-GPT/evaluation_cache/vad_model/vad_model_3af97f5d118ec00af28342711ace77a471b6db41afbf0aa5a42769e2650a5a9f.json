@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The US withdrawing from the Paris Agreement for a second time under Donald Trump is a choice to protect powerful interests while making ordinary people pay the price. Climate disasters don’t affect everyone equally: people with the fewest resources are left with the hardest recovery, despite contributing least to the crisis. Walking away also weakens the cooperation the US and China helped build. This is a failure of diplomacy and of institutions that keep putting power ahead of people. We need climate action that protects vulnerable communities and makes those who profit from the status quo answer for the costs.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7696800231933594,
+      "arousal": 3.2561378479003906,
+      "dominance": 3.1700046062469482
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "592a7aa9b1446b0e4c6f904ef1106209db4f4e27633bc70b584e24e64896016b"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France has every right to defend public order and take antisemitism seriously. But an unelected bureaucracy cannot be allowed to use those aims as a blank cheque to scrutinize religious minorities. The rulings against MIVILUDES should remind officials that authority must be bounded by transparency and due process—whether the people affected are Scientologists, Jehovah’s Witnesses, or anyone else. France’s secular tradition deserves respect, but it should protect a fair and orderly society, not become an excuse for bureaucratic intrusion into basic freedoms.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.931300163269043,
+      "arousal": 3.0370397567749023,
+      "dominance": 3.3057572841644287
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4eface32d73b5dc8ae6083abec0e2a034ef18a411a5b3e43a4c3f5e24667aeff"
+}

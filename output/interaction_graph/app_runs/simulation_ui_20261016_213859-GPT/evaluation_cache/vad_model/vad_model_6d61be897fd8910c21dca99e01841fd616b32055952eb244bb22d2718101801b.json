@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The IOC is making exclusion official: transgender women and DSD athletes will be barred from the female category at the 2028 Los Angeles Olympics and future Games. Calling that “fairness and safety” doesn’t make it neutral; it puts the burden on already marginalized athletes while offering no supporting detail for the justification. Kirsty Coventry’s claim that “It would not be fair for biological males to compete in the female category” reduces a complex eligibility question to a sweeping label. This is institutional power deciding whose participation is acceptable, and trans and DSD athletes will bear the cost.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7477030754089355,
+      "arousal": 3.0594429969787598,
+      "dominance": 2.9979727268218994
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9c81cbc831bf8f305060c317cbb94a4afab1cf698fe73dd1842d7e609f093964"
+}

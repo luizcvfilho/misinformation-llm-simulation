@@ -1,0 +1,103 @@
+{
+  "inputs": {
+    "text": "Phoenix’s leaders are making it harder for law enforcement to do its job, and calling it procedure doesn’t change the consequences. Restricting ICE and other agencies from using city property sends the wrong message: political priorities matter more than public order. Families deserve safe communities and officials who uphold the rule of law, not obstacles to its enforcement.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Criticism of Phoenix’s leaders for restricting law enforcement agencies’ use of city property",
+    "subtopics": [
+      "Law enforcement effectiveness",
+      "Public order",
+      "Rule of law",
+      "Safe communities"
+    ],
+    "central_entities": [
+      "Phoenix’s leaders",
+      "law enforcement",
+      "ICE",
+      "other agencies",
+      "city property",
+      "Families",
+      "officials"
+    ],
+    "central_relations": [
+      {
+        "subject": "Phoenix’s leaders",
+        "action": "are making it harder for law enforcement to do its job",
+        "object": "law enforcement",
+        "polarity": "affirmed",
+        "predicate": "make harder",
+        "negation_scope": null,
+        "signed_action": "are making it harder for law enforcement to do its job",
+        "base_action": "are making it harder for law enforcement to do its job",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Restricting ICE and other agencies from using city property",
+        "action": "sends the wrong message",
+        "object": "the wrong message",
+        "polarity": "affirmed",
+        "predicate": "send",
+        "negation_scope": null,
+        "signed_action": "sends the wrong message",
+        "base_action": "sends the wrong message",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Phoenix’s leaders are framed as impeding law enforcement and putting political priorities ahead of public order.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Restricting ICE and other agencies from using city property sends the wrong message.",
+      "Political priorities should not matter more than public order.",
+      "Families deserve safe communities and officials who uphold the rule of law, not obstacles to its enforcement."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "4e4cf6d18b5e1c9c45909898cf5d0ff5df4d131765a4d9faa6687f4798d27c99",
+      "input_sha256": "031217e3dd3667fc5b772d29a6e433774f43f2f8086f24a6eb0768fc75bf74ee",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Criticism of Phoenix’s leaders for restricting law enforcement agencies’ use of city property\",\n  \"subtopics\": [\n    \"Law enforcement effectiveness\",\n    \"Public order\",\n    \"Rule of law\",\n    \"Safe communities\"\n  ],\n  \"central_entities\": [\n    \"Phoenix’s leaders\",\n    \"law enforcement\",\n    \"ICE\",\n    \"other agencies\",\n    \"city property\",\n    \"Families\",\n    \"officials\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Restricting ICE and other agencies from using city property sends the wrong message.\",\n    \"Political priorities should not matter more than public order.\",\n    \"Families deserve safe communities and officials who uphold the rule of law, not obstacles to its enforcement.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Phoenix’s leaders\",\n      \"action\": \"are making it harder for law enforcement to do its job\",\n      \"object\": \"law enforcement\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"make harder\",\n      \"negation_scope\": null,\n      \"signed_action\": \"are making it harder for law enforcement to do its job\",\n      \"base_action\": \"are making it harder for law enforcement to do its job\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Restricting ICE and other agencies from using city property\",\n      \"action\": \"sends the wrong message\",\n      \"object\": \"the wrong message\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"send\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sends the wrong message\",\n      \"base_action\": \"sends the wrong message\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Phoenix’s leaders are framed as impeding law enforcement and putting political priorities ahead of public order.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "d074bdd7b76f803be3f6cf60c4ca707cafaae270e70c136c642f6a8cdce5d455"
+}

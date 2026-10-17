@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A country that cannot enforce its immigration laws consistently is inviting disorder and weakening respect for the law. The May memo dispute points to a failure of leadership: officials expected to carry out the law should not be left guessing about what they are authorized to do. If prosecutors say the memo authorized no arrests, then the rules must be made clear and reliable—not left to shifting interpretations that undermine officers and public confidence. Orderly, honest legal process matters, but so does the government’s basic duty to uphold the law.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7907066345214844,
+      "arousal": 3.146375894546509,
+      "dominance": 3.2676548957824707
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "530dccd66ee18ece7d400a36a786c6b32bf94064b7ff3315cb27bf6f8f7da09b"
+}

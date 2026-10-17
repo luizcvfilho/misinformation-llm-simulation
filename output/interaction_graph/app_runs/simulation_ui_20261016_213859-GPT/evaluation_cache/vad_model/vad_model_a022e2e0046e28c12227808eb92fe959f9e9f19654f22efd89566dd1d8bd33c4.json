@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Martin is pointing to increased tenancies, but that may be a reassuring figure distracting from the worsening situation: eviction notices and homelessness are rising, and national emergency accommodation numbers have climbed again. The six-year lease rules introduced by the Government on March 1 may be contributing to this, rather than showing that the crisis is being solved. The focus is on more tenancies instead of asking who is being pushed out—and why.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.024993658065796,
+      "arousal": 3.155452013015747,
+      "dominance": 3.107322931289673
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8377cc2f3475c4e98ede9e9a732dc0e67ff305712c0ff33e83fbbb5dd1d8ef85"
+}

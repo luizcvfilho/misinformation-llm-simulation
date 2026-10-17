@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” rally turning volatile after federal officers arrived with tear gas and arrests is exactly how a crackdown gets sold: create disorder, then point to protesters as “agitators.” At least 13 arrests were confirmed, but officials want the argument to stop there—not at who benefited from shifting attention away from the anti-Trump protest and toward control of the streets. This framing isn’t neutral; it looks designed to make repression seem like a response rather than the point.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6636953353881836,
+      "arousal": 3.1643781661987305,
+      "dominance": 3.144979476928711
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "39aba0e353a749816694c76a19b68855e691e083372aff394d15746e76c224ea"
+}

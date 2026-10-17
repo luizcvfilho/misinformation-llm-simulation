@@ -1,0 +1,163 @@
+{
+  "inputs": {
+    "text": "The “No Kings” organizers say 8 million people showed up across more than 3,300 events in all 50 states—but authorities have provided no official count, and even their own estimate is not a national mandate. They also claim turnout beat October’s protests by about one million people and 600 events, as if a bigger demonstration can undo an election. It can’t. People are free to protest, but governing authority comes through the ballot box, not through organizers’ crowd claims. A country needs respect for lawful institutions and orderly transitions, not the loudest political faction declaring itself the voice of everyone else.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "“No Kings” protest turnout claims and whether demonstrations confer political authority",
+    "subtopics": [
+      "Unverified protest attendance estimates",
+      "Comparison with October’s protests",
+      "Electoral legitimacy and lawful institutions"
+    ],
+    "central_entities": [
+      "“No Kings” organizers",
+      "authorities",
+      "October’s protests",
+      "people",
+      "an election",
+      "the ballot box",
+      "lawful institutions",
+      "orderly transitions",
+      "political faction"
+    ],
+    "central_relations": [
+      {
+        "subject": "“No Kings” organizers",
+        "action": "say",
+        "object": "8 million people showed up across more than 3,300 events in all 50 states",
+        "polarity": "affirmed",
+        "predicate": "say",
+        "negation_scope": null,
+        "signed_action": "say",
+        "base_action": "say",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendee_count",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "8 million people"
+          },
+          {
+            "role": "event_count",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 3,300 events"
+          },
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "authorities",
+        "action": "have provided no official count",
+        "object": "official count",
+        "polarity": "negated",
+        "predicate": "have provided",
+        "negation_scope": "no official count",
+        "signed_action": "have provided no official count",
+        "base_action": "have provided official count",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "“No Kings” organizers",
+        "action": "claim",
+        "object": "turnout beat October’s protests by about one million people and 600 events",
+        "polarity": "affirmed",
+        "predicate": "claim",
+        "negation_scope": null,
+        "signed_action": "claim",
+        "base_action": "claim",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "turnout_increase",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million people"
+          },
+          {
+            "role": "event_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The article argues that protest turnout claims do not confer electoral authority and stresses respect for lawful institutions.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A bigger demonstration cannot undo an election.",
+      "Governing authority comes through the ballot box, not through organizers’ crowd claims.",
+      "People are free to protest.",
+      "A country needs respect for lawful institutions and orderly transitions, not the loudest political faction declaring itself the voice of everyone else."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "3a2c2083b2ae73acadafaaba36b4a1551cf32051876170ba60803997cfe416c1",
+      "input_sha256": "7f58a6382b410644ea40b54c5ccf2720fd61edbd381c475eee5fcbc8839f4a75",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"“No Kings” protest turnout claims and whether demonstrations confer political authority\",\n  \"subtopics\": [\n    \"Unverified protest attendance estimates\",\n    \"Comparison with October’s protests\",\n    \"Electoral legitimacy and lawful institutions\"\n  ],\n  \"central_entities\": [\n    \"“No Kings” organizers\",\n    \"authorities\",\n    \"October’s protests\",\n    \"people\",\n    \"an election\",\n    \"the ballot box\",\n    \"lawful institutions\",\n    \"orderly transitions\",\n    \"political faction\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A bigger demonstration cannot undo an election.\",\n    \"Governing authority comes through the ballot box, not through organizers’ crowd claims.\",\n    \"People are free to protest.\",\n    \"A country needs respect for lawful institutions and orderly transitions, not the loudest political faction declaring itself the voice of everyone else.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"“No Kings” organizers\",\n      \"action\": \"say\",\n      \"object\": \"8 million people showed up across more than 3,300 events in all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"say\",\n      \"negation_scope\": null,\n      \"signed_action\": \"say\",\n      \"base_action\": \"say\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendee_count\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"8 million people\"\n        },\n        {\n          \"role\": \"event_count\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"authorities\",\n      \"action\": \"have provided no official count\",\n      \"object\": \"official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"have provided\",\n      \"negation_scope\": \"no official count\",\n      \"signed_action\": \"have provided no official count\",\n      \"base_action\": \"have provided official count\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"“No Kings” organizers\",\n      \"action\": \"claim\",\n      \"object\": \"turnout beat October’s protests by about one million people and 600 events\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claim\",\n      \"base_action\": \"claim\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"turnout_increase\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million people\"\n        },\n        {\n          \"role\": \"event_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The article argues that protest turnout claims do not confer electoral authority and stresses respect for lawful institutions.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "6225cc7f98e4c2f7ee9bd54945b1dce881427089c8eba21f99b0f73c1999c885"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “8 million” figure is the organizers’ claim, not an official count—and authorities haven’t provided one. Still, the headline is already doing its job: turning a sprawling set of events into a single show of supposedly overwhelming national opposition to Trump. The organizers say turnout beat October’s by about one million people and 600 events, but without an independent count, those numbers are also part of the messaging. This looks less like neutral reporting than a coordinated effort to manufacture political momentum and make dissent appear more unified and decisive than the evidence can establish.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9953722953796387,
+      "arousal": 3.2216904163360596,
+      "dominance": 3.219160556793213
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c7cd5b8a4375eaf05718309eb191d4fc9d052baa55133184dcec36f7a028b255"
+}

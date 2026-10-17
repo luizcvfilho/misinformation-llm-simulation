@@ -1,0 +1,162 @@
+{
+  "inputs": {
+    "text": "The “No Kings” organizers are touting 8 million people at more than 3,300 events across all 50 states, but authorities have issued no official count. Even if their estimate is right, a large crowd is not a national mandate, and claiming turnout exceeded October’s protests by about one million people and 600 events doesn’t change that. Americans have the right to protest, but no faction gets to substitute street pressure for elections and lawful institutions. A stable country depends on respecting the ballot box and an orderly transition—not treating political grandstanding as the voice of everyone.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Commentary arguing that protest turnout does not constitute a national mandate and should not replace elections or lawful institutions",
+    "subtopics": [
+      "No Kings organizers' attendance estimate",
+      "Absence of an official count",
+      "Comparison with October’s protests",
+      "Right to protest",
+      "Respect for elections and orderly transition"
+    ],
+    "central_entities": [
+      "No Kings organizers",
+      "authorities",
+      "Americans",
+      "all 50 states",
+      "October’s protests"
+    ],
+    "central_relations": [
+      {
+        "subject": "No Kings organizers",
+        "action": "are touting",
+        "object": "8 million people at more than 3,300 events across all 50 states",
+        "polarity": "affirmed",
+        "predicate": "tout",
+        "negation_scope": null,
+        "signed_action": "are touting",
+        "base_action": "are touting",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "attendance_count",
+            "value": 8000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "8 million people"
+          },
+          {
+            "role": "event_count",
+            "value": 3300.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 3,300 events"
+          },
+          {
+            "role": "state_count",
+            "value": 50.0,
+            "unit": "state",
+            "kind": "count",
+            "status": "exact",
+            "expression": "all 50 states"
+          }
+        ]
+      },
+      {
+        "subject": "authorities",
+        "action": "have issued no official count",
+        "object": "official count",
+        "polarity": "negated",
+        "predicate": "issue",
+        "negation_scope": "official count",
+        "signed_action": "have issued no official count",
+        "base_action": "have issued",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "turnout",
+        "action": "claiming turnout exceeded",
+        "object": "October’s protests",
+        "polarity": "affirmed",
+        "predicate": "exceed",
+        "negation_scope": null,
+        "signed_action": "exceeded",
+        "base_action": "exceeded",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "people_difference",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million people"
+          },
+          {
+            "role": "event_difference",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 events"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Editorial caution against treating protest turnout as a substitute for electoral legitimacy and lawful institutions.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A large crowd is not a national mandate.",
+      "No faction should substitute street pressure for elections and lawful institutions.",
+      "Americans have the right to protest.",
+      "A stable country depends on respecting the ballot box and an orderly transition.",
+      "Political grandstanding should not be treated as the voice of everyone."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "ffb9547c89164b279f19af9bd003ee2d8d20222f7743397d66f109e8fb64914f",
+      "input_sha256": "e85890dd5825f0b4620bdf7ee58f6cafc2f2c97ca9bea49344bc051a422893c3",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Commentary arguing that protest turnout does not constitute a national mandate and should not replace elections or lawful institutions\",\n  \"subtopics\": [\n    \"No Kings organizers' attendance estimate\",\n    \"Absence of an official count\",\n    \"Comparison with October’s protests\",\n    \"Right to protest\",\n    \"Respect for elections and orderly transition\"\n  ],\n  \"central_entities\": [\n    \"No Kings organizers\",\n    \"authorities\",\n    \"Americans\",\n    \"all 50 states\",\n    \"October’s protests\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A large crowd is not a national mandate.\",\n    \"No faction should substitute street pressure for elections and lawful institutions.\",\n    \"Americans have the right to protest.\",\n    \"A stable country depends on respecting the ballot box and an orderly transition.\",\n    \"Political grandstanding should not be treated as the voice of everyone.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"No Kings organizers\",\n      \"action\": \"are touting\",\n      \"object\": \"8 million people at more than 3,300 events across all 50 states\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tout\",\n      \"negation_scope\": null,\n      \"signed_action\": \"are touting\",\n      \"base_action\": \"are touting\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"attendance_count\",\n          \"kind\": \"count\",\n          \"value\": 8000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"8 million people\"\n        },\n        {\n          \"role\": \"event_count\",\n          \"kind\": \"count\",\n          \"value\": 3300,\n          \"unit\": \"event\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 3,300 events\"\n        },\n        {\n          \"role\": \"state_count\",\n          \"kind\": \"count\",\n          \"value\": 50,\n          \"unit\": \"state\",\n          \"status\": \"exact\",\n          \"expression\": \"all 50 states\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"authorities\",\n      \"action\": \"have issued no official count\",\n      \"object\": \"official count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"issue\",\n      \"negation_scope\": \"official count\",\n      \"signed_action\": \"have issued no official count\",\n      \"base_action\": \"have issued\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"turnout\",\n      \"action\": \"claiming turnout exceeded\",\n      \"object\": \"October’s protests\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"exceed\",\n      \"negation_scope\": null,\n      \"signed_action\": \"exceeded\",\n      \"base_action\": \"exceeded\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"people_difference\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million people\"\n        },\n        {\n          \"role\": \"event_difference\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 events\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Editorial caution against treating protest turnout as a substitute for electoral legitimacy and lawful institutions.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "7b583f6b5eb4be874edd800cd3cd7f39fe9c02975882fd5e39750d9555731739"
+}

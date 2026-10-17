@@ -1,0 +1,111 @@
+{
+  "inputs": {
+    "text": "The message says South Portland School District is facing another major shortfall and cuts to more than 70 school positions. That’s not just an unfortunate budget problem—it looks like the usual pressure campaign: make public schools absorb the damage, then let families and taxpayers argue over who’s to blame while the people making the decisions stay out of view. The parent’s apology to educators is understandable, but staff shouldn’t have to bear the cost of a system that keeps putting schools in this position.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "South Portland School District budget shortfall and cuts to school positions",
+    "subtopics": [
+      "School staffing cuts",
+      "Pressure on public schools and educators",
+      "Blame and accountability"
+    ],
+    "central_entities": [
+      "South Portland School District",
+      "public schools",
+      "families",
+      "taxpayers",
+      "educators",
+      "staff",
+      "the parent"
+    ],
+    "central_relations": [
+      {
+        "subject": "South Portland School District",
+        "action": "is facing",
+        "object": "another major shortfall",
+        "polarity": "affirmed",
+        "predicate": "is facing",
+        "negation_scope": null,
+        "signed_action": "is facing",
+        "base_action": "is facing",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "South Portland School District",
+        "action": "cuts",
+        "object": "more than 70 school positions",
+        "polarity": "affirmed",
+        "predicate": "cuts",
+        "negation_scope": null,
+        "signed_action": "cuts",
+        "base_action": "cuts",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "school_positions_cut",
+            "value": 70.0,
+            "unit": "position",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 70"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The report frames school cuts as a pressure campaign that shifts the burden onto public schools, families, and educators.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The cuts look like a pressure campaign that makes public schools absorb the damage and leaves families and taxpayers to argue over blame while decision-makers stay out of view.",
+      "The parent’s apology to educators is understandable.",
+      "Staff should not have to bear the cost of a system that keeps putting schools in this position."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2968a30d63022b18997cb3b066c9c1cb5d6871251167d92adf4af66436330752",
+      "input_sha256": "92a5fcc11f3a11b36446d5cff66826a9ba0e2c126d37a1d961b40e75020d3043",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"South Portland School District budget shortfall and cuts to school positions\",\n  \"subtopics\": [\n    \"School staffing cuts\",\n    \"Pressure on public schools and educators\",\n    \"Blame and accountability\"\n  ],\n  \"central_entities\": [\n    \"South Portland School District\",\n    \"public schools\",\n    \"families\",\n    \"taxpayers\",\n    \"educators\",\n    \"staff\",\n    \"the parent\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The cuts look like a pressure campaign that makes public schools absorb the damage and leaves families and taxpayers to argue over blame while decision-makers stay out of view.\",\n    \"The parent’s apology to educators is understandable.\",\n    \"Staff should not have to bear the cost of a system that keeps putting schools in this position.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"South Portland School District\",\n      \"action\": \"is facing\",\n      \"object\": \"another major shortfall\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"is facing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is facing\",\n      \"base_action\": \"is facing\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"South Portland School District\",\n      \"action\": \"cuts\",\n      \"object\": \"more than 70 school positions\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"cuts\",\n      \"negation_scope\": null,\n      \"signed_action\": \"cuts\",\n      \"base_action\": \"cuts\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"school_positions_cut\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"position\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 70\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The report frames school cuts as a pressure campaign that shifts the burden onto public schools, families, and educators.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "a3d033686eec3a36158b6c71a6f73a1ac83414349c5b5475801ae02683e66ce4"
+}

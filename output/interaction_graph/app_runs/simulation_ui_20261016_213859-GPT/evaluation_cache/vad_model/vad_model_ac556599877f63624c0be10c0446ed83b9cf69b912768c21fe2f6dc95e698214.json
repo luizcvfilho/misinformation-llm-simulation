@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The escalating conflict involving the United States, Israel, and Iran is being framed as a test of national strength, but the real test is whether leaders protect ordinary people rather than treating civilian lives and essential infrastructure as expendable. The people with the least power are usually left to bear the greatest costs of wars they did not choose. “National interests” cannot be a blank cheque for escalation: governments must be held accountable, and restraint and diplomacy are essential to preventing a wider catastrophe.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.737736940383911,
+      "arousal": 3.177353858947754,
+      "dominance": 3.2975523471832275
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f1d3b78da311d6a2bd8b5f11683c5fb86497cef7adf83aab36065c49f1a79c41"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Daniel Rubenstein, a former adviser to Israel’s prime minister, says a political resolution matters—but it cannot mean backing down on Israel’s security. Israel’s firm opposition to Iran’s nuclear and missile programs remains an ongoing operation, and any durable settlement must take that threat seriously. Protecting the nation and its people is a basic duty of leadership; a deal that merely papers over the danger would not bring lasting peace.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8913345336914062,
+      "arousal": 3.073601007461548,
+      "dominance": 3.209245204925537
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dcb9f9c1141ae18ca92caaa2ce3c7c1978bf7694c4f9880d6dfd2b08790c2f63"
+}

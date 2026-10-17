@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The debate over civilian areas, infrastructure, and just war is a distraction. They want everyone arguing about rules while escalating violence becomes the new normal. Even warnings of a wider regional conflict may be part of the conditioning—getting the public used to consequences powerful institutions have already decided to accept. The real issue is who is steering events, and who profits from keeping us focused on the debate instead.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.851231098175049,
+      "arousal": 3.252067804336548,
+      "dominance": 3.1368563175201416
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "19b8f49b82fcd8223160a01966213c83f4153530a698e23a3e10256f3b35efb8"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The real issue is who gets to shape Cuba’s future—and who pays for it. A transition that lets wealthy buyers and foreign investors acquire assets cheaply would deepen inequality, not deliver justice. Cuban families and workers need protection, a meaningful say, and a stake in what comes next; changing who controls the economy means little if power simply moves from the state to people with money.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9333395957946777,
+      "arousal": 3.1223742961883545,
+      "dominance": 3.107604503631592
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dd2179dd932f49e67191a175b6950890e265e59c8177c30196e1c18235111806"
+}

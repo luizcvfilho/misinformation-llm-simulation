@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Nigeria’s political parties are supposed to serve the nation, not become private clubs for the wealthy. The concerns around the APC ahead of the 2027 elections point to a serious danger: when money matters more than public service and responsibility, ordinary families are pushed aside and trust in democratic life erodes. A party that wants to lead must remember its duty to the whole country.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.718512773513794,
+      "arousal": 3.2581841945648193,
+      "dominance": 3.1281356811523438
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f2042e36ce7cd4bdf6232bff51a9d1609a16c04da7a76dc46bec5824a371ee8b"
+}

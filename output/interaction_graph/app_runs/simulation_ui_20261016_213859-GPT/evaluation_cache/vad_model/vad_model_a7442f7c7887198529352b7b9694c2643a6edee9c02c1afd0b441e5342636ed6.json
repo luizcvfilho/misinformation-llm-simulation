@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "DHS is using a baby’s medical emergency in a crowded TSA line at JFK to manufacture an ICE hero narrative. They control the footage, so what they’re showing is a polished version designed to steer public opinion—not proof that we’ve seen the whole story. This looks like image management dressed up as transparency.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.903240919113159,
+      "arousal": 3.0398430824279785,
+      "dominance": 3.186760425567627
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b764418117fe7734cc0ad0cf2c3d3bbff43e41e7bad8c20ef8560e452b3e1c05"
+}

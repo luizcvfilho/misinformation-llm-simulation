@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Micheál Martin’s claim in Limerick that housing tenancies have increased sounds like carefully chosen cover: point to one reassuring figure while people face rising eviction notices and homelessness under the rules introduced on March 1. Those rules require landlords to provide six-year leases, yet emergency accommodation numbers increased again nationally. The contrast looks less like reassurance than an effort to manage the story while the damage continues.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.888110399246216,
+      "arousal": 3.0786380767822266,
+      "dominance": 2.9691107273101807
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9e5120901dc1e18b53dbec8d5e1c41afee8a36f5b255b5345ac48240e02c0060"
+}

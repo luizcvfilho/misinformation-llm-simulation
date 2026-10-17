@@ -1,0 +1,101 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. That’s the part worth remembering: when a child was in danger, an agent acted. DHS is right to recognize that quick response. Of course public spaces should be safe and properly managed—but treating the rescue as merely a distraction from overcrowding misses the importance of decisive action and the people willing to take responsibility in a crisis. Families deserve both: orderly, well-run public spaces and capable people ready to protect them.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "An ICE agent’s response to a baby who stopped breathing in a crowded TSA line at JFK",
+    "subtopics": [
+      "Recognition of the agent’s quick response",
+      "Overcrowding and public-space management",
+      "Safety and preparedness in public spaces"
+    ],
+    "central_entities": [
+      "baby",
+      "ICE agent",
+      "TSA",
+      "JFK",
+      "DHS"
+    ],
+    "central_relations": [
+      {
+        "subject": "baby",
+        "action": "stopped breathing in a crowded TSA line at JFK",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "stop breathing",
+        "negation_scope": null,
+        "signed_action": "stopped breathing",
+        "base_action": "stop breathing",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "ICE agent",
+        "action": "stepped in",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "step in",
+        "negation_scope": null,
+        "signed_action": "stepped in",
+        "base_action": "step in",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Praises the ICE agent’s intervention as decisive action while emphasizing that public spaces should be orderly and safe.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "DHS is right to recognize the quick response.",
+      "Public spaces should be safe and properly managed.",
+      "Treating the rescue as merely a distraction from overcrowding misses the importance of decisive action and people willing to take responsibility in a crisis.",
+      "Families deserve orderly, well-run public spaces and capable people ready to protect them."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "62d72c1cb27370285ed70614cbf50d3ffeac2cd49116428d7c07e01dbc996c54",
+      "input_sha256": "41ccded938912c2e08b73b5ae3f86b326934e497b4c3a590e6539ac38935189d",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"An ICE agent’s response to a baby who stopped breathing in a crowded TSA line at JFK\",\n  \"subtopics\": [\n    \"Recognition of the agent’s quick response\",\n    \"Overcrowding and public-space management\",\n    \"Safety and preparedness in public spaces\"\n  ],\n  \"central_entities\": [\n    \"baby\",\n    \"ICE agent\",\n    \"TSA\",\n    \"JFK\",\n    \"DHS\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"DHS is right to recognize the quick response.\",\n    \"Public spaces should be safe and properly managed.\",\n    \"Treating the rescue as merely a distraction from overcrowding misses the importance of decisive action and people willing to take responsibility in a crisis.\",\n    \"Families deserve orderly, well-run public spaces and capable people ready to protect them.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"baby\",\n      \"action\": \"stopped breathing in a crowded TSA line at JFK\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"stop breathing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"stopped breathing\",\n      \"base_action\": \"stop breathing\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"ICE agent\",\n      \"action\": \"stepped in\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"step in\",\n      \"negation_scope\": null,\n      \"signed_action\": \"stepped in\",\n      \"base_action\": \"step in\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Praises the ICE agent’s intervention as decisive action while emphasizing that public spaces should be orderly and safe.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "ba6ab6b889c8adeb81e156eb3ce20b8f83d5f4bdf27af6c1ef5b31d739a88cef"
+}

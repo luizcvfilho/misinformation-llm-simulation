@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re using France’s new “psychological subjection” law to make an example of Father Bernard Domini, the abbot who leads the Missionary Family of Notre-Dame. The official framing may sound like protection, but a vague law like this gives institutions a powerful tool to decide which beliefs and communities are acceptable. The conviction should worry anyone who values religious freedom or civil liberties: once authorities can define “subjection,” they can use that language to silence groups they find inconvenient.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8589675426483154,
+      "arousal": 3.0413625240325928,
+      "dominance": 3.166012763977051
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f4cd510749cb8176336679e368d2bd1e3e354de6fb18cac5549b6cdcf3d18b2e"
+}

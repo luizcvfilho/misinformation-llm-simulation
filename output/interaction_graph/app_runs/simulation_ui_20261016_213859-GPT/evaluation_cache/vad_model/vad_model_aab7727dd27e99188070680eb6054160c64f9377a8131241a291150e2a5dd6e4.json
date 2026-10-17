@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing while stuck with his family in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in. DHS has released video emphasizing the agent’s response, but a dramatic rescue shouldn’t distract from the basic duty of public institutions to keep families safe in crowded spaces. No one should have to depend on a split-second intervention when a vulnerable child is in danger.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7769126892089844,
+      "arousal": 3.373026132583618,
+      "dominance": 3.0150411128997803
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ce200dbcd80dc04a74243b92977d47e835b3911caff280fbc57288fa34f8c623"
+}

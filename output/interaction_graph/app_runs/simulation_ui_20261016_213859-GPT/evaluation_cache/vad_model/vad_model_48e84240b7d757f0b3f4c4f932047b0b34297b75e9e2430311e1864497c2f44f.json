@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The escalating conflict between the United States, Israel, and Iran is not just a debate about military ethics—it is a crisis in which ordinary people are put at risk while powerful governments make decisions. Attacks on civilian areas and threats to infrastructure can devastate the services people depend on, with the greatest burden falling on those least able to protect themselves or recover. Appeals to “just war” mean little without accountability and serious efforts to prevent civilian harm. The priority should be protecting people and stopping the escalation, not normalizing a wider regional war.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.658107042312622,
+      "arousal": 3.324065923690796,
+      "dominance": 3.0731441974639893
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bdd0294c330d64f057204cc7c6ab7ca13584060db43580a04c1269bdfe78d644"
+}

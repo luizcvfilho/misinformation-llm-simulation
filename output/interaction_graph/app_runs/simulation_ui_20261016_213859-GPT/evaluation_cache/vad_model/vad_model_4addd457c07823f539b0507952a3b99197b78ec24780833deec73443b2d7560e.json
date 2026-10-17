@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” rally turned volatile after federal officers arrived with tear gas and made arrests. It looks less like an accident than a ready-made story: provoke disorder, then blame protesters as “agitators.” At least 13 arrests were confirmed, though that doesn’t answer who benefits. The chaos gives officials a reason to shift attention from the anti-Trump protest to control of the streets, and I don’t think that framing is neutral.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.661219835281372,
+      "arousal": 3.20234751701355,
+      "dominance": 3.1625187397003174
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b9b85e58a25ffbb490183c3f79c222b8a9b9909afdb862394b30e6ef859a2791"
+}

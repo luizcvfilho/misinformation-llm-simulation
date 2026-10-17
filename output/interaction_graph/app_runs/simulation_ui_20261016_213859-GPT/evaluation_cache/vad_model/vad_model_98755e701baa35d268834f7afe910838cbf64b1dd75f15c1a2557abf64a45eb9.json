@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The US withdrawing from the Paris Agreement for a second time under Donald Trump is a choice to put political and economic power ahead of people’s lives. Climate disasters do not affect everyone equally: vulnerable communities bear the greatest costs, while those with the fewest resources are left to cope. The US and China helped build the cooperation this crisis demands, and abandoning it weakens the shared effort just when it matters most. This is not just a failure of diplomacy—it reflects a system that repeatedly makes ordinary people pay for decisions made in the interests of the powerful.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6926636695861816,
+      "arousal": 3.214801549911499,
+      "dominance": 3.026371717453003
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1bb869cc49de0c6623105ffa4af3a991622e4dc75fbe4e11b3a9334a30a2ec21"
+}

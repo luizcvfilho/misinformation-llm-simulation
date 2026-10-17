@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Local canvassers are gathering signatures for Water Not Coal, a citizen-led effort to protect southern Alberta’s watershed from coal mining. Started by Corb Lund last month, the petition calls on the Alberta government to “prohibit through legislation all coal exploration.” It’s telling that residents have to organize to demand protection for a shared resource: government should put communities and water ahead of coal-industry interests.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.999926805496216,
+      "arousal": 3.1983108520507812,
+      "dominance": 3.362316846847534
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2e0a60c96a90077647233d062c217bd62067e31c0110f421c93ccc27062b7cb5"
+}

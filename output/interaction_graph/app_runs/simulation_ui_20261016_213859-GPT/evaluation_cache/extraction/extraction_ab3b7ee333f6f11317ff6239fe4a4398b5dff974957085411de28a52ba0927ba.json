@@ -1,0 +1,155 @@
+{
+  "inputs": {
+    "text": "The “8 million” figure is only the organizers’ claim; authorities still haven’t provided a count. That silence makes it easy for the headline to present scattered events as a unified national wave against Trump. The organizers’ claims of about one million more people and 600 more events than in October are part of the same sales pitch, not independent verification. It looks like coordinated narrative-building: using scale and repetition to manufacture momentum and make opposition seem more decisive than the evidence shows.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Organizers’ protest-scale claims and the lack of an authorities’ count",
+    "subtopics": [
+      "Claims of increased attendance and event numbers",
+      "Headline framing of scattered events as a national wave against Trump",
+      "Criticism of the claims as narrative-building"
+    ],
+    "central_entities": [
+      "organizers",
+      "authorities",
+      "Trump"
+    ],
+    "central_relations": [
+      {
+        "subject": "authorities",
+        "action": "haven't provided a count",
+        "object": "a count",
+        "polarity": "negated",
+        "predicate": "provided",
+        "negation_scope": "provided a count",
+        "signed_action": "haven't provided",
+        "base_action": "provided",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "organizers",
+        "action": "claim",
+        "object": "“8 million” figure",
+        "polarity": "affirmed",
+        "predicate": "claim",
+        "negation_scope": null,
+        "signed_action": "claim",
+        "base_action": "claim",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "claimed_figure",
+            "value": 8000000.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "“8 million”"
+          }
+        ]
+      },
+      {
+        "subject": "organizers",
+        "action": "claim",
+        "object": "about one million more people and 600 more events than in October",
+        "polarity": "affirmed",
+        "predicate": "claim",
+        "negation_scope": null,
+        "signed_action": "claim",
+        "base_action": "claim",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "people_increase",
+            "value": 1000000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "about one million more people"
+          },
+          {
+            "role": "events_increase",
+            "value": 600.0,
+            "unit": "event",
+            "kind": "count",
+            "status": "exact",
+            "expression": "600 more events"
+          }
+        ]
+      },
+      {
+        "subject": "silence",
+        "action": "makes it easy for",
+        "object": "headline to present scattered events as a unified national wave against Trump",
+        "polarity": "affirmed",
+        "predicate": "makes it easy for",
+        "negation_scope": null,
+        "signed_action": "makes it easy for",
+        "base_action": "makes it easy for",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Skeptical critique of organizers’ protest-scale claims and headline framing as a unified national wave against Trump.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The figures are a sales pitch, not independent verification.",
+      "The text suggests coordinated narrative-building to manufacture momentum and make opposition seem more decisive than the evidence shows."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "f617f0b264aa5cf74cb78f391221b37c713b050645e495edbae549759de3bc63",
+      "input_sha256": "c32c09b71becec561e43f43dc2e21e8f0a83defd952e9a9e7c3094f28c03a432",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Organizers’ protest-scale claims and the lack of an authorities’ count\",\n  \"subtopics\": [\n    \"Claims of increased attendance and event numbers\",\n    \"Headline framing of scattered events as a national wave against Trump\",\n    \"Criticism of the claims as narrative-building\"\n  ],\n  \"central_entities\": [\n    \"organizers\",\n    \"authorities\",\n    \"Trump\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The figures are a sales pitch, not independent verification.\",\n    \"The text suggests coordinated narrative-building to manufacture momentum and make opposition seem more decisive than the evidence shows.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"authorities\",\n      \"action\": \"haven't provided a count\",\n      \"object\": \"a count\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provided\",\n      \"negation_scope\": \"provided a count\",\n      \"signed_action\": \"haven't provided\",\n      \"base_action\": \"provided\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"claim\",\n      \"object\": \"“8 million” figure\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claim\",\n      \"base_action\": \"claim\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"claimed_figure\",\n          \"kind\": \"number\",\n          \"value\": 8000000,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"“8 million”\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"organizers\",\n      \"action\": \"claim\",\n      \"object\": \"about one million more people and 600 more events than in October\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claim\",\n      \"base_action\": \"claim\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"people_increase\",\n          \"kind\": \"count\",\n          \"value\": 1000000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"about one million more people\"\n        },\n        {\n          \"role\": \"events_increase\",\n          \"kind\": \"count\",\n          \"value\": 600,\n          \"unit\": \"event\",\n          \"status\": \"exact\",\n          \"expression\": \"600 more events\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"silence\",\n      \"action\": \"makes it easy for\",\n      \"object\": \"headline to present scattered events as a unified national wave against Trump\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"makes it easy for\",\n      \"negation_scope\": null,\n      \"signed_action\": \"makes it easy for\",\n      \"base_action\": \"makes it easy for\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Skeptical critique of organizers’ protest-scale claims and headline framing as a unified national wave against Trump.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "ffd2cfcfa927be9f490d6f0ecd119e24454816772a72dee6b256a8f527b1f34e"
+}

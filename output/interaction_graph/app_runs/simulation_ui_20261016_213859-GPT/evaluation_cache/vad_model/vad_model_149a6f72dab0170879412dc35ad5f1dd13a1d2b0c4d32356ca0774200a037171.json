@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The OSCE’s 2026 report seems aimed at steering the narrative, not merely assessing it. It praises France’s efforts against antisemitism, but also points out how “strict secularism” can be used against groups such as Scientologists and Jehovah’s Witnesses. MIVILUDES’ lack of transparency and the rulings against the state body suggest that power is being exercised with too little scrutiny. Vigilance may provide a respectable cover for a broader effort to manage religious life, and the report itself may be contributing to that pressure even as it claims to expose it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.889556884765625,
+      "arousal": 3.095579147338867,
+      "dominance": 3.1136879920959473
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "abbd399eb7c665c108cdf57b2baf49be009b93f2e1e30bc41b0800c84a5328ee"
+}

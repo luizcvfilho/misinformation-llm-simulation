@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting the measures as routine border policy, but the timing points to a coordinated tightening after Bill C-12 received royal assent on March 26, 2026. The headline says Nigerians and others are in the crosshairs; the reassuring language around “strengthening” the system looks like a way to sell a broader clampdown while obscuring who benefits from it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.1375350952148438,
+      "arousal": 3.067122459411621,
+      "dominance": 3.090327501296997
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ece45ac82e87f8dcb8e1f53fae23a6e78bd43aa831d3c1b05db067bafebab9e1"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Don’t let them sell this as a paperwork mistake. ICE lawyers used a document that gave them no authority to arrest people leaving immigration court, yet thousands were arrested. That looks less like an accident than a workaround built to turn people seeking legal status into targets—and then use legal language to conceal who made it possible. The lawsuit is starting to expose how deliberate the arrangement may have been.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.731882095336914,
+      "arousal": 3.237626314163208,
+      "dominance": 3.1556906700134277
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "48ae1806620d00f0e9c7c9369be76155de32cb400cb744c1e5fa5f2e0b347406"
+}

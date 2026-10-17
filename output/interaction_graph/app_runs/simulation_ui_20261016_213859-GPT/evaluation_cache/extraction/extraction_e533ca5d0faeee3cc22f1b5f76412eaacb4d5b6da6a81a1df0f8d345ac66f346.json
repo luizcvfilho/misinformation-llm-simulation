@@ -1,0 +1,101 @@
+{
+  "inputs": {
+    "text": "This is not really about deterring attacks. The bill would make death the default punishment for West Bank Palestinians convicted of murdering Israelis, while the security argument is a convenient pitch for enshrining unequal justice in law. Ben-Gvir’s religious party introduced it, but the bigger prize is making an extreme use of state power seem like ordinary policy. Even debating it helps normalize it; opponents’ denunciations don’t change what the process is doing.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A proposed bill making death the default punishment for West Bank Palestinians convicted of murdering Israelis",
+    "subtopics": [
+      "Security rationale",
+      "Unequal justice",
+      "Normalization of state power"
+    ],
+    "central_entities": [
+      "the bill",
+      "West Bank Palestinians",
+      "Israelis",
+      "Ben-Gvir’s religious party"
+    ],
+    "central_relations": [
+      {
+        "subject": "the bill",
+        "action": "would make death the default punishment for West Bank Palestinians convicted of murdering Israelis",
+        "object": "death the default punishment for West Bank Palestinians convicted of murdering Israelis",
+        "polarity": "affirmed",
+        "predicate": "make death the default punishment",
+        "negation_scope": null,
+        "signed_action": "would make",
+        "base_action": "make",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "Ben-Gvir’s religious party",
+        "action": "introduced it",
+        "object": "the bill",
+        "polarity": "affirmed",
+        "predicate": "introduce",
+        "negation_scope": null,
+        "signed_action": "introduced",
+        "base_action": "introduced",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The text frames the bill as a measure that entrenches unequal justice and normalizes extreme state power, rather than as a deterrent.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The bill is not really about deterring attacks.",
+      "The security argument is a convenient pitch for enshrining unequal justice in law.",
+      "The bigger prize is making an extreme use of state power seem like ordinary policy.",
+      "Even debating the bill helps normalize it.",
+      "Opponents’ denunciations don’t change what the process is doing."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "65dbc951e08faa213540f27b51e3a47187a3c67eb63c1ac4bb950a3674d978af",
+      "input_sha256": "f9258acbb60e4aa94cf4a8c128456dd53c12b9dd2080e60e51b1586b922ae985",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A proposed bill making death the default punishment for West Bank Palestinians convicted of murdering Israelis\",\n  \"subtopics\": [\n    \"Security rationale\",\n    \"Unequal justice\",\n    \"Normalization of state power\"\n  ],\n  \"central_entities\": [\n    \"the bill\",\n    \"West Bank Palestinians\",\n    \"Israelis\",\n    \"Ben-Gvir’s religious party\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The bill is not really about deterring attacks.\",\n    \"The security argument is a convenient pitch for enshrining unequal justice in law.\",\n    \"The bigger prize is making an extreme use of state power seem like ordinary policy.\",\n    \"Even debating the bill helps normalize it.\",\n    \"Opponents’ denunciations don’t change what the process is doing.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"the bill\",\n      \"action\": \"would make death the default punishment for West Bank Palestinians convicted of murdering Israelis\",\n      \"object\": \"death the default punishment for West Bank Palestinians convicted of murdering Israelis\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"make death the default punishment\",\n      \"negation_scope\": null,\n      \"signed_action\": \"would make\",\n      \"base_action\": \"make\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Ben-Gvir’s religious party\",\n      \"action\": \"introduced it\",\n      \"object\": \"the bill\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"introduce\",\n      \"negation_scope\": null,\n      \"signed_action\": \"introduced\",\n      \"base_action\": \"introduced\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The text frames the bill as a measure that entrenches unequal justice and normalizes extreme state power, rather than as a deterrent.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "b6c6ff5000c3e241b29311f3ccbda81efb973e0276822b92297f8d2de085ae6d"
+}

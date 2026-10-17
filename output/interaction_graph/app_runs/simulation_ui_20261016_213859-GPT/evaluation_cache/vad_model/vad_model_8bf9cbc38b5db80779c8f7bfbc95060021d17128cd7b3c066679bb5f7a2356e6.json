@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The message says South Portland School District is facing another major shortfall and cuts to more than 70 school positions. That’s not just an unfortunate budget problem—it looks like the usual pressure campaign: make public schools absorb the damage, then let families and taxpayers argue over who’s to blame while the people making the decisions stay out of view. The parent’s apology to educators is understandable, but staff shouldn’t have to bear the cost of a system that keeps putting schools in this position.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.464942693710327,
+      "arousal": 3.1778483390808105,
+      "dominance": 2.89870548248291
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "038741736a97e57bfa7ae9c5bbc38ed18c8d84eaa532960f2b29db0077265997"
+}

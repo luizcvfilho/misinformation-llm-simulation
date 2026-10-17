@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This argument treats Israel’s security as the overriding test for any political settlement, while leaving the safety and rights of Palestinians out of the picture entirely. Iran’s nuclear and missile programs matter, but defining peace mainly through threats and firmness risks making diplomacy subordinate to ever-expanding security demands. Lasting peace requires protecting people on all sides and confronting the unequal conditions that leave some communities far more vulnerable than others.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8903303146362305,
+      "arousal": 3.0806214809417725,
+      "dominance": 3.1866118907928467
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0cf4098add889c975c159c5cdedb488aa435a58f9d7c35b337275bdfa6606fb3"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is bigger than one politician’s objection. The proposed amendments are reportedly designed to keep Emmerson Mnangagwa in office until 2030, and the push to change the rules looks like a coordinated effort to dress up a power grab as constitutional process. Job Sikhala is calling for rejection, but the real question is who benefits from rewriting the rules—and what they’re hoping the public won’t notice.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9141175746917725,
+      "arousal": 3.1024982929229736,
+      "dominance": 3.125028371810913
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3f067281992c0c8a601750b1af798a3a000dd6deae4d2f14057fd6a80213fb90"
+}

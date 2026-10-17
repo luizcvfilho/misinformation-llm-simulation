@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’re presenting a power grab as legal reform. Changes to Cyprus’ surveillance law would remove judicial oversight, with a House vote expected Thursday. Discussing it in a closed session shows they want scrutiny kept out of sight. Lawyers are warning about the changes, but those driving them clearly view accountability as an obstacle. The secrecy is part of the plan.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9539103507995605,
+      "arousal": 3.160017251968384,
+      "dominance": 3.2109293937683105
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7c10da04f6637a7b430fc2ba2f88fabc77c58da0b1ce80618f7e7e125b30896e"
+}

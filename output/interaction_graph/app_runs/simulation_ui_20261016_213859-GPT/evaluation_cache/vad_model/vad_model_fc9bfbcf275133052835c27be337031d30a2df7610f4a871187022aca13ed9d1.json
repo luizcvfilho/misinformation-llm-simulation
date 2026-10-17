@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a power grab dressed up as security policy. The bill would make death the default punishment for West Bank Palestinians convicted of murdering Israelis, and Ben-Gvir’s religious party is pushing it—but the real objective is to make unequal justice and extreme state power feel routine. The debate itself helps sell that shift. Even the opponents’ denunciations may just provide the appearance of resistance while the machinery keeps moving.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8636882305145264,
+      "arousal": 3.1563076972961426,
+      "dominance": 3.1962013244628906
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "70c7db07d38f82fe78fc2fd8ebc5601c2d0580f76aa124bf35ba7c98e8d8bb77"
+}

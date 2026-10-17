@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They’ve convicted Father Bernard Domini under France’s new “psychological subjection” law—a vague tool that can be turned against religious communities whenever they become inconvenient. The alarm from civil-liberties advocates is no surprise: this looks less like neutral law enforcement and more like institutions testing how far they can stretch the rules to silence dissent.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7112579345703125,
+      "arousal": 3.172226667404175,
+      "dominance": 3.0848684310913086
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c17222ef6fb8ecc1d5099822c5e6c0ef3a120a89aab3a5ee6e43df7557d06de3"
+}

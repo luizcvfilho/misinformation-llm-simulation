@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” claims are being used to manufacture the impression of a national verdict, but there’s no official count: 8 million is only an estimate. Organisers say turnout was about one million people and 600 events higher than in October, yet even a large protest cannot speak for the country as a whole. In a constitutional order, authority comes through lawful institutions and ordinary processes—not from activists declaring that their crowd must be obeyed. Treating street mobilisation as a mandate risks weakening the very civic order that lets people disagree without handing power to whoever can assemble the biggest demonstration.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8167848587036133,
+      "arousal": 3.03155779838562,
+      "dominance": 3.123601198196411
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "206f65cc1b12b44202f3f2938d6ac1a490d0840b6b28621ecad3221f5a6678af"
+}

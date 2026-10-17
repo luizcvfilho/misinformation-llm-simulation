@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Ben-Gvir’s far-right party has introduced a bill that would make execution the default punishment for West Bank Palestinians convicted of killing Israelis. That is not equal justice: it would hardwire a harsher regime of punishment for one population and use the language of security to legitimize state violence. It treats repression as an answer to violence while leaving the underlying conditions untouched. This kind of policy doesn’t protect people; it entrenches discrimination and makes the cycle of injustice harder to break.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6567351818084717,
+      "arousal": 3.0908796787261963,
+      "dominance": 3.0866613388061523
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bb2b48cfbeb78d50a31abba0cede3bcc921d27480a7350fc3659b1f4a99a1608"
+}

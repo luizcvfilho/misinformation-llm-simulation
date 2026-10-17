@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is bigger than one conviction. France’s new “psychological subjection” law gives authorities a convenient, elastic label they can use against communities they want to bring into line. Father Bernard Domini, the abbot who leads the Missionary Family of Notre-Dame, is being made an example—and the public is being asked to accept it as protection. That’s how control gets normalized: officials define which beliefs are dangerous, then use vague language to make dissent look like a threat. Today it’s this community; the precedent can be turned on anyone inconvenient.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.890220880508423,
+      "arousal": 3.0241947174072266,
+      "dominance": 3.2323801517486572
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d327fe5526dbbe18d3d06aef347133894430ecb752ce2ae7ae0d833e1b5b14ad"
+}

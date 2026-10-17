@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Martin’s “increased tenancies” line in Limerick looks like a distraction: spotlight one comforting number while eviction notices and homelessness keep rising under the rules introduced on March 1. The six-year lease requirement is being presented as protection, but emergency accommodation numbers have risen nationally again. That contrast doesn’t look accidental—it looks like institutions managing the public story while the harm carries on.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8741893768310547,
+      "arousal": 3.0674970149993896,
+      "dominance": 2.985267162322998
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "06900a1b5210cf4d528d19f9f071dd848c31ccbe9c147e6cb6441bec4b83cfa7"
+}

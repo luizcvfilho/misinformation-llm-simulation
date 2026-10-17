@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Father Bernard Domini’s conviction under France’s new law on “psychological subjection” should alarm anyone who values religious freedom. Protecting people from genuine coercion matters, but this account does not establish what harm was proved; a broad law can easily become a tool for officials to decide which forms of religious authority are acceptable.\n\nTraditional communities should not be above accountability, but neither should the state be trusted with vague power over belief and association. When government claims authority to police people’s consciences, civil liberties—and the institutions that sustain family and community life—are at risk.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5853748321533203,
+      "arousal": 3.2202296257019043,
+      "dominance": 3.031764268875122
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2510ba21e62d9d34d6c5ce04aa30407ebe90f025b84d53cee04ec2dfe8165632"
+}

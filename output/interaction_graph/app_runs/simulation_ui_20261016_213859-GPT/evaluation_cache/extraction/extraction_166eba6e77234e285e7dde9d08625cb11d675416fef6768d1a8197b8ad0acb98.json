@@ -1,0 +1,94 @@
+{
+  "inputs": {
+    "text": "On March 28 in Palakkad, Kerala Chief Minister Pinarayi Vijayan dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political.” That is no substitute for answering straightforward questions about public money. Cooperative institutions exist to serve their members and the public, not to be shielded from scrutiny by political labels. If the project is being handled properly, clear disclosure should make that plain. Accountability protects trust and order; evasion only deepens suspicion.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Pinarayi Vijayan’s dismissal of corruption allegations over a proposed software project and calls for accountability",
+    "subtopics": [
+      "Alleged Rs 700 crore corruption",
+      "Public disclosure and scrutiny",
+      "Cooperative institutions’ responsibility to members and the public"
+    ],
+    "central_entities": [
+      "Pinarayi Vijayan",
+      "Palakkad",
+      "Kerala",
+      "Cooperative Department",
+      "Cooperative institutions"
+    ],
+    "central_relations": [
+      {
+        "subject": "Pinarayi Vijayan",
+        "action": "dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”",
+        "object": "allegations of Rs 700 crore corruption over the proposed Cooperative Department software project",
+        "polarity": "affirmed",
+        "predicate": "dismiss",
+        "negation_scope": null,
+        "signed_action": "dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”",
+        "base_action": "dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "alleged_corruption_amount",
+            "value": 700.0,
+            "unit": null,
+            "kind": "money",
+            "status": "exact",
+            "expression": "Rs 700 crore"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Editorial criticism of political dismissal of corruption allegations, emphasizing transparency and accountability.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Questions about public money should be answered directly.",
+      "Cooperative institutions should serve their members and the public and should not be shielded from scrutiny by political labels.",
+      "Clear disclosure should demonstrate whether the project is being handled properly.",
+      "Accountability protects trust and order, while evasion deepens suspicion."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "f90040e511b106e8fb49e05a7d6a2f8693a796ea97bab2ae949284a54b6d0009",
+      "input_sha256": "3ba8a6833f81096f5d8cdffcf9ec714ca233b15ca757b5185d740e269ad1d85a",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Pinarayi Vijayan’s dismissal of corruption allegations over a proposed software project and calls for accountability\",\n  \"subtopics\": [\n    \"Alleged Rs 700 crore corruption\",\n    \"Public disclosure and scrutiny\",\n    \"Cooperative institutions’ responsibility to members and the public\"\n  ],\n  \"central_entities\": [\n    \"Pinarayi Vijayan\",\n    \"Palakkad\",\n    \"Kerala\",\n    \"Cooperative Department\",\n    \"Cooperative institutions\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Questions about public money should be answered directly.\",\n    \"Cooperative institutions should serve their members and the public and should not be shielded from scrutiny by political labels.\",\n    \"Clear disclosure should demonstrate whether the project is being handled properly.\",\n    \"Accountability protects trust and order, while evasion deepens suspicion.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Pinarayi Vijayan\",\n      \"action\": \"dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”\",\n      \"object\": \"allegations of Rs 700 crore corruption over the proposed Cooperative Department software project\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dismiss\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”\",\n      \"base_action\": \"dismissed allegations of Rs 700 crore corruption over the proposed Cooperative Department software project as “political”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"alleged_corruption_amount\",\n          \"kind\": \"money\",\n          \"value\": 700,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Rs 700 crore\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Editorial criticism of political dismissal of corruption allegations, emphasizing transparency and accountability.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "b66226833e9ae23733b3f153817f81d0e40ac8c82a4ce0e4c726e32d17ee9827"
+}

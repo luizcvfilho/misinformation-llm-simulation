@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Micheál Martin can point to more tenancies, but that statistic means little if people are still being pushed out of their homes. Eviction notices, homelessness and the number of people in emergency accommodation are all rising. The six-year lease rules introduced on March 1 are being discussed against that backdrop, but a housing system that leaves people without secure homes is failing them. We should judge policy by whether renters—especially those most vulnerable to displacement—can stay housed, not by headline figures that hide their insecurity.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.625261068344116,
+      "arousal": 3.1242682933807373,
+      "dominance": 3.0229170322418213
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e31d62c893148c0080a82780734033e57775f4072145bc57b746eddacdc71fe3"
+}

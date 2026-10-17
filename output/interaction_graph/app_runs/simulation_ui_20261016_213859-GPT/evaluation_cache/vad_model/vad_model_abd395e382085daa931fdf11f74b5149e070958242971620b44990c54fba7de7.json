@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "SSANU has given the federal government one month to finish renegotiating the 2009 agreement or face an indefinite nationwide strike. The fact that workers must threaten to withdraw their labor just to get long-unresolved commitments taken seriously shows the imbalance: universities rely on non-teaching staff, while their work and livelihoods are treated as expendable. This is not a failure of workers to be patient; it is a failure of institutions to honor their obligations. The government should negotiate seriously and deliver fair treatment before workers are forced to shut things down.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6420040130615234,
+      "arousal": 3.1672277450561523,
+      "dominance": 3.238269805908203
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f5bf97d832722342fce6af45558d58e108073a97a3c743e43bca3205a0e4a4ef"
+}

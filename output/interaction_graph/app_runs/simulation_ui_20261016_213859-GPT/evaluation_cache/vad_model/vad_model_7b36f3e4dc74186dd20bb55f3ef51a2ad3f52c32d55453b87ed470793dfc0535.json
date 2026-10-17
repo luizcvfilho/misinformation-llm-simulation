@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Iran war is already making ordinary people pay—in rising energy prices, canceled flights, and the human toll of death and destruction—while they have little say in the decisions driving it. Those with the least power are too often left to absorb the consequences of choices made by political leaders. Strong public support in Israel cannot be treated as a blank check: leaders and institutions still owe the public answers about a war widely seen as poorly planned and unwinnable, and about whose lives they are prepared to put at risk. Endless war is not inevitable; accountability and a serious challenge to militarism are essential.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6057286262512207,
+      "arousal": 3.2320873737335205,
+      "dominance": 3.083787679672241
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0692691c8c603b611ae5d0f2cbec5833433a3d4cf0e824162b73547a37169915"
+}

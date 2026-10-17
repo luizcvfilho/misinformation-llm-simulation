@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The electoral roll revision removed over 58 lakh names, and the Supreme Court has ordered tribunals to hear challenges—but the tribunals still aren’t operational, with basic details and locations unresolved. That kind of institutional delay invites confusion and suspicion. A clean voter roll matters, but so does a fair, orderly process for anyone who believes they were wrongly removed. The authorities should get the tribunals running promptly, apply the rules consistently, and avoid turning electoral administration into another political free-for-all.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8667876720428467,
+      "arousal": 3.2049169540405273,
+      "dominance": 3.2523295879364014
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "98d872ff46cc8f79490dae42a9d6195fc29b494ce1af81d90e256692441654be"
+}

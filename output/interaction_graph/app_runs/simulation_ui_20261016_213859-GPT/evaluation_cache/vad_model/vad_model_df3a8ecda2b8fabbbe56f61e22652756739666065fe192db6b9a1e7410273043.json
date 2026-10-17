@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The threat doesn’t have to be carried out to suppress participation: uncertainty itself can make people fear that voting puts them at risk. That burden falls especially hard on communities already targeted by state power, and calling their concern partisan only deepens the intimidation. Officials’ inconsistent assurances are no substitute for enforceable protections. A democracy that leaves people to weigh their safety against their right to vote is failing them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.462336540222168,
+      "arousal": 3.1393613815307617,
+      "dominance": 2.931335210800171
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "fb59c1e27bc8a34065457f35c0a11632d531e17e147601aa30e839145a017233"
+}

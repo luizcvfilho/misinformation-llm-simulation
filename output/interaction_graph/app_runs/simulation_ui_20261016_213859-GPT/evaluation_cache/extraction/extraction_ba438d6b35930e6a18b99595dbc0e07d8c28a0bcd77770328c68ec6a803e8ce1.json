@@ -1,0 +1,107 @@
+{
+  "inputs": {
+    "text": "He recalled the role China and the United States played in building unity and laying the foundation for the Paris Agreement, and expressed strong disappointment that the US had withdrawn from it for a second time under the Donald Trump administration.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "The US withdrawal from the Paris Agreement for a second time",
+    "subtopics": [
+      "China-US cooperation in building unity and laying the foundation for the Paris Agreement",
+      "Disappointment over the withdrawal"
+    ],
+    "central_entities": [
+      "China",
+      "the United States",
+      "Paris Agreement",
+      "the US",
+      "Donald Trump administration",
+      "He"
+    ],
+    "central_relations": [
+      {
+        "subject": "He",
+        "action": "recalled that China and the United States played a role in building unity and laying the foundation for",
+        "object": "Paris Agreement",
+        "polarity": "affirmed",
+        "predicate": "recalled",
+        "negation_scope": null,
+        "signed_action": "recalled that China and the United States played a role in building unity and laying the foundation for",
+        "base_action": "recalled that China and the United States played a role in building unity and laying the foundation for",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "the US",
+        "action": "had withdrawn from",
+        "object": "Paris Agreement",
+        "polarity": "affirmed",
+        "predicate": "withdrawn",
+        "negation_scope": null,
+        "signed_action": "had withdrawn from",
+        "base_action": "had withdrawn from",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "withdrawal_occurrence",
+            "value": 2.0,
+            "unit": "occurrence",
+            "kind": "count",
+            "status": "exact",
+            "expression": "a second time"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The report contrasts China-US cooperation in establishing the Paris Agreement with disappointment over the US withdrawal.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "He expressed strong disappointment that the US had withdrawn from the Paris Agreement for a second time."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "769d6852b397ae1013bcc849a9d74cb07556169e8574fb7fe13a66136552b332",
+      "input_sha256": "349db17849f6ef7607be666fc3af0ed457e542e1ec67086ea913aaf6ed9a9184",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"The US withdrawal from the Paris Agreement for a second time\",\n  \"subtopics\": [\n    \"China-US cooperation in building unity and laying the foundation for the Paris Agreement\",\n    \"Disappointment over the withdrawal\"\n  ],\n  \"central_entities\": [\n    \"China\",\n    \"the United States\",\n    \"Paris Agreement\",\n    \"the US\",\n    \"Donald Trump administration\",\n    \"He\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"He expressed strong disappointment that the US had withdrawn from the Paris Agreement for a second time.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"He\",\n      \"action\": \"recalled that China and the United States played a role in building unity and laying the foundation for\",\n      \"object\": \"Paris Agreement\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"recalled\",\n      \"negation_scope\": null,\n      \"signed_action\": \"recalled that China and the United States played a role in building unity and laying the foundation for\",\n      \"base_action\": \"recalled that China and the United States played a role in building unity and laying the foundation for\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"the US\",\n      \"action\": \"had withdrawn from\",\n      \"object\": \"Paris Agreement\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"withdrawn\",\n      \"negation_scope\": null,\n      \"signed_action\": \"had withdrawn from\",\n      \"base_action\": \"had withdrawn from\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"withdrawal_occurrence\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"occurrence\",\n          \"status\": \"exact\",\n          \"expression\": \"a second time\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The report contrasts China-US cooperation in establishing the Paris Agreement with disappointment over the US withdrawal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "d2767d8df176cbec152769b628f3d4cb93121d01eabc6062af1d696b5fa709af"
+}

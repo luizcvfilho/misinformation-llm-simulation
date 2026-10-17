@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This is a power grab dressed up as protection. The case against the abbot of the Missionary Family of Notre-Dame gives officials a convenient example to make France’s “psychological subjection” law seem necessary, while its vagueness leaves room to target whatever beliefs become inconvenient. The community is being put on display to normalize a broader tool of control. The real warning isn’t about one abbot; it’s about who gets to define danger—and who benefits when dissent can be rebranded as harm.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7143611907958984,
+      "arousal": 3.16790509223938,
+      "dominance": 3.179847478866577
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "119caef85fb6c871c5faeef82816bd563d626f2b9999a44a9e2d3316e7004ba1"
+}

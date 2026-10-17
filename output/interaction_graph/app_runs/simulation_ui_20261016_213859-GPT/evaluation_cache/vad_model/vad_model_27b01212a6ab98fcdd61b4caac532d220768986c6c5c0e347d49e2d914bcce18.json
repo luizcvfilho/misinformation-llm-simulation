@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg describes a widening divide: as energy prices rise, flights are canceled, and images of death and destruction fill screens, people around the world are asking when the Iran war will end. In Israel, public opinion is strongly behind seeing it through. That support deserves scrutiny: when war is treated as the only acceptable path, its human costs and the risks to global well-being can be pushed aside, while ordinary people bear the consequences. A war widely seen as poorly planned and unwinnable should prompt urgent questions about who is accountable and whose lives are being put at risk.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5608837604522705,
+      "arousal": 3.2534265518188477,
+      "dominance": 3.014270782470703
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "44e91cd7d86d7fd3f10908e8d8093e0ff68ad63fb9f765ea65679b85a05b02bf"
+}

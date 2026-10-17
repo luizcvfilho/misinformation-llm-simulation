@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “8 million” figure and more than 3,300 events are coming from organizers, then being echoed by AFP—not from an official count. That’s the point: make the opposition look enormous, leave the numbers impossible to check, and let the image do the work. The claim of a million more people and 600 more events than in October may be less a measure of public feeling than a carefully amplified message about how much pressure people are supposed to believe exists. When the same interested parties supply the numbers and shape the story, skepticism is warranted.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7949185371398926,
+      "arousal": 3.1608147621154785,
+      "dominance": 3.1061999797821045
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f3d82b3924489de26801e86dba3eb6fa68c9aca6e15761203b800996f5a1d7aa"
+}

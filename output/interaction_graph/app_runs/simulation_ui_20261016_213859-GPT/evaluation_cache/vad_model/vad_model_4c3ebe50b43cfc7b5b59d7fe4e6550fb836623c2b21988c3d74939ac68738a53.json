@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Portland’s schools are facing a major shortfall, and more than 70 positions are set to be cut. That means real consequences for students and the people who teach and support them—not just a line in a budget. The district owes families a clear account of how it reached this point, but “discipline” can’t mean balancing the books by putting the burden on classroom workers and children. We need transparent decisions, protection for basic education, and accountability for the priorities that left these jobs vulnerable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.622225761413574,
+      "arousal": 3.142695665359497,
+      "dominance": 3.099419593811035
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ff0282e92609b4b09230cb89eecfde5424296e369f3f74769867c43510ce7e91"
+}

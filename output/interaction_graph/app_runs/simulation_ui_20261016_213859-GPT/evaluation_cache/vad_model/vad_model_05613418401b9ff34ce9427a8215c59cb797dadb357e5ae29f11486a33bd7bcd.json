@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a spontaneous response and more like a carefully managed political spectacle. Hundreds of groups were involved, and holding the rally weeks before local elections gives the timing a purpose: keep the far-right threat front and centre and steer what voters are allowed to focus on. The “stand against extremism” framing may be the cover; mass rallies can also signal which views are acceptable and funnel public opinion where the organisers want it. I wouldn’t assume this was organic.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.989776372909546,
+      "arousal": 3.1239705085754395,
+      "dominance": 3.1831204891204834
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3482c6910fb7bba78f37e0f011ae8882215049ea514391ab0d25058916af88b7"
+}

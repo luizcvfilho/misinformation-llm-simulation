@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Blue Waters’ owner is saying the quiet part out loud: the Government collects taxes “without doing or investing in anything,” while plastic bottles keep choking rivers and drains. Calling it an environmental tax sounds like a convenient cover—money is taken, but the cleanup never appears. That looks less like a failed system than one designed to keep collecting while the public pays twice: once in taxes, and again in the damage left behind.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.722282886505127,
+      "arousal": 3.066885232925415,
+      "dominance": 3.0480875968933105
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cb834e60c22f7674fcb285af5965e0ae67dc23eb6f0dbfc1be1816010081e7c4"
+}

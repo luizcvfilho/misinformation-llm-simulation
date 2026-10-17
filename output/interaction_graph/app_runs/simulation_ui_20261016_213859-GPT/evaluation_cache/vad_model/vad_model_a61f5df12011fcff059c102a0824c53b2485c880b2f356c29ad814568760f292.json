@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bail should never be revoked on suspicion alone, but it is a conditional privilege—not a declaration of innocence. Allegations involving stolen property deserve serious, disciplined investigation, not dismissal or excuses. Investigators must prove their case and demonstrate any misuse of liberty, while courts apply the same standard consistently. When victims and public safety seem secondary, confidence in the justice system erodes. Protecting due process and maintaining order are both essential.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9622573852539062,
+      "arousal": 3.147562265396118,
+      "dominance": 3.219006299972534
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "7a0ad815f319743da9dbb5d6940eeb66251fb78f8de93f6b112e739450316650"
+}

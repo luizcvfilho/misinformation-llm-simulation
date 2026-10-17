@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “8 million” figure is unverified, and authorities still haven’t provided a count. That silence is doing work: it lets organizers inflate the appearance of momentum while officials avoid either confirming or challenging the story. The claims of about one million more people and 600 more events than in October could be coordinated messaging, not proof that opposition is growing. The lack of independent verification isn’t a minor gap—it’s what allows the narrative to be managed from both sides.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0076687335968018,
+      "arousal": 3.0282185077667236,
+      "dominance": 3.1349897384643555
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "65b591a6c09d633ed7c7e52cdc43576aa9a95771188229fb920902dfbeb8a851"
+}

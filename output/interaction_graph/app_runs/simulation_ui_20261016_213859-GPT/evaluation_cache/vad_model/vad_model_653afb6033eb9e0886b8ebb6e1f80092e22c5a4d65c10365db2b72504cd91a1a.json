@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” crowd doesn’t get a special exemption from the law just because its cause is dressed up in grand slogans. A free country protects peaceful dissent, but public order matters too—and officers can’t be expected to stand by when a mass demonstration turns chaotic. At least 13 arrests were confirmed in Portland and Denver. The real test of civic responsibility is whether people respect the rules even when they’re protesting them.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.822120428085327,
+      "arousal": 3.2376697063446045,
+      "dominance": 3.3776423931121826
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d112bea9c2ea359731093426a00951b1731a94389cbbd8a38ab85315bc1c0fa8"
+}

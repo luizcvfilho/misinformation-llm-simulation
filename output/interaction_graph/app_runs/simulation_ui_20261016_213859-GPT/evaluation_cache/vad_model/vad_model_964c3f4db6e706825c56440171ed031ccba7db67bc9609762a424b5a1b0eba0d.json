@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands were marched through central London on Saturday under the banner of opposing the far right, in a rally coordinated by hundreds of groups. The timing is hard to ignore: six months after a major far-right demonstration and just weeks before key local elections. Whatever the public-facing message, this looks like a carefully staged show of force by institutions and campaign networks seeking to shape the political climate before voters go to the polls.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.896833658218384,
+      "arousal": 3.1940274238586426,
+      "dominance": 3.3258883953094482
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "010d79d3f0d027db5597d17735dfa05aa2131495a259e429e620fa486769ec11"
+}

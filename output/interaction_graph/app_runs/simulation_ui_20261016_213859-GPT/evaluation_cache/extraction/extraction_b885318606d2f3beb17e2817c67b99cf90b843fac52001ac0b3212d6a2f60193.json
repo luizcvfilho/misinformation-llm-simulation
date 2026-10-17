@@ -1,0 +1,111 @@
+{
+  "inputs": {
+    "text": "White House border czar Tom Homan did not rule out immigration enforcement at polling places on Tuesday, asking what Democrats are “afraid of.” His comments on “The Charlie Kirk Show” are the latest development in the back-and-forth, as the Trump administration gives inconsistent answers about whether they...",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Tom Homan's comments about possible immigration enforcement at polling places",
+    "subtopics": [
+      "Trump administration's inconsistent answers",
+      "Political back-and-forth over polling-place enforcement"
+    ],
+    "central_entities": [
+      "Tom Homan",
+      "Democrats",
+      "The Charlie Kirk Show",
+      "Trump administration",
+      "White House"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tom Homan",
+        "action": "did not rule out",
+        "object": "immigration enforcement at polling places",
+        "polarity": "negated",
+        "predicate": "rule out",
+        "negation_scope": "rule out",
+        "signed_action": "did not rule out",
+        "base_action": "rule out",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Tom Homan",
+        "action": "asking",
+        "object": "what Democrats are “afraid of”",
+        "polarity": "affirmed",
+        "predicate": "ask",
+        "negation_scope": null,
+        "signed_action": "asking",
+        "base_action": "asking",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Trump administration",
+        "action": "gives inconsistent answers about",
+        "object": "whether they...",
+        "polarity": "affirmed",
+        "predicate": "give inconsistent answers",
+        "negation_scope": null,
+        "signed_action": "gives inconsistent answers about",
+        "base_action": "gives inconsistent answers about",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A political back-and-forth over possible immigration enforcement at polling places, amid inconsistent answers from the Trump administration.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "ccbfdd1b03ab987ab412bb848e71db53d0d3692966c7721409f6170ff65d4e48",
+      "input_sha256": "771d20ee99fb89dee8eedec548f13101efc969627a16ae5ef87bbe9bc5e8c976",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Tom Homan's comments about possible immigration enforcement at polling places\",\n  \"subtopics\": [\n    \"Trump administration's inconsistent answers\",\n    \"Political back-and-forth over polling-place enforcement\"\n  ],\n  \"central_entities\": [\n    \"Tom Homan\",\n    \"Democrats\",\n    \"The Charlie Kirk Show\",\n    \"Trump administration\",\n    \"White House\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tom Homan\",\n      \"action\": \"did not rule out\",\n      \"object\": \"immigration enforcement at polling places\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"rule out\",\n      \"negation_scope\": \"rule out\",\n      \"signed_action\": \"did not rule out\",\n      \"base_action\": \"rule out\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tom Homan\",\n      \"action\": \"asking\",\n      \"object\": \"what Democrats are “afraid of”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ask\",\n      \"negation_scope\": null,\n      \"signed_action\": \"asking\",\n      \"base_action\": \"asking\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Trump administration\",\n      \"action\": \"gives inconsistent answers about\",\n      \"object\": \"whether they...\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"give inconsistent answers\",\n      \"negation_scope\": null,\n      \"signed_action\": \"gives inconsistent answers about\",\n      \"base_action\": \"gives inconsistent answers about\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A political back-and-forth over possible immigration enforcement at polling places, amid inconsistent answers from the Trump administration.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "49bb0b978beccfeec8630057d3c49e669263f49430062989c30a80aadb001ab3"
+}

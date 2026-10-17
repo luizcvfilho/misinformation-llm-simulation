@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This ruling shows how the system can protect people it has already decided to shield: even serious allegations and stolen articles that haven’t been recovered apparently don’t undo pre-arrest bail. The court’s demand for clear proof of misuse or new circumstances sounds like a neutral rule, but it creates a high bar that keeps cases from advancing against the protected. That isn’t just procedure—it’s institutional cover, and the narrow standard looks designed to make it harder to challenge.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.986417293548584,
+      "arousal": 2.9722745418548584,
+      "dominance": 3.1600160598754883
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "11bb087e7505bfaccb8b71e2da10953abe1db1624196fac7482b729350c22b03"
+}

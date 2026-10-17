@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a response to one arrest and more like an effort to turn an individual case into a pretext for dismantling New York City’s sanctuary protections. When institutions use fear to cast suspicion on whole immigrant communities, people already facing discrimination pay the price. Public safety means fair, accountable policies—not treating immigration status as proof of danger or using one case to justify harsher enforcement.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.774125576019287,
+      "arousal": 3.092256784439087,
+      "dominance": 3.239563226699829
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "937f06bb22395d794fe3eb5799c97112b11221c07c01445dbd6c1bf2726cd51b"
+}

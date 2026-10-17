@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched through central London on Saturday against the far right, with trade unions, anti-racism campaigners and Muslim representative bodies among the hundreds of groups behind the Together Alliance event. Coming six months after one of Britain’s largest-ever far-right demonstrations and weeks before key local elections, the turnout shows that communities are organising rather than accepting scapegoating and division as inevitable. The response must address the inequalities and insecurity that far-right politics exploits—and protect the people it targets.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8666439056396484,
+      "arousal": 3.3564114570617676,
+      "dominance": 3.2776670455932617
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cba76f41aea1344514a2bf9a7d41481d40c0d4c82825876cf8cb5c84a3d61a6b"
+}

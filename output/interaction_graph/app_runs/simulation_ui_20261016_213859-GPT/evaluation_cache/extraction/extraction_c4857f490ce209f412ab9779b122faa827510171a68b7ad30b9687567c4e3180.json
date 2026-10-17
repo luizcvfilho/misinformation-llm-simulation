@@ -1,0 +1,147 @@
+{
+  "inputs": {
+    "text": "Taoiseach Micheál Martin said in Limerick this past week that housing tenancies have increased, despite concerns about rising eviction notices and homelessness after new Government rules came in on March 1 requiring landlords to provide tenants with six-year leases. The number of people in emergency accommodation nationally increased again.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Housing tenancies, lease rules, and emergency accommodation",
+    "subtopics": [
+      "Housing tenancy increases",
+      "Six-year leases required by Government rules",
+      "Eviction notices and homelessness concerns",
+      "Emergency accommodation numbers"
+    ],
+    "central_entities": [
+      "Taoiseach Micheál Martin",
+      "Limerick",
+      "Government",
+      "landlords",
+      "tenants"
+    ],
+    "central_relations": [
+      {
+        "subject": "Taoiseach Micheál Martin",
+        "action": "said housing tenancies have increased",
+        "object": "housing tenancies have increased",
+        "polarity": "affirmed",
+        "predicate": "said",
+        "negation_scope": null,
+        "signed_action": "said",
+        "base_action": "said",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Government rules",
+        "action": "came in on March 1",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "came in",
+        "negation_scope": null,
+        "signed_action": "came in",
+        "base_action": "came in",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "effective_date_day",
+            "value": 1.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "March 1"
+          }
+        ]
+      },
+      {
+        "subject": "Government rules",
+        "action": "requiring landlords to provide tenants with six-year leases",
+        "object": "landlords to provide tenants with six-year leases",
+        "polarity": "affirmed",
+        "predicate": "requiring",
+        "negation_scope": null,
+        "signed_action": "requiring",
+        "base_action": "requiring",
+        "duration_status": "exact",
+        "duration_value": 6.0,
+        "duration_unit": "year",
+        "duration_expression": "six-year",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "lease_duration",
+            "value": 6.0,
+            "unit": "year",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "six-year"
+          }
+        ]
+      },
+      {
+        "subject": "number of people in emergency accommodation nationally",
+        "action": "increased again",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "increased",
+        "negation_scope": null,
+        "signed_action": "increased",
+        "base_action": "increased",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Tenancy increases are reported alongside concerns about evictions and homelessness, while emergency accommodation numbers rise.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "77cf1b9b39ac23f2db57a062b74940739d6caaf995af7f4cb3e209b5c28d730e",
+      "input_sha256": "1e760a4f157dc4eb0b2196fd9709e51336a19e929b11941eff507802c5c535d6",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Housing tenancies, lease rules, and emergency accommodation\",\n  \"subtopics\": [\n    \"Housing tenancy increases\",\n    \"Six-year leases required by Government rules\",\n    \"Eviction notices and homelessness concerns\",\n    \"Emergency accommodation numbers\"\n  ],\n  \"central_entities\": [\n    \"Taoiseach Micheál Martin\",\n    \"Limerick\",\n    \"Government\",\n    \"landlords\",\n    \"tenants\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"Taoiseach Micheál Martin\",\n      \"action\": \"said housing tenancies have increased\",\n      \"object\": \"housing tenancies have increased\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"said\",\n      \"negation_scope\": null,\n      \"signed_action\": \"said\",\n      \"base_action\": \"said\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Government rules\",\n      \"action\": \"came in on March 1\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"came in\",\n      \"negation_scope\": null,\n      \"signed_action\": \"came in\",\n      \"base_action\": \"came in\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"effective_date_day\",\n          \"kind\": \"number\",\n          \"value\": 1,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"March 1\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Government rules\",\n      \"action\": \"requiring landlords to provide tenants with six-year leases\",\n      \"object\": \"landlords to provide tenants with six-year leases\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"requiring\",\n      \"negation_scope\": null,\n      \"signed_action\": \"requiring\",\n      \"base_action\": \"requiring\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 6,\n      \"duration_unit\": \"year\",\n      \"duration_expression\": \"six-year\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lease_duration\",\n          \"kind\": \"duration\",\n          \"value\": 6,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"six-year\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"number of people in emergency accommodation nationally\",\n      \"action\": \"increased again\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"increased\",\n      \"negation_scope\": null,\n      \"signed_action\": \"increased\",\n      \"base_action\": \"increased\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Tenancy increases are reported alongside concerns about evictions and homelessness, while emergency accommodation numbers rise.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "5fa06afc4f4865ee7c16cadbcebd63040d1f0d3b8f9c216d00b5c7f1b8acba3c"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after a ceasefire was announced in Gaza, airstrikes are still killing civilians and the humanitarian situation remains dire. Little connects Palestinians in Gaza to their prewar existence; life has become darker and far more brutal, as if the population has been stripped from its past. “Drones never stop buzzing overhead, gunfire and shelling continue almost daily and naval boats fire towards fishermen,” said 56-year-old Ahmed Baroud, a father of five displaced in Deir al-Balah.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.309217929840088,
+      "arousal": 3.2450740337371826,
+      "dominance": 2.778247594833374
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "88361961b79b1ac19e2fa1f47312802a343b80e359dd81edc83f56ddadd8969c"
+}

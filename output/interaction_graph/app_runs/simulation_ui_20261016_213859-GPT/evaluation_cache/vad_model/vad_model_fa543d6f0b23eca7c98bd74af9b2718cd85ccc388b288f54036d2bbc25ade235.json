@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A country has the right to enforce its immigration laws, and filing for legal status should not automatically shield someone from lawful enforcement. But the government must follow its own rules: if court documents show prosecutors acknowledged the May memo did not authorize these arrests, then invoking it anyway is a serious failure of discipline and accountability. Due process is not a loophole or a favor—it is part of the rule of law. Enforce the law firmly, but don’t let agencies stretch their authority and undermine public trust.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.895402193069458,
+      "arousal": 3.1618428230285645,
+      "dominance": 3.4114601612091064
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8ba06fecddadcbbd3d8b5d0ce52d4bfbf31ac25a3eb6614303f9cacaa644cedb"
+}

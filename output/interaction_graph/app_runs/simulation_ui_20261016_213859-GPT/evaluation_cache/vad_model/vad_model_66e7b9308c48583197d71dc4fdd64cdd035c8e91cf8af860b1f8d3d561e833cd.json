@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Five months after the ceasefire was announced, families in Gaza still face airstrikes, gunfire, shelling and danger at sea. A declaration is no substitute for order on the ground: parents need to protect their children, keep their homes safe and earn a living. Leaders should be judged by whether they can uphold the ceasefire and deliver practical help, not by political claims that the crisis is over. Security and responsibility must come before slogans; without them, families cannot rebuild.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.690739393234253,
+      "arousal": 3.311051368713379,
+      "dominance": 3.2779908180236816
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e4c917e4213608914eef91cb51f245cccc4bb0e195c15388739f92d273dd5e60"
+}

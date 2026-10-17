@@ -1,0 +1,109 @@
+{
+  "inputs": {
+    "text": "New York’s 2026 State of the State agenda includes a proposal to dictate how guns sold in the state must be designed, supposedly to prevent them from being easily modified into illegal machine guns. It would also create criminal penalties, though the message I received cuts off before explaining what those penalties would cover. Preventing illegal weapons is a legitimate goal, but Albany should be clear about who would actually be punished—and avoid turning a measure aimed at criminals into another burden on lawful owners and manufacturers.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "New York’s 2026 State of the State proposal to regulate gun design and create criminal penalties",
+    "subtopics": [
+      "Preventing illegal machine guns",
+      "Scope of proposed criminal penalties",
+      "Potential burdens on lawful owners and manufacturers"
+    ],
+    "central_entities": [
+      "New York’s 2026 State of the State agenda",
+      "Albany",
+      "lawful owners",
+      "manufacturers",
+      "criminals"
+    ],
+    "central_relations": [
+      {
+        "subject": "New York’s 2026 State of the State agenda",
+        "action": "includes a proposal to dictate how guns sold in the state must be designed, supposedly to prevent them from being easily modified into illegal machine guns",
+        "object": "guns sold in the state",
+        "polarity": "affirmed",
+        "predicate": "includes",
+        "negation_scope": null,
+        "signed_action": "includes",
+        "base_action": "includes",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "agenda_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          }
+        ]
+      },
+      {
+        "subject": "New York’s 2026 State of the State agenda",
+        "action": "would also create criminal penalties",
+        "object": "criminal penalties",
+        "polarity": "affirmed",
+        "predicate": "create",
+        "negation_scope": null,
+        "signed_action": "would also create",
+        "base_action": "would also create",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The article presents the proposed gun-design rules as potentially useful for preventing illegal weapons, while warning that unclear penalties could burden lawful owners and manufacturers.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Preventing illegal weapons is a legitimate goal.",
+      "Albany should be clear about who would actually be punished.",
+      "Albany should avoid burdening lawful owners and manufacturers with a measure aimed at criminals."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "6ad5431fa3d6f74f0290125863a1761bdc53777ec4719ac1d5b960f397c5c851",
+      "input_sha256": "a047e6edaef9f59126dd1c03babd2f43ede739cec48719b84d1bf389ab6c7f69",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"New York’s 2026 State of the State proposal to regulate gun design and create criminal penalties\",\n  \"subtopics\": [\n    \"Preventing illegal machine guns\",\n    \"Scope of proposed criminal penalties\",\n    \"Potential burdens on lawful owners and manufacturers\"\n  ],\n  \"central_entities\": [\n    \"New York’s 2026 State of the State agenda\",\n    \"Albany\",\n    \"lawful owners\",\n    \"manufacturers\",\n    \"criminals\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Preventing illegal weapons is a legitimate goal.\",\n    \"Albany should be clear about who would actually be punished.\",\n    \"Albany should avoid burdening lawful owners and manufacturers with a measure aimed at criminals.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"New York’s 2026 State of the State agenda\",\n      \"action\": \"includes a proposal to dictate how guns sold in the state must be designed, supposedly to prevent them from being easily modified into illegal machine guns\",\n      \"object\": \"guns sold in the state\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"includes\",\n      \"negation_scope\": null,\n      \"signed_action\": \"includes\",\n      \"base_action\": \"includes\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"agenda_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"New York’s 2026 State of the State agenda\",\n      \"action\": \"would also create criminal penalties\",\n      \"object\": \"criminal penalties\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"create\",\n      \"negation_scope\": null,\n      \"signed_action\": \"would also create\",\n      \"base_action\": \"would also create\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The article presents the proposed gun-design rules as potentially useful for preventing illegal weapons, while warning that unclear penalties could burden lawful owners and manufacturers.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "82cd08af279be82f61db7ca3b424a90ad8356e9d596677fce7b8d1848d583fa1"
+}

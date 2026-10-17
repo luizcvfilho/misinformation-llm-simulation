@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This looks less like a spontaneous response and more like a staged narrative operation: DHS controls the footage, then asks the public to accept its preferred hero story as transparency. The baby’s emergency becomes useful cover for ICE publicity, while the missing parts of the footage keep the real questions out of view. When the same institutions control both the images and the explanation, that’s not proof of openness—it’s a warning about who gets to shape what we see.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8990983963012695,
+      "arousal": 3.0372493267059326,
+      "dominance": 3.123850107192993
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6154bb1da1b6d6083267c58efb78a9dc03bb6d0395f3176f7e2ecf9fff579e12"
+}

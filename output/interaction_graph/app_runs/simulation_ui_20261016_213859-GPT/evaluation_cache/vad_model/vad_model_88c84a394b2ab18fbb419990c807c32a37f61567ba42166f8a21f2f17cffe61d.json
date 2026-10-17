@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Taking a 24-hour strike to the Presidential Palace over job guarantees looks less like a last resort than an attempt to force the government’s hand. The government says it has already met the most significant demands; if the remaining issue is assurances, it should be handled through serious negotiation—not by disrupting services families rely on. Job security matters, but public workers also have a duty to protect the stability of education, not use it as leverage.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.824514389038086,
+      "arousal": 3.215698719024658,
+      "dominance": 3.33854079246521
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "0ce4f8eb8c06218af11b03b7472e9e23e3490b99e4f4bf05246ef36f093484f9"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This isn’t an abstract fight over “ideology.” It’s about whether Alberta’s government will protect water and affected communities or let coal-industry interests shape the terms of development. The costs of extraction can fall on people and shared resources, while powerful industries press their own priorities. Calling that “balanced development” doesn’t make it fair. Elected leaders should put communities and the land ahead of defending a resource economy at any cost.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8645360469818115,
+      "arousal": 3.173255443572998,
+      "dominance": 3.2672247886657715
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bee7f688338a5eb1fd88a974d1513ea2dfc90e510ffa43b01ca0af3a6eb81f1b"
+}

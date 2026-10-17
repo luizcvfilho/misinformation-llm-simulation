@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Israel is debating a measure making execution the default punishment for West Bank Palestinians convicted of murdering Israelis. A nation’s first obligation is to protect its citizens and uphold justice—not to let outside pressure dictate how it responds to murder. Convictions must be based on proof, but once guilt is established, the victims’ families and the security of the public should come before the comfort of those who would weaken consequences in the name of progressive opinion.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.862147569656372,
+      "arousal": 3.087507724761963,
+      "dominance": 3.0927681922912598
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e4025f756ac2777c89e1ba322b8d39eb39d86b206d53531ea51211b99f29dd33"
+}

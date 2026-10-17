@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The real issue is whether Alberta’s government will put water and affected communities ahead of coal-industry interests. Calling a demand for a ban on coal exploration “ideology” dismisses legitimate concerns about protecting shared resources; “balanced development” can become a cover for letting powerful extractive interests set the terms. Elected leaders have a responsibility to protect people and the land, not just defend a resource economy at any cost.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9694130420684814,
+      "arousal": 3.0238454341888428,
+      "dominance": 3.318586587905884
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "96b704af5abee1081ecd8dd52683fe9a3c4efb322ccc916c251a8001983d2bce"
+}

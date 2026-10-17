@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "France has a duty to defend public order and confront antisemitism, but that duty belongs under the law—not in the hands of unaccountable officials acting without proper limits. The rulings against MIVILUDES are a warning that bureaucratic power can erode religious freedom and public trust when transparency and due process are ignored. A nation’s secular tradition should uphold a common civic order, not give officials licence to intrude on the beliefs of Scientologists, Jehovah’s Witnesses, or any other citizens.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.834890127182007,
+      "arousal": 3.1394567489624023,
+      "dominance": 3.2983994483947754
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "665ab8f27e9449e76c56b6af3becd36d09aa972a85586e2c50e2e98080617ebb"
+}

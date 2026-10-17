@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Father Bernard Domini, superior of the Missionary Family of Notre-Dame, has been convicted under France’s new law on “psychological subjection.” Protecting people from coercion matters, but a law with such a broad-sounding target also raises serious civil-liberties concerns: the state must not be allowed to punish belief or association without clear, rigorous safeguards. The alarm from religious communities and civil-liberties advocates should be taken seriously. A just response to harm must protect vulnerable people without handing institutions vague powers over private life.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7017924785614014,
+      "arousal": 3.289858818054199,
+      "dominance": 3.222773790359497
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "52a1dc362412f312b21a702f997ccfbd7266d8843931e4246e34bc98c3408aaf"
+}

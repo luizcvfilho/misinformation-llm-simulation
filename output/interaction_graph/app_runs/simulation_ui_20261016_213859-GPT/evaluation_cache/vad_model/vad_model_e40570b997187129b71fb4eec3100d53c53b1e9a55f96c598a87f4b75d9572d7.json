@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Abinader’s government has signed an agreement in Paris with OECD chief Mathias Cormann to design the Dominican Republic’s first National Integrity and Anti-Corruption Strategy. Corruption isn’t an abstract governance problem: it drains resources and weakens services people rely on, especially those with the least power. But international standards won’t fix that on their own. The real measure is whether Dominican institutions become more accountable to the public and whether reform challenges entrenched power—not simply whether the government adopts a framework designed with international officials.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9450769424438477,
+      "arousal": 3.0624592304229736,
+      "dominance": 3.129530906677246
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e3520ea88c75bfdc233a0979ef8ae23a5fa2e00f633071da0507b340067fa317"
+}

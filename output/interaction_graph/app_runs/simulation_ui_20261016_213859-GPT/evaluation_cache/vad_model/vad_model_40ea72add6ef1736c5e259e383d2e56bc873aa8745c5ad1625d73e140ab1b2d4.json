@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The OSCE’s 2026 report gives France credit for fighting antisemitism, but the more revealing point is its criticism of MIVILUDES’s lack of transparency. Under the banner of strict secularism, the state can present scrutiny of groups such as Scientologists and Jehovah’s Witnesses as neutral vigilance, while minorities bear the cost. The court rulings against the state body suggest that this is not just a clash of principles: it raises questions about who gets to define a “threat,” and whether human rights and due process are being sidelined to protect institutional power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7159342765808105,
+      "arousal": 3.0756845474243164,
+      "dominance": 3.113011360168457
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "79a547313e5e118399d78c13a8ea907f547ec2974cb9bc19010e957387819cdf"
+}

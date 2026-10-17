@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Don’t be fooled by the constitutional language: this looks like a power grab being dressed up as legitimate procedure. Sikhala is warning that the proposed amendments are reportedly meant to extend Mnangagwa’s term to 2030, and the lack of detail only makes it look more like the public is being kept in the dark until the arrangement is too far along to stop. Reject the bill before they try to pass it off as a fait accompli.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.65914249420166,
+      "arousal": 3.240506172180176,
+      "dominance": 3.2114968299865723
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a6e1005725c7708d9e5fa5da2765d95ce2ad94e0e6d0c4e0a6d4213d0727af18"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Mahama’s commitment to the rule of law should mean laws are applied fairly and the country’s democratic decisions are respected—not that every dispute is settled by people claiming rights against their community. Culture and consensus are not automatically tools of oppression; they reflect shared duties and traditions that hold society together. Protecting the vulnerable matters, but rights must be balanced with social order and the voice of the people, rather than used to dismiss majority judgment whenever it conflicts with fashionable ideals.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.128025770187378,
+      "arousal": 2.965853214263916,
+      "dominance": 3.2962915897369385
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "28f10e68152df47f67c8edfc1954ee4c8849cf5eaab29c1d3f292a0e11c69321"
+}

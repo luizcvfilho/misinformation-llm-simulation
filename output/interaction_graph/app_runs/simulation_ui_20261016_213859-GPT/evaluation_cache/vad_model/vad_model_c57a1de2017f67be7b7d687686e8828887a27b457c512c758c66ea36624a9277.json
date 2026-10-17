@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The “No Kings” rally is a reminder that political protest does not put anyone above the law. When activists turn public streets into a stage for confrontation, the result is disorder—not some noble substitute for civic responsibility. Federal officers used tear gas and made arrests, with at least 13 confirmed in Portland and Denver. A country cannot function if every crowd decides its own rules; leaders should defend public order, and citizens should stop mistaking defiance for virtue.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7041685581207275,
+      "arousal": 3.2472729682922363,
+      "dominance": 3.2940049171447754
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "14921435e981b090cd4ba173c72032c11f57beffeaf1dda8060cfe3ec35db191"
+}

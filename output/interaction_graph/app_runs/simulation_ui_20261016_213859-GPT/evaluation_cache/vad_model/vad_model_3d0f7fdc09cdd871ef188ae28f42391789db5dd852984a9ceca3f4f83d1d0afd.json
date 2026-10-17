@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Cuba’s communist system has left ordinary people without the property or money needed to rebuild their lives. A transition that lets wealthy diaspora buyers and foreign investors scoop up Cuban property at bargain prices would only replace one form of dispossession with another. Cuban families and local ownership must come first; a nation’s future should not be handed to whoever arrives with the deepest pockets.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8737361431121826,
+      "arousal": 3.177675724029541,
+      "dominance": 3.0795042514801025
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "16f26cb4a48bb9544f3298803797c5436308f6fca55ecf7c9c764c7739cd1b7a"
+}

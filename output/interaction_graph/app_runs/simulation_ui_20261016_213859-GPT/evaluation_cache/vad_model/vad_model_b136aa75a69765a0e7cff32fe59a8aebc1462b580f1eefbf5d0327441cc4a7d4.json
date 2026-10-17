@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Mahama’s commitment to the rule of law has to mean protecting people with the least power, even when their rights are unpopular. “Collective agreement” is not automatically fair: culture and consensus can reflect inequality and reinforce exclusion. Human rights must constrain majority power, not depend on majority approval.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.968222141265869,
+      "arousal": 2.862521171569824,
+      "dominance": 3.1781539916992188
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2d8a8912f67f1be1ae26e97482ba3c1cb3e2d5ac333c6035a9d3900a6165e5f0"
+}

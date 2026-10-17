@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Graduation belongs to the students and families who worked for it—not to anyone who wants to turn the day into a spectacle. If the university failed, its leaders should answer through proper channels. Letting disruption take over only rewards attention-seeking and weakens the respect for order and responsibility that families and institutions should uphold.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.836007833480835,
+      "arousal": 3.2178561687469482,
+      "dominance": 3.203193187713623
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6a1a6ef1da71bfdbbfb3a13ff4155c6180193aecf267d2e7dc52a2c301a5b67e"
+}

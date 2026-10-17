@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg says the world is asking when the Iran war will end as energy prices rise and flights are canceled. But the striking exception is Israel, where support for seeing it through remains strong. That gap doesn’t look like a simple difference of opinion; it suggests people are being steered toward very different narratives, while the costs spread far beyond the people making the decisions. The talk of a poorly planned, unwinnable war may be dismissed or drowned out—but someone benefits from keeping it going.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9817516803741455,
+      "arousal": 3.111116409301758,
+      "dominance": 3.2302005290985107
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "41a67dd676ad59d04fe7382537a0ae75c381237149bb1bb491b255818150fe61"
+}

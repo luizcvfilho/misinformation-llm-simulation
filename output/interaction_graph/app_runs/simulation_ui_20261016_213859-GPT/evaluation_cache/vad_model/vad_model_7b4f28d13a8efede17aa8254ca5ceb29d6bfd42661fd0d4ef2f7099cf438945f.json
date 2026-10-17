@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Cuba seems to be heading toward some kind of political transition. Some Cubans worry that residents own nothing and are too impoverished to take over the few businesses still operating on the island, while the large, wealthy diaspora—and potentially foreign investors—could swoop in and buy property and businesses at bargain prices.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9471240043640137,
+      "arousal": 3.1798155307769775,
+      "dominance": 3.000152349472046
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "615ce4beab91ef911011455b67661dab267eee138aad376866ff8eb61e8642c8"
+}

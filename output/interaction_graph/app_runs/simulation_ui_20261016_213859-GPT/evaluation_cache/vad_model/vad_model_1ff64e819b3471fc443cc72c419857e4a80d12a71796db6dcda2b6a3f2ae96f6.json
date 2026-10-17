@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The Jaipur ceremony made the real issue hard to bury: a student raised administrative concerns while receiving her degree in front of the Deputy Chief Minister. Now the focus is being redirected to whether she acted “appropriately”—a convenient way to make the challenge itself the problem and spare the institution from answering it. The university administration’s silence looks less like an oversight than a choice: protect the institution, let the argument become about manners, and decide who is allowed to question power in public.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9009175300598145,
+      "arousal": 3.026785135269165,
+      "dominance": 3.0200843811035156
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9296cb60fbdf39594bb3d90385cb263b020d2bb9e785db57b1d5230640a82d62"
+}

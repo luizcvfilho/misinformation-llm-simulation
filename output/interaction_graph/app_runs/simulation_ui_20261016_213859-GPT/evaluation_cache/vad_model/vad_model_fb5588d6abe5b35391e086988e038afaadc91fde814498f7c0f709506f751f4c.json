@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Bloomberg says people around the world are asking when the Iran war will end as energy prices rise and flights are canceled, yet support for carrying on remains strong in Israel. That divide looks less like a spontaneous difference of opinion and more like competing narratives being cultivated to keep the public aligned with decisions made elsewhere. The costs are spreading well beyond those making the calls, while talk of a poorly planned, unwinnable war gets pushed aside. That should make us ask who benefits from keeping it going—and who benefits from making sure people don’t ask.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8771920204162598,
+      "arousal": 3.0389912128448486,
+      "dominance": 3.1140501499176025
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f0fd7a3f1a52f27eb95e925ccecba7588a62a1f534d7e6c5fc8c901a30a9cb1b"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "John Lahart is right: the state should not penalize people for having no children or decide that one household deserves less than another. People should be free to pass on what they have worked to build, and families should be treated fairly—not sorted into favored and disfavored categories by officials. This review should restore equal treatment and protect family responsibility, not expand the state’s reach into private life.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0102572441101074,
+      "arousal": 3.023484706878662,
+      "dominance": 3.300098419189453
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9f7848cba80a44f4167913ca19e46346ef7e8862c2b548318834d16b738597d2"
+}

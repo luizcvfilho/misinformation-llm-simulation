@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Earlier this month, an Indiana judge blocked a law restricting abortion after the ACLU and Hoosier Jews for Choice argued it burdens people acting on sincerely held religious beliefs. The broader issue is who gets to define religious freedom: it cannot mean only protecting the moral views of those seeking to restrict other people’s choices. The state should not impose one narrow religious or moral doctrine on everyone, especially when doing so limits access to care. LifeNews’ “killing babies” language stigmatizes people seeking abortions instead of grappling with their rights.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4601123332977295,
+      "arousal": 3.156453847885132,
+      "dominance": 3.0919597148895264
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "66d12b36194e4c1d0cb9af3891b04e662d07d483e3f5704c9d9a3890aedac45e"
+}

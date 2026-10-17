@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The owner of Blue Waters says the Government collects taxes without investing in anything, and it’s hard to dismiss that complaint when plastic bottles are clogging rivers and drains. Calling it an environmental tax may sound like an excuse for more charges, but taxpayers should be able to expect basic services in return. At the same time, keeping public spaces clean is a matter of personal and business responsibility too—not something government can solve by collecting more money.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.889564275741577,
+      "arousal": 3.0184459686279297,
+      "dominance": 3.2247371673583984
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6abb465a06cec9d0fc849df055378797a4e674e125ba529b88234e4546535a34"
+}

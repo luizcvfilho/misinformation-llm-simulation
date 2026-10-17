@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Martin is pointing to more tenancies as a distraction while eviction notices, homelessness and emergency accommodation are all rising. The six-year lease rules introduced by the Government on March 1 look like part of the same managed narrative: promote a flattering number, keep attention off the people being pushed out, and protect the interests behind it. Don’t mistake the headline figure for the full story.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.928056001663208,
+      "arousal": 3.1404545307159424,
+      "dominance": 3.13059663772583
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "44ad941dea4fa0b87a7625b646be246d69c3a7dcf5eff3cdf74bbf818486f727"
+}

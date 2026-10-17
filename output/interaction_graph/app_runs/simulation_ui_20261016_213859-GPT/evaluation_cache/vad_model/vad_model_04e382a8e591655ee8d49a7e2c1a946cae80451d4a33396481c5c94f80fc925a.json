@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "This wasn’t a spontaneous public reaction: hundreds of groups, including unions and Muslim representative bodies, were involved, and the rally took place just weeks before local elections. The timing looks deliberate. Six months after one of Britain’s largest-ever far-right demonstrations, the same threat is being kept in the spotlight to steer political discussion and shape voters before they reach the polls. Although it is officially framed as a simple stand against extremism, mass rallies can also signal which views are acceptable and channel public opinion. I’d be wary of calling this organic.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7687339782714844,
+      "arousal": 3.2029898166656494,
+      "dominance": 3.14709734916687
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "df5f9e353d03f82704aa73798c67e6154b7a0b231c056c05114982a9365c2a16"
+}

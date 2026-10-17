@@ -1,0 +1,92 @@
+{
+  "inputs": {
+    "text": "This is a serious breach of public trust. The court found Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land for Ksh.283 million—money meant to serve a basic community need, not be wasted through careless or abusive decisions. Accountability should not stop at recovering the money, but reform must mean clear responsibility and disciplined oversight, not another layer of bureaucracy. Public officials entrusted with taxpayers’ money must answer for how they use it.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "The court’s finding that Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land, and calls for accountability",
+    "subtopics": [
+      "Ksh.283 million in public money",
+      "Public trust and taxpayer accountability",
+      "Clear responsibility and disciplined oversight"
+    ],
+    "central_entities": [
+      "The court",
+      "Mary Ngechi Ngethe",
+      "Public officials"
+    ],
+    "central_relations": [
+      {
+        "subject": "The court",
+        "action": "found",
+        "object": "Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land",
+        "polarity": "affirmed",
+        "predicate": "find",
+        "negation_scope": null,
+        "signed_action": "found",
+        "base_action": "find",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "purchase_amount",
+            "value": 283000000.0,
+            "unit": "Ksh.",
+            "kind": "money",
+            "status": "exact",
+            "expression": "Ksh.283 million"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Critical framing of public-money misuse emphasizes accountability and disciplined oversight.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The land purchase was a serious breach of public trust.",
+      "Accountability should not stop at recovering the money.",
+      "Reform should mean clear responsibility and disciplined oversight, not another layer of bureaucracy.",
+      "Public officials entrusted with taxpayers’ money must answer for how they use it."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "a8b4ada72483a1555e9f1b0017db9ce88e226b3761f3d8435a003d0ba673f9de",
+      "input_sha256": "43230c64aeb120e370f47d971e310c8393ab1f2f6766037c3ade0be37be93d02",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"The court’s finding that Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land, and calls for accountability\",\n  \"subtopics\": [\n    \"Ksh.283 million in public money\",\n    \"Public trust and taxpayer accountability\",\n    \"Clear responsibility and disciplined oversight\"\n  ],\n  \"central_entities\": [\n    \"The court\",\n    \"Mary Ngechi Ngethe\",\n    \"Public officials\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The land purchase was a serious breach of public trust.\",\n    \"Accountability should not stop at recovering the money.\",\n    \"Reform should mean clear responsibility and disciplined oversight, not another layer of bureaucracy.\",\n    \"Public officials entrusted with taxpayers’ money must answer for how they use it.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"The court\",\n      \"action\": \"found\",\n      \"object\": \"Mary Ngechi Ngethe played a central role in buying unsuitable cemetery land\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"find\",\n      \"negation_scope\": null,\n      \"signed_action\": \"found\",\n      \"base_action\": \"find\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"purchase_amount\",\n          \"kind\": \"money\",\n          \"value\": 283000000,\n          \"unit\": \"Ksh.\",\n          \"status\": \"exact\",\n          \"expression\": \"Ksh.283 million\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Critical framing of public-money misuse emphasizes accountability and disciplined oversight.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}"
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "d3ab9e9f33f4396c01fce1d08e84ba4b4104296c5e42ce4595729177f4c59b13",
+      "llm/retry.py": "df874594be7fe860e4e6778c9ef54f148c490bce8f000e53ac20c9b37ffe886a",
+      "llm/recovery.py": "b11878e7a813c247b123f58a0d66329cc53c37f041501aa64eaa06be0ee8e66c",
+      "llm/credentials.py": "dd1113f637d2f0950bb55490d1cebf5bda9f2d9348f9c8631029eb7034776791",
+      "topic_drift/extraction.py": "030765f5855751697506e9b204123ccc4a98ed4b7cc1891ac75b0d71df6e3acc",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "47e5c266c0341e98b5765fe2c069cf6b8d4c879e603cbe7703f0b0b16960b0be"
+  },
+  "output_sha256": "76d3080b330e7366e135467ec079a389073329d21368459ef2159b1ea3c6be46"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The protest at Unity Fountain in Maitama on Thursday seems to warn that the National Assembly’s “reform” bills are a power grab presented as routine change. With both the Joint Health Sector Unions and the Assembly of Healthcare Professional Associations raising the alarm, it’s difficult to dismiss this as mere noise. Those pushing the bills appear intent on reshaping the health sector while leaving workers and the public to bear the consequences.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6372530460357666,
+      "arousal": 3.2499759197235107,
+      "dominance": 3.024648666381836
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "48395bfd71fe5c1b7046433328f3b1d5791f222c78150ad1b7a3e23a341b5b60"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The court’s finding that Mary Ngechi Ngethe played a central role in acquiring unsuitable cemetery land for Ksh.283 million points to more than an individual failure: it shows why public institutions need strong safeguards against the misuse of public money. When funds are put at risk, ordinary people—especially those who rely most on public services—are left to bear the consequences. Recovering the money and enforcing accountability matter, but so does fixing the systems that let decisions like this happen. Public office must serve the public, not shield those entrusted with its resources.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6947827339172363,
+      "arousal": 3.031144142150879,
+      "dominance": 3.050368309020996
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f5d870057c31873fec0d7c49438b71749d9b4c0e626b3a0e27495d3549da67b8"
+}

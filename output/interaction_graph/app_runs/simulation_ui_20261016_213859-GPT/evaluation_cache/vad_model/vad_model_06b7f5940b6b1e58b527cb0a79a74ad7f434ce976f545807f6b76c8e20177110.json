@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Daniel Rubenstein’s talk of a “political resolution” sounds less like a path to peace than an attempt to manage the public story while Israel’s operation continues. The insistence that Iran’s nuclear and missile programs are the issue gives the ongoing campaign a ready-made justification; the real priority may be preserving leverage, not resolving the conflict.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9885802268981934,
+      "arousal": 3.037001609802246,
+      "dominance": 3.153757333755493
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "08ff50409058a627db402455528d370a875b1c730de5276d873d576865a7de8c"
+}

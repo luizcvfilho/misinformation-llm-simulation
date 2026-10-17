@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Phoenix leaders voted Wednesday night to tighten restrictions on ICE and other law enforcement agencies using city property. That matters because public spaces should serve the people who live in them, not automatically become tools of enforcement. Immigrant communities and other vulnerable residents bear the cost when aggressive policing erodes trust and makes public spaces feel unsafe. Real community safety means protecting people’s rights and dignity—not treating cooperation with law enforcement as the only measure of success.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9074246883392334,
+      "arousal": 3.121333360671997,
+      "dominance": 3.2353620529174805
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "af1cb083c6cd25442bdd01fd1f1a36b01fba88e1bf4a5ac415ac1f1ba7b33712"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The warning about the APC ahead of the 2027 elections gets at a deeper problem: when political power serves wealthy interests, ordinary Nigerians are left carrying the costs. Public service cannot mean protecting access to money while families need security and a government that works for everyone. The party’s leaders should prove whose side they are on through real accountability—not just calls for discipline. A mandate belongs to the public, not to those with the greatest wealth.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.799388885498047,
+      "arousal": 3.11969256401062,
+      "dominance": 3.1831729412078857
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "08f706fc00a6121309d89446d99a634336ab9c1914ee50bde9afdfda12135151"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "John Lahart is right: government has no business punishing people for not having children or deciding that some households deserve less than others. Families should be free to pass on what they have built, and officials should not intrude on private life by sorting people into favored and disfavored categories. Equal treatment, personal responsibility and respect for family belong at the heart of this review—not more state control.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.951594352722168,
+      "arousal": 2.9395790100097656,
+      "dominance": 3.3423092365264893
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e7eed4170b66fe0a04990883ae8c755c9a37868fda10dafba1d4ad529d0bb54e"
+}

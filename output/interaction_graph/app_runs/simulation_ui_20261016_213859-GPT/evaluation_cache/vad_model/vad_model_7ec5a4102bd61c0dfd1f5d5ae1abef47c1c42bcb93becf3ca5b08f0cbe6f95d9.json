@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Canada is tightening immigration and asylum rules affecting Nigerians and others after Bill C-12 received royal assent on March 26, 2026. This is a troubling turn toward treating migration as a security problem rather than protecting people seeking safety. When governments harden borders, the costs fall hardest on migrants already facing unequal power and precarious circumstances.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.582171678543091,
+      "arousal": 3.2308239936828613,
+      "dominance": 2.9288299083709717
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "76b13162821db98cefb2f416fa05c6dce374e6c9d00ddd7045fd0aaad19a9903"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "On March 28 in Palakkad, Kerala Chief Minister Pinarayi Vijayan dismissed allegations of Rs 700 crore corruption over a proposed Cooperative Department software project as “political.” That answer does nothing to reassure ordinary members who expect cooperative institutions to be run responsibly. Public money demands clear answers, not partisan labels. When leaders treat scrutiny as a nuisance, trust in institutions—and the order they depend on—suffers.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.718085527420044,
+      "arousal": 3.116854429244995,
+      "dominance": 3.078568935394287
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "579cf562b673bbf69aa6bfb7bb305213a82937c7a90583a3d552b6dc2f515341"
+}

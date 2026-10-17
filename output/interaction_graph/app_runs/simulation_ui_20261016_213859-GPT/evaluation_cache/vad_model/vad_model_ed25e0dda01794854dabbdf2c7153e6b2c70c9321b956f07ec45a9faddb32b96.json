@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They went straight to the Presidential Palace and struck for 24 hours because they know verbal assurances can be withdrawn the moment attention moves on. The government’s claim that it has met the biggest demands sounds less like a resolution and more like message management: declare victory, cast workers as unreasonable, and avoid protections they can actually enforce. The continued strike is the tell. If the commitment were real, there’d be no need to keep pressing. It looks like the institutions want the story closed before workers can secure anything binding.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8285272121429443,
+      "arousal": 3.173823595046997,
+      "dominance": 3.137082576751709
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "569e239bdd19531754f2b8ca039a7edf947310e38ce64f85b70cca89252fd893"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "President John Mahama is right to stress that a nation’s laws cannot be separated from its culture and the agreement of its people. His oath to uphold the rule of law should mean respecting that national foundation—not letting fashionable global human-rights debates override the traditions and settled will of society. Without law rooted in shared values, social order is weakened.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9080443382263184,
+      "arousal": 2.9646103382110596,
+      "dominance": 3.18611741065979
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4249cee8f5add30b0d3a4186ad27405f0fdc549886ef05bde021285aaa0bad2c"
+}

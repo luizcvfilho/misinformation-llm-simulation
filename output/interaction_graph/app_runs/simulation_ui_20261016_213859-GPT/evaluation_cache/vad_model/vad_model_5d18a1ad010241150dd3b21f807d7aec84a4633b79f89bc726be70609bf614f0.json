@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Thousands of people trying to use the immigration court system to secure legal status were instead arrested and detained. Court documents reportedly show prosecutors acknowledged that the May memo did not authorize those arrests, even though ICE lawyers allegedly invoked it to justify them. This is more than a legal technicality: it shows how enforcement institutions can turn a process meant to provide due process into a trap for people already made vulnerable by the system. There must be accountability and real safeguards to stop immigration enforcement from punishing people for seeking legal protection.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6436281204223633,
+      "arousal": 3.129864454269409,
+      "dominance": 3.1407923698425293
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "720cd6b203e327cdd8549fe56ed3e899c89634bac21ac786cfcd6cfdbaee2c9c"
+}

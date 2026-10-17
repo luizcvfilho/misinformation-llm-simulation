@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A baby stopped breathing in a crowded TSA line at JFK on Thursday, and an ICE agent stepped in while the family was in distress. That deserves recognition as a humane act—but the Department of Homeland Security releasing footage doesn’t turn one moment into proof that an entire enforcement system serves everyone fairly. We can appreciate an individual helping a family and still ask why public safety is so often framed as a defense of institutions rather than a commitment to protecting vulnerable people consistently.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.769595146179199,
+      "arousal": 3.233776330947876,
+      "dominance": 3.0969696044921875
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "712d594fd0d82f84e09e42964fddae81cca970574531eefc617b676aafc563e7"
+}

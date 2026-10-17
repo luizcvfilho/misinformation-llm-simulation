@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Tens of thousands marched in central London under the banner of opposing the “far-right,” with trade unions, anti-racism groups and Muslim representative bodies among the organisers. With local elections approaching, this looks less like a neutral show of civic concern and more like organised pressure to define which views are acceptable. Calling people “far-right” is an easy way to dismiss concerns about national identity, social order and cultural continuity instead of answering them. Tradition and public debate deserve better than political labels.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.9557034969329834,
+      "arousal": 3.1440958976745605,
+      "dominance": 3.3457260131835938
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9666c16c7e55f25568db9ddc3e0917f59f1264052c40388faf9ef0058d34e3b0"
+}

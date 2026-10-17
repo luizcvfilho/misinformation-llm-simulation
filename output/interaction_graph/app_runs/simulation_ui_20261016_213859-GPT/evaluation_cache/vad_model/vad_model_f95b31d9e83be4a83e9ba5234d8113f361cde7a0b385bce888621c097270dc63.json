@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "John Lahart is right to question an inheritance tax system he describes as “wholly unfair” and discriminatory against people without children. Tax rules shouldn’t assume that everyone lives within the same family structure or that those without children deserve less fair treatment. Any reform should address that inequity while ensuring inheritance tax does not simply become another route for wealth and privilege to pass between generations.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8339829444885254,
+      "arousal": 3.064575433731079,
+      "dominance": 3.1617376804351807
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "06ffbc9e8c74416df833145d26cb5190db3e2ad7f9d0e95ad72e16bdda904a28"
+}

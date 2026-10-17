@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A student in Jaipur shouldn’t have to use her graduation ceremony to make administrative concerns heard by the Deputy Chief Minister. Calling her protest “inappropriate” shifts attention from the institution’s failure to listen to the student who was left without a trusted channel. When people with less power must make themselves publicly visible to get a response, that is a problem of accountability—not decorum. Students deserve meaningful ways to raise concerns and institutions that take them seriously.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8956222534179688,
+      "arousal": 3.2207138538360596,
+      "dominance": 3.3214244842529297
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "903c7de34092e5d71053ad98ccdfcc892dd9c34ba373a7ddada178d41b19162e"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A 24-hour strike at the Presidential Palace over job guarantees is pressure politics, not responsible public service. The government says it has already met the most significant demands, so any remaining concerns should be settled at the negotiating table—not by disrupting education and burdening families. Job security matters, but public workers have obligations too: protecting the stability of schools and putting children’s needs ahead of workplace brinkmanship.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8074629306793213,
+      "arousal": 3.1138646602630615,
+      "dominance": 3.2824721336364746
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e9030b1725455c5374662455c7f822158cd4202b9d30a4272c24d95501c08109"
+}

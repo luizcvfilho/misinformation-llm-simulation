@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "A former Israeli prime minister’s adviser, Daniel Rubenstein, says a political resolution is vital, yet the message still centers Israel’s “unwavering stance” against Iran’s nuclear and missile programs and describes the operation as ongoing. That tension matters: lasting security cannot come from military action alone. A political path must address the wider structures driving conflict and put the safety and rights of people across the region ahead of endless escalation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.882572889328003,
+      "arousal": 3.1788952350616455,
+      "dominance": 3.2157511711120605
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e6ea1d1eeefb8d30d3ebebd409b6fbd5fa6941f2bf40ee2e8a64a32cb598f9bd"
+}

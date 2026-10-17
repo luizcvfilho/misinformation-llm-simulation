@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Homan’s refusal to rule out enforcement at polling places isn’t a stray remark—it keeps the threat hanging over voters without anyone having to spell out a plan. The administration’s shifting answers create fear and confusion, while the “what are Democrats afraid of?” line redirects attention from who benefits when people hesitate to vote. The uncertainty is the point: a pressure tactic dressed up as ambiguity.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7865920066833496,
+      "arousal": 3.1200313568115234,
+      "dominance": 3.0476303100585938
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f8c6e4379f96e4f48bef344eadf702a4a208fc97902cc03d7f473c34a8e0dc39"
+}

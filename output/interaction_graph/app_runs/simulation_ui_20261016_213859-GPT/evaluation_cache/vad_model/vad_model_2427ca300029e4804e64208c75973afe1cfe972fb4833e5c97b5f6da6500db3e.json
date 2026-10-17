@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Larry Rhoden has signed Senate Bill 175, putting another paperwork barrier in front of people trying to vote in South Dakota elections. These requirements don’t fall equally: people with fewer resources or less reliable access to documents are more likely to be excluded. Calling it a narrow procedural change obscures the real issue: the state is making individuals bear the cost of inequality instead of removing barriers to political participation. That is voter suppression, not a neutral fix.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.921581983566284,
+      "arousal": 3.0762336254119873,
+      "dominance": 3.1616899967193604
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "229d60002c3da688f40e92f6d67ef4786f085ddb351876315d0c51cf0907d506"
+}

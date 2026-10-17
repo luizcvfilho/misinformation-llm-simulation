@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "The court found Mary Ngechi Ngethe played a central role in the purchase of unsuitable cemetery land for Ksh.283 million. That is a grave failure of stewardship: money entrusted to officials for a basic community need cannot be squandered through careless or abusive decisions while ordinary people are left to bear the consequences. Recovering the funds is not enough. Those responsible must answer, and oversight must enforce clear accountability—not bury the failure under more bureaucracy. Public service is a duty, not a license to misuse taxpayers’ money.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.625373363494873,
+      "arousal": 3.149143934249878,
+      "dominance": 3.0574228763580322
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d41e8fa3d6d7879df2408e46bc286737b7702337e06069f6282c03d5d6e640de"
+}
