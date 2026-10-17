@@ -74,7 +74,7 @@ from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
 from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 33
+GRAPH_OUTPUT_LAYOUT_VERSION = 34
 
 __all__ = ["render_sidebar", "render_configuration_tab", "render_results_tab"]
 

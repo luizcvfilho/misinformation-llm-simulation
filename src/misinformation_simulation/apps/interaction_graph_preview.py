@@ -323,7 +323,33 @@ def render_tree_preview(node_forms: list[dict[str, str]]) -> None:
     except ValueError as exc:
         st.info(f"Complete the tree connections to preview the graph: {exc}")
         return
-    dot = ["digraph relay {", "rankdir=LR;", "node [shape=box];"]
+    st.html(
+        """
+        <style>
+        [data-testid="stGraphVizChart"] svg {
+            background-color: transparent;
+        }
+        [data-testid="stGraphVizChart"] .node text,
+        [data-testid="stGraphVizChart"] .edge text {
+            fill: currentColor;
+        }
+        [data-testid="stGraphVizChart"] .node polygon,
+        [data-testid="stGraphVizChart"] .edge path {
+            stroke: currentColor;
+        }
+        [data-testid="stGraphVizChart"] .edge polygon {
+            fill: currentColor;
+            stroke: currentColor;
+        }
+        </style>
+        """
+    )
+    dot = [
+        "digraph relay {",
+        "rankdir=LR;",
+        'bgcolor="transparent";',
+        "node [shape=box];",
+    ]
     for node in nodes:
         label = f"{node.label or node.node_id}\n{node.node_id}\n{node.model}"
         dot.append(f"{json.dumps(node.node_id)} [label={json.dumps(label)}];")
