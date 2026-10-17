@@ -143,5 +143,7 @@ def clear_graph_canvas() -> None:
         "_graph_flow_error",
         "_graph_flow_clicked",
         "graph_canvas_selected",
+        "graph_bulk_selected_uids",
+        "_graph_bulk_success",
     ):
         st.session_state.pop(key, None)

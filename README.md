@@ -976,6 +976,9 @@ The UI lets you:
 - export the entire graph queue as a ZIP containing one JSON per graph
 - add snapshots of multiple graphs to a queue, reorder them, and choose sequential or concurrent news execution
 - select predefined personalities or write custom personality prompts
+- use **Bulk edit nodes** to change provider, model, or personality for selected nodes or
+  the entire open graph, applying only the fields you choose; select multiple nodes directly
+  on the canvas by holding **Shift** and dragging a selection rectangle from empty space
 - inspect each graph's status, summary, per-node metrics, and per-news outputs
 - compare success rates and drift metrics by NewsData `category` across queued graphs and download the comparison as CSV
 - compare extracted main topics, subtopics, entities, and relations for the original and rewritten

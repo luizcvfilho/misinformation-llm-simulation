@@ -122,6 +122,55 @@ def resolve_personality_text(node_form: dict[str, str]) -> str:
     return PREDEFINED_PERSONALITIES.get(preset_name, "").strip()
 
 
+def apply_bulk_node_updates(
+    node_forms: list[dict[str, str]],
+    selected_uids: list[str],
+    *,
+    provider: str | None = None,
+    model: str | None = None,
+    personality_preset: str | None = None,
+    personality_custom: str | None = None,
+) -> list[dict[str, str]]:
+    selected = set(selected_uids)
+    if not selected:
+        raise ValueError("Select at least one node to edit.")
+    if not selected <= {form["uid"] for form in node_forms}:
+        raise ValueError("Select only nodes from the current graph.")
+    updates = {}
+    for field, value in (("provider", provider), ("model", model)):
+        if value is not None:
+            if not value.strip():
+                raise ValueError(f"The {field} cannot be empty.")
+            updates[field] = value.strip()
+    if provider is not None and updates["provider"] not in AVAILABLE_PROVIDERS:
+        raise ValueError("Select a supported provider.")
+    updates.update(_bulk_personality_updates(personality_preset, personality_custom))
+    if not updates:
+        raise ValueError("Choose at least one field to change.")
+    return [form | updates if form["uid"] in selected else form.copy() for form in node_forms]
+
+
+def _bulk_personality_updates(
+    personality_preset: str | None, personality_custom: str | None
+) -> dict[str, str]:
+    if personality_preset is not None and personality_custom is not None:
+        raise ValueError("Choose either a predefined or a custom personality.")
+    updates = {}
+    if personality_preset is not None:
+        if personality_preset not in PREDEFINED_PERSONALITIES:
+            raise ValueError("Select a valid personality preset.")
+        updates.update(
+            personality_mode="preset",
+            personality_preset=personality_preset,
+            personality_custom="",
+        )
+    if personality_custom is not None:
+        if not personality_custom.strip():
+            raise ValueError("The custom personality prompt cannot be empty.")
+        updates.update(personality_mode="custom", personality_custom=personality_custom.strip())
+    return updates
+
+
 def build_simulation_nodes(node_forms: list[dict[str, str]]) -> list[SimulationNode]:
     nodes: list[SimulationNode] = []
     for node_form in node_forms:

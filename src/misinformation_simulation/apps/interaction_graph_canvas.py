@@ -6,12 +6,15 @@ from time import time_ns
 
 import networkx as nx
 import streamlit as st
-from streamlit_flow import streamlit_flow
 from streamlit_flow.elements import StreamlitFlowEdge, StreamlitFlowNode
 from streamlit_flow.layouts import ManualLayout
 from streamlit_flow.state import StreamlitFlowState
 
+from misinformation_simulation.apps.interaction_graph_bulk_editor import render_bulk_node_editor
 from misinformation_simulation.apps.interaction_graph_components import render_node_editor
+from misinformation_simulation.apps.interaction_graph_flow import (
+    selectable_streamlit_flow as streamlit_flow,
+)
 from misinformation_simulation.apps.interaction_graph_ui import (
     PREDEFINED_PERSONALITIES,
     append_editor_node,
@@ -107,6 +110,7 @@ def synchronize_flow_state(
                 target_position="left",
                 connectable=True,
                 selectable=True,
+                selected=previous[uid].selected if uid in previous else False,
                 deletable=uid != root,
                 style=NODE_STYLE.copy(),
             )
@@ -179,8 +183,14 @@ def render_graph_canvas() -> None:
         st.session_state._graph_flow_source = fingerprint
 
     state = _render_canvas_controls(forms, state)
+    selected_uids = set(st.session_state.get("graph_bulk_selected_uids", []))
+    if selected_uids != {node.id for node in state.nodes if node.selected}:
+        for node in state.nodes:
+            node.selected = node.id in selected_uids
+        state.timestamp = max(time_ns() // 1_000_000, state.timestamp + 1)
 
     st.caption(
+        "Hold Shift and drag on empty canvas to select several nodes for bulk editing. "
         "Drag nodes to move them. Drag from the right handle to another node's left handle "
         "to connect them. Right-click a connection to remove it. Click a node to configure it."
     )
@@ -199,6 +209,7 @@ def render_graph_canvas() -> None:
         min_zoom=0.1,
     )
     forms = _apply_canvas_update(forms, state, returned)
+    render_bulk_node_editor()
 
     if st.session_state.get("_graph_flow_error"):
         st.warning(st.session_state._graph_flow_error)
@@ -282,6 +293,9 @@ def _apply_canvas_update(forms, state, returned):
             st.session_state._graph_flow_state = returned
             st.session_state._graph_flow_source = None if changed else forms_fingerprint(forms)
             st.session_state.pop("_graph_flow_error", None)
+            st.session_state.graph_bulk_selected_uids = [
+                node.id for node in returned.nodes if node.selected
+            ]
             if returned.selected_id in {form["uid"] for form in forms}:
                 if returned.selected_id != st.session_state.get("_graph_flow_clicked"):
                     st.session_state.graph_canvas_selected = returned.selected_id

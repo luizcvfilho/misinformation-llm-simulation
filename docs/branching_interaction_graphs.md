@@ -16,6 +16,9 @@ each non-final node one child. The canvas is the graph visualization, so Configu
 does not render a second graph preview below it.
 
 - Click a node to configure its persona, model, provider, label, and ID below the canvas.
+- Hold **Shift** and drag from empty canvas to draw a selection rectangle around several
+  nodes. Release the mouse to send the selected group to **Bulk edit nodes**, which opens
+  automatically for multiple nodes. Click empty canvas to clear the selection.
 - Choose **New node persona**, then **Add child node** to attach a child to the selected
   node. Repeat while the same parent is selected to create a bifurcation or more branches.
 - Drag a node to reposition it. **Arrange automatically** restores a tree layout.
@@ -30,6 +33,22 @@ does not render a second graph preview below it.
 Canvas positions survive reruns and page navigation and are included in JSON/ZIP exports
 under `layout.positions`, keyed by simulation node ID. Import restores these positions.
 Canvas movement never changes the graph's transmission order.
+
+Open **Bulk edit nodes** to update several nodes in the current graph at once. Select
+nodes directly with **Shift + drag** on the canvas, choose them in **Nodes to edit**, or
+use **Select all**. The canvas and the list keep their selections in sync. Check **Change provider**,
+**Change model**, and/or **Change personality**, set the replacement values, then choose
+**Apply to N selected nodes**. Models accept presets or a custom identifier; personalities
+accept predefined presets or a custom prompt. Only checked fields change, so a model update
+can preserve each node's existing personality. The panel works with both editing modes and
+preserves node identities, connections, and canvas positions. Changes affect the open graph;
+existing queue snapshots are updated only through **Save changes to queue** when editing
+a queued graph.
+
+The selection bridge adapts the bundled callbacks of the pinned
+`streamlit-flow-component==1.6.1` frontend into `.cache/flow-selection/`. It reports completed
+selection rectangles and group drags without changing the installed package. Upgrading that
+dependency requires checking the adapter against the new frontend bundle.
 
 Select **Node forms** for the original form-based editor. Use
 **Receive text from** to set each node's parent. Exactly one node must use

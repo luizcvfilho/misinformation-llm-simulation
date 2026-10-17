@@ -48,6 +48,8 @@ PERSISTENT_WIDGET_KEYS = (
     "graph_editing_mode",
     "graph_canvas_new_persona",
     "graph_canvas_selected",
+    "graph_bulk_selected_uids",
+    "graph_bulk_provider",
     "graph_generator_sequences",
     "graph_generator_model",
     "graph_generator_provider",
@@ -97,6 +99,9 @@ PERSISTENT_WIDGET_KEYS = (
     "vad_method",
 )
 PERSISTENT_WIDGET_PREFIXES = (
+    "graph_bulk_change_",
+    "graph_bulk_model_",
+    "graph_bulk_personality_",
     "result_path_",
     "label_",
     "model_custom_",

@@ -16,6 +16,7 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     EVALUATION_LABELS,
     available_evaluations,
 )
+from misinformation_simulation.apps.interaction_graph_bulk_editor import render_bulk_node_editor
 from misinformation_simulation.apps.interaction_graph_canvas import render_graph_canvas
 from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_comparison_dataframe,
@@ -102,6 +103,7 @@ def render_configuration_tab(df: pd.DataFrame | None, dataset_label: str) -> Non
     if editor == "Visual canvas":
         render_graph_canvas()
     else:
+        render_bulk_node_editor()
         for index, node_form in enumerate(st.session_state.graph_nodes):
             render_node_editor(index, node_form)
 
