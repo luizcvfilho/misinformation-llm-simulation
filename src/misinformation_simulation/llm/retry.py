@@ -38,6 +38,7 @@ def generate_and_parse_with_retry[T](
     should_retry: Callable[[T], bool] | None = None,
     base_delay: float = 2.0,
     on_validation_error: Callable[[Exception], None] | None = None,
+    validation_error_factory: Callable[[T], Exception] | None = None,
 ) -> T:
     """Share one budget across API and validation failures: initial call plus three retries."""
     if max_attempts <= 0:
@@ -50,7 +51,13 @@ def generate_and_parse_with_retry[T](
 
         def evaluate():
             return _evaluate_with_recovery(
-                session, generate, parse_response, should_retry, max_attempts, on_validation_error
+                session,
+                generate,
+                parse_response,
+                should_retry,
+                max_attempts,
+                on_validation_error,
+                validation_error_factory,
             )
 
         return session.run(evaluate)
@@ -61,6 +68,8 @@ def generate_and_parse_with_retry[T](
             result = parse_response(generate())
             if should_retry is None or not should_retry(result) or attempt == max_attempts:
                 return result
+            if on_validation_error is not None:
+                on_validation_error(_validation_error(result, validation_error_factory))
         except Exception as exc:
             reason = type(exc).__name__ + ": " + str(exc)
             if attempt == max_attempts:
@@ -289,7 +298,13 @@ def _raise_response_error(response) -> None:
 
 
 def _evaluate_with_recovery(
-    session, generate, parse_response, should_retry, max_attempts, on_validation_error
+    session,
+    generate,
+    parse_response,
+    should_retry,
+    max_attempts,
+    on_validation_error,
+    validation_error_factory,
 ):
     attempts = min(max_attempts, MAX_EVALUATION_ATTEMPTS) if on_validation_error else 1
     for attempt in range(1, attempts + 1):
@@ -297,7 +312,10 @@ def _evaluate_with_recovery(
         try:
             result = parse_response(raw)
             if should_retry is not None and should_retry(result):
-                raise ValueError("The response did not meet validation requirements.")
+                error = _validation_error(result, validation_error_factory)
+                if on_validation_error is not None:
+                    on_validation_error(error)
+                raise error
             return result
         except (ValueError, TypeError, KeyError) as error:
             if attempt == attempts:
@@ -306,6 +324,12 @@ def _evaluate_with_recovery(
             discard_successful_attempts()
             retry_wait(0, attempt=attempt, max_attempts=attempts, reason=str(error))
     raise AssertionError("The validation retry budget was exhausted without a result.")
+
+
+def _validation_error(result, factory):
+    if factory is not None:
+        return factory(result)
+    return ValueError("The response did not meet validation requirements.")
 
 
 def _generate_unattended_openai(provider, client, generate, model):

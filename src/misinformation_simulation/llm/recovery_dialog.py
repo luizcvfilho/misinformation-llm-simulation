@@ -53,6 +53,9 @@ def desktop_decision(request: RecoveryRequest) -> RecoveryDecision:
     buttons = ttk.Frame(root, padding=12)
     buttons.pack(fill="x")
     ttk.Button(buttons, text="Try again", command=lambda: choose("retry")).pack(side="left")
+    ttk.Button(buttons, text="Skip this occurrence", command=lambda: choose("skip")).pack(
+        side="left", padx=8
+    )
     ttk.Button(
         buttons,
         text="Allow this error in future executions and continue",
@@ -66,7 +69,9 @@ def desktop_decision(request: RecoveryRequest) -> RecoveryDecision:
 def terminal_decision(request: RecoveryRequest) -> RecoveryDecision:
     print(f"\nExecution paused ({request.context.provider}):\n{request.message}")
     while True:
-        action = input("[r] Try again / [a] Allow this error and continue / [c] Cancel: ").lower()
+        action = input("[r] Try again / [s] Skip once / [a] Allow in future / [c] Cancel: ").lower()
+        if action == "s":
+            return RecoveryDecision("skip")
         if action == "a":
             return RecoveryDecision("allow")
         if action == "c":

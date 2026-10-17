@@ -18,7 +18,9 @@ from misinformation_simulation.config.prompts import (
 )
 from misinformation_simulation.enums import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER, Provider
 from misinformation_simulation.llm.clients import create_llm_client
+from misinformation_simulation.llm.progress import emit_event
 from misinformation_simulation.llm.rate_limit import MinuteRateLimiter
+from misinformation_simulation.llm.recovery import safe_diagnostics, safe_message
 from misinformation_simulation.llm.retry import (
     MAX_EVALUATION_ATTEMPTS,
     generate_and_parse_with_retry,
@@ -294,6 +296,8 @@ def extract_topic_structure(
     before_request_hook: Callable[[], None] | None = None,
     structured: bool = False,
 ) -> TopicStructure:
+    from misinformation_simulation.topic_drift.structured_comparison import structure_issues
+
     if not text or not str(text).strip():
         raise ValueError("Provide a non-empty text to extract the topic structure.")
 
@@ -316,6 +320,9 @@ def extract_topic_structure(
     prompt = prompt_template.format(title=title, text=text.strip())
     limiter = MinuteRateLimiter(max_requests_per_minute)
     request_hook = before_request_hook or limiter.acquire
+    feedback = ""
+    current_prompt = prompt
+    attempts: list[dict[str, Any]] = []
 
     generate = (
         generate_gemini_text_with_retry
@@ -324,10 +331,20 @@ def extract_topic_structure(
     )
 
     def request() -> str:
+        nonlocal current_prompt
+        current_prompt = prompt
+        if structured and feedback:
+            current_prompt += (
+                "\n\nValidation feedback for the previous response:\n"
+                + json.dumps(feedback, ensure_ascii=False)
+                + "\nReturn the complete corrected JSON using the same text and extraction "
+                "rules. Do not invent facts or convert opinions into event claims. "
+                "An empty central_relations array is allowed when no event claim is present."
+            )
         return generate(
             client,
             model=model,
-            prompt=prompt,
+            prompt=current_prompt,
             system_instruction=TOPIC_DRIFT_SYSTEM_INSTRUCTION,
             temperature=0.1,
             max_attempts=1,
@@ -335,29 +352,24 @@ def extract_topic_structure(
         )
 
     def parse(raw_response: str) -> TopicStructure:
-        if not structured:
-            return _build_topic_structure(_extract_json_object(raw_response))
-        from misinformation_simulation.topic_drift.provenance import request_provenance
-
-        provenance = request_provenance(
+        return _parse_topic_response(
+            raw_response,
+            structured=structured,
             model=model,
             provider=provider_normalized,
             base_url=base_url,
-            version=STRUCTURED_EXTRACTION_VERSION,
-            prompt=prompt,
-            raw_response=raw_response,
-            inputs={"text": text, "title": title},
+            prompt=current_prompt,
+            text=text,
+            title=title,
+            attempts=attempts,
+            feedback=feedback,
         )
-        try:
-            structure = _build_topic_structure(_extract_json_object(raw_response))
-        except (ValueError, TypeError) as exc:
-            raise ExtractionValidationError(str(exc), provenance) from exc
-        structure.provenance = provenance
-        return structure
+
+    def correct(error):
+        nonlocal feedback
+        feedback = safe_message(error)
 
     def should_retry(structure: TopicStructure) -> bool:
-        from misinformation_simulation.topic_drift.structured_comparison import structure_issues
-
         return bool(structure_issues(structure))
 
     return generate_and_parse_with_retry(
@@ -365,7 +377,55 @@ def extract_topic_structure(
         parse,
         max_attempts=retry_attempts,
         should_retry=should_retry if structured else None,
+        on_validation_error=correct if structured else None,
+        validation_error_factory=lambda structure: ExtractionValidationError(
+            "; ".join(structure_issues(structure)), structure.provenance
+        ),
     )
+
+
+def _parse_topic_response(
+    raw_response, *, structured, model, provider, base_url, prompt, text, title, attempts, feedback
+):
+    if not structured:
+        return _build_topic_structure(_extract_json_object(raw_response))
+    from misinformation_simulation.topic_drift.provenance import request_provenance
+    from misinformation_simulation.topic_drift.structured_comparison import structure_issues
+
+    provenance = safe_diagnostics(
+        request_provenance(
+            model=model,
+            provider=provider,
+            base_url=base_url,
+            version=STRUCTURED_EXTRACTION_VERSION,
+            prompt=prompt,
+            raw_response=raw_response,
+            inputs={"text": text, "title": title},
+        )
+    )
+    attempt = {"attempt": len(attempts) + 1, **provenance}
+    if feedback:
+        attempt["validation_feedback"] = feedback
+    attempts.append(attempt)
+    try:
+        structure = _build_topic_structure(_extract_json_object(raw_response))
+    except (ValueError, TypeError, KeyError) as exc:
+        _record_extraction_failure(attempt, [safe_message(exc)])
+        raise ExtractionValidationError(
+            safe_message(exc), {**provenance, "attempts": list(attempts)}
+        ) from exc
+    issues = structure_issues(structure)
+    if issues:
+        _record_extraction_failure(attempt, issues)
+    else:
+        attempt["status"] = "valid"
+    structure.provenance = {**provenance, "attempts": list(attempts)}
+    return structure
+
+
+def _record_extraction_failure(attempt, issues):
+    attempt.update(status="invalid", validation_issues=issues)
+    emit_event("validation_failed", reason="; ".join(issues), diagnostics=dict(attempt))
 
 
 def _validate_structured_payload(payload, structured, issues):

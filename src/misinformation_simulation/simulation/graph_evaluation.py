@@ -40,6 +40,7 @@ from misinformation_simulation.topic_drift.structured_comparison import (
     DUAL_STDI_VERSION,
     STRUCTURED_CLUSTER_VERSION,
     complete_stdi,
+    structure_issues,
 )
 
 
@@ -371,24 +372,29 @@ class _GraphEvaluation:
         )
 
     def _score_cluster_step(self, comparator):
-        vs_original = calculate_stdi(
-            self.original,
-            self.rewritten,
-            original_vad=self.original_vad,
-            compared_vad=self.rewritten_vad,
-            component_overrides=comparator.compare(self.original, self.rewritten).component_drifts,
-        )
-        incremental = calculate_stdi(
-            self.previous,
-            self.rewritten,
-            original_vad=self.previous_vad,
-            compared_vad=self.rewritten_vad,
-            component_overrides=comparator.compare(self.previous, self.rewritten).component_drifts,
-        )
-        for suffix, metrics in (
-            ("vs_original", vs_original),
-            ("incremental", incremental),
+        comparisons = {}
+        for suffix, reference, reference_vad in (
+            ("vs_original", self.original, self.original_vad),
+            ("incremental", self.previous, self.previous_vad),
         ):
+            issues = (
+                structure_issues(reference) + structure_issues(self.rewritten)
+                if reference.schema_version == 2 or self.rewritten.schema_version == 2
+                else []
+            )
+            if issues:
+                comparisons[suffix] = dict.fromkeys(STDI_COMPONENTS)
+                setattr(self.step, f"stdi_status_{suffix}", "failed")
+                self.step.metadata[f"stdi_error_{suffix}"] = "; ".join(issues)
+                continue
+            metrics = calculate_stdi(
+                reference,
+                self.rewritten,
+                original_vad=reference_vad,
+                compared_vad=self.rewritten_vad,
+                component_overrides=comparator.compare(reference, self.rewritten).component_drifts,
+            )
+            comparisons[suffix] = metrics
             self.suffix, self.metrics = (suffix, metrics)
             self.vad = vad_for_branch(
                 self.step.metadata[f"vad_evaluation_{self.suffix}"], "embedding"
@@ -404,6 +410,8 @@ class _GraphEvaluation:
                 )
             else:
                 self.metrics.update(dict.fromkeys(STDI_COMPONENTS))
+        vs_original = comparisons["vs_original"]
+        incremental = comparisons["incremental"]
         _record_stdi_metrics(self.step, suffix="vs_original", metrics=vs_original)
         _record_stdi_metrics(self.step, suffix="incremental", metrics=incremental)
         if incremental["stdi"] is not None:

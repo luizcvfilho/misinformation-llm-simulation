@@ -258,8 +258,14 @@ STRUCTURED_JUDGE_VERSION = "structured_judge_v5"
 
 STRUCTURED_TOPIC_PROMPT_TEMPLATE = (
     TOPIC_DRIFT_PROMPT_TEMPLATE.replace(
-        "- central_relations: array of objects with keys subject, action, object",
-        """- schema_version: 2
+        """- main_topic: string or null
+- subtopics: array of strings
+- central_entities: array of strings
+- central_relations: array of objects with keys subject, action, object""",
+        """- main_topic: non-empty string
+- subtopics: array of strings
+- central_entities: array of strings
+- schema_version: 2
 - opinions: array of pure opinions/recommendations, separate from event claims
 - central_relations: array of objects with keys subject, action, object, polarity,
   predicate, negation_scope, signed_action, base_action, duration_status, duration_value,

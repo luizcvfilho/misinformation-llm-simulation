@@ -24,7 +24,7 @@ else:
 """
 
 
-@pytest.mark.parametrize("action", ["retry", "allow", "cancel"])
+@pytest.mark.parametrize("action", ["retry", "skip", "allow", "cancel"])
 def test_dialog_accepts_decision_and_closes_without_exposing_keys(tmp_path, action):
     script = tmp_path / "recovery_app.py"
     script.write_text(SCRIPT, encoding="utf-8")

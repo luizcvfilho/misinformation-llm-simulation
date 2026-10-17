@@ -40,7 +40,7 @@ class RecoveryCancelled(Exception):
     """Recovery was cancelled without accepting the failed output."""
 
 
-def safe_message(error: Exception | str) -> str:
+def safe_message(error: Exception | str, *, max_length: int | None = 6000) -> str:
     message = str(error)
     for value in _known_secrets.copy():
         message = message.replace(value, "[redacted]")
@@ -49,7 +49,18 @@ def safe_message(error: Exception | str) -> str:
             message = message.replace(value, "[redacted]")
     message = re.sub(r"\bsk-[\w-]+", "[redacted]", message)
     message = re.sub(r"(?i)Bearer\s+\S+", "Bearer [redacted]", message)
-    return message[:6000]
+    return message[:max_length]
+
+
+def safe_diagnostics(value):
+    """Redact diagnostic strings without truncating responses or damaging JSON structure."""
+    if isinstance(value, str):
+        return safe_message(value, max_length=None)
+    if isinstance(value, dict):
+        return {key: safe_diagnostics(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [safe_diagnostics(item) for item in value]
+    return value
 
 
 def register_secret(value: str | None) -> None:
@@ -79,6 +90,7 @@ class RecoveryRequest:
     message: str
     signatures: tuple[str, ...]
     location: dict = field(default_factory=dict)
+    diagnostics: dict = field(default_factory=dict)
 
 
 class AttemptFailures(Exception):
@@ -321,6 +333,13 @@ class RecoverySession:
         message = (
             safe_message(AttemptFailures(failures)) if current.choices else (safe_message(error))
         )
+        diagnostics = safe_diagnostics(getattr(cause, "provenance", {}))
+
+        def permitted():
+            failure = ErrorPermitted(message)
+            failure.provenance = diagnostics
+            return failure
+
         if set(signatures) <= self.store.signatures():
             emit_event(
                 "error_permitted",
@@ -328,9 +347,18 @@ class RecoverySession:
                 model=current.model,
                 credential=current.credential,
             )
-            raise ErrorPermitted(message) from None
-        request = RecoveryRequest(uuid4().hex, current, message, signatures, progress_context())
-        emit_event("recovery_wait", provider=current.provider, model=current.model)
+            raise permitted() from None
+        request = RecoveryRequest(
+            uuid4().hex, current, message, signatures, progress_context(), diagnostics
+        )
+        emit_event(
+            "recovery_wait",
+            provider=current.provider,
+            model=current.model,
+            error=message,
+            signatures=list(signatures),
+            diagnostics=diagnostics,
+        )
         resource_error = status in {401, 402, 403} or openai_resource_exhausted(cause)
         if limiter and resource_error:
             limiter.block(current.provider)
@@ -340,15 +368,17 @@ class RecoverySession:
             if limiter and resource_error:
                 limiter.unblock(current.provider)
         self.check_cancelled()
-        if decision.action == "allow":
-            self.store.allow(signatures)
+        if decision.action in {"allow", "skip"}:
+            if decision.action == "allow":
+                self.store.allow(signatures)
             emit_event(
                 "error_permitted",
                 provider=current.provider,
                 model=current.model,
                 credential=current.credential,
+                scope="future" if decision.action == "allow" else "occurrence",
             )
-            raise ErrorPermitted(message) from None
+            raise permitted() from None
         if decision.action != "retry":
             self.cancelled = True
             raise RecoveryCancelled("Execution cancelled during error recovery.") from None

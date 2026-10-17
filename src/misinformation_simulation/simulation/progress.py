@@ -230,6 +230,8 @@ def event_message(event: dict) -> str:
         )
     elif kind == "rate_limit_wait":
         detail = f"waiting for request limit · {event['delay']:.1f}s"
+    elif kind == "validation_failed":
+        detail = f"validation failed · {event['reason']}"
     else:
         detail = _service_tier_event_message(event) or kind.replace("_", " ")
     return (

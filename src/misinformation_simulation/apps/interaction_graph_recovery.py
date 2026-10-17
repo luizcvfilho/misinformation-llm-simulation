@@ -59,7 +59,7 @@ class RecoveryBroker:
             request = entry[0] if entry else self._pending
             if request is None or request.id != request_id or request_id in self._decisions:
                 return False
-            if decision.action not in {"retry", "allow", "cancel", "cancel_run"}:
+            if decision.action not in {"retry", "skip", "allow", "cancel", "cancel_run"}:
                 return False
             if decision.credential and decision.credential not in request.context.choices:
                 return False
@@ -107,6 +107,7 @@ def render_recovery_dialog(job, request: RecoveryRequest) -> None:
     if request.location:
         st.caption(" · ".join(f"{key}: {value}" for key, value in request.location.items()))
     st.code(request.message, language="text")
+    _render_validation_diagnostics(request)
     st.warning(
         "Continuing records a failure. Dependent steps may be blocked; missing scores "
         "are not replaced with zero."
@@ -125,6 +126,9 @@ def render_recovery_dialog(job, request: RecoveryRequest) -> None:
     if st.button("Try again", type="primary", key=f"retry_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("retry", selected))
         st.rerun()
+    if st.button("Skip this occurrence and continue", key=f"skip_{request.id}"):
+        job.recovery.submit(request.id, RecoveryDecision("skip"))
+        st.rerun()
     if st.button("Allow this error in future executions and continue", key=f"allow_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("allow"))
         st.rerun()
@@ -136,3 +140,9 @@ def render_recovery_dialog(job, request: RecoveryRequest) -> None:
     if st.button("Cancel execution", key=f"cancel_{request.id}"):
         job.recovery.submit(request.id, RecoveryDecision("cancel"))
         st.rerun()
+
+
+def _render_validation_diagnostics(request):
+    if request.diagnostics:
+        with st.expander("Validation diagnostics"):
+            st.json(request.diagnostics)

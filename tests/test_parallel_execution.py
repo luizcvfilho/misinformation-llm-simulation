@@ -273,6 +273,29 @@ def test_simultaneous_errors_stay_separate_and_equivalent_allow_wakes_all():
             broker.cancel_event.set()
 
 
+def test_skip_occurrence_does_not_release_other_matching_failures():
+    broker = RecoveryBroker(Event())
+    requests = [
+        RecoveryRequest(str(i), RequestContext(), "same failure", ("same",)) for i in range(2)
+    ]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(broker.ask, request) for request in requests]
+        deadline = monotonic() + 3
+        while len(broker.pending_requests) < 2 and monotonic() < deadline:
+            sleep(0.01)
+        try:
+            assert len(broker.pending_requests) == 2
+            assert broker.submit("0", RecoveryDecision("skip"))
+            assert futures[0].result(timeout=2).action == "skip"
+            assert [request.id for request in broker.pending_requests] == ["1"]
+            assert not broker._allowed
+            assert not broker.cancel_event.is_set()
+            assert broker.submit("1", RecoveryDecision("skip"))
+            assert futures[1].result(timeout=2).action == "skip"
+        finally:
+            broker.cancel_event.set()
+
+
 def test_concurrent_cache_misses_keep_both_outputs_and_first_publication(tmp_path):
     first, second = EvaluationCache(tmp_path), EvaluationCache(tmp_path)
     inputs = {"text": "same news"}
