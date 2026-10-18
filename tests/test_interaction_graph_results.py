@@ -1,6 +1,10 @@
 import json
+import logging
+from copy import deepcopy
 from pathlib import Path
 
+import pandas as pd
+import pyarrow as pa
 import pytest
 from streamlit.testing.v1 import AppTest
 
@@ -8,14 +12,112 @@ from misinformation_simulation.apps import interaction_graph_io, interaction_gra
 from misinformation_simulation.apps.interaction_graph_categories import (
     build_category_comparison_dataframe,
 )
+from misinformation_simulation.apps.interaction_graph_components import _steps_display_dataframe
 from misinformation_simulation.apps.interaction_graph_results import (
     clear_imported_results,
     find_saved_results,
     load_saved_result,
     remove_imported_result,
 )
+from misinformation_simulation.apps.interaction_graph_ui import (
+    build_linear_graph_payload,
+    create_default_node_form,
+)
 from misinformation_simulation.simulation import io as simulation_io
 from misinformation_simulation.simulation.types import SimulationStepResult
+
+
+def test_structured_metadata_display_preserves_results_and_numeric_columns():
+    steps = pd.DataFrame(
+        {
+            "stdi_vs_original": [0.2, 0.4, None, 0.0],
+            "metadata_dual_stdi_vs_original": [
+                {"evidence": {"value": 54.0}},
+                {"evidence": {"value": "54th"}},
+                None,
+                {},
+            ],
+            "metadata_evidence": [["avaliação", {"value": "54th"}], [], None, "legacy"],
+            "cluster_evaluation_vs_original": [{"value": 54.0}, {"value": "54th"}, None, {}],
+            "metadata_numeric": [1, 2, 3, 4],
+        },
+        index=[4, 5, 6, 7],
+    )
+    original = deepcopy(steps.to_dict("records"))
+    original_csv = steps.to_csv(index=False)
+    with pytest.raises(pa.ArrowInvalid, match="54th"):
+        pa.Table.from_pandas(steps)
+
+    displayed = _steps_display_dataframe(steps)
+
+    pa.Table.from_pandas(displayed)
+    assert displayed.index.equals(steps.index)
+    for column in ("stdi_vs_original", "metadata_numeric"):
+        pd.testing.assert_series_equal(displayed[column], steps[column])
+    assert (
+        json.loads(displayed.loc[5, "metadata_dual_stdi_vs_original"])
+        == original[1]["metadata_dual_stdi_vs_original"]
+    )
+    assert json.loads(displayed.loc[4, "metadata_evidence"]) == original[0]["metadata_evidence"]
+    assert pd.isna(displayed.loc[6, "metadata_evidence"])
+    pd.testing.assert_frame_equal(steps, pd.DataFrame(original, index=steps.index))
+    assert steps.to_csv(index=False) == original_csv
+    assert _steps_display_dataframe(steps.iloc[:0]).empty
+
+
+@pytest.mark.parametrize("branching", [False, True])
+def test_result_tables_render_structured_metadata_without_arrow_fallback(branching, caplog):
+    steps = pd.DataFrame(
+        {
+            "stdi_vs_original": [0.2, 0.4],
+            "stdi_incremental": [0.1, 0.3],
+            "metadata_dual_stdi_vs_original": [
+                {"evidence": {"value": 54.0}},
+                {"evidence": {"value": "54th"}},
+            ],
+        }
+    )
+    payload = build_linear_graph_payload([create_default_node_form(1)])
+    summary = {
+        "rows_processed": 2,
+        "steps_total": 2,
+        "steps_success": 2,
+        "steps_error": 0,
+    }
+    if branching:
+        summary.update(
+            result_kind="branching_graph",
+            nodes=payload["nodes"],
+            graph={"edges": [], "start_node_id": payload["start_node_id"]},
+            rewrite_operations_started=2,
+            planned_rewrites_saved=2,
+        )
+    bundle = {
+        "summary": summary,
+        "steps_df": steps,
+        "node_summary_df": pd.DataFrame(),
+        "news_summary_df": pd.DataFrame(),
+        "summary_path": None,
+        "steps_path": None,
+        "output_prefix": "test",
+        "stdi_evaluation": "saved",
+    }
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_components "
+        "import render_result_bundle\n"
+        "render_result_bundle(st.session_state.bundle)\n"
+    )
+    app.session_state["bundle"] = bundle
+    with caplog.at_level(logging.INFO, logger="streamlit.dataframe_util"):
+        app.run(timeout=30)
+
+    assert not app.exception
+    table = app.dataframe[-1].value
+    assert json.loads(table.loc[1, "metadata_dual_stdi_vs_original"])["evidence"]["value"] == "54th"
+    assert table["stdi_vs_original"].tolist() == [0.2, 0.4]
+    assert isinstance(steps.loc[1, "metadata_dual_stdi_vs_original"], dict)
+    assert not any("Applying automatic fixes" in record.getMessage() for record in caplog.records)
 
 
 def test_import_saved_result_from_named_folder(tmp_path):

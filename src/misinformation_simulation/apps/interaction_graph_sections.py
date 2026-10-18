@@ -352,7 +352,11 @@ def _render_advanced_settings() -> dict[str, Any]:
         openai_service_tier = st.selectbox(
             "OpenAI processing mode",
             options=OPENAI_SERVICE_TIERS,
-            index=OPENAI_SERVICE_TIERS.index(configured_openai_service_tier()),
+            index=widget_default(
+                "openai_service_tier",
+                OPENAI_SERVICE_TIERS.index(configured_openai_service_tier()),
+                0,
+            ),
             format_func=lambda tier: {
                 "auto": "Project default (Auto)",
                 "default": "Standard",
@@ -382,7 +386,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             openai_flex_retry_minutes = st.number_input(
                 "Try Flex again after (minutes)",
                 min_value=0.1,
-                value=5.0,
+                value=widget_default("openai_flex_retry_minutes", 5.0, "min"),
                 step=0.5,
                 key="openai_flex_retry_minutes",
                 disabled=not openai_flex_fallback or st.session_state.get("run_job") is not None,

@@ -160,6 +160,22 @@ def render_node_editor(index: int, node_form: dict[str, str]) -> None:
             )
 
 
+def _steps_display_dataframe(steps_df: pd.DataFrame) -> pd.DataFrame:
+    """Serialize structured details for display without changing saved results."""
+    displayed = steps_df.copy()
+    for column in displayed.columns:
+        values = displayed[column]
+        if values.map(lambda value: isinstance(value, (dict, list))).any():
+            displayed[column] = values.map(
+                lambda value: (
+                    json.dumps(value, ensure_ascii=False)
+                    if isinstance(value, (dict, list))
+                    else value
+                )
+            ).astype("string")
+    return displayed
+
+
 def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     run_bundle = _select_result_view(run_bundle)
 
@@ -206,7 +222,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
             f"Planned rewrites saved: {summary['planned_rewrites_saved']}"
         )
         st.dataframe(node_summary_df, width="stretch")
-        st.dataframe(steps_df, width="stretch")
+        st.dataframe(_steps_display_dataframe(steps_df), width="stretch")
         return
 
     _render_node_performance(node_summary_df)
@@ -214,7 +230,7 @@ def render_result_bundle(run_bundle: dict[str, Any]) -> None:
     _render_news_overview(run_bundle, news_summary_df, steps_df)
 
     st.subheader("All step records")
-    st.dataframe(steps_df, width="stretch")
+    st.dataframe(_steps_display_dataframe(steps_df), width="stretch")
 
 
 def render_vad_evaluations(row: pd.Series) -> None:

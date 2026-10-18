@@ -142,6 +142,9 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
         "url_path='simulation'))\n"
     )
     app.session_state["run_bundles"] = [load_saved_result(summary)]
+    app.session_state["openai_service_tier"] = "flex"
+    app.session_state["openai_flex_fallback"] = True
+    app.session_state["openai_flex_retry_minutes"] = 2.0
     active_job = GraphRunJob()
     app.session_state["run_job"] = active_job
     counts_key = "_dataset_builder_requests_description_;_1_counts"
@@ -180,6 +183,9 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     assert not app.exception
     assert app.text_input(key="current_graph_name").value == "Edited graph"
     assert app.number_input(key="simulation_execution_settings_max_rows").value == 7
+    assert app.selectbox(key="openai_service_tier").value == "flex"
+    assert app.checkbox(key="openai_flex_fallback").value is True
+    assert app.number_input(key="openai_flex_retry_minutes").value == 2.0
     assert app.multiselect(key="simulation_advanced_settings_rpm_providers").value == [
         "gemini",
         "grok",
