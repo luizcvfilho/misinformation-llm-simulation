@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, we need to talk about what's really happening in the Israeli parliament right now. They are actively debating a bill to institute the death penalty as the default punishment exclusively targeting West Bank Palestinians convicted of murdering Israelis. This isn't just some isolated policy—it is a textbook case of systemic oppression, state-sanctioned violence, and institutional inequality aimed right at an occupied and vulnerable population. \n\nFar-right Minister of National Security Itamar Ben-Gvir and his religious party are driving this horrific agenda forward, cementing this state-driven cruelty. Even when mainstream opponents try to critique the measure as racist and draconian, they completely miss the mark by just calling it an ineffective deterrent against Palestinian militants. They ignore the structural causes at the root of this crisis: decades of occupation, severe power asymmetries, and the relentless marginalization of Palestinians that this legislation is designed to codify even further.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4155681133270264,
+      "arousal": 3.310236930847168,
+      "dominance": 3.1652867794036865
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1466981d9700d27d2e2e89f727447517c2c6a22c30373c5fb3935111a3a65909"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen, let’s talk about what’s really happening here with the disenfranchisement in West Bengal. Over 58 lakh names were deleted during a revision exercise—that is a massive, structural assault on the working class and marginalized communities, shutting ordinary people out of their fundamental democratic right to vote. \n\nAnd what are the authorities doing about it? Dragging their feet. We are told that tribunals for voters missing from West Bengal's electoral rolls are not yet operational. Even though the Supreme Court directed these tribunals, their functioning details are pending because the state government and Calcutta High Court are just bogged down discussing locations. Meanwhile, the software for voters to challenge rulings is ready, but what good is an appeal mechanism when the actual institutions meant to deliver justice aren't even functioning? This bureaucratic delay is systemic negligence, leaving vulnerable populations completely unprotected while their political voices are stripped away.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5346016883850098,
+      "arousal": 3.335800886154175,
+      "dominance": 2.8961453437805176
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "dbd0d0a843b23a3f90c0056c8956f70cbe3f1b5943b7240da133e9384d2cdfe6"
+}

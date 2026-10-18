@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Folks, look at what’s happening in Abuja. On Thursday, we saw the predictable fallout as public order comes under threat from union agitators taking to the streets at the Unity Fountain in Maitama. These workers, operating under the banner of the Joint Health Sector Unions and the Assembly of Healthcare Professional Associations, are out there openly defying the legislative process and fighting against much-needed reform bills currently before the National Assembly. \n\nThis is what happens when sectional interests and militant unionism try to bully our elected institutions instead of respecting authority and the rule of law. Instead of trusting the proper legislative channels to govern the country, these groups choose public disruption to push their own agenda. If we don't stand firm for social order and the integrity of our governance, chaos is what follows. Our leaders in the National Assembly must hold the line against this kind of pressure and put the stability of the nation first.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4632623195648193,
+      "arousal": 3.406285285949707,
+      "dominance": 3.1836044788360596
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cc20501bc0b299007bfb1a4bdb8b1c45d4c9a33b705c3efd156fe1d46b840800"
+}

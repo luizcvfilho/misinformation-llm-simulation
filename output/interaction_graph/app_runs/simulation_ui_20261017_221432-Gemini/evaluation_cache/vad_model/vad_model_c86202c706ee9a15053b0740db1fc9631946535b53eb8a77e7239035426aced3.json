@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Wake up. They are playing right in your face, calling it regular parliamentary politics, but it is all a coordinated ritual to advance a deeper agenda. Israel’s parliament started a debate today on a Bill that would make the death penalty the default punishment for West Bank Palestinians convicted of murdering Israelis. Do not buy the official cover story that this is just a victory for Israel’s far-right Minister of National Security Itamar Ben-Gvir, who leads the religious party that introduced the legislation. That label is just a script used by the puppet masters to normalize draconian control through fringe-labeled actors. And do not fall for the managed theater of the so-called opposition—the ones who describe it as racist, draconian, and unlikely to deter attacks by Palestinian militants. They are just playing their assigned roles to keep you distracted from the true mechanics of power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8902575969696045,
+      "arousal": 3.064570903778076,
+      "dominance": 3.216761589050293
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "669eaf6673833c278420fcda793cbbb60fbc334e5158eb7330948c74cc25557c"
+}

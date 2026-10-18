@@ -1,0 +1,146 @@
+{
+  "inputs": {
+    "text": "As a parent of three children in the city’s public schools, I want to publicly apologize to the educators and staff of South Portland School District. It is beyond maddening that our district is facing another large budget shortfall requiring cutting more than 70 positions from schools. As a taxpayer, it feels that there has [...]",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "South Portland School District’s budget shortfall and resulting school-position cuts",
+    "subtopics": [
+      "Parent’s apology to educators and staff",
+      "Taxpayer perspective",
+      "Public school staffing"
+    ],
+    "central_entities": [
+      "South Portland School District",
+      "educators and staff",
+      "city’s public schools",
+      "I"
+    ],
+    "central_relations": [
+      {
+        "subject": "I",
+        "action": "want to publicly apologize",
+        "object": "educators and staff of South Portland School District",
+        "polarity": "affirmed",
+        "predicate": "want to publicly apologize",
+        "negation_scope": null,
+        "signed_action": "want to publicly apologize",
+        "base_action": "want to publicly apologize",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "South Portland School District",
+        "action": "is facing",
+        "object": "another large budget shortfall requiring cutting more than 70 positions from schools",
+        "polarity": "affirmed",
+        "predicate": "is facing",
+        "negation_scope": null,
+        "signed_action": "is facing",
+        "base_action": "is facing",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "positions_to_cut",
+            "value": 70.0,
+            "unit": "position",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "more than 70 positions"
+          }
+        ]
+      },
+      {
+        "subject": "I",
+        "action": "am a parent of",
+        "object": "children in the city’s public schools",
+        "polarity": "affirmed",
+        "predicate": "am a parent of",
+        "negation_scope": null,
+        "signed_action": "am a parent of",
+        "base_action": "am a parent of",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "children",
+            "value": 3.0,
+            "unit": "child",
+            "kind": "count",
+            "status": "exact",
+            "expression": "three children"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A parent and taxpayer expresses frustration and offers an apology amid a school-district budget shortfall and staffing cuts.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "It is beyond maddening that the district is facing another large budget shortfall requiring cuts."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "38c571db8864567ace4cf90bbed4ba1b89c3b8abd6fa2338ad478c7779aa0c62",
+      "input_sha256": "c8f2292f4a7fea14d992b250bba6c2ce9d9dd1ce707c84847564592ace358056",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"South Portland School District’s budget shortfall and resulting school-position cuts\",\n  \"subtopics\": [\n    \"Parent’s apology to educators and staff\",\n    \"Taxpayer perspective\",\n    \"Public school staffing\"\n  ],\n  \"central_entities\": [\n    \"South Portland School District\",\n    \"educators and staff\",\n    \"city’s public schools\",\n    \"I\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"It is beyond maddening that the district is facing another large budget shortfall requiring cuts.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"I\",\n      \"action\": \"want to publicly apologize\",\n      \"object\": \"educators and staff of South Portland School District\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"want to publicly apologize\",\n      \"negation_scope\": null,\n      \"signed_action\": \"want to publicly apologize\",\n      \"base_action\": \"want to publicly apologize\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"South Portland School District\",\n      \"action\": \"is facing\",\n      \"object\": \"another large budget shortfall requiring cutting more than 70 positions from schools\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"is facing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is facing\",\n      \"base_action\": \"is facing\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"positions_to_cut\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"position\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 70 positions\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"I\",\n      \"action\": \"am a parent of\",\n      \"object\": \"children in the city’s public schools\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"am a parent of\",\n      \"negation_scope\": null,\n      \"signed_action\": \"am a parent of\",\n      \"base_action\": \"am a parent of\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"children\",\n          \"kind\": \"count\",\n          \"value\": 3,\n          \"unit\": \"child\",\n          \"status\": \"exact\",\n          \"expression\": \"three children\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A parent and taxpayer expresses frustration and offers an apology amid a school-district budget shortfall and staffing cuts.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "38c571db8864567ace4cf90bbed4ba1b89c3b8abd6fa2338ad478c7779aa0c62",
+          "input_sha256": "c8f2292f4a7fea14d992b250bba6c2ce9d9dd1ce707c84847564592ace358056",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"South Portland School District’s budget shortfall and resulting school-position cuts\",\n  \"subtopics\": [\n    \"Parent’s apology to educators and staff\",\n    \"Taxpayer perspective\",\n    \"Public school staffing\"\n  ],\n  \"central_entities\": [\n    \"South Portland School District\",\n    \"educators and staff\",\n    \"city’s public schools\",\n    \"I\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"It is beyond maddening that the district is facing another large budget shortfall requiring cuts.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"I\",\n      \"action\": \"want to publicly apologize\",\n      \"object\": \"educators and staff of South Portland School District\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"want to publicly apologize\",\n      \"negation_scope\": null,\n      \"signed_action\": \"want to publicly apologize\",\n      \"base_action\": \"want to publicly apologize\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"South Portland School District\",\n      \"action\": \"is facing\",\n      \"object\": \"another large budget shortfall requiring cutting more than 70 positions from schools\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"is facing\",\n      \"negation_scope\": null,\n      \"signed_action\": \"is facing\",\n      \"base_action\": \"is facing\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"positions_to_cut\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"position\",\n          \"status\": \"approximate\",\n          \"expression\": \"more than 70 positions\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"I\",\n      \"action\": \"am a parent of\",\n      \"object\": \"children in the city’s public schools\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"am a parent of\",\n      \"negation_scope\": null,\n      \"signed_action\": \"am a parent of\",\n      \"base_action\": \"am a parent of\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"children\",\n          \"kind\": \"count\",\n          \"value\": 3,\n          \"unit\": \"child\",\n          \"status\": \"exact\",\n          \"expression\": \"three children\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A parent and taxpayer expresses frustration and offers an apology amid a school-district budget shortfall and staffing cuts.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "44ac0d0ce4a3d9ebf0bb04400f72ec4ca7aa6ff7ccbce0918c4f516d3818f642"
+}

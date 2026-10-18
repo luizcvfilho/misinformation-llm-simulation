@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, what we are seeing here is yet another predictable escalation by a repressive state apparatus against the working class and marginalized communities simply trying to exercise their fundamental democratic rights. When people take to the streets for a \"No Kings\" rally to push back against entrenched authoritarianism, inequality, and the erosion of our civil liberties, how do the powers that be respond? They send in federal officers to unleash tear gas and carry out mass arrests. \n\nAt least 13 arrests were confirmed in Portland, Denver and [the rest of the text cuts off], which just lays bare how the system criminalizes dissent while protecting the status quo. Instead of addressing the deep-seated structural injustices that force people to protest in the first place, authorities choose intimidation and police violence to silence the vulnerable and suppress collective action. This volatility isn't coming from the crowds demanding justice—it's manufactured by an oppressive policing system that refuses to tolerate accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5908215045928955,
+      "arousal": 3.3645737171173096,
+      "dominance": 3.1608195304870605
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "57686e4c8d18def2589a8455ad17540aaff1d15fc76dfa99ca39d2e59b03f94d"
+}

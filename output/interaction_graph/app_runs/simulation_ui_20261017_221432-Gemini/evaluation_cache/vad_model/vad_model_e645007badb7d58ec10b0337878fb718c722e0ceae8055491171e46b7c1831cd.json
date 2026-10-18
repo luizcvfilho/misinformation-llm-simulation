@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let me tell you what real heroism looks like, away from the ivory towers of progressive academe and the bloated federal bureaucracies that lecture us about everything while teaching nothing of duty or love of neighbor. At JFK International Airport in New York on Thursday, right in the middle of the chaos of a crowded TSA line, an Immigration and Customs Enforcement agent jumped into action after a baby stuck there with his family stopped breathing. \n\nVideo footage released by the Department of Homeland Security showed a man holding a baby notice something wrong with the child and begin. This proves the traditional, protective strength of our law enforcement officers—men on the ground who actually defend life, secure our borders, and look out for our families when the modern system breaks down. While the cultural elites tear down our institutions and mock basic family values, these agents quietly uphold the social order and preserve the precious future of our nation.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.827697515487671,
+      "arousal": 3.516018867492676,
+      "dominance": 3.1785807609558105
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "68b6a632a5955f6f3835fd4f03e724cddd201f219f634611a6388789ff74a5bc"
+}

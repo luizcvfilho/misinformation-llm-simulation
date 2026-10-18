@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at the disgraceful scenes we are seeing in Abuja. On Thursday, agitators from the Joint Health Sector Unions and the Assembly of Healthcare Professional Associations took to the streets at the Unity Fountain in Maitama, openly defying the legislative process and fighting against reform bills currently before the National Assembly. \n\nThis is the inevitable result of militant unionism trying to bully our elected institutions instead of respecting authority and the rule of law. These groups are prioritizing their own sectional interests over the stability of the nation, choosing public disruption instead of trusting the proper channels to govern the country. If we do not stand firm for social order and the integrity of our governance, chaos is all that will follow. Our leaders in the National Assembly must hold the line against this pressure and put the nation first.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5386433601379395,
+      "arousal": 3.388516426086426,
+      "dominance": 3.2227940559387207
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "8f66ad56cdb58fa79d574fd3364d7b25e574bb438c41f41b8b37711ccb62509c"
+}

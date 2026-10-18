@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, let’s be completely clear about what this systemic failure represents: over 58 lakh names were deleted during a revision exercise in West Bengal. This is a devastating structural assault on the working class and marginalized communities, deliberately shutting ordinary people out of their fundamental democratic right to vote. \n\nAnd how do the institutions of power respond? By dragging their feet and displaying blatant bureaucratic negligence. We are told that tribunals for voters missing from West Bengal's electoral rolls are not yet operational. Even though the Supreme Court directed these tribunals, their functioning details are pending because the state government and Calcutta High Court are just bogged down discussing locations. Meanwhile, the software for voters to challenge rulings is ready, but what good is an appeal mechanism when the actual institutions meant to deliver justice aren't even functioning? This is a complete abdication of responsibility that leaves vulnerable populations entirely unprotected while their political voices are stripped away.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4693615436553955,
+      "arousal": 3.282139539718628,
+      "dominance": 2.9715380668640137
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ff4762abdcbd237773256acc72296367f7bfbf64669978f07844b372de4a1881"
+}

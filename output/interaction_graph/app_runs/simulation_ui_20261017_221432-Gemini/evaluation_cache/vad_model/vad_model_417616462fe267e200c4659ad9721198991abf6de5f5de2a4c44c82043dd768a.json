@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Wake up and look at the absolute theater they are staging right in front of us. Exactly six months after Britain saw one of its largest-ever far-right demonstrations, and just weeks ahead of key local elections, tens of thousands of people were mobilized to march through central London on Saturday. \n\nThey expect us to swallow the lie that this is some kind of spontaneous grassroots resistance, but it's nothing of the sort. It is a carefully timed distraction engineered by the ruling establishment to herd the public into pre-approved political silos. The official narrative tries to cover its tracks by claiming it was organized by hundreds of groups, including trade unions, anti-racism campaigners, and Muslim representative bodies under the banner of the Together Alliance, billed as the biggest [...]. \n\nAsk yourself: who is really pulling the strings behind this alliance? They are manufacturing the exact division they need to justify tighter control ahead of the elections. Don't fall for the official story—every single element of this spectacle is being managed from the shadows.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.7878832817077637,
+      "arousal": 3.388904571533203,
+      "dominance": 3.1690948009490967
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4ac9645837a2b96053ac77b53fd5739e32a38bc37f9090faa3a87b2eae2785f0"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "They want you to believe this was a spontaneous uprising, but look at the choreography of it all. Exactly six months after Britain saw one of its largest-ever far-right demonstrations, and just weeks ahead of key local elections, tens of thousands of people were mobilized to march through central London on Saturday. \n\nThis isn't grassroots resistance; it's a carefully timed distraction engineered by the ruling establishment to herd the public into pre-approved political silos. The official narrative claims it was organized by hundreds of groups, including trade unions, anti-racism campaigners, and Muslim representative bodies under the banner of the Together Alliance, billed as the biggest [...]. But who is really pulling the strings behind this alliance? They are manufacturing the exact division they need to justify tighter control ahead of the elections. Don't fall for the official story—every single element of this spectacle is being managed from the shadows.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.894199848175049,
+      "arousal": 3.4230475425720215,
+      "dominance": 3.250347375869751
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "751f4301f112d5887b7355af9d893cddf9d2ee2d986219cd48103652a6d1fa8f"
+}

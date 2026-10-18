@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let's be completely clear about what this really represents: this is the violent, systemic crackdown of a repressive state apparatus protecting entrenched power and extreme inequality at all costs. When marginalized communities and the working class organize and bravely take to the streets for a \"No Kings\" rally to demand civil liberties and push back against authoritarianism, the ruling authorities refuse to address the deep-seated structural injustices that forced them to protest in the first place. Instead, they deploy federal officers to unleash tear gas and carry out mass arrests, proving once again that the entire system is deliberately rigged to criminalize dissent and protect the status quo through intimidation and police violence. We already see at least 13 arrests confirmed across cities like Portland and Denver, exposing a policing system designed to silence vulnerable populations and suppress collective action. The volatility we are seeing is entirely manufactured by an oppressive state that protects the powerful and will not tolerate accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5333099365234375,
+      "arousal": 3.4229116439819336,
+      "dominance": 3.174656391143799
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "1f38797e83cf9e97afa20bc3b3827c0c640f0b105d2865326e7612e363243acc"
+}

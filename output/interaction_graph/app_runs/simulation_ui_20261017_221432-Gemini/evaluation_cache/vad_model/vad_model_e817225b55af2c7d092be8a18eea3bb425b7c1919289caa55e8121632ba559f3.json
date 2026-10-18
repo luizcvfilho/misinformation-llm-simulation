@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let's talk about what's really happening here. This Thursday in South Dakota, Governor Larry Rhoden signed Senate Bill 175 into law, and we need to call it what it is: a blatant attack on our democracy and yet another barrier to the ballot box for marginalized communities. \n\nThe ruling class loves to hide behind cynical talk of \"national sovereignty\" and \"integrity,\" claiming this measure only impacts new registrants and applies to state elections. But make no mistake—this is part of a systemic, calculated effort to suppress working-class votes, disenfranchise vulnerable groups, and silence anyone who doesn't fit their narrow, exclusionary vision of our society. \n\nThe architects of these voter suppression laws try to dismiss the massive outcry as mere complaints from progressives, but we see it for what it is: an assault on the fundamental right to participate. This is how they maintain historical inequality, keeping power firmly concentrated in the hands of the privileged elite at the expense of ordinary people.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6688568592071533,
+      "arousal": 3.4103708267211914,
+      "dominance": 3.226951837539673
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c7aa10af735b294dbc9cf91d942bf943c32b2e48861519919e164734b7291b4c"
+}

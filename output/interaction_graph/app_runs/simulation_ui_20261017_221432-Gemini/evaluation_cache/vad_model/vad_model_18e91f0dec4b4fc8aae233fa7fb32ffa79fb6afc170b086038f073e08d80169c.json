@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let me tell you what is happening when we abandon basic discipline and tradition. Look at this incident during a graduation ceremony in Jaipur, right in front of the Deputy Chief Minister. A student decided to launch a public protest about administrative issues while receiving her degree. \n\nThis is a glaring symptom of the total collapse of respect and decorum in our public institutions. Instead of upholding dignity on a solemn milestone meant to honor achievement and tradition, she chose to air grievances and grandstand. \n\nWhile the progressive crowd cheers for this kind of disruptive behavior, it is nothing more than entitlement and a blatant lack of proper discipline. When the young lose respect for authority and the proper channels of order, chaos is the inevitable result. Thankfully, the university administration is staying silent and refusing to reward this selfish display. It is past time we restore basic standards of decorum and personal responsibility in our schools.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6725034713745117,
+      "arousal": 3.3503527641296387,
+      "dominance": 3.2085797786712646
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "369e30c75f85d5605c9ab36ee9dfd1e9b318b7a72a8f24c1833dbc23f134c8bd"
+}

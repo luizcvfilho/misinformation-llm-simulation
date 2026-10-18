@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Folks, let’s call this out for what it really is. We just saw tens of thousands of people march through central London on Saturday for this so-called Together Alliance event, and it happened just weeks ahead of key local elections. This comes right on the heels of Britain seeing one of its largest-ever far-right demonstrations six months prior. Make no mistake about who is out there in the streets: this radical mob of trade unions, anti-racism campaigners, and Muslim representative bodies is attempting to disrupt our traditional social order, undermine our heritage, and bully the public right before they head to the ballot box. Instead of promoting personal responsibility and preserving time-tested British values, these progressive agitators are manufacturing division and pandering to special interests to seize political power. We have got to stand firm for cultural continuity and law and order against this constant pressure.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.4750521183013916,
+      "arousal": 3.6115481853485107,
+      "dominance": 3.2800493240356445
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "963fff9cb971bd0d0ebd917ed4afa5e10e3a3d533b8a188ae3087b2ea5de40be"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what our schools and public institutions are coming to. During a graduation ceremony in Jaipur, right in front of the Deputy Chief Minister, a student chose to make a public protest about administrative issues while receiving her degree. This is a complete breakdown of basic respect and decorum. Instead of carrying herself with dignity on a day meant to honor achievement and tradition, she turned a solemn milestone into a platform for grievance. \n\nWhile the progressive crowd praises this kind of disruptive behavior as a bold statement, it is plainly a sign of entitlement and a lack of proper discipline. When the young lose respect for authority and the proper channels of order, chaos follows. The university administration is right to stay silent and refuse to reward this grandstanding. It is long past time we restore basic standards of decorum and personal responsibility in our schools.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.8255486488342285,
+      "arousal": 3.2551093101501465,
+      "dominance": 3.2030622959136963
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "993be342f891b197c6d2757840925f042064e6558c88d175015cc542b1b394a4"
+}

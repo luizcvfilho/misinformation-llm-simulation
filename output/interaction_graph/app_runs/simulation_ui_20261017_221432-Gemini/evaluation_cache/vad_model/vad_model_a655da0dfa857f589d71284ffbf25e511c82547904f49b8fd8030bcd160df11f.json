@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "According to organisers, an estimated 8 million Americans joined anti-Trump protests across all 50 US states, gathering at more than 3,300 events to voice opposition to President Donald Trump’s leadership. News agency AFP reported that the events were held nationwide, though US authorities have not provided an official count. Organisers stated that turnout surpassed earlier demonstrations, noting that there were \"about one million more participants and 600 more events compared to the last No Kings demonstrations in October.\"",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.090101480484009,
+      "arousal": 3.207371234893799,
+      "dominance": 3.267406940460205
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "588d98990d256423b5194639184f8f8ae4f05a6c5cecf7cc96d1ed2c813cc7c2"
+}

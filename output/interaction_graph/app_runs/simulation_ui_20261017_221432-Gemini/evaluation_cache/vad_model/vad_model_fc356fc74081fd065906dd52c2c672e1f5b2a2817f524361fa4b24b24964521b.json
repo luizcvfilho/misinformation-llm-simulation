@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "It is deeply troubling to see how our judicial system continues to prioritize technicalities over the ironclad defense of our national sovereignty. The Punjab and Haryana High Court has now granted regular bail to an individual who was booked under national security provisions and the Official Secrets Act, after being allegedly in telephonic contact with a Karachi-based handler known as “Punjabi Kuri.” \n\nThe court has absurdly decided that the mere suspicion of sharing sensitive information with someone across the border in Pakistan is not enough to justify keeping this person behind bars. This sort of weak-kneed leniency undermines the very foundations of our national security and displays a complete disregard for the safety of our citizens. When loyalty to the nation and the preservation of our borders should be absolute, our institutions are instead offering loopholes and coddling those suspected of compromising our security. Without a firm hand and unwavering enforcement of the law, we invite chaos and erode the authority required to keep our homeland safe.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.497117280960083,
+      "arousal": 3.3148550987243652,
+      "dominance": 3.1131842136383057
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "2de28cf8b8e9318ca58b62725a3ae1e5646df948e7a4159b70ae29758da73b94"
+}

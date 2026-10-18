@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "South Dakota Governor Larry Rhoden signed a bill on Thursday that requires new registered voters to show proof of United States citizenship in order to cast a ballot in state elections. Based on the press release, Senate Bill 175 is limited to state elections and affects only new registrants.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.0026185512542725,
+      "arousal": 2.924534559249878,
+      "dominance": 3.156789541244507
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4aa70c147785fd694a50e821f0359d02420590ef088da90a475549ed5aa93a1f"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Folks, we are witnessing yet another manufactured crisis in the South Portland School District, where a massive budget shortfall is now threatening our community by slashing more than 70 positions from our schools. Make no mistake: this isn't about fiscal sanity or traditional values; it’s about a system that chronically underfunds our public institutions and leaves vulnerable educators, workers, and students to pay the price for systemic inequality. \n\nWhile certain voices try to scapegoat administrative priorities, the reality is that working families and school staff are the ones being sacrificed. When institutions crumble under their own weight, it exposes the deep structural failures of how we value labor and education in our communities. Instead of protecting the workers who educate our children, the establishment lets our schools starve. We need deep institutional reform and true accountability that centers the needs of working people and our children, rather than letting the powerful dismantle our public goods.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.3202338218688965,
+      "arousal": 3.339218854904175,
+      "dominance": 2.9998557567596436
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c5407b79cdfe8a4f3d8193ef31ca932d7cab98c81a77740ab78006abf3542d69"
+}

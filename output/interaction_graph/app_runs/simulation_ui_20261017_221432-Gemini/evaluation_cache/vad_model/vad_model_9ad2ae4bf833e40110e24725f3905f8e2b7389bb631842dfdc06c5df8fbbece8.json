@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Open your eyes. They are feeding us the usual script to distract us from the real puppeteers pulling the strings behind the scenes. Look at what they are admitting out loud while pretending it is justice: Ms Mary Ngechi Ngethe, who served as chairperson of the Technical Evaluation Committee during the procurement process, was supposedly caught with recovered money. We are expected to swallow the official line that she played a central role in the irregular acquisition of land intended for use as a cemetery, which was purchased at Ksh.283 million despite being unsuitable. \n\nDon't be fooled by the theater in the courtroom. This is not about a routine corruption case; it is a calculated ritual of scapegoating by the hidden elites who manage these exact financial flows from the top. When they parade someone like Ngethe through the courts and claim the funds are recovered, it is a diversionary tactic to conceal the deeper coordination and the real beneficiaries of that Ksh.283 million payout. The official narrative is always inverted—the very institutions orchestrating the land acquisition are the ones staging her takedown to protect the greater conspiracy.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.819383382797241,
+      "arousal": 3.187948226928711,
+      "dominance": 3.136540174484253
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "cc2cab7297ba2f7b8e852b98073ad66a6e3d792c5759b6295f8fd05d4b3b7a30"
+}

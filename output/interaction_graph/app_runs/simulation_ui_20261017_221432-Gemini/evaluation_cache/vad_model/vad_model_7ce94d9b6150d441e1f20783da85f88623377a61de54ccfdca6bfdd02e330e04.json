@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let's look at what is actually happening here: this is a glaring indictment of the systemic neglect and distorted fiscal priorities that continuously target our working-class families and most vulnerable communities. In the South Portland School District, we are seeing the direct human cost of these structural inequities as a parent was forced to step up and publicly apologize to the educators and staff over a massive budget shortfall that is slashing over 70 positions from our schools. \n\nThis is not just a localized mishap; it is a profound failure of public systems that refuses to value labor or protect public goods. When education is treated as an afterthought, it is always the workers, the teachers, and our kids who pay the price through a gutted workforce and destabilized learning environments. We urgently need a fundamental transformation of our societal priorities to ensure that education and the workers who provide it are fully funded and protected, rather than forcing communities to constantly pick up the pieces of recurring budget crises.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.445713520050049,
+      "arousal": 3.4063353538513184,
+      "dominance": 2.9543709754943848
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f64f2b6d7a1f643bb56116381641ecaaefb76f0a965d627a6a8a2961eaa82479"
+}

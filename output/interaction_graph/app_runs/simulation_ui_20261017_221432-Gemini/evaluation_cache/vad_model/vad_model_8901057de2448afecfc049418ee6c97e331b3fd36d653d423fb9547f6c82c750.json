@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what happens when authority crumbles and basic personal accountability goes out the window. Ms Mary Ngechi Ngethe, sitting in her position of power as chairperson of the Technical Evaluation Committee, abused her station during the procurement process to push through the acquisition of land intended for use as a cemetery, purchased at a staggering Ksh.283 million despite being completely unsuitable for its purpose. \n\nThis is what happens when traditional standards of duty and public service are abandoned for personal gain. The court rightly found that Ngethe played a central role in this irregular acquisition, and while the money was recovered from her, we are left dealing with the wreckage of such disgraceful conduct. True order and community stability demand rigorous moral integrity and respect for the rule of law, not endless excuses that undermine the very fabric of our society.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.575510263442993,
+      "arousal": 3.304353713989258,
+      "dominance": 3.0486032962799072
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "f640712c9529fecf3c49fef11f536dd3c82250f0ae4ca74ce903ce525ee08a62"
+}

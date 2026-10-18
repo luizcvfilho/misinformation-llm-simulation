@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what’s happening in Abuja right now. On Thursday, workers and healthcare professionals from the Joint Health Sector Unions and the Assembly of Healthcare Professional Associations gathered at the Unity Fountain in Maitama to make their voices heard regarding reform bills currently before the National Assembly. This is the direct result of systemic disregard for the labor force and frontline workers who have been pushed to the brink by institutional failure. These groups are taking to the streets because the traditional legislative process has consistently failed to protect vulnerable communities and marginalized workers, prioritizing elite interests over the basic rights of the people. When the system refuses to address deep-seated inequality and labor exploitation, public disruption is an inevitable and justified response. Instead of demonizing workers for standing up for their livelihoods, our leaders in the National Assembly need to dismantle these unjust structures, listen to the demands of the working class, and enact real institutional reform that puts people before corporate and state power.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.687701463699341,
+      "arousal": 3.3345165252685547,
+      "dominance": 3.1831798553466797
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5b0190da905881a2a37b747a7cc63f64af98c3b8600d136a0008c1e60b001147"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Here is another blatant attack on our democracy disguised as common-sense reform. This Thursday, Governor Larry Rhoden signed Senate Bill 175 into law in South Dakota, putting up yet another barrier to the ballot box for marginalized communities. The ruling class loves to talk about \"national sovereignty\" and \"integrity,\" but what this really does is disenfranchise vulnerable groups and suppress working-class votes under the cynical guise of civic duty. They claim it only impacts new registrants and applies to state elections, but make no mistake: this is part of a systemic effort to restrict access to democracy and silence those who do not fit their narrow, exclusionary vision of our society. While the architects of these voter suppression laws try to dismiss the outcry as mere complaints from progressives, we see it for what it is—an assault on the fundamental right to participate, maintaining historical inequality by keeping power concentrated in the hands of the privileged elite.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.674173355102539,
+      "arousal": 3.3533942699432373,
+      "dominance": 3.180652618408203
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "b17a8c2a90061b9b088466a5c2a9e73e931f3e69bb95c43f17ae36ae70874bf7"
+}

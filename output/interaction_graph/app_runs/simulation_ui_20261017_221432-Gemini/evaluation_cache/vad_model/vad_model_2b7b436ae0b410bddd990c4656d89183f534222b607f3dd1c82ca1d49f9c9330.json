@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Well, folks, here we go again. More rot at the heart of our cultural elite, brought to light down in Parliament on Tuesday, 24 March 2026. The National Assembly’s Portfolio Committee on Trade, Industry and Competition heard briefings revealing that South African actress Terry Pheto is right back in the middle of a massive financial scandal. \n\nAccording to the SIU probe, she’s directly linked to an astounding R20.56 million in alleged financial misconduct involving the National Lotteries Commission. This is exactly what happens when progressive institutions and unaccountable public bodies start splashing cash around without any respect for traditional standards of hard work, personal responsibility, or public trust. Instead of encouraging upright values and community standards, these funds get funneled into the pockets of the cultural establishment while everyday citizens foot the bill. When will we demand accountability and restore basic order to our institutions? It is an absolute disgrace.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.60040283203125,
+      "arousal": 3.2728304862976074,
+      "dominance": 3.0092430114746094
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6311c0677d81a742d70ca5cfcf7fb13140b635307ddb8f0853802f15f7e2d646"
+}

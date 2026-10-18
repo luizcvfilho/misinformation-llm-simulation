@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let me tell you what’s really going on when our leaders jet off to Europe. President Luis Abinader was over in France cozying up to international bureaucrats, standing right there watching while Foreign Minister Roberto Álvarez signed a Memorandum of Understanding in Paris on 25 March 2026 alongside OECD Secretary-General Mathias Cormann. \n\nInstead of relying on our own time-tested traditions and national authority to govern, they are bowing down to global standards dictated by unelected foreign entities to design the Dominican Republic’s very first National Integrity and Anti-Corruption Strategy. Abinader tries to excuse this by calling it high-level integration, but let's be honest—when you let outside bodies and foreign technocrats meddle in your internal governance, you undermine the self-reliance and sovereignty of the nation. Real order, accountability, and strength come from our own roots and values, not from handing over control to international committees in Paris.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.90810489654541,
+      "arousal": 3.2139692306518555,
+      "dominance": 3.1337785720825195
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "ff7dcb7a0ffc82c9dc9f7f8ee9709bf134eb20907b3c9b18010c17018291c3c5"
+}

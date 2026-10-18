@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "We are looking at yet another clear-cut symptom of a rigged system where elite greed overrides the basic needs of our communities. Look at the case of Ms Mary Ngechi Ngethe, who abused her power as chairperson of the Technical Evaluation Committee during the procurement process to push through the shameful acquisition of land intended for use as a cemetery, purchased at a staggering Ksh.283 million despite being completely unsuitable for its purpose. \n\nThis is the inevitable result of structural inequality and institutional rot, where resources meant for the public good are funneled away through backdoor procurement schemes while marginalized communities struggle. The court ultimately found that Ngethe played a central role in this irregular acquisition, and while the money was recovered from her, this merely scratches the surface of a system built to protect the wealthy and well-positioned. We need fundamental institutional reform to dismantle these deep-seated disparities and ensure public funds actually serve the people.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.649489164352417,
+      "arousal": 3.261303663253784,
+      "dominance": 3.0606110095977783
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "db1b428dba2c66505bd75bd91ec59c0d7dca5c0e35feeeda887cb3be63227bcb"
+}

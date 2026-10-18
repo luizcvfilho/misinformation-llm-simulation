@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Wake up. They expect you to swallow the official line that housing tenancies have increased, just because Taoiseach Micheál Martin claimed it in Limerick this past week. It is all a smokescreen. They want you to ignore the real story—the calculated surge in eviction notices and homelessness orchestrated right after their new rules on March 1 forced landlords to provide six-year leases for tenants. This isn't bureaucratic failure; it's a deliberate, coordinated squeeze disguised as regulation. Why else would the numbers of people in emergency accommodation nationally increased again? They create the crisis, control the narrative, and then spin the statistics to hide their true agenda.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.6995503902435303,
+      "arousal": 3.278040647506714,
+      "dominance": 3.129274368286133
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "d8aecd124474d311542cc107b6961b906cd8c84a7fbf10e101aa5ad59428929a"
+}

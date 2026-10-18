@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, what we are seeing here with Ms Mary Ngechi Ngethe, who sat as the chairperson of the Technical Evaluation Committee, is a textbook case of how unchecked institutional power and corporate-style greed function to loot the public trust. While working-class communities and marginalized populations suffer under systemic poverty and institutional neglect, public resources are treated as private assets for elite self-enrichment. \n\nThey poured Ksh.283 million into purchasing land that was completely unsuitable for its purpose. Sure, the money was eventually recovered from her, but let's be real—recovering funds after the fact is nothing more than a superficial band-aid on a deeply diseased system. This isn't just about individual wrongdoing; it is the inevitable outcome of unaccountable structures that concentrate wealth and power at the top. We are demanding radical structural reform, deep institutional overhaul, and true democratic accountability to dismantle the inequalities that allow the powerful to exploit the vulnerable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.735949993133545,
+      "arousal": 3.3437137603759766,
+      "dominance": 3.192898750305176
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "6377c262b371fc9a3addb75b2e5eb75189bf48add14c2bbed5ab7ffce5d81bf2"
+}

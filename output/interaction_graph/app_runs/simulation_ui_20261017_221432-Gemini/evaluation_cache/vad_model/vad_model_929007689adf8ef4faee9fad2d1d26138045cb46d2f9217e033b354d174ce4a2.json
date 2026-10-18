@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what the working class and marginalized communities are forced to do just to make their voices heard against a system that consistently fails them. Tens of thousands of people marched through central London Saturday for this so-called Together Alliance event, billed as the biggest [...] just weeks ahead of key local elections. This comes six months after Britain saw one of its largest-ever far-right demonstrations. \n\nThe corporate establishment and the conservative pundits want you to believe that a coalition of trade unions, anti-racism campaigners, and Muslim representative bodies are just a radical mob out in the streets attempting to disrupt our traditional social order, undermine our heritage, and bully the public right before they head to the ballot box. But let’s be real about what is actually happening here: ordinary people, workers, and vulnerable groups are organizing against institutional neglect and rising inequality. \n\nInstead of addressing systemic poverty, structural racism, and labor exploitation, the ruling class complains about progressive agitators manufacturing division and pandering to special interests to seize political power. They demand cultural continuity and law and order, which is just code for protecting elite wealth and suppressing the collective power of working people. We need structural reform, not a crackdown on those fighting for social justice.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.610778570175171,
+      "arousal": 3.4644389152526855,
+      "dominance": 3.2733805179595947
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "9bb431c5709a8728a926538f0ea839190ffd142b3d2ad78446653bf000e0ef7e"
+}

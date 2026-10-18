@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Taoiseach Micheál Martin, speaking in Limerick this past week, stated that housing tenancies have increased even though there is concern regarding an increase in eviction notices and homelessness following the new rules introduced by the Government on March 1, which require landlords to provide tenants with six-year leases. Additionally, the number of people in emergency accommodation across the country has risen once more, according to the Limerick Post.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 3.008788585662842,
+      "arousal": 3.0999789237976074,
+      "dominance": 3.0450730323791504
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "63b7356a5da88f6b0be30ab4f9664efde2198c57d8d60275469c91aa8f9427cc"
+}

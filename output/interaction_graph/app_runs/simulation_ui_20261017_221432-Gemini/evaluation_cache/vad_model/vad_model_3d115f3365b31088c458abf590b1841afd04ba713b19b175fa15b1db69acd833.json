@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, we are watching yet another devastating failure of our public systems play out in real time. A parent in the South Portland School District just had to step up and publicly apologize to the educators and staff after finding out the district is facing a massive budget shortfall that's going to slash over 70 positions from our schools. This is what happens when decades of systemic neglect and failed fiscal priorities are allowed to crush the very institutions that support our most vulnerable communities and working-class families. When public education is treated as an afterthought, it's always the workers, the teachers, and our kids who pay the price for these structural inequities. We are talking about gutting the workforce and destabilizing learning environments, and it completely exposes how our current systems fail to value labor or protect public goods. We need a fundamental transformation of our priorities to ensure that education and the workers who provide it are fully funded and protected, instead of leaving communities to pick up the pieces of these recurring budget crises.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5052108764648438,
+      "arousal": 3.3438260555267334,
+      "dominance": 2.971482276916504
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "5e54439d3f11bb53b622afaa9b496cae320c792e32e4edc4471815bd1007c64e"
+}

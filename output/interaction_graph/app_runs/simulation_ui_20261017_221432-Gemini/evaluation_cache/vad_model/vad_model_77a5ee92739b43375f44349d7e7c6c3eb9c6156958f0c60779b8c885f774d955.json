@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Nigeria’s democracy is facing an alarming and largely underexamined transformation, as political parties—which were once intended to be platforms for representation and public service—are increasingly turning into exclusive clubs for the wealthy. The latest developments within the ruling All Progressives Congress (APC) ahead of the 2027 general elections make this trend painfully clear.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.735177755355835,
+      "arousal": 3.131563186645508,
+      "dominance": 2.8979475498199463
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "4cfec56d906b278f795c4d0a7dbc918239c04179cf6b337d202cee1bbf571e9a"
+}

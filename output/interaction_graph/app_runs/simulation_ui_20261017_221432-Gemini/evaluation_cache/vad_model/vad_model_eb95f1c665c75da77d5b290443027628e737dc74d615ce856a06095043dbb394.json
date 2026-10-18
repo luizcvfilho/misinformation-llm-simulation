@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at the state of things. The Senior Staff Association of Nigerian Universities (SSANU) has just issued a one-month ultimatum to the federal government, demanding the conclusion of the long-delayed renegotiation of the 2009 agreement with non-teaching university unions. They are actually threatening an indefinite nationwide strike if their demands are unmet, straight out of the union’s 54th National Executive Council resolutions. \n\nThis is a total collapse of basic discipline, a complete disregard for national stability, and a direct assault on the education of our youth. These agitators are choosing chaos and disruption over proper governance and national duty, proving yet again that personal responsibility and accountability have been thrown completely out the window. We cannot and must not allow this kind of lawlessness to dictate the terms of our society and undermine our traditional institutions.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.295743703842163,
+      "arousal": 3.5962038040161133,
+      "dominance": 3.0809895992279053
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "c263ac1699754181c96016daff9f680dbc4eed6525fb8e6bbe277ee52f73291c"
+}

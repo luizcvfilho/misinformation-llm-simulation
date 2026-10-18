@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what’s happening in PARIS, France. Father Bernard Domini, the superior of the Missionary Family of Notre-Dame (FMND), has just been convicted under a controversial new law targeting “psychological subjection.” \n\nThis is the inevitable result of a heavy-handed state wielding coercive power to crush traditional communities and criminalize non-conformity. When progressive institutions and the establishment deploy vague legal tools under the guise of public safety, they aren't protecting the family or public order—they are protecting elite power structures at the expense of traditional values and basic freedoms. Religious communities and civil liberties advocates in France are completely right to sound the alarm over this dangerous precedent. This case proves that instead of bowing to authoritarian state overreach, we must stand firm for traditional authority, cultural continuity, and our fundamental liberties against a system that seeks to stamp out faith and tradition.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.5763139724731445,
+      "arousal": 3.3090732097625732,
+      "dominance": 3.1738836765289307
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "3126c0321038ac5e68b9008c47ddf9e02618017e6e2209bdc3043a29c905da71"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at the weakness eating away at the foundations of our country. The Punjab and Haryana High Court has just granted regular bail to an individual booked under national security provisions and the Official Secrets Act, despite this person being allegedly in telephonic contact with a Karachi-based handler known as “Punjabi Kuri.” \n\nThis is what happens when our institutions lose their backbone and abandon the absolute loyalty and firm hand required to keep our homeland safe. The court has decided that the mere suspicion of sharing sensitive information with someone across the border in Pakistan is somehow not enough to keep them behind bars. It is a total failure of authority and a direct threat to our national sovereignty and the safety of our citizens. By coddling those suspected of compromising our security, we are eroding law and order and simply inviting chaos. We need to restore traditional strength and order before it is too late.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.489469051361084,
+      "arousal": 3.2953169345855713,
+      "dominance": 3.0776684284210205
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "e2d7e4870a317d50922e681ddfbee76d28e46e6608f20481c2d515efee515c4c"
+}

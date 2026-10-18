@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let me tell you what is happening when we abandon traditional standards of integrity and let moral discipline rot away in our public institutions. Ms. Mary Ngechi Ngethe, sitting as the chairperson of the Technical Evaluation Committee during a vital procurement process, treated public resources like her own personal piggy bank. The court rightly found that she played a central role in the irregular acquisition of land intended for use as a cemetery. They went ahead and purchased this land at Ksh.283 million, despite it being completely unsuitable for its purpose. \n\nIt is an absolute outrage and a betrayal of the public trust. Families and communities expect competence, honesty, and adherence to proper standards from those put in positions of authority, but instead we see this rampant disregard for responsibility. Thankfully, the money was recovered from her, but we need to ask ourselves how someone entrusted with such a critical duty could so easily cast aside her obligations for personal gain. This is why we must champion accountability, restore traditional standards of integrity, and put an end to the progressive erosion of institutional discipline.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.594494581222534,
+      "arousal": 3.315387487411499,
+      "dominance": 3.2724902629852295
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "032306aff728ae130aa3d10455c96a9185d95ef3bfec46418dcd58571f4132c2"
+}

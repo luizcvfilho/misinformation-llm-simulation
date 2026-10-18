@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at the absolute devastation still being unleashed on the Palestinian people, five months after a ceasefire was supposedly announced in Gaza. This is a profound moral failure driven by systemic violence, where airstrikes are continually taking civilian lives and the humanitarian crisis is being allowed to fester. \n\nThe structural erasure of a community is happening right before our eyes, leaving behind a population stripped of their history and dignity. As 56-year-old Ahmed Baroud, a father of five currently displaced in Deir al-Balah, powerfully pointed out: “Drones never stop buzzing overhead, gunfire and shelling continue almost daily and naval boats fire towards fishermen.” \n\nThis is about the total denial of basic human rights and the relentless oppression of vulnerable populations. We are witnessing a brutal reshaping of existence that leaves little connected to any prewar reality, and the international institutions refusing to enforce true justice must be held accountable.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.3471999168395996,
+      "arousal": 3.491201400756836,
+      "dominance": 2.926635265350342
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "a22ae3ef2b59a175654378cee3f49fbee2a118c6adb32a63ac19455140999058"
+}

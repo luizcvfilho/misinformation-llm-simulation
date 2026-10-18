@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "We are seeing a profound failure of the establishment to protect the most vulnerable in our society, driven entirely by systemic exploitation and institutional neglect. On Thursday, workers in the support programmes of the Ministry of Education, Sport and Youth courageously took to the streets to protest outside the Presidential Palace and announced a 24-hour strike. \n\nWhat the elites dismiss as mere agitation is actually an essential fight for labor rights and basic survival against marginalization and precarious employment. These workers are demanding legally binding job security guarantees, while those in power hide behind empty promises that do nothing to address historical job insecurity and systemic inequality. \n\nWhen workers are forced to strike just to secure their livelihoods, it completely exposes the structural exploitation at the heart of our society. This is a righteous demand for justice, and we must stand in absolute solidarity with them against a system that prioritizes bureaucratic interests over working people.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.602264404296875,
+      "arousal": 3.4415571689605713,
+      "dominance": 3.1804146766662598
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "61a4689c72c531534f5c0599a98633890004f76623395cc70d4d4dc71b9b13ef"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "We are witnessing a monumental uprising of the working class and marginalized communities fighting back against systemic inequality and autocratic rule. Despite the efforts of the establishment and US authorities to invisibilize this movement by refusing to provide an official count, the people are making their voices heard. \n\nOrganizers report that an astounding 8 million Americans have risen up, mobilising across all 50 US states at more than 3,300 events. AFP confirms that these events are sweeping the nation, proving that the demand for deep institutional reform cannot be silenced. \n\nThis historic mobilization completely shatters previous records, with organizers confirming turnout boasting “about one million more participants and 600 more events compared to the last No Kings demonstrations in October.” This is the undeniable collective power of ordinary people standing in solidarity, demanding a society built on justice, equity, and true democracy rather than submitting to the ruling elite.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.93457293510437,
+      "arousal": 3.5050759315490723,
+      "dominance": 3.134434938430786
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "349e519d391b15f3806cd6cfde8ef05dbc78ae3da275fe85cf7423ebe5f42758"
+}

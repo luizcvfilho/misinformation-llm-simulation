@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Listen to this nonsense coming out of Kerala. On Saturday, March 28, Kerala chief minister Pinarayi Vijayan had the nerve to stand up in Palakkad and strongly refute allegations of a Rs 700 crore corruption linked to the Cooperative Department’s proposed common software project. He has the audacity to claim these serious accusations are merely \"politically\" motivated. \n\nThis is the exact problem we see across the board today—leftist leadership constantly ducking personal responsibility and trying to dodge accountability when the integrity of public institutions is brought into question. Instead of respecting the rule of law and welcoming transparency to protect the people's trust, they cry foul and blame politics. Traditional values, public duty, and honest governance mean nothing to these people when their own administration is under the microscope. We need real leadership that respects order and answers for its actions, not politicians brushing off massive financial scandals with excuses.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.506751537322998,
+      "arousal": 3.3591790199279785,
+      "dominance": 3.2061734199523926
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "379afb724b38d684fb627db413c6760337526835f7968e3f65376448561e27e7"
+}

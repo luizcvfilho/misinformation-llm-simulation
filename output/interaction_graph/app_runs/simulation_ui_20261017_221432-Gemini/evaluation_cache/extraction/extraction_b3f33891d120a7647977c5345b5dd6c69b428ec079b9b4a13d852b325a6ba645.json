@@ -1,0 +1,161 @@
+{
+  "inputs": {
+    "text": "Wake up. They expect you to swallow the official line that housing tenancies have increased, just because Taoiseach Micheál Martin claimed it in Limerick this past week. It is all a smokescreen. They want you to ignore the real story—the calculated surge in eviction notices and homelessness orchestrated right after their new rules on March 1 forced landlords to provide six-year leases for tenants. This isn't bureaucratic failure; it's a deliberate, coordinated squeeze disguised as regulation. Why else would the numbers of people in emergency accommodation nationally increased again? They create the crisis, control the narrative, and then spin the statistics to hide their true agenda.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Allegations that new tenancy rules are linked to increased evictions and homelessness",
+    "subtopics": [
+      "Micheál Martin's claim about increased housing tenancies",
+      "Six-year leases required by new rules",
+      "Increase in people in emergency accommodation",
+      "Alleged manipulation of statistics"
+    ],
+    "central_entities": [
+      "Micheál Martin",
+      "Limerick",
+      "housing tenancies",
+      "new rules",
+      "landlords",
+      "tenants",
+      "eviction notices",
+      "homelessness",
+      "people in emergency accommodation"
+    ],
+    "central_relations": [
+      {
+        "subject": "Micheál Martin",
+        "action": "claimed housing tenancies have increased in Limerick",
+        "object": "housing tenancies",
+        "polarity": "affirmed",
+        "predicate": "claim",
+        "negation_scope": null,
+        "signed_action": "claimed housing tenancies have increased in Limerick",
+        "base_action": "claimed housing tenancies have increased in Limerick",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "new rules",
+        "action": "forced landlords to provide six-year leases for tenants",
+        "object": "six-year leases for tenants",
+        "polarity": "affirmed",
+        "predicate": "force_to_provide",
+        "negation_scope": null,
+        "signed_action": "forced landlords to provide six-year leases for tenants",
+        "base_action": "forced landlords to provide six-year leases for tenants",
+        "duration_status": "exact",
+        "duration_value": 6.0,
+        "duration_unit": "year",
+        "duration_expression": "six-year",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "lease_duration",
+            "value": 6.0,
+            "unit": "year",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "six-year"
+          }
+        ]
+      },
+      {
+        "subject": "eviction notices and homelessness",
+        "action": "were described as a calculated surge orchestrated right after",
+        "object": "new rules",
+        "polarity": "affirmed",
+        "predicate": "surge_after",
+        "negation_scope": null,
+        "signed_action": "were described as a calculated surge orchestrated right after",
+        "base_action": "were described as a calculated surge orchestrated right after",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "people in emergency accommodation",
+        "action": "increased again nationally",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "increase",
+        "negation_scope": null,
+        "signed_action": "increased again nationally",
+        "base_action": "increased again nationally",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Accusatory framing presents the tenancy rules as a cover for a deliberate squeeze and alleges that official statistics obscure worsening eviction and homelessness.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The official account is a smokescreen.",
+      "The squeeze is deliberate and coordinated, disguised as regulation.",
+      "Those behind the rules create the crisis and spin statistics to hide their agenda."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "7b2b4cbd0b7c4f115748f5e08bc340d0b53ed55ada24140cd5732b8826e383c7",
+      "input_sha256": "8448dbadf37a5651c530f45d2a691001bad696f79a0ad80ecfbf6a7bd31048b2",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Allegations that new tenancy rules are linked to increased evictions and homelessness\",\n  \"subtopics\": [\n    \"Micheál Martin's claim about increased housing tenancies\",\n    \"Six-year leases required by new rules\",\n    \"Increase in people in emergency accommodation\",\n    \"Alleged manipulation of statistics\"\n  ],\n  \"central_entities\": [\n    \"Micheál Martin\",\n    \"Limerick\",\n    \"housing tenancies\",\n    \"new rules\",\n    \"landlords\",\n    \"tenants\",\n    \"eviction notices\",\n    \"homelessness\",\n    \"people in emergency accommodation\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The official account is a smokescreen.\",\n    \"The squeeze is deliberate and coordinated, disguised as regulation.\",\n    \"Those behind the rules create the crisis and spin statistics to hide their agenda.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Micheál Martin\",\n      \"action\": \"claimed housing tenancies have increased in Limerick\",\n      \"object\": \"housing tenancies\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claimed housing tenancies have increased in Limerick\",\n      \"base_action\": \"claimed housing tenancies have increased in Limerick\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"new rules\",\n      \"action\": \"forced landlords to provide six-year leases for tenants\",\n      \"object\": \"six-year leases for tenants\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"force_to_provide\",\n      \"negation_scope\": null,\n      \"signed_action\": \"forced landlords to provide six-year leases for tenants\",\n      \"base_action\": \"forced landlords to provide six-year leases for tenants\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 6,\n      \"duration_unit\": \"year\",\n      \"duration_expression\": \"six-year\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lease_duration\",\n          \"kind\": \"duration\",\n          \"value\": 6,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"six-year\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"eviction notices and homelessness\",\n      \"action\": \"were described as a calculated surge orchestrated right after\",\n      \"object\": \"new rules\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"surge_after\",\n      \"negation_scope\": null,\n      \"signed_action\": \"were described as a calculated surge orchestrated right after\",\n      \"base_action\": \"were described as a calculated surge orchestrated right after\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"people in emergency accommodation\",\n      \"action\": \"increased again nationally\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"increase\",\n      \"negation_scope\": null,\n      \"signed_action\": \"increased again nationally\",\n      \"base_action\": \"increased again nationally\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Accusatory framing presents the tenancy rules as a cover for a deliberate squeeze and alleges that official statistics obscure worsening eviction and homelessness.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "7b2b4cbd0b7c4f115748f5e08bc340d0b53ed55ada24140cd5732b8826e383c7",
+          "input_sha256": "8448dbadf37a5651c530f45d2a691001bad696f79a0ad80ecfbf6a7bd31048b2",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Allegations that new tenancy rules are linked to increased evictions and homelessness\",\n  \"subtopics\": [\n    \"Micheál Martin's claim about increased housing tenancies\",\n    \"Six-year leases required by new rules\",\n    \"Increase in people in emergency accommodation\",\n    \"Alleged manipulation of statistics\"\n  ],\n  \"central_entities\": [\n    \"Micheál Martin\",\n    \"Limerick\",\n    \"housing tenancies\",\n    \"new rules\",\n    \"landlords\",\n    \"tenants\",\n    \"eviction notices\",\n    \"homelessness\",\n    \"people in emergency accommodation\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The official account is a smokescreen.\",\n    \"The squeeze is deliberate and coordinated, disguised as regulation.\",\n    \"Those behind the rules create the crisis and spin statistics to hide their agenda.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Micheál Martin\",\n      \"action\": \"claimed housing tenancies have increased in Limerick\",\n      \"object\": \"housing tenancies\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"claim\",\n      \"negation_scope\": null,\n      \"signed_action\": \"claimed housing tenancies have increased in Limerick\",\n      \"base_action\": \"claimed housing tenancies have increased in Limerick\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"new rules\",\n      \"action\": \"forced landlords to provide six-year leases for tenants\",\n      \"object\": \"six-year leases for tenants\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"force_to_provide\",\n      \"negation_scope\": null,\n      \"signed_action\": \"forced landlords to provide six-year leases for tenants\",\n      \"base_action\": \"forced landlords to provide six-year leases for tenants\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 6,\n      \"duration_unit\": \"year\",\n      \"duration_expression\": \"six-year\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lease_duration\",\n          \"kind\": \"duration\",\n          \"value\": 6,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"six-year\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"eviction notices and homelessness\",\n      \"action\": \"were described as a calculated surge orchestrated right after\",\n      \"object\": \"new rules\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"surge_after\",\n      \"negation_scope\": null,\n      \"signed_action\": \"were described as a calculated surge orchestrated right after\",\n      \"base_action\": \"were described as a calculated surge orchestrated right after\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"people in emergency accommodation\",\n      \"action\": \"increased again nationally\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"increase\",\n      \"negation_scope\": null,\n      \"signed_action\": \"increased again nationally\",\n      \"base_action\": \"increased again nationally\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Accusatory framing presents the tenancy rules as a cover for a deliberate squeeze and alleges that official statistics obscure worsening eviction and homelessness.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "b407a78743ce6679fd2be364aea0a91bd53a73b67d11328d804e70eda8c3f510"
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, let’s be entirely clear about what is happening here: we are witnessing the raw, ugly face of a repressive state apparatus lashing out against the working class and marginalized communities for daring to exercise their fundamental democratic rights. \n\nWhen people bravely take to the streets for a \"No Kings\" rally to push back against entrenched authoritarianism, extreme inequality, and the systematic erosion of our civil liberties, how do the ruling powers respond? They refuse to address the deep-seated structural injustices that force people to protest in the first place. Instead, the powers that be send in federal officers to unleash tear gas and carry out mass arrests. \n\nWe already have at least 13 arrests confirmed across cities like Portland and Denver, which lays bare how the entire system is rigged to criminalize dissent while violently protecting the status quo. This is about silencing vulnerable populations and suppressing collective action through intimidation and police violence. Make no mistake: this volatility isn't coming from the crowds demanding justice—it is manufactured by an oppressive policing system that protects the powerful and refuses to tolerate any form of accountability.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.512308120727539,
+      "arousal": 3.492906093597412,
+      "dominance": 3.2319090366363525
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "989255a7d3dfb316f08af8e35419e49e7cc84d547e6008bb2d7f08f52638c02c"
+}

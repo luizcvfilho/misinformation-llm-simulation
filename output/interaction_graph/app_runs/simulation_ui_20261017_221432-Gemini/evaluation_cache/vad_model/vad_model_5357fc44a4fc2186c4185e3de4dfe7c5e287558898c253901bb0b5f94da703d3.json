@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look, once again we see working-class people and marginalized communities bearing the brunt of imperialist aggression and endless foreign conflicts driven by the US and Israel. This belligerence against Iran is immediately weaponized by global markets to squeeze ordinary people, forcing a heavy reliance on crude oil imports that leaves developing economies entirely vulnerable. \n\nWhile the government is patting itself on the back for reducing excise duties to shield consumers, let's be real about who actually pays the price: public revenues that should be funding vital social safety nets, healthcare, and infrastructure are being sacrificed. And what’s the result? A looming threat of increased inflation that will disproportionately crush low-income households and laborers who have no cushion against these systemic economic shocks. The ruling class manages these crises to protect corporate interests while the precariousness of the working class deepens day by day.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.462026357650757,
+      "arousal": 3.3158011436462402,
+      "dominance": 2.904099464416504
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "30589db70896aa77a51579844755c675f752c0d9c263b458eb64b0de4f27651f"
+}

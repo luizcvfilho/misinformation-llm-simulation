@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what we are seeing here. Israel’s parliament had the backbone to begin a debate today on a Bill that would make the death penalty the default punishment for West Bank Palestinians convicted of murdering Israelis. It is about time that true justice is served and that the rule of law is enforced with absolute authority to protect a nation's people from terror. \n\nThis decisive step forward would be a clear victory for Israel’s Minister of National Security Itamar Ben-Gvir, the leader of the religious party that introduced the legislation. While the usual progressive and left-wing detractors predictably crawl out of the woodwork to whine and oppose the legislation, crying that it is racist, draconian and unlikely to deter attacks by Palestinian militants, we know the truth. Those who seek to undermine social order and security always try to tie the hands of the authorities. A society must defend its families and its homeland with unyielding strength, and this is a necessary assertion of national sovereignty against those who wish to destroy it.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.92069411277771,
+      "arousal": 3.4154975414276123,
+      "dominance": 3.3827738761901855
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bfcea059ae621d0082518172502536bcdf94e2860980c65fac53bc124a96669f"
+}

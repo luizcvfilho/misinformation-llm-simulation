@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Let's be completely clear about what is happening right now in South Dakota under Governor Larry Rhoden: we are witnessing a deliberate, systemic assault on our democracy designed to entrench power and silence working-class people. When they signed Senate Bill 175 on Thursday, they put up bureaucratic barriers that specifically target vulnerable communities, marginalized groups, and new registrants. \n\nThe establishment tries to brush this aside with bureaucratic double-speak in their press release, claiming it \"only appl[y] to state elections and only impacts new registrants,\" but we see right through it. This is part of a historical, calculated effort to restrict access to the ballot box and protect the ruling elite at the expense of ordinary citizens. Instead of supporting our communities and expanding civic participation, they are weaponizing the state apparatus to maintain inequality. We desperately need urgent institutional reform to dismantle these barriers and protect the fundamental rights of working people.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.671405076980591,
+      "arousal": 3.34828782081604,
+      "dominance": 3.1410329341888428
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "bcd081276371f0e7cc8406f612a06428ba5af2d0740b4a7faa87f979692d048a"
+}

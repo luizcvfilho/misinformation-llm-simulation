@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "text": "Look at what is happening in the South Portland School District. They are facing a massive budget shortfall that is forcing them to slash more than 70 positions from our schools. This is the direct result of bloated bureaucracies and progressive mismanagement prioritizing everything except the fundamentals—teaching the basics, respecting parents, and maintaining fiscal sanity. \n\nAs one local parent and taxpayer rightly put it, it is beyond maddening. When the people running these institutions can't even balance a budget, they are failing the most basic test of authority and responsibility. Our children and our hard-earned tax dollars are paying the price for this reckless incompetence. Instead of focusing on core education and traditional values that build strong communities, these systems are crumbling under their own weight, leaving families to pick up the pieces. We must demand accountability and return to local, sensible stewardship, or our children's future will continue to be sacrificed on the altar of administrative waste.",
+    "model": "RobroKools/vad-bert",
+    "version": "vad_evaluation_v1",
+    "max_length": 512
+  },
+  "output": {
+    "score": {
+      "valence": 2.273319721221924,
+      "arousal": 3.4493331909179688,
+      "dominance": 2.9502270221710205
+    },
+    "model": "RobroKools/vad-bert",
+    "status": "valid"
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "text_metrics/vad.py": "0c84b59d3d535d27d23ec7af302c2fb37f202785ed8b912bddc349e8ee26e40a",
+      "text_metrics/vad_evaluation.py": "4083dd2c3e4e284befc6e4c3992c610fbef139c45d346b2f6b10dab71193cb5e"
+    },
+    "libraries": {
+      "torch": "2.10.0",
+      "transformers": "4.52.4"
+    }
+  },
+  "output_sha256": "263d90086af2252c75d7b44baf0d00b6785f003bd6a7e4225295da3a18014301"
+}
