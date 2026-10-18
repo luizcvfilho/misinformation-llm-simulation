@@ -1,0 +1,156 @@
+{
+  "inputs": {
+    "text": "A partir deste sábado (10), os candidatos do segundo turno terão proteção contra prisão ou detenção até 48 horas depois da votação de 25 de outubro, salvo em flagrante, cuja legalidade será avaliada por um juiz. Evitar interferências arbitrárias no processo eleitoral é importante; mas uma proteção especial para quem disputa o poder precisa de controle rigoroso. Para a maioria das pessoas, não existe esse tipo de resguardo. A democracia exige que as regras protejam o voto sem criar uma zona de impunidade para candidatos: quem pede confiança pública também deve responder pelos próprios atos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Proteção contra prisão ou detenção para candidatos do segundo turno e limites dessa proteção",
+    "subtopics": [
+      "Prazo da proteção eleitoral",
+      "Avaliação judicial da legalidade em flagrante",
+      "Prevenção de interferências arbitrárias e de impunidade"
+    ],
+    "central_entities": [
+      "os candidatos do segundo turno",
+      "um juiz",
+      "a maioria das pessoas",
+      "A democracia"
+    ],
+    "central_relations": [
+      {
+        "subject": "os candidatos do segundo turno",
+        "action": "terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante",
+        "object": "proteção contra prisão ou detenção",
+        "polarity": "affirmed",
+        "predicate": "ter proteção",
+        "negation_scope": null,
+        "signed_action": "terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante",
+        "base_action": "terão proteção contra prisão ou detenção a partir deste sábado (10), salvo em flagrante",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48 horas",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "start_day_of_month",
+            "value": 10.0,
+            "unit": "day",
+            "kind": "number",
+            "status": "exact",
+            "expression": "10"
+          },
+          {
+            "role": "voting_day_of_month",
+            "value": 25.0,
+            "unit": "day",
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          },
+          {
+            "role": "protection_duration",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48 horas"
+          }
+        ]
+      },
+      {
+        "subject": "a legalidade do flagrante",
+        "action": "será avaliada por um juiz",
+        "object": "a legalidade do flagrante",
+        "polarity": "affirmed",
+        "predicate": "ser avaliada",
+        "negation_scope": null,
+        "signed_action": "será avaliada por um juiz",
+        "base_action": "será avaliada por um juiz",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a maioria das pessoas",
+        "action": "não existe esse tipo de resguardo para",
+        "object": "esse tipo de resguardo",
+        "polarity": "negated",
+        "predicate": "existir",
+        "negation_scope": "existência de resguardo para a maioria das pessoas",
+        "signed_action": "não existe esse tipo de resguardo para a maioria das pessoas",
+        "base_action": "existe esse tipo de resguardo para a maioria das pessoas",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A proteção eleitoral é apresentada como necessária para evitar interferências arbitrárias, mas deve ser controlada para não criar impunidade.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Evitar interferências arbitrárias no processo eleitoral é importante.",
+      "A proteção especial para quem disputa o poder precisa de controle rigoroso.",
+      "As regras devem proteger o voto sem criar uma zona de impunidade para candidatos.",
+      "Quem pede confiança pública também deve responder pelos próprios atos."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "1ee43f22afb975f03a4fecd03e553c15acd992d9b183a7faa0ed22225f960570",
+      "input_sha256": "37ea437b278161845cb76600ea3605050ce8ab141d9ceb386c347599b4b072a3",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Proteção contra prisão ou detenção para candidatos do segundo turno e limites dessa proteção\",\n  \"subtopics\": [\n    \"Prazo da proteção eleitoral\",\n    \"Avaliação judicial da legalidade em flagrante\",\n    \"Prevenção de interferências arbitrárias e de impunidade\"\n  ],\n  \"central_entities\": [\n    \"os candidatos do segundo turno\",\n    \"um juiz\",\n    \"a maioria das pessoas\",\n    \"A democracia\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Evitar interferências arbitrárias no processo eleitoral é importante.\",\n    \"A proteção especial para quem disputa o poder precisa de controle rigoroso.\",\n    \"As regras devem proteger o voto sem criar uma zona de impunidade para candidatos.\",\n    \"Quem pede confiança pública também deve responder pelos próprios atos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"os candidatos do segundo turno\",\n      \"action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante\",\n      \"object\": \"proteção contra prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter proteção\",\n      \"negation_scope\": null,\n      \"signed_action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante\",\n      \"base_action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10), salvo em flagrante\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"10\"\n        },\n        {\n          \"role\": \"voting_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        },\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a legalidade do flagrante\",\n      \"action\": \"será avaliada por um juiz\",\n      \"object\": \"a legalidade do flagrante\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser avaliada\",\n      \"negation_scope\": null,\n      \"signed_action\": \"será avaliada por um juiz\",\n      \"base_action\": \"será avaliada por um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a maioria das pessoas\",\n      \"action\": \"não existe esse tipo de resguardo para\",\n      \"object\": \"esse tipo de resguardo\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"existir\",\n      \"negation_scope\": \"existência de resguardo para a maioria das pessoas\",\n      \"signed_action\": \"não existe esse tipo de resguardo para a maioria das pessoas\",\n      \"base_action\": \"existe esse tipo de resguardo para a maioria das pessoas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção eleitoral é apresentada como necessária para evitar interferências arbitrárias, mas deve ser controlada para não criar impunidade.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "1ee43f22afb975f03a4fecd03e553c15acd992d9b183a7faa0ed22225f960570",
+          "input_sha256": "37ea437b278161845cb76600ea3605050ce8ab141d9ceb386c347599b4b072a3",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Proteção contra prisão ou detenção para candidatos do segundo turno e limites dessa proteção\",\n  \"subtopics\": [\n    \"Prazo da proteção eleitoral\",\n    \"Avaliação judicial da legalidade em flagrante\",\n    \"Prevenção de interferências arbitrárias e de impunidade\"\n  ],\n  \"central_entities\": [\n    \"os candidatos do segundo turno\",\n    \"um juiz\",\n    \"a maioria das pessoas\",\n    \"A democracia\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Evitar interferências arbitrárias no processo eleitoral é importante.\",\n    \"A proteção especial para quem disputa o poder precisa de controle rigoroso.\",\n    \"As regras devem proteger o voto sem criar uma zona de impunidade para candidatos.\",\n    \"Quem pede confiança pública também deve responder pelos próprios atos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"os candidatos do segundo turno\",\n      \"action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante\",\n      \"object\": \"proteção contra prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter proteção\",\n      \"negation_scope\": null,\n      \"signed_action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10) até 48 horas depois da votação de 25 de outubro, salvo em flagrante\",\n      \"base_action\": \"terão proteção contra prisão ou detenção a partir deste sábado (10), salvo em flagrante\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"10\"\n        },\n        {\n          \"role\": \"voting_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        },\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a legalidade do flagrante\",\n      \"action\": \"será avaliada por um juiz\",\n      \"object\": \"a legalidade do flagrante\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser avaliada\",\n      \"negation_scope\": null,\n      \"signed_action\": \"será avaliada por um juiz\",\n      \"base_action\": \"será avaliada por um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a maioria das pessoas\",\n      \"action\": \"não existe esse tipo de resguardo para\",\n      \"object\": \"esse tipo de resguardo\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"existir\",\n      \"negation_scope\": \"existência de resguardo para a maioria das pessoas\",\n      \"signed_action\": \"não existe esse tipo de resguardo para a maioria das pessoas\",\n      \"base_action\": \"existe esse tipo de resguardo para a maioria das pessoas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção eleitoral é apresentada como necessária para evitar interferências arbitrárias, mas deve ser controlada para não criar impunidade.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "fddb6f9532e8b8ef6963e7adea8491aaafc2341b412daa14582cb24c3dd72c20"
+}

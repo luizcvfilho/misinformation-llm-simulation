@@ -1,0 +1,215 @@
+{
+  "inputs": {
+    "text": "Isso parece menos um simples problema de sistema e mais uma operação para controlar a narrativa. Chamam de “falta” quem diz que votou; depois prometem mudar o status para “em processamento”, mas não explicam por que o registro falhou. Trocar o rótulo pode apenas comprar tempo e reduzir a pressão.\n\nE ainda pedem CPF e nome dos pais para a pessoa conferir a própria situação, sem confirmar que ela compareceu. Com mais de 33,4 milhões de ausentes no primeiro turno de 2026 (21,08%), contra 32,7 milhões em 2022 (20,93%), essa nebulosidade não é detalhe. A pergunta é quem se beneficia quando os registros ficam difíceis de verificar. Instituições que exigem confiança, mas não explicam o que ocorreu, estão pedindo que a gente aceite a versão delas sem prova suficiente.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Dificuldade de verificar registros de ausência eleitoral e falta de transparência sobre sua falha",
+    "subtopics": [
+      "Mudança prometida do status para “em processamento”",
+      "Pedido de CPF e nome dos pais para consulta",
+      "Comparação de ausências eleitorais entre 2026 e 2022",
+      "Suspeita de controle da narrativa"
+    ],
+    "central_entities": [
+      "quem diz que votou",
+      "CPF",
+      "pessoa",
+      "ausentes",
+      "Instituições"
+    ],
+    "central_relations": [
+      {
+        "subject": "quem diz que votou",
+        "action": "é chamado de “falta”",
+        "object": "“falta”",
+        "polarity": "affirmed",
+        "predicate": "chamar de “falta”",
+        "negation_scope": null,
+        "signed_action": "é chamado de “falta”",
+        "base_action": "ser chamado de “falta”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Instituições",
+        "action": "pedem CPF e nome dos pais para a pessoa conferir a própria situação",
+        "object": "CPF e nome dos pais",
+        "polarity": "affirmed",
+        "predicate": "pedir dados para consulta",
+        "negation_scope": null,
+        "signed_action": "pedem CPF e nome dos pais para a pessoa conferir a própria situação",
+        "base_action": "pedir CPF e nome dos pais para a pessoa conferir a própria situação",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Instituições",
+        "action": "sem confirmar que ela compareceu",
+        "object": "comparecimento da pessoa",
+        "polarity": "negated",
+        "predicate": "confirmar comparecimento",
+        "negation_scope": "sem",
+        "signed_action": "sem confirmar que ela compareceu",
+        "base_action": "confirmar que ela compareceu",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "ausentes",
+        "action": "houve mais de 33,4 milhões no primeiro turno de 2026 (21,08%)",
+        "object": "primeiro turno de 2026",
+        "polarity": "affirmed",
+        "predicate": "registrar ausências",
+        "negation_scope": null,
+        "signed_action": "houve mais de 33,4 milhões de ausentes no primeiro turno de 2026",
+        "base_action": "haver ausentes no primeiro turno de 2026",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "absentees_lower_bound",
+            "value": 33400000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "mais de 33,4 milhões"
+          },
+          {
+            "role": "absentee_rate",
+            "value": 21.08,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "21,08%"
+          },
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          }
+        ]
+      },
+      {
+        "subject": "ausentes",
+        "action": "foram 32,7 milhões em 2022 (20,93%)",
+        "object": "2022",
+        "polarity": "affirmed",
+        "predicate": "registrar ausências",
+        "negation_scope": null,
+        "signed_action": "foram 32,7 milhões de ausentes em 2022",
+        "base_action": "ser 32,7 milhões de ausentes em 2022",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "absentees_count",
+            "value": 32700000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "32,7 milhões"
+          },
+          {
+            "role": "absentee_rate",
+            "value": 20.93,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "20,93%"
+          },
+          {
+            "role": "election_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Enquadramento cético que sugere controle da narrativa e questiona a transparência da verificação dos registros de ausência.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A situação parece mais uma operação para controlar a narrativa do que um simples problema de sistema.",
+      "Trocar o rótulo pode apenas comprar tempo e reduzir a pressão.",
+      "A nebulosidade dos registros não é detalhe.",
+      "Instituições que exigem confiança sem explicar o ocorrido pedem que se aceite sua versão sem prova suficiente."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "14317e1c35e8f8510bb317740a6da97e401f2c56da3a43432825474d2a34c4d7",
+      "input_sha256": "ab76524806b73926a728298fd546d6846f68ce66385ca60eb091fee84c66de7e",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Dificuldade de verificar registros de ausência eleitoral e falta de transparência sobre sua falha\",\n  \"subtopics\": [\n    \"Mudança prometida do status para “em processamento”\",\n    \"Pedido de CPF e nome dos pais para consulta\",\n    \"Comparação de ausências eleitorais entre 2026 e 2022\",\n    \"Suspeita de controle da narrativa\"\n  ],\n  \"central_entities\": [\n    \"quem diz que votou\",\n    \"CPF\",\n    \"pessoa\",\n    \"ausentes\",\n    \"Instituições\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A situação parece mais uma operação para controlar a narrativa do que um simples problema de sistema.\",\n    \"Trocar o rótulo pode apenas comprar tempo e reduzir a pressão.\",\n    \"A nebulosidade dos registros não é detalhe.\",\n    \"Instituições que exigem confiança sem explicar o ocorrido pedem que se aceite sua versão sem prova suficiente.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"quem diz que votou\",\n      \"action\": \"é chamado de “falta”\",\n      \"object\": \"“falta”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamar de “falta”\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é chamado de “falta”\",\n      \"base_action\": \"ser chamado de “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Instituições\",\n      \"action\": \"pedem CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"object\": \"CPF e nome dos pais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir dados para consulta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pedem CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"base_action\": \"pedir CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Instituições\",\n      \"action\": \"sem confirmar que ela compareceu\",\n      \"object\": \"comparecimento da pessoa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"confirmar comparecimento\",\n      \"negation_scope\": \"sem\",\n      \"signed_action\": \"sem confirmar que ela compareceu\",\n      \"base_action\": \"confirmar que ela compareceu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"ausentes\",\n      \"action\": \"houve mais de 33,4 milhões no primeiro turno de 2026 (21,08%)\",\n      \"object\": \"primeiro turno de 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"registrar ausências\",\n      \"negation_scope\": null,\n      \"signed_action\": \"houve mais de 33,4 milhões de ausentes no primeiro turno de 2026\",\n      \"base_action\": \"haver ausentes no primeiro turno de 2026\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"absentees_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 33,4 milhões\"\n        },\n        {\n          \"role\": \"absentee_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"ausentes\",\n      \"action\": \"foram 32,7 milhões em 2022 (20,93%)\",\n      \"object\": \"2022\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"registrar ausências\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram 32,7 milhões de ausentes em 2022\",\n      \"base_action\": \"ser 32,7 milhões de ausentes em 2022\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"absentees_count\",\n          \"kind\": \"count\",\n          \"value\": 32700000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"32,7 milhões\"\n        },\n        {\n          \"role\": \"absentee_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 20.93,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"20,93%\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético que sugere controle da narrativa e questiona a transparência da verificação dos registros de ausência.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "14317e1c35e8f8510bb317740a6da97e401f2c56da3a43432825474d2a34c4d7",
+          "input_sha256": "ab76524806b73926a728298fd546d6846f68ce66385ca60eb091fee84c66de7e",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Dificuldade de verificar registros de ausência eleitoral e falta de transparência sobre sua falha\",\n  \"subtopics\": [\n    \"Mudança prometida do status para “em processamento”\",\n    \"Pedido de CPF e nome dos pais para consulta\",\n    \"Comparação de ausências eleitorais entre 2026 e 2022\",\n    \"Suspeita de controle da narrativa\"\n  ],\n  \"central_entities\": [\n    \"quem diz que votou\",\n    \"CPF\",\n    \"pessoa\",\n    \"ausentes\",\n    \"Instituições\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A situação parece mais uma operação para controlar a narrativa do que um simples problema de sistema.\",\n    \"Trocar o rótulo pode apenas comprar tempo e reduzir a pressão.\",\n    \"A nebulosidade dos registros não é detalhe.\",\n    \"Instituições que exigem confiança sem explicar o ocorrido pedem que se aceite sua versão sem prova suficiente.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"quem diz que votou\",\n      \"action\": \"é chamado de “falta”\",\n      \"object\": \"“falta”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamar de “falta”\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é chamado de “falta”\",\n      \"base_action\": \"ser chamado de “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Instituições\",\n      \"action\": \"pedem CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"object\": \"CPF e nome dos pais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir dados para consulta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pedem CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"base_action\": \"pedir CPF e nome dos pais para a pessoa conferir a própria situação\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Instituições\",\n      \"action\": \"sem confirmar que ela compareceu\",\n      \"object\": \"comparecimento da pessoa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"confirmar comparecimento\",\n      \"negation_scope\": \"sem\",\n      \"signed_action\": \"sem confirmar que ela compareceu\",\n      \"base_action\": \"confirmar que ela compareceu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"ausentes\",\n      \"action\": \"houve mais de 33,4 milhões no primeiro turno de 2026 (21,08%)\",\n      \"object\": \"primeiro turno de 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"registrar ausências\",\n      \"negation_scope\": null,\n      \"signed_action\": \"houve mais de 33,4 milhões de ausentes no primeiro turno de 2026\",\n      \"base_action\": \"haver ausentes no primeiro turno de 2026\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"absentees_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 33,4 milhões\"\n        },\n        {\n          \"role\": \"absentee_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"ausentes\",\n      \"action\": \"foram 32,7 milhões em 2022 (20,93%)\",\n      \"object\": \"2022\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"registrar ausências\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram 32,7 milhões de ausentes em 2022\",\n      \"base_action\": \"ser 32,7 milhões de ausentes em 2022\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"absentees_count\",\n          \"kind\": \"count\",\n          \"value\": 32700000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"32,7 milhões\"\n        },\n        {\n          \"role\": \"absentee_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 20.93,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"20,93%\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético que sugere controle da narrativa e questiona a transparência da verificação dos registros de ausência.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "966c95e68bf4271956e76532445265edbd76331b26dfcf6c62cdf57d477c9ba5"
+}

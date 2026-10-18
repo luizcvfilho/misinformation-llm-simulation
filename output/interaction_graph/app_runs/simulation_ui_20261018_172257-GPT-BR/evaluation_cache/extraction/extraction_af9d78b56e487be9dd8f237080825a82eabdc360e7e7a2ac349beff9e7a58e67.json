@@ -1,0 +1,165 @@
+{
+  "inputs": {
+    "text": "Isso confirma que não se trata de uma conversão espontânea, mas de uma operação política calculada: a campanha de Lula usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral. A conversa sobre o que o bolsonarismo fez dentro da igreja serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos” dos evangélicos indecisos. Chamam isso de conscientização, mas o que está em jogo é controlar a influência dentro da comunidade religiosa — e vender essa disputa como se fosse uma causa moral.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Alegação de que a campanha de Lula usa Otoni de Paula para influenciar eleitores evangélicos",
+    "subtopics": [
+      "Disputa por influência dentro da comunidade religiosa",
+      "Deslocamento de votos de evangélicos indecisos",
+      "Enquadramento da disputa como conscientização ou causa moral"
+    ],
+    "central_entities": [
+      "Lula",
+      "campanha de Lula",
+      "Otoni de Paula",
+      "igreja",
+      "fiéis",
+      "bolsonarismo",
+      "evangélicos indecisos",
+      "comunidade religiosa"
+    ],
+    "central_relations": [
+      {
+        "subject": "Isso",
+        "action": "não se trata de",
+        "object": "uma conversão espontânea",
+        "polarity": "negated",
+        "predicate": "se trata de",
+        "negation_scope": "se trata de uma conversão espontânea",
+        "signed_action": "não se trata de",
+        "base_action": "se trata de",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "campanha de Lula",
+        "action": "usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral",
+        "object": "Otoni de Paula",
+        "polarity": "affirmed",
+        "predicate": "usa",
+        "negation_scope": null,
+        "signed_action": "usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral",
+        "base_action": "usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "A conversa sobre o que o bolsonarismo fez dentro da igreja",
+        "action": "serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”",
+        "object": "dos evangélicos indecisos",
+        "polarity": "affirmed",
+        "predicate": "serve de cobertura",
+        "negation_scope": null,
+        "signed_action": "serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”",
+        "base_action": "serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "electoral_points_lower_bound",
+            "value": 1.0,
+            "unit": "point",
+            "kind": "count",
+            "status": "exact",
+            "expression": "um"
+          },
+          {
+            "role": "electoral_points_upper_bound",
+            "value": 2.0,
+            "unit": "point",
+            "kind": "count",
+            "status": "exact",
+            "expression": "dois pontinhos"
+          }
+        ]
+      },
+      {
+        "subject": "o que está em jogo",
+        "action": "é controlar",
+        "object": "a influência dentro da comunidade religiosa",
+        "polarity": "affirmed",
+        "predicate": "controlar",
+        "negation_scope": null,
+        "signed_action": "é controlar",
+        "base_action": "é controlar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A disputa política é apresentada como uma estratégia para alcançar eleitores evangélicos por meio da influência religiosa, enquanto o discurso de conscientização é retratado como cobertura eleitoral.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O texto caracteriza a estratégia como uma operação política calculada, feita pela “porta dos fundos”, e apresenta a conversa moral como cobertura para objetivos eleitorais."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2a8e0952467b5d29c7ba0eba5a856bc836d92fb97e51af9f9431e350cdad4e5b",
+      "input_sha256": "1f44dca3949559c4f835589174a83883308438127c1cc2a5baf92a6f923f59a8",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Alegação de que a campanha de Lula usa Otoni de Paula para influenciar eleitores evangélicos\",\n  \"subtopics\": [\n    \"Disputa por influência dentro da comunidade religiosa\",\n    \"Deslocamento de votos de evangélicos indecisos\",\n    \"Enquadramento da disputa como conscientização ou causa moral\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"campanha de Lula\",\n    \"Otoni de Paula\",\n    \"igreja\",\n    \"fiéis\",\n    \"bolsonarismo\",\n    \"evangélicos indecisos\",\n    \"comunidade religiosa\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto caracteriza a estratégia como uma operação política calculada, feita pela “porta dos fundos”, e apresenta a conversa moral como cobertura para objetivos eleitorais.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Isso\",\n      \"action\": \"não se trata de\",\n      \"object\": \"uma conversão espontânea\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"se trata de\",\n      \"negation_scope\": \"se trata de uma conversão espontânea\",\n      \"signed_action\": \"não se trata de\",\n      \"base_action\": \"se trata de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"object\": \"Otoni de Paula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"usa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"base_action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A conversa sobre o que o bolsonarismo fez dentro da igreja\",\n      \"action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"object\": \"dos evangélicos indecisos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"serve de cobertura\",\n      \"negation_scope\": null,\n      \"signed_action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"base_action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"electoral_points_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"um\"\n        },\n        {\n          \"role\": \"electoral_points_upper_bound\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontinhos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"o que está em jogo\",\n      \"action\": \"é controlar\",\n      \"object\": \"a influência dentro da comunidade religiosa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"controlar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é controlar\",\n      \"base_action\": \"é controlar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa política é apresentada como uma estratégia para alcançar eleitores evangélicos por meio da influência religiosa, enquanto o discurso de conscientização é retratado como cobertura eleitoral.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "2a8e0952467b5d29c7ba0eba5a856bc836d92fb97e51af9f9431e350cdad4e5b",
+          "input_sha256": "1f44dca3949559c4f835589174a83883308438127c1cc2a5baf92a6f923f59a8",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Alegação de que a campanha de Lula usa Otoni de Paula para influenciar eleitores evangélicos\",\n  \"subtopics\": [\n    \"Disputa por influência dentro da comunidade religiosa\",\n    \"Deslocamento de votos de evangélicos indecisos\",\n    \"Enquadramento da disputa como conscientização ou causa moral\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"campanha de Lula\",\n    \"Otoni de Paula\",\n    \"igreja\",\n    \"fiéis\",\n    \"bolsonarismo\",\n    \"evangélicos indecisos\",\n    \"comunidade religiosa\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto caracteriza a estratégia como uma operação política calculada, feita pela “porta dos fundos”, e apresenta a conversa moral como cobertura para objetivos eleitorais.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Isso\",\n      \"action\": \"não se trata de\",\n      \"object\": \"uma conversão espontânea\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"se trata de\",\n      \"negation_scope\": \"se trata de uma conversão espontânea\",\n      \"signed_action\": \"não se trata de\",\n      \"base_action\": \"se trata de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"object\": \"Otoni de Paula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"usa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"base_action\": \"usa Otoni de Paula para entrar na igreja pela porta dos fundos e transformar a confiança dos fiéis em ferramenta eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A conversa sobre o que o bolsonarismo fez dentro da igreja\",\n      \"action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"object\": \"dos evangélicos indecisos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"serve de cobertura\",\n      \"negation_scope\": null,\n      \"signed_action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"base_action\": \"serve de cobertura para deslocar votos e arrancar “um ou dois pontinhos”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"electoral_points_lower_bound\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"um\"\n        },\n        {\n          \"role\": \"electoral_points_upper_bound\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontinhos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"o que está em jogo\",\n      \"action\": \"é controlar\",\n      \"object\": \"a influência dentro da comunidade religiosa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"controlar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é controlar\",\n      \"base_action\": \"é controlar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa política é apresentada como uma estratégia para alcançar eleitores evangélicos por meio da influência religiosa, enquanto o discurso de conscientização é retratado como cobertura eleitoral.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "469a928ca0dd4be78552688d3248e10267009ed9d80ca24cdc4fca77d0a0995a"
+}

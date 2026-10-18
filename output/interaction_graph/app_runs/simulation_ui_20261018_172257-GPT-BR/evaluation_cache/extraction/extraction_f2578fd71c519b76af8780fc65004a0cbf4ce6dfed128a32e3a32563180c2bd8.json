@@ -1,0 +1,222 @@
+{
+  "inputs": {
+    "text": "Os votos não mudaram; mudaram as regras da conta. Ao excluir 274.411 votos de Anthony Garotinho, a retotalização fez Douglas Ruas (PL) aparecer com 50,88%, contra 44,16% de Eduardo Paes (PSD). Chamam de procedimento técnico, mas o efeito é político: uma decisão institucional altera quem pode vencer sem que os eleitores tenham mudado de opinião.\n\nE o segundo turno continua suspenso enquanto ainda cabem recursos e contestações. A proclamação de Ruas está prevista para 15 de outubro, às 15h. Para mim, isso parece menos uma apuração neutra e mais um mecanismo institucional que decide o resultado sob a aparência de mera contabilidade.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Retotalização eleitoral e suspensão do segundo turno",
+    "subtopics": [
+      "Exclusão dos votos de Anthony Garotinho",
+      "Percentuais de Douglas Ruas (PL) e Eduardo Paes (PSD)",
+      "Previsão de proclamação do resultado",
+      "Crítica à aparência técnica do procedimento"
+    ],
+    "central_entities": [
+      "Anthony Garotinho",
+      "Douglas Ruas (PL)",
+      "Eduardo Paes (PSD)",
+      "PL",
+      "PSD",
+      "os eleitores"
+    ],
+    "central_relations": [
+      {
+        "subject": "a retotalização",
+        "action": "excluir",
+        "object": "274.411 votos de Anthony Garotinho",
+        "polarity": "affirmed",
+        "predicate": "excluir votos",
+        "negation_scope": null,
+        "signed_action": "excluir",
+        "base_action": "excluir",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "excluded_votes",
+            "value": 274411.0,
+            "unit": "vote",
+            "kind": "count",
+            "status": "exact",
+            "expression": "274.411 votos"
+          }
+        ]
+      },
+      {
+        "subject": "a retotalização",
+        "action": "fez Douglas Ruas (PL) aparecer com",
+        "object": "50,88%, contra 44,16% de Eduardo Paes (PSD)",
+        "polarity": "affirmed",
+        "predicate": "alterar percentuais eleitorais",
+        "negation_scope": null,
+        "signed_action": "fez Douglas Ruas (PL) aparecer com",
+        "base_action": "fez Douglas Ruas (PL) aparecer com",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "Douglas Ruas_percentage",
+            "value": 50.88,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "50,88%"
+          },
+          {
+            "role": "Eduardo Paes_percentage",
+            "value": 44.16,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "44,16%"
+          }
+        ]
+      },
+      {
+        "subject": "O segundo turno",
+        "action": "continua suspenso enquanto ainda cabem recursos e contestações",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "continuar suspenso",
+        "negation_scope": null,
+        "signed_action": "continua suspenso enquanto ainda cabem recursos e contestações",
+        "base_action": "continua suspenso enquanto ainda cabem recursos e contestações",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "A proclamação",
+        "action": "está prevista para",
+        "object": "Douglas Ruas (PL)",
+        "polarity": "affirmed",
+        "predicate": "estar prevista",
+        "negation_scope": null,
+        "signed_action": "está prevista para",
+        "base_action": "está prevista para",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "proclamation_day",
+            "value": 15.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "15 de outubro"
+          },
+          {
+            "role": "proclamation_hour",
+            "value": 15.0,
+            "unit": "hour",
+            "kind": "number",
+            "status": "exact",
+            "expression": "15h"
+          }
+        ]
+      },
+      {
+        "subject": "uma decisão institucional",
+        "action": "altera",
+        "object": "quem pode vencer",
+        "polarity": "affirmed",
+        "predicate": "alterar",
+        "negation_scope": null,
+        "signed_action": "altera",
+        "base_action": "altera",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "os eleitores",
+        "action": "tenham mudado de opinião",
+        "object": "",
+        "polarity": "negated",
+        "predicate": "mudar de opinião",
+        "negation_scope": "sem que os eleitores tenham mudado de opinião",
+        "signed_action": "sem que tenham mudado de opinião",
+        "base_action": "mudar de opinião",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A retotalização é apresentada como um procedimento técnico com efeitos políticos, enquanto o segundo turno permanece suspenso.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Para o narrador, o procedimento parece menos uma apuração neutra e mais um mecanismo institucional que decide o resultado sob a aparência de mera contabilidade."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "5690934f65c3fa3488bf41f20ab3b54bc099a5e47015394e7765719fce8f9cbf",
+      "input_sha256": "e2c6034f8af6f98419793b539bdca0a235bbf1df55ef4e0f740d5f385ec83fc4",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Retotalização eleitoral e suspensão do segundo turno\",\n  \"subtopics\": [\n    \"Exclusão dos votos de Anthony Garotinho\",\n    \"Percentuais de Douglas Ruas (PL) e Eduardo Paes (PSD)\",\n    \"Previsão de proclamação do resultado\",\n    \"Crítica à aparência técnica do procedimento\"\n  ],\n  \"central_entities\": [\n    \"Anthony Garotinho\",\n    \"Douglas Ruas (PL)\",\n    \"Eduardo Paes (PSD)\",\n    \"PL\",\n    \"PSD\",\n    \"os eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Para o narrador, o procedimento parece menos uma apuração neutra e mais um mecanismo institucional que decide o resultado sob a aparência de mera contabilidade.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"a retotalização\",\n      \"action\": \"excluir\",\n      \"object\": \"274.411 votos de Anthony Garotinho\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"excluir votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"excluir\",\n      \"base_action\": \"excluir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"excluded_votes\",\n          \"kind\": \"count\",\n          \"value\": 274411,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"274.411 votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a retotalização\",\n      \"action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"object\": \"50,88%, contra 44,16% de Eduardo Paes (PSD)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alterar percentuais eleitorais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"base_action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"Douglas Ruas_percentage\",\n          \"kind\": \"percentage\",\n          \"value\": 50.88,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"50,88%\"\n        },\n        {\n          \"role\": \"Eduardo Paes_percentage\",\n          \"kind\": \"percentage\",\n          \"value\": 44.16,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"44,16%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O segundo turno\",\n      \"action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"continuar suspenso\",\n      \"negation_scope\": null,\n      \"signed_action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"base_action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A proclamação\",\n      \"action\": \"está prevista para\",\n      \"object\": \"Douglas Ruas (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estar prevista\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está prevista para\",\n      \"base_action\": \"está prevista para\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"proclamation_day\",\n          \"kind\": \"number\",\n          \"value\": 15,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"15 de outubro\"\n        },\n        {\n          \"role\": \"proclamation_hour\",\n          \"kind\": \"number\",\n          \"value\": 15,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"15h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"uma decisão institucional\",\n      \"action\": \"altera\",\n      \"object\": \"quem pode vencer\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alterar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"altera\",\n      \"base_action\": \"altera\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"os eleitores\",\n      \"action\": \"tenham mudado de opinião\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"mudar de opinião\",\n      \"negation_scope\": \"sem que os eleitores tenham mudado de opinião\",\n      \"signed_action\": \"sem que tenham mudado de opinião\",\n      \"base_action\": \"mudar de opinião\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A retotalização é apresentada como um procedimento técnico com efeitos políticos, enquanto o segundo turno permanece suspenso.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "5690934f65c3fa3488bf41f20ab3b54bc099a5e47015394e7765719fce8f9cbf",
+          "input_sha256": "e2c6034f8af6f98419793b539bdca0a235bbf1df55ef4e0f740d5f385ec83fc4",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Retotalização eleitoral e suspensão do segundo turno\",\n  \"subtopics\": [\n    \"Exclusão dos votos de Anthony Garotinho\",\n    \"Percentuais de Douglas Ruas (PL) e Eduardo Paes (PSD)\",\n    \"Previsão de proclamação do resultado\",\n    \"Crítica à aparência técnica do procedimento\"\n  ],\n  \"central_entities\": [\n    \"Anthony Garotinho\",\n    \"Douglas Ruas (PL)\",\n    \"Eduardo Paes (PSD)\",\n    \"PL\",\n    \"PSD\",\n    \"os eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Para o narrador, o procedimento parece menos uma apuração neutra e mais um mecanismo institucional que decide o resultado sob a aparência de mera contabilidade.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"a retotalização\",\n      \"action\": \"excluir\",\n      \"object\": \"274.411 votos de Anthony Garotinho\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"excluir votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"excluir\",\n      \"base_action\": \"excluir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"excluded_votes\",\n          \"kind\": \"count\",\n          \"value\": 274411,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"274.411 votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a retotalização\",\n      \"action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"object\": \"50,88%, contra 44,16% de Eduardo Paes (PSD)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alterar percentuais eleitorais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"base_action\": \"fez Douglas Ruas (PL) aparecer com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"Douglas Ruas_percentage\",\n          \"kind\": \"percentage\",\n          \"value\": 50.88,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"50,88%\"\n        },\n        {\n          \"role\": \"Eduardo Paes_percentage\",\n          \"kind\": \"percentage\",\n          \"value\": 44.16,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"44,16%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O segundo turno\",\n      \"action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"continuar suspenso\",\n      \"negation_scope\": null,\n      \"signed_action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"base_action\": \"continua suspenso enquanto ainda cabem recursos e contestações\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A proclamação\",\n      \"action\": \"está prevista para\",\n      \"object\": \"Douglas Ruas (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estar prevista\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está prevista para\",\n      \"base_action\": \"está prevista para\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"proclamation_day\",\n          \"kind\": \"number\",\n          \"value\": 15,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"15 de outubro\"\n        },\n        {\n          \"role\": \"proclamation_hour\",\n          \"kind\": \"number\",\n          \"value\": 15,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"15h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"uma decisão institucional\",\n      \"action\": \"altera\",\n      \"object\": \"quem pode vencer\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alterar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"altera\",\n      \"base_action\": \"altera\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"os eleitores\",\n      \"action\": \"tenham mudado de opinião\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"mudar de opinião\",\n      \"negation_scope\": \"sem que os eleitores tenham mudado de opinião\",\n      \"signed_action\": \"sem que tenham mudado de opinião\",\n      \"base_action\": \"mudar de opinião\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A retotalização é apresentada como um procedimento técnico com efeitos políticos, enquanto o segundo turno permanece suspenso.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "086bf0d210f19fc4d5d9280e92e85a2df89682c3c671050e80eed439a12ad285"
+}

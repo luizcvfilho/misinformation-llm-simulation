@@ -1,0 +1,164 @@
+{
+  "inputs": {
+    "text": "Barchini já está preparando o terreno para tratar qualquer ajuste fiscal como ameaça à educação. Diz que cortar 1,5% do PIB — cerca de R$ 200 bilhões, quase todas as despesas discricionárias da União — atingiria bolsas da CAPES, o “Pé-de-meia”, universidades e outros programas. Mas essa lista também funciona como pressão: transforma uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger. Quando um ministro apresenta o corte como “inviável”, vale perguntar se está apenas alertando sobre consequências ou tentando blindar o orçamento e os interesses ligados a ele.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A apresentação de cortes fiscais como ameaça à educação e possível instrumento de pressão política",
+    "subtopics": [
+      "Impacto previsto sobre bolsas, universidades e programas",
+      "Proposta de campanha de Flávio Bolsonaro",
+      "Possível proteção do orçamento e de interesses ligados a ele"
+    ],
+    "central_entities": [
+      "Barchini",
+      "CAPES",
+      "“Pé-de-meia”",
+      "Flávio Bolsonaro",
+      "União",
+      "governo"
+    ],
+    "central_relations": [
+      {
+        "subject": "Barchini",
+        "action": "está preparando o terreno para tratar qualquer ajuste fiscal como ameaça à educação",
+        "object": "qualquer ajuste fiscal como ameaça à educação",
+        "polarity": "affirmed",
+        "predicate": "preparar o terreno para tratar",
+        "negation_scope": null,
+        "signed_action": "está preparando o terreno para tratar",
+        "base_action": "está preparando o terreno para tratar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Barchini",
+        "action": "diz que cortar 1,5% do PIB — cerca de R$ 200 bilhões — atingiria",
+        "object": "bolsas da CAPES, o “Pé-de-meia”, universidades e outros programas",
+        "polarity": "affirmed",
+        "predicate": "atingir",
+        "negation_scope": null,
+        "signed_action": "atingiria",
+        "base_action": "atingiria",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "cut_share_of_gdp",
+            "value": 1.5,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "1,5% do PIB"
+          },
+          {
+            "role": "cut_amount",
+            "value": 200000000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "cerca de R$ 200 bilhões"
+          }
+        ]
+      },
+      {
+        "subject": "essa lista",
+        "action": "funciona como pressão: transforma uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger",
+        "object": "uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger",
+        "polarity": "affirmed",
+        "predicate": "transformar",
+        "negation_scope": null,
+        "signed_action": "transforma",
+        "base_action": "transforma",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "um ministro",
+        "action": "apresenta o corte como “inviável”",
+        "object": "o corte como “inviável”",
+        "polarity": "affirmed",
+        "predicate": "apresentar como",
+        "negation_scope": null,
+        "signed_action": "apresenta",
+        "base_action": "apresenta",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento cético da advertência sobre cortes fiscais, apresentada como possível forma de pressão para proteger o orçamento e interesses ligados a ele.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A lista também funciona como pressão política.",
+      "Vale perguntar se o ministro está apenas alertando sobre consequências ou tentando blindar o orçamento e os interesses ligados a ele."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "36f7b63696e030113172608d4c6a9a59288ea40e31e1997959a05124a5ffa6d5",
+      "input_sha256": "260a8e1a59ad8a847858a710b339059046434e5a1f07ba793e0f8c3e9bb3ad6c",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A apresentação de cortes fiscais como ameaça à educação e possível instrumento de pressão política\",\n  \"subtopics\": [\n    \"Impacto previsto sobre bolsas, universidades e programas\",\n    \"Proposta de campanha de Flávio Bolsonaro\",\n    \"Possível proteção do orçamento e de interesses ligados a ele\"\n  ],\n  \"central_entities\": [\n    \"Barchini\",\n    \"CAPES\",\n    \"“Pé-de-meia”\",\n    \"Flávio Bolsonaro\",\n    \"União\",\n    \"governo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A lista também funciona como pressão política.\",\n    \"Vale perguntar se o ministro está apenas alertando sobre consequências ou tentando blindar o orçamento e os interesses ligados a ele.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Barchini\",\n      \"action\": \"está preparando o terreno para tratar qualquer ajuste fiscal como ameaça à educação\",\n      \"object\": \"qualquer ajuste fiscal como ameaça à educação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"preparar o terreno para tratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está preparando o terreno para tratar\",\n      \"base_action\": \"está preparando o terreno para tratar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Barchini\",\n      \"action\": \"diz que cortar 1,5% do PIB — cerca de R$ 200 bilhões — atingiria\",\n      \"object\": \"bolsas da CAPES, o “Pé-de-meia”, universidades e outros programas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"atingir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"atingiria\",\n      \"base_action\": \"atingiria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"cut_share_of_gdp\",\n          \"kind\": \"percentage\",\n          \"value\": 1.5,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"1,5% do PIB\"\n        },\n        {\n          \"role\": \"cut_amount\",\n          \"kind\": \"money\",\n          \"value\": 200000000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"cerca de R$ 200 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"essa lista\",\n      \"action\": \"funciona como pressão: transforma uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger\",\n      \"object\": \"uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"transformar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"transforma\",\n      \"base_action\": \"transforma\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"um ministro\",\n      \"action\": \"apresenta o corte como “inviável”\",\n      \"object\": \"o corte como “inviável”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apresentar como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apresenta\",\n      \"base_action\": \"apresenta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético da advertência sobre cortes fiscais, apresentada como possível forma de pressão para proteger o orçamento e interesses ligados a ele.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "36f7b63696e030113172608d4c6a9a59288ea40e31e1997959a05124a5ffa6d5",
+          "input_sha256": "260a8e1a59ad8a847858a710b339059046434e5a1f07ba793e0f8c3e9bb3ad6c",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"A apresentação de cortes fiscais como ameaça à educação e possível instrumento de pressão política\",\n  \"subtopics\": [\n    \"Impacto previsto sobre bolsas, universidades e programas\",\n    \"Proposta de campanha de Flávio Bolsonaro\",\n    \"Possível proteção do orçamento e de interesses ligados a ele\"\n  ],\n  \"central_entities\": [\n    \"Barchini\",\n    \"CAPES\",\n    \"“Pé-de-meia”\",\n    \"Flávio Bolsonaro\",\n    \"União\",\n    \"governo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A lista também funciona como pressão política.\",\n    \"Vale perguntar se o ministro está apenas alertando sobre consequências ou tentando blindar o orçamento e os interesses ligados a ele.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Barchini\",\n      \"action\": \"está preparando o terreno para tratar qualquer ajuste fiscal como ameaça à educação\",\n      \"object\": \"qualquer ajuste fiscal como ameaça à educação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"preparar o terreno para tratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está preparando o terreno para tratar\",\n      \"base_action\": \"está preparando o terreno para tratar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Barchini\",\n      \"action\": \"diz que cortar 1,5% do PIB — cerca de R$ 200 bilhões — atingiria\",\n      \"object\": \"bolsas da CAPES, o “Pé-de-meia”, universidades e outros programas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"atingir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"atingiria\",\n      \"base_action\": \"atingiria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"cut_share_of_gdp\",\n          \"kind\": \"percentage\",\n          \"value\": 1.5,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"1,5% do PIB\"\n        },\n        {\n          \"role\": \"cut_amount\",\n          \"kind\": \"money\",\n          \"value\": 200000000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"cerca de R$ 200 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"essa lista\",\n      \"action\": \"funciona como pressão: transforma uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger\",\n      \"object\": \"uma proposta de campanha de Flávio Bolsonaro em risco para tudo que o governo quer proteger\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"transformar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"transforma\",\n      \"base_action\": \"transforma\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"um ministro\",\n      \"action\": \"apresenta o corte como “inviável”\",\n      \"object\": \"o corte como “inviável”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apresentar como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apresenta\",\n      \"base_action\": \"apresenta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético da advertência sobre cortes fiscais, apresentada como possível forma de pressão para proteger o orçamento e interesses ligados a ele.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "21a2fee089b9bedba74aa605e290d3604b2b56a3ffcf10352c1246db41187c1f"
+}

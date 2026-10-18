@@ -1,0 +1,153 @@
+{
+  "inputs": {
+    "text": "Tarcísio de Freitas negou nesta quarta-feira (7) um acordo para disputar a Presidência em 2030, mas a própria especulação expõe uma política organizada em torno de projetos de poder, enquanto quem vive e trabalha em São Paulo espera respostas para suas necessidades. Reeleito em primeiro turno com mais de 60% dos votos, ele tem a obrigação de governar para a população — não de transformar o mandato em trampolim para ambições nacionais. Quando cargos e disputas eleitorais ocupam o centro, as prioridades de quem mais depende dos serviços e das políticas públicas ficam em segundo plano.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A negativa de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e a crítica a ambições eleitorais que desviam o foco das necessidades da população.",
+    "subtopics": [
+      "Reeleição de Tarcísio de Freitas com mais de 60% dos votos",
+      "Expectativas da população de São Paulo por respostas às suas necessidades",
+      "Crítica à priorização de projetos de poder e disputas eleitorais"
+    ],
+    "central_entities": [
+      "Tarcísio de Freitas",
+      "Presidência",
+      "São Paulo"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "negou",
+        "object": "um acordo para disputar a Presidência em 2030",
+        "polarity": "affirmed",
+        "predicate": "negou",
+        "negation_scope": "um acordo para disputar a Presidência em 2030",
+        "signed_action": "negou",
+        "base_action": "negou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "presidency_race_year",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "Reeleito",
+        "object": "em primeiro turno com mais de 60% dos votos",
+        "polarity": "affirmed",
+        "predicate": "Reeleito",
+        "negation_scope": null,
+        "signed_action": "Reeleito",
+        "base_action": "Reeleito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 1.0,
+            "unit": "round",
+            "kind": "count",
+            "status": "exact",
+            "expression": "primeiro turno"
+          },
+          {
+            "role": "votes_percentage_lower_bound",
+            "value": 60.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "mais de 60%"
+          }
+        ]
+      },
+      {
+        "subject": "quem vive e trabalha em São Paulo",
+        "action": "espera",
+        "object": "respostas para suas necessidades",
+        "polarity": "affirmed",
+        "predicate": "espera",
+        "negation_scope": null,
+        "signed_action": "espera",
+        "base_action": "espera",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Crítica a uma política centrada em projetos de poder e disputas eleitorais que deixa em segundo plano as necessidades de quem vive e trabalha em São Paulo.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Tarcísio de Freitas deve governar para a população, não transformar o mandato em trampolim para ambições nacionais."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "799b1bcc16ac860ba58f6f103ee93c82ca6adade6eba19a20489975fb888b06d",
+      "input_sha256": "7be746691e48ed6651a077fd37170cc0c002ee02625b6e98edbdcde067308b0f",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A negativa de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e a crítica a ambições eleitorais que desviam o foco das necessidades da população.\",\n  \"subtopics\": [\n    \"Reeleição de Tarcísio de Freitas com mais de 60% dos votos\",\n    \"Expectativas da população de São Paulo por respostas às suas necessidades\",\n    \"Crítica à priorização de projetos de poder e disputas eleitorais\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"Presidência\",\n    \"São Paulo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Tarcísio de Freitas deve governar para a população, não transformar o mandato em trampolim para ambições nacionais.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"um acordo para disputar a Presidência em 2030\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negou\",\n      \"negation_scope\": \"um acordo para disputar a Presidência em 2030\",\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"presidency_race_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"Reeleito\",\n      \"object\": \"em primeiro turno com mais de 60% dos votos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"Reeleito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Reeleito\",\n      \"base_action\": \"Reeleito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"votes_percentage_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"quem vive e trabalha em São Paulo\",\n      \"action\": \"espera\",\n      \"object\": \"respostas para suas necessidades\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"espera\",\n      \"negation_scope\": null,\n      \"signed_action\": \"espera\",\n      \"base_action\": \"espera\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica a uma política centrada em projetos de poder e disputas eleitorais que deixa em segundo plano as necessidades de quem vive e trabalha em São Paulo.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "799b1bcc16ac860ba58f6f103ee93c82ca6adade6eba19a20489975fb888b06d",
+          "input_sha256": "7be746691e48ed6651a077fd37170cc0c002ee02625b6e98edbdcde067308b0f",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"A negativa de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e a crítica a ambições eleitorais que desviam o foco das necessidades da população.\",\n  \"subtopics\": [\n    \"Reeleição de Tarcísio de Freitas com mais de 60% dos votos\",\n    \"Expectativas da população de São Paulo por respostas às suas necessidades\",\n    \"Crítica à priorização de projetos de poder e disputas eleitorais\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"Presidência\",\n    \"São Paulo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Tarcísio de Freitas deve governar para a população, não transformar o mandato em trampolim para ambições nacionais.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"um acordo para disputar a Presidência em 2030\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negou\",\n      \"negation_scope\": \"um acordo para disputar a Presidência em 2030\",\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"presidency_race_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"Reeleito\",\n      \"object\": \"em primeiro turno com mais de 60% dos votos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"Reeleito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Reeleito\",\n      \"base_action\": \"Reeleito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"votes_percentage_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"quem vive e trabalha em São Paulo\",\n      \"action\": \"espera\",\n      \"object\": \"respostas para suas necessidades\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"espera\",\n      \"negation_scope\": null,\n      \"signed_action\": \"espera\",\n      \"base_action\": \"espera\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica a uma política centrada em projetos de poder e disputas eleitorais que deixa em segundo plano as necessidades de quem vive e trabalha em São Paulo.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "c98c92607a7dc8ef36148db7f6b680728dc46462d791598023157d8eaf92d16d"
+}

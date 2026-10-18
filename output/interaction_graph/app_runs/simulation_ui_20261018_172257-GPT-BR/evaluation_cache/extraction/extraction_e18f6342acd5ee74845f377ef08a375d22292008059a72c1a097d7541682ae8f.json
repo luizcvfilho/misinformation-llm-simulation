@@ -1,0 +1,149 @@
+{
+  "inputs": {
+    "text": "O TSE deu à Meta 48 horas para preservar registos e explicar decisões sobre perfis de Lula e de terceiros, as visualizações de vídeos publicados em 7 de outubro, a conta de anúncios desactivada em 23 de setembro e uma rede de 255 perfis. Há perguntas legítimas, mas nada disso prova que a campanha do PT tenha sido alvo de restrição selectiva.\n\nTambém é preciso desconfiar quando o poder público exige explicações a uma empresa privada em plena disputa política: a fiscalização não pode servir de pretexto para pressionar plataformas a favorecer uma candidatura ou a controlar o debate. A Meta deve esclarecer os critérios e mostrar que os aplicou de forma igual às duas candidaturas; o TSE, por sua vez, deve agir com transparência e imparcialidade. Sem provas verificáveis, transformar suspeitas em acusações só aumenta a desconfiança e enfraquece a confiança nas instituições.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "O prazo dado pelo TSE à Meta para explicar decisões sobre perfis e conteúdos, e a falta de provas de restrição selectiva contra a campanha do PT.",
+    "subtopics": [
+      "Preservação de registos e explicação de decisões da Meta",
+      "Fiscalização pública durante uma disputa política",
+      "Transparência, imparcialidade e confiança nas instituições"
+    ],
+    "central_entities": [
+      "TSE",
+      "Meta",
+      "Lula",
+      "PT"
+    ],
+    "central_relations": [
+      {
+        "subject": "TSE",
+        "action": "deu à Meta 48 horas para preservar registos e explicar decisões",
+        "object": "decisões sobre perfis de Lula e de terceiros, visualizações de vídeos publicados em 7 de outubro, a conta de anúncios desactivada em 23 de setembro e uma rede de 255 perfis",
+        "polarity": "affirmed",
+        "predicate": "dar prazo",
+        "negation_scope": null,
+        "signed_action": "deu à Meta 48 horas para preservar registos e explicar decisões",
+        "base_action": "deu à Meta para preservar registos e explicar decisões",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48 horas",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "response_deadline",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48 horas"
+          },
+          {
+            "role": "video_publication_day",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "7 de outubro"
+          },
+          {
+            "role": "ad_account_deactivation_day",
+            "value": 23.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "23 de setembro"
+          },
+          {
+            "role": "profiles_count",
+            "value": 255.0,
+            "unit": "profile",
+            "kind": "count",
+            "status": "exact",
+            "expression": "255 perfis"
+          }
+        ]
+      },
+      {
+        "subject": "nada disso",
+        "action": "não prova que tenha sido alvo de restrição selectiva",
+        "object": "a campanha do PT",
+        "polarity": "negated",
+        "predicate": "provar",
+        "negation_scope": "prova",
+        "signed_action": "não prova que a campanha do PT tenha sido alvo de restrição selectiva",
+        "base_action": "provar que a campanha do PT tenha sido alvo de restrição selectiva",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "O texto reconhece questões legítimas sobre as decisões da Meta, mas alerta para o risco de pressão política e afirma que não há prova de restrição selectiva contra a campanha do PT.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "É preciso desconfiar de exigências do poder público a uma empresa privada durante uma disputa política.",
+      "A fiscalização não deve servir de pretexto para pressionar plataformas a favorecer uma candidatura ou controlar o debate.",
+      "A Meta deve esclarecer os critérios e mostrar que os aplicou de forma igual às duas candidaturas.",
+      "O TSE deve agir com transparência e imparcialidade.",
+      "Sem provas verificáveis, transformar suspeitas em acusações aumenta a desconfiança e enfraquece a confiança nas instituições."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "98f1a494b2d0d3c1e5af5184b90656da6b675091055ebe318342ff58f0d9441e",
+      "input_sha256": "e9a34e7eba496dee102fb3352eff5c212f98a2536c9a77b3518680e346e23210",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"O prazo dado pelo TSE à Meta para explicar decisões sobre perfis e conteúdos, e a falta de provas de restrição selectiva contra a campanha do PT.\",\n  \"subtopics\": [\n    \"Preservação de registos e explicação de decisões da Meta\",\n    \"Fiscalização pública durante uma disputa política\",\n    \"Transparência, imparcialidade e confiança nas instituições\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Meta\",\n    \"Lula\",\n    \"PT\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"É preciso desconfiar de exigências do poder público a uma empresa privada durante uma disputa política.\",\n    \"A fiscalização não deve servir de pretexto para pressionar plataformas a favorecer uma candidatura ou controlar o debate.\",\n    \"A Meta deve esclarecer os critérios e mostrar que os aplicou de forma igual às duas candidaturas.\",\n    \"O TSE deve agir com transparência e imparcialidade.\",\n    \"Sem provas verificáveis, transformar suspeitas em acusações aumenta a desconfiança e enfraquece a confiança nas instituições.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"deu à Meta 48 horas para preservar registos e explicar decisões\",\n      \"object\": \"decisões sobre perfis de Lula e de terceiros, visualizações de vídeos publicados em 7 de outubro, a conta de anúncios desactivada em 23 de setembro e uma rede de 255 perfis\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar prazo\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deu à Meta 48 horas para preservar registos e explicar decisões\",\n      \"base_action\": \"deu à Meta para preservar registos e explicar decisões\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"response_deadline\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        },\n        {\n          \"role\": \"video_publication_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7 de outubro\"\n        },\n        {\n          \"role\": \"ad_account_deactivation_day\",\n          \"kind\": \"number\",\n          \"value\": 23,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"23 de setembro\"\n        },\n        {\n          \"role\": \"profiles_count\",\n          \"kind\": \"count\",\n          \"value\": 255,\n          \"unit\": \"profile\",\n          \"status\": \"exact\",\n          \"expression\": \"255 perfis\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"nada disso\",\n      \"action\": \"não prova que tenha sido alvo de restrição selectiva\",\n      \"object\": \"a campanha do PT\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provar\",\n      \"negation_scope\": \"prova\",\n      \"signed_action\": \"não prova que a campanha do PT tenha sido alvo de restrição selectiva\",\n      \"base_action\": \"provar que a campanha do PT tenha sido alvo de restrição selectiva\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"O texto reconhece questões legítimas sobre as decisões da Meta, mas alerta para o risco de pressão política e afirma que não há prova de restrição selectiva contra a campanha do PT.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "98f1a494b2d0d3c1e5af5184b90656da6b675091055ebe318342ff58f0d9441e",
+          "input_sha256": "e9a34e7eba496dee102fb3352eff5c212f98a2536c9a77b3518680e346e23210",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"O prazo dado pelo TSE à Meta para explicar decisões sobre perfis e conteúdos, e a falta de provas de restrição selectiva contra a campanha do PT.\",\n  \"subtopics\": [\n    \"Preservação de registos e explicação de decisões da Meta\",\n    \"Fiscalização pública durante uma disputa política\",\n    \"Transparência, imparcialidade e confiança nas instituições\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Meta\",\n    \"Lula\",\n    \"PT\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"É preciso desconfiar de exigências do poder público a uma empresa privada durante uma disputa política.\",\n    \"A fiscalização não deve servir de pretexto para pressionar plataformas a favorecer uma candidatura ou controlar o debate.\",\n    \"A Meta deve esclarecer os critérios e mostrar que os aplicou de forma igual às duas candidaturas.\",\n    \"O TSE deve agir com transparência e imparcialidade.\",\n    \"Sem provas verificáveis, transformar suspeitas em acusações aumenta a desconfiança e enfraquece a confiança nas instituições.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"deu à Meta 48 horas para preservar registos e explicar decisões\",\n      \"object\": \"decisões sobre perfis de Lula e de terceiros, visualizações de vídeos publicados em 7 de outubro, a conta de anúncios desactivada em 23 de setembro e uma rede de 255 perfis\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar prazo\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deu à Meta 48 horas para preservar registos e explicar decisões\",\n      \"base_action\": \"deu à Meta para preservar registos e explicar decisões\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"response_deadline\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        },\n        {\n          \"role\": \"video_publication_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7 de outubro\"\n        },\n        {\n          \"role\": \"ad_account_deactivation_day\",\n          \"kind\": \"number\",\n          \"value\": 23,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"23 de setembro\"\n        },\n        {\n          \"role\": \"profiles_count\",\n          \"kind\": \"count\",\n          \"value\": 255,\n          \"unit\": \"profile\",\n          \"status\": \"exact\",\n          \"expression\": \"255 perfis\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"nada disso\",\n      \"action\": \"não prova que tenha sido alvo de restrição selectiva\",\n      \"object\": \"a campanha do PT\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provar\",\n      \"negation_scope\": \"prova\",\n      \"signed_action\": \"não prova que a campanha do PT tenha sido alvo de restrição selectiva\",\n      \"base_action\": \"provar que a campanha do PT tenha sido alvo de restrição selectiva\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"O texto reconhece questões legítimas sobre as decisões da Meta, mas alerta para o risco de pressão política e afirma que não há prova de restrição selectiva contra a campanha do PT.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "54f4b6349bc1bd06fe226d70e72abd620966a3873c7acfc42695099edf1ae2d4"
+}

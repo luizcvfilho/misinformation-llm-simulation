@@ -1,0 +1,221 @@
+{
+  "inputs": {
+    "text": "As urnas deram um aviso claro: Lula ficou 3,3 milhões de votos atrás de Flávio Bolsonaro e perdeu votos em 98% dos municípios face a 2022. Não é um detalhe que se possa descartar. Sobretudo no interior e nas regiões ligadas ao agro, muitos eleitores parecem rejeitar um poder distante de quem trabalha, produz e sustenta a vida do país. Um governo que desvaloriza a família, a ordem e as tradições acaba por enfraquecer os alicerces da sociedade — e não deve surpreender-se quando os cidadãos lhe retiram confiança.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Perdas eleitorais de Lula e interpretação como rejeição política",
+    "subtopics": [
+      "Diferença de votos para Flávio Bolsonaro",
+      "Perda de votos nos municípios face a 2022",
+      "Rejeição atribuída a eleitores do interior e ligados ao agro",
+      "Crítica à desvalorização da família, da ordem e das tradições"
+    ],
+    "central_entities": [
+      "Lula",
+      "Flávio Bolsonaro",
+      "muitos eleitores",
+      "Um governo",
+      "os cidadãos"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lula",
+        "action": "ficou 3,3 milhões de votos atrás de",
+        "object": "Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "ficar atrás de",
+        "negation_scope": null,
+        "signed_action": "ficou 3,3 milhões de votos atrás de",
+        "base_action": "ficou atrás de",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_gap",
+            "value": 3300000.0,
+            "unit": "vote",
+            "kind": "count",
+            "status": "exact",
+            "expression": "3,3 milhões de votos"
+          }
+        ]
+      },
+      {
+        "subject": "Lula",
+        "action": "perdeu votos em 98% dos municípios face a 2022",
+        "object": "municípios",
+        "polarity": "affirmed",
+        "predicate": "perder votos",
+        "negation_scope": null,
+        "signed_action": "perdeu votos em 98% dos municípios face a 2022",
+        "base_action": "perdeu votos face a",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "municipalities_vote_loss_rate",
+            "value": 98.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "98%"
+          },
+          {
+            "role": "comparison_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          }
+        ]
+      },
+      {
+        "subject": "muitos eleitores",
+        "action": "parecem rejeitar",
+        "object": "um poder distante de quem trabalha, produz e sustenta a vida do país",
+        "polarity": "affirmed",
+        "predicate": "rejeitar",
+        "negation_scope": null,
+        "signed_action": "parecem rejeitar",
+        "base_action": "parecem rejeitar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "Um governo",
+        "action": "desvaloriza",
+        "object": "a família, a ordem e as tradições",
+        "polarity": "affirmed",
+        "predicate": "desvalorizar",
+        "negation_scope": null,
+        "signed_action": "desvaloriza",
+        "base_action": "desvaloriza",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Um governo",
+        "action": "acaba por enfraquecer",
+        "object": "os alicerces da sociedade",
+        "polarity": "affirmed",
+        "predicate": "enfraquecer",
+        "negation_scope": null,
+        "signed_action": "acaba por enfraquecer",
+        "base_action": "acaba por enfraquecer",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "os cidadãos",
+        "action": "retiram confiança",
+        "object": "Um governo",
+        "polarity": "affirmed",
+        "predicate": "retirar confiança",
+        "negation_scope": null,
+        "signed_action": "retiram confiança",
+        "base_action": "retiram confiança",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Um governo",
+        "action": "não deve surpreender-se quando os cidadãos lhe retiram confiança",
+        "object": "quando os cidadãos lhe retiram confiança",
+        "polarity": "negated",
+        "predicate": "dever surpreender-se",
+        "negation_scope": "não deve",
+        "signed_action": "não deve surpreender-se",
+        "base_action": "deve surpreender-se",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Crítica política que enquadra as perdas eleitorais como rejeição a um poder distante e associa a perda de confiança à desvalorização de valores tradicionais.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Um governo que desvaloriza a família, a ordem e as tradições enfraquece os alicerces da sociedade.",
+      "Um governo não deve surpreender-se quando os cidadãos lhe retiram confiança."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2f18e77e8bd5bb8fde709e4f903affc2d4688d8cf44121825a135339f3a14267",
+      "input_sha256": "caf69a6b73e1c30a4e9ac8ae3826deeabda24aa4a52552e2f9d5955bd181b92f",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Perdas eleitorais de Lula e interpretação como rejeição política\",\n  \"subtopics\": [\n    \"Diferença de votos para Flávio Bolsonaro\",\n    \"Perda de votos nos municípios face a 2022\",\n    \"Rejeição atribuída a eleitores do interior e ligados ao agro\",\n    \"Crítica à desvalorização da família, da ordem e das tradições\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"muitos eleitores\",\n    \"Um governo\",\n    \"os cidadãos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Um governo que desvaloriza a família, a ordem e as tradições enfraquece os alicerces da sociedade.\",\n    \"Um governo não deve surpreender-se quando os cidadãos lhe retiram confiança.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficar atrás de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficou atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"perdeu votos em 98% dos municípios face a 2022\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perder votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"perdeu votos em 98% dos municípios face a 2022\",\n      \"base_action\": \"perdeu votos face a\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipalities_vote_loss_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"muitos eleitores\",\n      \"action\": \"parecem rejeitar\",\n      \"object\": \"um poder distante de quem trabalha, produz e sustenta a vida do país\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"rejeitar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"parecem rejeitar\",\n      \"base_action\": \"parecem rejeitar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"desvaloriza\",\n      \"object\": \"a família, a ordem e as tradições\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"desvalorizar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"desvaloriza\",\n      \"base_action\": \"desvaloriza\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"acaba por enfraquecer\",\n      \"object\": \"os alicerces da sociedade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"enfraquecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acaba por enfraquecer\",\n      \"base_action\": \"acaba por enfraquecer\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"os cidadãos\",\n      \"action\": \"retiram confiança\",\n      \"object\": \"Um governo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retirar confiança\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retiram confiança\",\n      \"base_action\": \"retiram confiança\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"não deve surpreender-se quando os cidadãos lhe retiram confiança\",\n      \"object\": \"quando os cidadãos lhe retiram confiança\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"dever surpreender-se\",\n      \"negation_scope\": \"não deve\",\n      \"signed_action\": \"não deve surpreender-se\",\n      \"base_action\": \"deve surpreender-se\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica política que enquadra as perdas eleitorais como rejeição a um poder distante e associa a perda de confiança à desvalorização de valores tradicionais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "2f18e77e8bd5bb8fde709e4f903affc2d4688d8cf44121825a135339f3a14267",
+          "input_sha256": "caf69a6b73e1c30a4e9ac8ae3826deeabda24aa4a52552e2f9d5955bd181b92f",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Perdas eleitorais de Lula e interpretação como rejeição política\",\n  \"subtopics\": [\n    \"Diferença de votos para Flávio Bolsonaro\",\n    \"Perda de votos nos municípios face a 2022\",\n    \"Rejeição atribuída a eleitores do interior e ligados ao agro\",\n    \"Crítica à desvalorização da família, da ordem e das tradições\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"muitos eleitores\",\n    \"Um governo\",\n    \"os cidadãos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Um governo que desvaloriza a família, a ordem e as tradições enfraquece os alicerces da sociedade.\",\n    \"Um governo não deve surpreender-se quando os cidadãos lhe retiram confiança.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficar atrás de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficou atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"perdeu votos em 98% dos municípios face a 2022\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perder votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"perdeu votos em 98% dos municípios face a 2022\",\n      \"base_action\": \"perdeu votos face a\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipalities_vote_loss_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"muitos eleitores\",\n      \"action\": \"parecem rejeitar\",\n      \"object\": \"um poder distante de quem trabalha, produz e sustenta a vida do país\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"rejeitar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"parecem rejeitar\",\n      \"base_action\": \"parecem rejeitar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"desvaloriza\",\n      \"object\": \"a família, a ordem e as tradições\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"desvalorizar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"desvaloriza\",\n      \"base_action\": \"desvaloriza\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"acaba por enfraquecer\",\n      \"object\": \"os alicerces da sociedade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"enfraquecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acaba por enfraquecer\",\n      \"base_action\": \"acaba por enfraquecer\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"os cidadãos\",\n      \"action\": \"retiram confiança\",\n      \"object\": \"Um governo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retirar confiança\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retiram confiança\",\n      \"base_action\": \"retiram confiança\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Um governo\",\n      \"action\": \"não deve surpreender-se quando os cidadãos lhe retiram confiança\",\n      \"object\": \"quando os cidadãos lhe retiram confiança\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"dever surpreender-se\",\n      \"negation_scope\": \"não deve\",\n      \"signed_action\": \"não deve surpreender-se\",\n      \"base_action\": \"deve surpreender-se\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica política que enquadra as perdas eleitorais como rejeição a um poder distante e associa a perda de confiança à desvalorização de valores tradicionais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "0da1babf83bda10c3ef921c52d89d9e182a91c23f41cc372955c6ef5c601f21a"
+}

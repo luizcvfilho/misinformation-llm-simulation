@@ -1,0 +1,184 @@
+{
+  "inputs": {
+    "text": "Flávio Bolsonaro (PL), candidato à Presidência da República, defendeu que jovens possam tirar a Carteira Nacional de Habilitação (CNH) a partir dos 16 anos. Ele fez a declaração na terça-feira (6), durante um evento em Goiânia (GO), no mesmo ato em que o ex-governador Ronaldo Caiado (PSD) anunciou apoio à candidatura de Flávio no segundo turno.\n\nA proposta surgiu enquanto Flávio falava sobre a redução da maioridade penal. Atualmente, brasileiros de 16 e 17 anos não podem obter CNH para dirigir veículos automotores, e seria necessário alterar as regras de habilitação. O candidato também relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Proposta de Flávio Bolsonaro para permitir CNH a partir dos 16 anos",
+    "subtopics": [
+      "Redução da maioridade penal",
+      "Apoio de Ronaldo Caiado à candidatura de Flávio Bolsonaro",
+      "Regras atuais para obtenção de CNH por adolescentes"
+    ],
+    "central_entities": [
+      "Flávio Bolsonaro (PL)",
+      "Ronaldo Caiado (PSD)",
+      "Goiânia (GO)",
+      "Carteira Nacional de Habilitação (CNH)",
+      "PL",
+      "PSD",
+      "brasileiros de 16 e 17 anos",
+      "jovens",
+      "adolescentes envolvidos em crimes graves"
+    ],
+    "central_relations": [
+      {
+        "subject": "Flávio Bolsonaro (PL)",
+        "action": "defendeu que jovens possam tirar CNH a partir dos 16 anos",
+        "object": "jovens tirar CNH a partir dos 16 anos",
+        "polarity": "affirmed",
+        "predicate": "defendeu",
+        "negation_scope": null,
+        "signed_action": "defendeu que jovens possam tirar CNH a partir dos 16 anos",
+        "base_action": "defendeu que jovens possam tirar CNH a partir dos 16 anos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": [
+          {
+            "role": "minimum_driving_age",
+            "value": 16.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "16 anos"
+          }
+        ]
+      },
+      {
+        "subject": "Ronaldo Caiado (PSD)",
+        "action": "anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno",
+        "object": "Flávio Bolsonaro (PL)",
+        "polarity": "affirmed",
+        "predicate": "anunciou apoio",
+        "negation_scope": null,
+        "signed_action": "anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno",
+        "base_action": "anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 2.0,
+            "unit": null,
+            "kind": "count",
+            "status": "exact",
+            "expression": "segundo turno"
+          }
+        ]
+      },
+      {
+        "subject": "brasileiros de 16 e 17 anos",
+        "action": "não podem obter CNH para dirigir veículos automotores",
+        "object": "Carteira Nacional de Habilitação (CNH)",
+        "polarity": "negated",
+        "predicate": "podem obter",
+        "negation_scope": "não",
+        "signed_action": "não podem obter CNH para dirigir veículos automotores",
+        "base_action": "podem obter CNH para dirigir veículos automotores",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "age",
+            "value": 16.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "16 anos"
+          },
+          {
+            "role": "age",
+            "value": 17.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "17 anos"
+          }
+        ]
+      },
+      {
+        "subject": "Flávio Bolsonaro (PL)",
+        "action": "relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos",
+        "object": "adolescentes envolvidos em crimes graves",
+        "polarity": "affirmed",
+        "predicate": "relacionou",
+        "negation_scope": null,
+        "signed_action": "relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos",
+        "base_action": "relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A proposta de habilitação aos 16 anos é apresentada no contexto do debate sobre redução da maioridade penal.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Permitir que jovens tirem CNH a partir dos 16 anos."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "c1b02a0c689695cf0b8839caa723d87db2ba494caf0db0dac14114d3cf2fc19e",
+      "input_sha256": "330751461d97e9ab981acaee3e14d898452e757aeae459adcd2e831d4f5f80a3",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Proposta de Flávio Bolsonaro para permitir CNH a partir dos 16 anos\",\n  \"subtopics\": [\n    \"Redução da maioridade penal\",\n    \"Apoio de Ronaldo Caiado à candidatura de Flávio Bolsonaro\",\n    \"Regras atuais para obtenção de CNH por adolescentes\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro (PL)\",\n    \"Ronaldo Caiado (PSD)\",\n    \"Goiânia (GO)\",\n    \"Carteira Nacional de Habilitação (CNH)\",\n    \"PL\",\n    \"PSD\",\n    \"brasileiros de 16 e 17 anos\",\n    \"jovens\",\n    \"adolescentes envolvidos em crimes graves\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Permitir que jovens tirem CNH a partir dos 16 anos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro (PL)\",\n      \"action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"object\": \"jovens tirar CNH a partir dos 16 anos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defendeu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"base_action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"minimum_driving_age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Ronaldo Caiado (PSD)\",\n      \"action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"object\": \"Flávio Bolsonaro (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"anunciou apoio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"base_action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"brasileiros de 16 e 17 anos\",\n      \"action\": \"não podem obter CNH para dirigir veículos automotores\",\n      \"object\": \"Carteira Nacional de Habilitação (CNH)\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"podem obter\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não podem obter CNH para dirigir veículos automotores\",\n      \"base_action\": \"podem obter CNH para dirigir veículos automotores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        },\n        {\n          \"role\": \"age\",\n          \"kind\": \"age\",\n          \"value\": 17,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"17 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro (PL)\",\n      \"action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"object\": \"adolescentes envolvidos em crimes graves\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"relacionou\",\n      \"negation_scope\": null,\n      \"signed_action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"base_action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proposta de habilitação aos 16 anos é apresentada no contexto do debate sobre redução da maioridade penal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "c1b02a0c689695cf0b8839caa723d87db2ba494caf0db0dac14114d3cf2fc19e",
+          "input_sha256": "330751461d97e9ab981acaee3e14d898452e757aeae459adcd2e831d4f5f80a3",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Proposta de Flávio Bolsonaro para permitir CNH a partir dos 16 anos\",\n  \"subtopics\": [\n    \"Redução da maioridade penal\",\n    \"Apoio de Ronaldo Caiado à candidatura de Flávio Bolsonaro\",\n    \"Regras atuais para obtenção de CNH por adolescentes\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro (PL)\",\n    \"Ronaldo Caiado (PSD)\",\n    \"Goiânia (GO)\",\n    \"Carteira Nacional de Habilitação (CNH)\",\n    \"PL\",\n    \"PSD\",\n    \"brasileiros de 16 e 17 anos\",\n    \"jovens\",\n    \"adolescentes envolvidos em crimes graves\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Permitir que jovens tirem CNH a partir dos 16 anos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro (PL)\",\n      \"action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"object\": \"jovens tirar CNH a partir dos 16 anos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defendeu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"base_action\": \"defendeu que jovens possam tirar CNH a partir dos 16 anos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"minimum_driving_age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Ronaldo Caiado (PSD)\",\n      \"action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"object\": \"Flávio Bolsonaro (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"anunciou apoio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"base_action\": \"anunciou apoio à candidatura de Flávio Bolsonaro no segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"brasileiros de 16 e 17 anos\",\n      \"action\": \"não podem obter CNH para dirigir veículos automotores\",\n      \"object\": \"Carteira Nacional de Habilitação (CNH)\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"podem obter\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não podem obter CNH para dirigir veículos automotores\",\n      \"base_action\": \"podem obter CNH para dirigir veículos automotores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        },\n        {\n          \"role\": \"age\",\n          \"kind\": \"age\",\n          \"value\": 17,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"17 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro (PL)\",\n      \"action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"object\": \"adolescentes envolvidos em crimes graves\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"relacionou\",\n      \"negation_scope\": null,\n      \"signed_action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"base_action\": \"relacionou a medida à defesa de que adolescentes envolvidos em crimes graves possam responder criminalmente como adultos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proposta de habilitação aos 16 anos é apresentada no contexto do debate sobre redução da maioridade penal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "09c81a2b540ab86174ef898c9abfce90a2bb6e5393c55a4369cca14a11215dce"
+}

@@ -1,0 +1,246 @@
+{
+  "inputs": {
+    "text": "Essa pesquisa já chega com a função de pautar o debate: Flávio Bolsonaro aparece à frente de Lula, mas a diferença está dentro da margem de erro de dois pontos. O discurso de “95% de confiança” e o registro no TSE dão verniz técnico, não garantem que a vantagem exista de fato. Foram ouvidos 2.520 eleitores em 153 cidades, na terça-feira (6) e na quarta-feira (7), mas esses números também podem servir para tornar convincente uma narrativa previamente escolhida. Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Questionamento da neutralidade de uma pesquisa eleitoral que coloca Flávio Bolsonaro à frente de Lula por uma diferença dentro da margem de erro.",
+    "subtopics": [
+      "Margem de erro e confiança da pesquisa",
+      "Registro no TSE e aparência de rigor técnico",
+      "Possível uso dos números para convencer sobre uma narrativa",
+      "Suspeita de condução da reação do público"
+    ],
+    "central_entities": [
+      "Flávio Bolsonaro",
+      "Lula",
+      "TSE",
+      "Essa pesquisa",
+      "eleitores"
+    ],
+    "central_relations": [
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "aparece à frente de",
+        "object": "Lula",
+        "polarity": "affirmed",
+        "predicate": "aparece à frente de",
+        "negation_scope": null,
+        "signed_action": "aparece à frente de",
+        "base_action": "aparece à frente de",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "diferença",
+        "action": "está dentro da margem de erro de dois pontos",
+        "object": "margem de erro",
+        "polarity": "affirmed",
+        "predicate": "está dentro de",
+        "negation_scope": null,
+        "signed_action": "está dentro da margem de erro de dois pontos",
+        "base_action": "está dentro da margem de erro de dois pontos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "margin_of_error",
+            "value": 2.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "dois pontos"
+          }
+        ]
+      },
+      {
+        "subject": "O discurso de “95% de confiança” e o registro no TSE",
+        "action": "dão verniz técnico",
+        "object": "verniz técnico",
+        "polarity": "affirmed",
+        "predicate": "dão",
+        "negation_scope": null,
+        "signed_action": "dão verniz técnico",
+        "base_action": "dão verniz técnico",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "confidence_level",
+            "value": 95.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "95%"
+          }
+        ]
+      },
+      {
+        "subject": "O discurso de “95% de confiança” e o registro no TSE",
+        "action": "não garantem que a vantagem exista de fato",
+        "object": "a vantagem",
+        "polarity": "negated",
+        "predicate": "garantem",
+        "negation_scope": "garantem que a vantagem exista de fato",
+        "signed_action": "não garantem que a vantagem exista de fato",
+        "base_action": "garantem que a vantagem exista de fato",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Essa pesquisa",
+        "action": "ouviu",
+        "object": "eleitores",
+        "polarity": "affirmed",
+        "predicate": "foram ouvidos",
+        "negation_scope": null,
+        "signed_action": "foram ouvidos",
+        "base_action": "foram ouvidos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "surveyed_voters",
+            "value": 2520.0,
+            "unit": "voter",
+            "kind": "count",
+            "status": "exact",
+            "expression": "2.520 eleitores"
+          },
+          {
+            "role": "survey_cities",
+            "value": 153.0,
+            "unit": "city",
+            "kind": "count",
+            "status": "exact",
+            "expression": "153 cidades"
+          },
+          {
+            "role": "interview_day_of_month",
+            "value": 6.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "terça-feira (6)"
+          },
+          {
+            "role": "interview_day_of_month",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "quarta-feira (7)"
+          }
+        ]
+      },
+      {
+        "subject": "esses números",
+        "action": "podem servir para tornar convincente",
+        "object": "uma narrativa previamente escolhida",
+        "polarity": "affirmed",
+        "predicate": "podem servir para tornar convincente",
+        "negation_scope": null,
+        "signed_action": "podem servir para tornar convincente uma narrativa previamente escolhida",
+        "base_action": "podem servir para tornar convincente uma narrativa previamente escolhida",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "Essa pesquisa",
+        "action": "parece um teste coordenado para medir e conduzir",
+        "object": "a reação do público",
+        "polarity": "affirmed",
+        "predicate": "parece",
+        "negation_scope": null,
+        "signed_action": "Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público",
+        "base_action": "Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A pesquisa é apresentada com aparência técnica, mas o texto questiona sua neutralidade e sugere que pode servir para conduzir a reação do público.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O discurso de “95% de confiança” e o registro no TSE dão verniz técnico.",
+      "A pesquisa parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "a63b87b7297c3bb7c04b78b9c0360ab118f1d4b79d42d1e36842c5e314c2c57b",
+      "input_sha256": "76705f7bca9006ff25c215873531e28bc684096e9ba13eb0dfd677a479fd8e3a",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Questionamento da neutralidade de uma pesquisa eleitoral que coloca Flávio Bolsonaro à frente de Lula por uma diferença dentro da margem de erro.\",\n  \"subtopics\": [\n    \"Margem de erro e confiança da pesquisa\",\n    \"Registro no TSE e aparência de rigor técnico\",\n    \"Possível uso dos números para convencer sobre uma narrativa\",\n    \"Suspeita de condução da reação do público\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\",\n    \"Essa pesquisa\",\n    \"eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O discurso de “95% de confiança” e o registro no TSE dão verniz técnico.\",\n    \"A pesquisa parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"aparece à frente de\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aparece à frente de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aparece à frente de\",\n      \"base_action\": \"aparece à frente de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"diferença\",\n      \"action\": \"está dentro da margem de erro de dois pontos\",\n      \"object\": \"margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"está dentro de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está dentro da margem de erro de dois pontos\",\n      \"base_action\": \"está dentro da margem de erro de dois pontos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"number\",\n          \"value\": 2,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O discurso de “95% de confiança” e o registro no TSE\",\n      \"action\": \"dão verniz técnico\",\n      \"object\": \"verniz técnico\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dão\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dão verniz técnico\",\n      \"base_action\": \"dão verniz técnico\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"confidence_level\",\n          \"kind\": \"percentage\",\n          \"value\": 95,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"95%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O discurso de “95% de confiança” e o registro no TSE\",\n      \"action\": \"não garantem que a vantagem exista de fato\",\n      \"object\": \"a vantagem\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"garantem\",\n      \"negation_scope\": \"garantem que a vantagem exista de fato\",\n      \"signed_action\": \"não garantem que a vantagem exista de fato\",\n      \"base_action\": \"garantem que a vantagem exista de fato\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa pesquisa\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foram ouvidos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram ouvidos\",\n      \"base_action\": \"foram ouvidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"interview_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"interview_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"esses números\",\n      \"action\": \"podem servir para tornar convincente\",\n      \"object\": \"uma narrativa previamente escolhida\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"podem servir para tornar convincente\",\n      \"negation_scope\": null,\n      \"signed_action\": \"podem servir para tornar convincente uma narrativa previamente escolhida\",\n      \"base_action\": \"podem servir para tornar convincente uma narrativa previamente escolhida\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa pesquisa\",\n      \"action\": \"parece um teste coordenado para medir e conduzir\",\n      \"object\": \"a reação do público\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"parece\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público\",\n      \"base_action\": \"Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A pesquisa é apresentada com aparência técnica, mas o texto questiona sua neutralidade e sugere que pode servir para conduzir a reação do público.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "a63b87b7297c3bb7c04b78b9c0360ab118f1d4b79d42d1e36842c5e314c2c57b",
+          "input_sha256": "76705f7bca9006ff25c215873531e28bc684096e9ba13eb0dfd677a479fd8e3a",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Questionamento da neutralidade de uma pesquisa eleitoral que coloca Flávio Bolsonaro à frente de Lula por uma diferença dentro da margem de erro.\",\n  \"subtopics\": [\n    \"Margem de erro e confiança da pesquisa\",\n    \"Registro no TSE e aparência de rigor técnico\",\n    \"Possível uso dos números para convencer sobre uma narrativa\",\n    \"Suspeita de condução da reação do público\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\",\n    \"Essa pesquisa\",\n    \"eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O discurso de “95% de confiança” e o registro no TSE dão verniz técnico.\",\n    \"A pesquisa parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"aparece à frente de\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aparece à frente de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aparece à frente de\",\n      \"base_action\": \"aparece à frente de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"diferença\",\n      \"action\": \"está dentro da margem de erro de dois pontos\",\n      \"object\": \"margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"está dentro de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está dentro da margem de erro de dois pontos\",\n      \"base_action\": \"está dentro da margem de erro de dois pontos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"number\",\n          \"value\": 2,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O discurso de “95% de confiança” e o registro no TSE\",\n      \"action\": \"dão verniz técnico\",\n      \"object\": \"verniz técnico\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dão\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dão verniz técnico\",\n      \"base_action\": \"dão verniz técnico\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"confidence_level\",\n          \"kind\": \"percentage\",\n          \"value\": 95,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"95%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"O discurso de “95% de confiança” e o registro no TSE\",\n      \"action\": \"não garantem que a vantagem exista de fato\",\n      \"object\": \"a vantagem\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"garantem\",\n      \"negation_scope\": \"garantem que a vantagem exista de fato\",\n      \"signed_action\": \"não garantem que a vantagem exista de fato\",\n      \"base_action\": \"garantem que a vantagem exista de fato\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa pesquisa\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foram ouvidos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram ouvidos\",\n      \"base_action\": \"foram ouvidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"interview_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"interview_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"esses números\",\n      \"action\": \"podem servir para tornar convincente\",\n      \"object\": \"uma narrativa previamente escolhida\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"podem servir para tornar convincente\",\n      \"negation_scope\": null,\n      \"signed_action\": \"podem servir para tornar convincente uma narrativa previamente escolhida\",\n      \"base_action\": \"podem servir para tornar convincente uma narrativa previamente escolhida\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa pesquisa\",\n      \"action\": \"parece um teste coordenado para medir e conduzir\",\n      \"object\": \"a reação do público\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"parece\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público\",\n      \"base_action\": \"Parece menos uma fotografia neutra e mais um teste coordenado para medir e conduzir a reação do público\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A pesquisa é apresentada com aparência técnica, mas o texto questiona sua neutralidade e sugere que pode servir para conduzir a reação do público.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "680d72c5da4dd0de485bf4a595ce055443c3972bf754dafcbe2ca102f30221fe"
+}

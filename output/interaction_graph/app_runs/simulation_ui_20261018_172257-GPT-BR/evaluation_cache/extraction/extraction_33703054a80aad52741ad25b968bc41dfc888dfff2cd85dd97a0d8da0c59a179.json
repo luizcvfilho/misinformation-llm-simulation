@@ -1,0 +1,180 @@
+{
+  "inputs": {
+    "text": "Lula está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral, mas não explica quem suportará os custos. O Senado não deve ceder à pressão política nem sacrificar empregos e a estabilidade das famílias por uma medida de efeito fácil. Respeitar os trabalhadores também é proteger o trabalho que sustenta as famílias: antes de mudar as regras, é preciso avaliar com seriedade as consequências.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Crítica à promessa eleitoral de Lula de substituir a escala 6x1 por jornada 5x2 sem redução salarial",
+    "subtopics": [
+      "Custos da mudança das regras de trabalho",
+      "Possíveis efeitos sobre empregos e estabilidade das famílias",
+      "Avaliação das consequências antes de mudar as regras"
+    ],
+    "central_entities": [
+      "Lula",
+      "Senado",
+      "trabalhadores",
+      "famílias"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lula",
+        "action": "está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral",
+        "object": "o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral",
+        "polarity": "affirmed",
+        "predicate": "vender",
+        "negation_scope": null,
+        "signed_action": "está a vender",
+        "base_action": "está a vender",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "work_schedule_pattern",
+            "value": "6x1",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "6x1"
+          },
+          {
+            "role": "work_schedule_pattern",
+            "value": "5x2",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "5x2"
+          }
+        ]
+      },
+      {
+        "subject": "Lula",
+        "action": "não explica",
+        "object": "quem suportará os custos",
+        "polarity": "negated",
+        "predicate": "explicar",
+        "negation_scope": "explica",
+        "signed_action": "não explica",
+        "base_action": "explica",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Senado",
+        "action": "não deve ceder à pressão política",
+        "object": "à pressão política",
+        "polarity": "negated",
+        "predicate": "deve ceder",
+        "negation_scope": "deve ceder",
+        "signed_action": "não deve ceder",
+        "base_action": "deve ceder",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      },
+      {
+        "subject": "Senado",
+        "action": "não deve sacrificar empregos e a estabilidade das famílias",
+        "object": "empregos e a estabilidade das famílias",
+        "polarity": "negated",
+        "predicate": "deve sacrificar",
+        "negation_scope": "deve sacrificar",
+        "signed_action": "não deve sacrificar",
+        "base_action": "deve sacrificar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento crítico que alerta para os custos e possíveis consequências da proposta de mudança da jornada de trabalho.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O Senado não deve ceder à pressão política nem sacrificar empregos e a estabilidade das famílias.",
+      "Respeitar os trabalhadores também é proteger o trabalho que sustenta as famílias.",
+      "Antes de mudar as regras, é preciso avaliar com seriedade as consequências."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "043593e8dcfd50d60a363efa2465402e0afb42c5b3a964a454841e30d623c878",
+      "input_sha256": "c9785da75cb4105bcd88efe840e106bfcf8eb055cbf2feccaba7a5d04e8bc25a",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Crítica à promessa eleitoral de Lula de substituir a escala 6x1 por jornada 5x2 sem redução salarial\",\n  \"subtopics\": [\n    \"Custos da mudança das regras de trabalho\",\n    \"Possíveis efeitos sobre empregos e estabilidade das famílias\",\n    \"Avaliação das consequências antes de mudar as regras\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Senado\",\n    \"trabalhadores\",\n    \"famílias\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O Senado não deve ceder à pressão política nem sacrificar empregos e a estabilidade das famílias.\",\n    \"Respeitar os trabalhadores também é proteger o trabalho que sustenta as famílias.\",\n    \"Antes de mudar as regras, é preciso avaliar com seriedade as consequências.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"object\": \"o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a vender\",\n      \"base_action\": \"está a vender\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"work_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        },\n        {\n          \"role\": \"work_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"5x2\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"5x2\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"não explica\",\n      \"object\": \"quem suportará os custos\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"explicar\",\n      \"negation_scope\": \"explica\",\n      \"signed_action\": \"não explica\",\n      \"base_action\": \"explica\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não deve ceder à pressão política\",\n      \"object\": \"à pressão política\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve ceder\",\n      \"negation_scope\": \"deve ceder\",\n      \"signed_action\": \"não deve ceder\",\n      \"base_action\": \"deve ceder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não deve sacrificar empregos e a estabilidade das famílias\",\n      \"object\": \"empregos e a estabilidade das famílias\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve sacrificar\",\n      \"negation_scope\": \"deve sacrificar\",\n      \"signed_action\": \"não deve sacrificar\",\n      \"base_action\": \"deve sacrificar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico que alerta para os custos e possíveis consequências da proposta de mudança da jornada de trabalho.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "8b5fc696d6066991ac763e46d4720e97e8d15992eedd4a71051a8ebd3391b5ab",
+          "input_sha256": "c9785da75cb4105bcd88efe840e106bfcf8eb055cbf2feccaba7a5d04e8bc25a",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Political criticism of Lula's electoral promise to end the 6x1 schedule and introduce a 5x2 workweek without reducing wages\",\n  \"subtopics\": [\n    \"Unexplained costs of the proposed change\",\n    \"Senado's response to political pressure\",\n    \"Potential effects on jobs and family stability\",\n    \"Need to assess consequences before changing rules\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Senado\",\n    \"trabalhadores\",\n    \"famílias\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The Senado should not yield to political pressure or sacrifice jobs and family stability.\",\n    \"Consequences should be assessed seriously before changing the rules.\",\n    \"Protecting trabalhadores also means protecting the work that sustains famílias.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"object\": \"o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"base_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        },\n        {\n          \"role\": \"schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"5x2\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"5x2\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"não explica quem suportará os custos\",\n      \"object\": \"quem suportará os custos\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"explica\",\n      \"negation_scope\": \"explica\",\n      \"signed_action\": \"não explica quem suportará os custos\",\n      \"base_action\": \"explica quem suportará os custos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não deve ceder à pressão política\",\n      \"object\": \"à pressão política\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ceder\",\n      \"negation_scope\": \"deve ceder\",\n      \"signed_action\": \"não deve ceder à pressão política\",\n      \"base_action\": \"deve ceder à pressão política\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"nem sacrificar empregos e a estabilidade das famílias por uma medida de efeito fácil\",\n      \"object\": \"empregos e a estabilidade das famílias por uma medida de efeito fácil\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"sacrificar\",\n      \"negation_scope\": \"nem sacrificar\",\n      \"signed_action\": \"nem sacrificar empregos e a estabilidade das famílias por uma medida de efeito fácil\",\n      \"base_action\": \"sacrificar empregos e a estabilidade das famílias por uma medida de efeito fácil\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"trabalhadores\",\n      \"action\": \"é também proteger o trabalho que sustenta as famílias\",\n      \"object\": \"o trabalho que sustenta as famílias\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"proteger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é também proteger o trabalho que sustenta as famílias\",\n      \"base_action\": \"é também proteger o trabalho que sustenta as famílias\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"\",\n      \"action\": \"é preciso avaliar com seriedade as consequências antes de mudar as regras\",\n      \"object\": \"as consequências antes de mudar as regras\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é preciso avaliar com seriedade as consequências antes de mudar as regras\",\n      \"base_action\": \"é preciso avaliar com seriedade as consequências antes de mudar as regras\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A cautionary critique of Lula's electoral promise, emphasizing its unexplained costs and possible risks to jobs and family stability.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "invalid",
+          "validation_issues": [
+            "Relation 5 has incomplete required fields"
+          ]
+        },
+        {
+          "attempt": 2,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "043593e8dcfd50d60a363efa2465402e0afb42c5b3a964a454841e30d623c878",
+          "input_sha256": "c9785da75cb4105bcd88efe840e106bfcf8eb055cbf2feccaba7a5d04e8bc25a",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Crítica à promessa eleitoral de Lula de substituir a escala 6x1 por jornada 5x2 sem redução salarial\",\n  \"subtopics\": [\n    \"Custos da mudança das regras de trabalho\",\n    \"Possíveis efeitos sobre empregos e estabilidade das famílias\",\n    \"Avaliação das consequências antes de mudar as regras\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Senado\",\n    \"trabalhadores\",\n    \"famílias\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O Senado não deve ceder à pressão política nem sacrificar empregos e a estabilidade das famílias.\",\n    \"Respeitar os trabalhadores também é proteger o trabalho que sustenta as famílias.\",\n    \"Antes de mudar as regras, é preciso avaliar com seriedade as consequências.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"object\": \"o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a vender\",\n      \"base_action\": \"está a vender\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"work_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        },\n        {\n          \"role\": \"work_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"5x2\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"5x2\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"não explica\",\n      \"object\": \"quem suportará os custos\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"explicar\",\n      \"negation_scope\": \"explica\",\n      \"signed_action\": \"não explica\",\n      \"base_action\": \"explica\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não deve ceder à pressão política\",\n      \"object\": \"à pressão política\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve ceder\",\n      \"negation_scope\": \"deve ceder\",\n      \"signed_action\": \"não deve ceder\",\n      \"base_action\": \"deve ceder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não deve sacrificar empregos e a estabilidade das famílias\",\n      \"object\": \"empregos e a estabilidade das famílias\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve sacrificar\",\n      \"negation_scope\": \"deve sacrificar\",\n      \"signed_action\": \"não deve sacrificar\",\n      \"base_action\": \"deve sacrificar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico que alerta para os custos e possíveis consequências da proposta de mudança da jornada de trabalho.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "validation_feedback": "Relation 5 has incomplete required fields",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "33653145ac2b5286550cb4b118a7a5f34ea69cb6f95fc143e852d8ee3d8699b9"
+}

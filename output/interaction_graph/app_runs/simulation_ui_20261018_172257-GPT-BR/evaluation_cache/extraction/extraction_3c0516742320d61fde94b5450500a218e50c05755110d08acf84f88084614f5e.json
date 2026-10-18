@@ -1,0 +1,154 @@
+{
+  "inputs": {
+    "text": "Estão chamando de “equilíbrio” uma proteção temporária para quem disputa o segundo turno: a partir deste sábado (10), candidatos não podem ser presos ou detidos até 48h após a votação de 25 de outubro. A justificativa oficial parece conveniente para blindar os concorrentes justamente no período decisivo. E a exceção do flagrante não elimina a dúvida: nesses casos, a decisão passa imediatamente para um juiz, que avaliará a legalidade da prisão. No fim, as instituições definem quando a regra vale e quem pode aplicá-la — tudo apresentado como mera regularidade eleitoral.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Restrição temporária à prisão ou detenção de candidatos no segundo turno e aplicação da regra",
+    "subtopics": [
+      "Exceção para prisão em flagrante",
+      "Avaliação judicial da legalidade da prisão",
+      "Discricionariedade institucional na aplicação da regra"
+    ],
+    "central_entities": [
+      "candidatos",
+      "um juiz",
+      "as instituições"
+    ],
+    "central_relations": [
+      {
+        "subject": "candidatos",
+        "action": "não podem ser presos ou detidos",
+        "object": "",
+        "polarity": "negated",
+        "predicate": "ser presos ou detidos",
+        "negation_scope": "não podem ser presos ou detidos",
+        "signed_action": "não podem ser presos ou detidos",
+        "base_action": "podem ser presos ou detidos",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48h",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "protection_duration",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48h"
+          }
+        ]
+      },
+      {
+        "subject": "a decisão",
+        "action": "passa imediatamente para",
+        "object": "um juiz",
+        "polarity": "affirmed",
+        "predicate": "passar para",
+        "negation_scope": null,
+        "signed_action": "passa imediatamente para um juiz",
+        "base_action": "passa imediatamente para um juiz",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "um juiz",
+        "action": "avaliará",
+        "object": "a legalidade da prisão",
+        "polarity": "affirmed",
+        "predicate": "avaliar",
+        "negation_scope": null,
+        "signed_action": "avaliará a legalidade da prisão",
+        "base_action": "avaliará a legalidade da prisão",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "as instituições",
+        "action": "definem quando a regra vale e quem pode aplicá-la",
+        "object": "quando a regra vale e quem pode aplicá-la",
+        "polarity": "affirmed",
+        "predicate": "definir",
+        "negation_scope": null,
+        "signed_action": "definem quando a regra vale e quem pode aplicá-la",
+        "base_action": "definem quando a regra vale e quem pode aplicá-la",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A proteção eleitoral é enquadrada criticamente como possível blindagem dos candidatos, com dúvidas sobre a aplicação da regra e poder institucional.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A justificativa oficial parece conveniente para blindar os concorrentes no período decisivo.",
+      "A exceção do flagrante não elimina a dúvida.",
+      "A regra é apresentada como mera regularidade eleitoral."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "e95ec7f9aa2f1f9a09f159586159a361559b54d0bad6749ddd54550dca7a4ee5",
+      "input_sha256": "d3bb5cbf47459551ab663963e26e5e7029b83a327aaa0d7ba53455add7f27526",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Restrição temporária à prisão ou detenção de candidatos no segundo turno e aplicação da regra\",\n  \"subtopics\": [\n    \"Exceção para prisão em flagrante\",\n    \"Avaliação judicial da legalidade da prisão\",\n    \"Discricionariedade institucional na aplicação da regra\"\n  ],\n  \"central_entities\": [\n    \"candidatos\",\n    \"um juiz\",\n    \"as instituições\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A justificativa oficial parece conveniente para blindar os concorrentes no período decisivo.\",\n    \"A exceção do flagrante não elimina a dúvida.\",\n    \"A regra é apresentada como mera regularidade eleitoral.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"não podem ser presos ou detidos\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser presos ou detidos\",\n      \"negation_scope\": \"não podem ser presos ou detidos\",\n      \"signed_action\": \"não podem ser presos ou detidos\",\n      \"base_action\": \"podem ser presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a decisão\",\n      \"action\": \"passa imediatamente para\",\n      \"object\": \"um juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"passar para\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"passa imediatamente para um juiz\",\n      \"base_action\": \"passa imediatamente para um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"um juiz\",\n      \"action\": \"avaliará\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"avaliará a legalidade da prisão\",\n      \"base_action\": \"avaliará a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"as instituições\",\n      \"action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"object\": \"quando a regra vale e quem pode aplicá-la\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"definir\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"base_action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção eleitoral é enquadrada criticamente como possível blindagem dos candidatos, com dúvidas sobre a aplicação da regra e poder institucional.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "e95ec7f9aa2f1f9a09f159586159a361559b54d0bad6749ddd54550dca7a4ee5",
+          "input_sha256": "d3bb5cbf47459551ab663963e26e5e7029b83a327aaa0d7ba53455add7f27526",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Restrição temporária à prisão ou detenção de candidatos no segundo turno e aplicação da regra\",\n  \"subtopics\": [\n    \"Exceção para prisão em flagrante\",\n    \"Avaliação judicial da legalidade da prisão\",\n    \"Discricionariedade institucional na aplicação da regra\"\n  ],\n  \"central_entities\": [\n    \"candidatos\",\n    \"um juiz\",\n    \"as instituições\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A justificativa oficial parece conveniente para blindar os concorrentes no período decisivo.\",\n    \"A exceção do flagrante não elimina a dúvida.\",\n    \"A regra é apresentada como mera regularidade eleitoral.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"não podem ser presos ou detidos\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser presos ou detidos\",\n      \"negation_scope\": \"não podem ser presos ou detidos\",\n      \"signed_action\": \"não podem ser presos ou detidos\",\n      \"base_action\": \"podem ser presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a decisão\",\n      \"action\": \"passa imediatamente para\",\n      \"object\": \"um juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"passar para\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"passa imediatamente para um juiz\",\n      \"base_action\": \"passa imediatamente para um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"um juiz\",\n      \"action\": \"avaliará\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"avaliará a legalidade da prisão\",\n      \"base_action\": \"avaliará a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"as instituições\",\n      \"action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"object\": \"quando a regra vale e quem pode aplicá-la\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"definir\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"base_action\": \"definem quando a regra vale e quem pode aplicá-la\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção eleitoral é enquadrada criticamente como possível blindagem dos candidatos, com dúvidas sobre a aplicação da regra e poder institucional.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "f70626e1442dfdc2911129d312f55a3547fc1033a2c4562d162326f653a87b8e"
+}

@@ -1,0 +1,204 @@
+{
+  "inputs": {
+    "text": "O diesel “garantido até o fim de outubro” soa menos como segurança e mais como uma promessa calculada para atravessar a reta final da eleição presidencial sem alarde. Sérgio Araújo, da Abicom, admitiu que setembro cobriu o consumo, mas não recompôs os estoques, e que as cargas para novembro estão “bem baixas”. Essa parte é que revela o tamanho do buraco por trás da versão tranquilizadora.\n\nAs subvenções ao diesel importado e a conversa sobre flexibilizar restrições russas parecem servir para sustentar a aparência de controle — pelo menos até passar o momento político. O Brasil depende de importações para cerca de 25% do diesel. Outubro está garantido; novembro, não. E quem insiste em vender isso como solução sólida está pedindo que a gente não olhe para o que vem depois.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Fragilidade da garantia de abastecimento de diesel no Brasil após outubro",
+    "subtopics": [
+      "Estoques e cargas de diesel",
+      "Dependência brasileira de importações",
+      "Subvenções ao diesel importado",
+      "Flexibilização de restrições russas",
+      "Enquadramento político da garantia"
+    ],
+    "central_entities": [
+      "Sérgio Araújo",
+      "Abicom",
+      "Brasil"
+    ],
+    "central_relations": [
+      {
+        "subject": "Sérgio Araújo",
+        "action": "admitiu que setembro cobriu",
+        "object": "o consumo",
+        "polarity": "affirmed",
+        "predicate": "cobriu",
+        "negation_scope": null,
+        "signed_action": "admitiu que setembro cobriu",
+        "base_action": "admitiu que setembro cobriu",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Sérgio Araújo",
+        "action": "admitiu que setembro não recompôs",
+        "object": "os estoques",
+        "polarity": "negated",
+        "predicate": "recompôs",
+        "negation_scope": "recompôs os estoques",
+        "signed_action": "admitiu que setembro não recompôs",
+        "base_action": "admitiu que setembro recompôs",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Sérgio Araújo",
+        "action": "admitiu que estão bem baixas",
+        "object": "as cargas para novembro",
+        "polarity": "affirmed",
+        "predicate": "estão bem baixas",
+        "negation_scope": null,
+        "signed_action": "admitiu que estão bem baixas",
+        "base_action": "admitiu que estão bem baixas",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Brasil",
+        "action": "depende de importações",
+        "object": "cerca de 25% do diesel",
+        "polarity": "affirmed",
+        "predicate": "depende",
+        "negation_scope": null,
+        "signed_action": "depende de importações",
+        "base_action": "depende de importações",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "diesel_import_dependence",
+            "value": 25.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "approximate",
+            "expression": "cerca de 25%"
+          }
+        ]
+      },
+      {
+        "subject": "Outubro",
+        "action": "está garantido até o fim de outubro",
+        "object": "o diesel",
+        "polarity": "affirmed",
+        "predicate": "está garantido",
+        "negation_scope": null,
+        "signed_action": "está garantido até o fim de outubro",
+        "base_action": "está garantido",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": "até o fim de outubro",
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Novembro",
+        "action": "não está garantido",
+        "object": "o diesel",
+        "polarity": "negated",
+        "predicate": "está garantido",
+        "negation_scope": "está garantido",
+        "signed_action": "não está garantido",
+        "base_action": "está garantido",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "As subvenções ao diesel importado e a conversa sobre flexibilizar restrições russas",
+        "action": "parecem servir para sustentar a aparência de controle",
+        "object": "pelo menos até passar o momento político",
+        "polarity": "affirmed",
+        "predicate": "servir para sustentar",
+        "negation_scope": null,
+        "signed_action": "parecem servir para sustentar a aparência de controle",
+        "base_action": "parecem servir para sustentar a aparência de controle",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": "pelo menos até passar o momento político",
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento cético de uma garantia de diesel limitada a outubro, apresentada como tranquilizadora apesar de estoques não recompostos e cargas baixas para novembro.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A garantia até o fim de outubro parece uma promessa calculada para atravessar a reta final da eleição presidencial sem alarde.",
+      "As subvenções e a conversa sobre flexibilizar restrições russas parecem sustentar apenas uma aparência de controle.",
+      "Apresentar a garantia como solução sólida desvia a atenção do que pode ocorrer depois de outubro."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "84b9ec199b4659657e0bbbb1d0cd0209bce0991a538661de2ba0a13c75d53a79",
+      "input_sha256": "28a4d05d6e50843003f6dc7669c5404588ba04e3ab92b0c5cdfd4ae9d5f9cb0b",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Fragilidade da garantia de abastecimento de diesel no Brasil após outubro\",\n  \"subtopics\": [\n    \"Estoques e cargas de diesel\",\n    \"Dependência brasileira de importações\",\n    \"Subvenções ao diesel importado\",\n    \"Flexibilização de restrições russas\",\n    \"Enquadramento político da garantia\"\n  ],\n  \"central_entities\": [\n    \"Sérgio Araújo\",\n    \"Abicom\",\n    \"Brasil\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A garantia até o fim de outubro parece uma promessa calculada para atravessar a reta final da eleição presidencial sem alarde.\",\n    \"As subvenções e a conversa sobre flexibilizar restrições russas parecem sustentar apenas uma aparência de controle.\",\n    \"Apresentar a garantia como solução sólida desvia a atenção do que pode ocorrer depois de outubro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que setembro cobriu\",\n      \"object\": \"o consumo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"cobriu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"admitiu que setembro cobriu\",\n      \"base_action\": \"admitiu que setembro cobriu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que setembro não recompôs\",\n      \"object\": \"os estoques\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"recompôs\",\n      \"negation_scope\": \"recompôs os estoques\",\n      \"signed_action\": \"admitiu que setembro não recompôs\",\n      \"base_action\": \"admitiu que setembro recompôs\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que estão bem baixas\",\n      \"object\": \"as cargas para novembro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estão bem baixas\",\n      \"negation_scope\": null,\n      \"signed_action\": \"admitiu que estão bem baixas\",\n      \"base_action\": \"admitiu que estão bem baixas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Brasil\",\n      \"action\": \"depende de importações\",\n      \"object\": \"cerca de 25% do diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"depende\",\n      \"negation_scope\": null,\n      \"signed_action\": \"depende de importações\",\n      \"base_action\": \"depende de importações\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"diesel_import_dependence\",\n          \"kind\": \"percentage\",\n          \"value\": 25,\n          \"unit\": \"%\",\n          \"status\": \"approximate\",\n          \"expression\": \"cerca de 25%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Outubro\",\n      \"action\": \"está garantido até o fim de outubro\",\n      \"object\": \"o diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"está garantido\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está garantido até o fim de outubro\",\n      \"base_action\": \"está garantido\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"até o fim de outubro\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Novembro\",\n      \"action\": \"não está garantido\",\n      \"object\": \"o diesel\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"está garantido\",\n      \"negation_scope\": \"está garantido\",\n      \"signed_action\": \"não está garantido\",\n      \"base_action\": \"está garantido\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"As subvenções ao diesel importado e a conversa sobre flexibilizar restrições russas\",\n      \"action\": \"parecem servir para sustentar a aparência de controle\",\n      \"object\": \"pelo menos até passar o momento político\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"servir para sustentar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"parecem servir para sustentar a aparência de controle\",\n      \"base_action\": \"parecem servir para sustentar a aparência de controle\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"pelo menos até passar o momento político\",\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético de uma garantia de diesel limitada a outubro, apresentada como tranquilizadora apesar de estoques não recompostos e cargas baixas para novembro.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "84b9ec199b4659657e0bbbb1d0cd0209bce0991a538661de2ba0a13c75d53a79",
+          "input_sha256": "28a4d05d6e50843003f6dc7669c5404588ba04e3ab92b0c5cdfd4ae9d5f9cb0b",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Fragilidade da garantia de abastecimento de diesel no Brasil após outubro\",\n  \"subtopics\": [\n    \"Estoques e cargas de diesel\",\n    \"Dependência brasileira de importações\",\n    \"Subvenções ao diesel importado\",\n    \"Flexibilização de restrições russas\",\n    \"Enquadramento político da garantia\"\n  ],\n  \"central_entities\": [\n    \"Sérgio Araújo\",\n    \"Abicom\",\n    \"Brasil\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A garantia até o fim de outubro parece uma promessa calculada para atravessar a reta final da eleição presidencial sem alarde.\",\n    \"As subvenções e a conversa sobre flexibilizar restrições russas parecem sustentar apenas uma aparência de controle.\",\n    \"Apresentar a garantia como solução sólida desvia a atenção do que pode ocorrer depois de outubro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que setembro cobriu\",\n      \"object\": \"o consumo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"cobriu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"admitiu que setembro cobriu\",\n      \"base_action\": \"admitiu que setembro cobriu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que setembro não recompôs\",\n      \"object\": \"os estoques\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"recompôs\",\n      \"negation_scope\": \"recompôs os estoques\",\n      \"signed_action\": \"admitiu que setembro não recompôs\",\n      \"base_action\": \"admitiu que setembro recompôs\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Sérgio Araújo\",\n      \"action\": \"admitiu que estão bem baixas\",\n      \"object\": \"as cargas para novembro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estão bem baixas\",\n      \"negation_scope\": null,\n      \"signed_action\": \"admitiu que estão bem baixas\",\n      \"base_action\": \"admitiu que estão bem baixas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Brasil\",\n      \"action\": \"depende de importações\",\n      \"object\": \"cerca de 25% do diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"depende\",\n      \"negation_scope\": null,\n      \"signed_action\": \"depende de importações\",\n      \"base_action\": \"depende de importações\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"diesel_import_dependence\",\n          \"kind\": \"percentage\",\n          \"value\": 25,\n          \"unit\": \"%\",\n          \"status\": \"approximate\",\n          \"expression\": \"cerca de 25%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Outubro\",\n      \"action\": \"está garantido até o fim de outubro\",\n      \"object\": \"o diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"está garantido\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está garantido até o fim de outubro\",\n      \"base_action\": \"está garantido\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"até o fim de outubro\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Novembro\",\n      \"action\": \"não está garantido\",\n      \"object\": \"o diesel\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"está garantido\",\n      \"negation_scope\": \"está garantido\",\n      \"signed_action\": \"não está garantido\",\n      \"base_action\": \"está garantido\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"As subvenções ao diesel importado e a conversa sobre flexibilizar restrições russas\",\n      \"action\": \"parecem servir para sustentar a aparência de controle\",\n      \"object\": \"pelo menos até passar o momento político\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"servir para sustentar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"parecem servir para sustentar a aparência de controle\",\n      \"base_action\": \"parecem servir para sustentar a aparência de controle\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"pelo menos até passar o momento político\",\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético de uma garantia de diesel limitada a outubro, apresentada como tranquilizadora apesar de estoques não recompostos e cargas baixas para novembro.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "f8d595168266f86f3ad12c7fc92d2d36cca270d84d8373dbf999050123b362be"
+}

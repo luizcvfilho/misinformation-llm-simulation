@@ -1,0 +1,255 @@
+{
+  "inputs": {
+    "text": "Isso não parece uma pesquisa simples: Folha e Globo contratam, e o Datafolha divulga Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro de dois pontos. O registro no TSE funciona como selo de credibilidade. Foram ouvidos 2.520 eleitores em 153 cidades, entre terça-feira (6) e quarta-feira (7), num cenário de virada em que a vantagem nem sequer é segura. Estão testando a reação do público e empurrando a ideia de disputa; a incerteza não atrapalha a narrativa — é justamente o que permite manipulá-la.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Crítica à divulgação de uma pesquisa que coloca Flávio Bolsonaro à frente de Lula por margem estreita e é apresentada como instrumento de construção de narrativa política.",
+    "subtopics": [
+      "Contratação da pesquisa por Folha e Globo",
+      "Margem de erro e vantagem incerta",
+      "Registro no TSE como selo de credibilidade",
+      "Amostra e período das entrevistas",
+      "Teste da reação do público e construção da ideia de disputa"
+    ],
+    "central_entities": [
+      "Folha",
+      "Globo",
+      "Datafolha",
+      "Flávio Bolsonaro",
+      "Lula",
+      "TSE"
+    ],
+    "central_relations": [
+      {
+        "subject": "Folha e Globo",
+        "action": "contratam",
+        "object": "pesquisa",
+        "polarity": "affirmed",
+        "predicate": "contratar",
+        "negation_scope": null,
+        "signed_action": "contratam",
+        "base_action": "contratam",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Datafolha",
+        "action": "divulga Flávio Bolsonaro à frente de Lula",
+        "object": "Flávio Bolsonaro à frente de Lula",
+        "polarity": "affirmed",
+        "predicate": "divulgar resultado da pesquisa",
+        "negation_scope": null,
+        "signed_action": "divulga Flávio Bolsonaro à frente de Lula",
+        "base_action": "divulga Flávio Bolsonaro à frente de Lula",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "margin_of_error",
+            "value": 2.0,
+            "unit": "point",
+            "kind": "measurement",
+            "status": "exact",
+            "expression": "dois pontos"
+          }
+        ]
+      },
+      {
+        "subject": "registro no TSE",
+        "action": "funciona como",
+        "object": "selo de credibilidade",
+        "polarity": "affirmed",
+        "predicate": "funcionar como selo de credibilidade",
+        "negation_scope": null,
+        "signed_action": "funciona como selo de credibilidade",
+        "base_action": "funciona como selo de credibilidade",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "eleitores",
+        "action": "foram ouvidos",
+        "object": "em cidades",
+        "polarity": "affirmed",
+        "predicate": "ouvir eleitores",
+        "negation_scope": null,
+        "signed_action": "foram ouvidos",
+        "base_action": "foram ouvidos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "interviewed_voters",
+            "value": 2520.0,
+            "unit": "voter",
+            "kind": "count",
+            "status": "exact",
+            "expression": "2.520 eleitores"
+          },
+          {
+            "role": "survey_cities",
+            "value": 153.0,
+            "unit": "city",
+            "kind": "count",
+            "status": "exact",
+            "expression": "153 cidades"
+          },
+          {
+            "role": "interview_start_day",
+            "value": 6.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "terça-feira (6)"
+          },
+          {
+            "role": "interview_end_day",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "quarta-feira (7)"
+          }
+        ]
+      },
+      {
+        "subject": "vantagem",
+        "action": "nem sequer é segura",
+        "object": "",
+        "polarity": "negated",
+        "predicate": "ser segura",
+        "negation_scope": "é segura",
+        "signed_action": "nem sequer é segura",
+        "base_action": "é segura",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "agentes não especificados",
+        "action": "estão testando a reação do público e empurrando a ideia de disputa",
+        "object": "a reação do público e a ideia de disputa",
+        "polarity": "affirmed",
+        "predicate": "testar a reação do público e empurrar a ideia de disputa",
+        "negation_scope": null,
+        "signed_action": "estão testando a reação do público e empurrando a ideia de disputa",
+        "base_action": "estão testando a reação do público e empurrando a ideia de disputa",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "incerteza",
+        "action": "não atrapalha",
+        "object": "a narrativa",
+        "polarity": "negated",
+        "predicate": "atrapalhar a narrativa",
+        "negation_scope": "atrapalha",
+        "signed_action": "não atrapalha a narrativa",
+        "base_action": "atrapalha a narrativa",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "incerteza",
+        "action": "permite manipulá-la",
+        "object": "a narrativa",
+        "polarity": "affirmed",
+        "predicate": "permitir manipular a narrativa",
+        "negation_scope": null,
+        "signed_action": "permite manipulá-la",
+        "base_action": "permite manipulá-la",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A pesquisa é retratada como uma tentativa de testar a reação do público e promover uma disputa política, com a incerteza apresentada como elemento útil à manipulação da narrativa.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A pesquisa não parece simples.",
+      "A incerteza permite manipular a narrativa."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "4afd1a1389460b3771dbcf48afa092a3532d9ce93cd2c001928e21ddb474a182",
+      "input_sha256": "73bb6795c50ce1f7673474d5b054d24ada5da45325bb94a662b62bf0605e8e58",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Crítica à divulgação de uma pesquisa que coloca Flávio Bolsonaro à frente de Lula por margem estreita e é apresentada como instrumento de construção de narrativa política.\",\n  \"subtopics\": [\n    \"Contratação da pesquisa por Folha e Globo\",\n    \"Margem de erro e vantagem incerta\",\n    \"Registro no TSE como selo de credibilidade\",\n    \"Amostra e período das entrevistas\",\n    \"Teste da reação do público e construção da ideia de disputa\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A pesquisa não parece simples.\",\n    \"A incerteza permite manipular a narrativa.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha e Globo\",\n      \"action\": \"contratam\",\n      \"object\": \"pesquisa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"object\": \"Flávio Bolsonaro à frente de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"divulgar resultado da pesquisa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"base_action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"funciona como\",\n      \"object\": \"selo de credibilidade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"funcionar como selo de credibilidade\",\n      \"negation_scope\": null,\n      \"signed_action\": \"funciona como selo de credibilidade\",\n      \"base_action\": \"funciona como selo de credibilidade\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eleitores\",\n      \"action\": \"foram ouvidos\",\n      \"object\": \"em cidades\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir eleitores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram ouvidos\",\n      \"base_action\": \"foram ouvidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"interviewed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"interview_start_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"interview_end_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"vantagem\",\n      \"action\": \"nem sequer é segura\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser segura\",\n      \"negation_scope\": \"é segura\",\n      \"signed_action\": \"nem sequer é segura\",\n      \"base_action\": \"é segura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agentes não especificados\",\n      \"action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"object\": \"a reação do público e a ideia de disputa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"testar a reação do público e empurrar a ideia de disputa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"base_action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"incerteza\",\n      \"action\": \"não atrapalha\",\n      \"object\": \"a narrativa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"atrapalhar a narrativa\",\n      \"negation_scope\": \"atrapalha\",\n      \"signed_action\": \"não atrapalha a narrativa\",\n      \"base_action\": \"atrapalha a narrativa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"incerteza\",\n      \"action\": \"permite manipulá-la\",\n      \"object\": \"a narrativa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"permitir manipular a narrativa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"permite manipulá-la\",\n      \"base_action\": \"permite manipulá-la\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A pesquisa é retratada como uma tentativa de testar a reação do público e promover uma disputa política, com a incerteza apresentada como elemento útil à manipulação da narrativa.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "4afd1a1389460b3771dbcf48afa092a3532d9ce93cd2c001928e21ddb474a182",
+          "input_sha256": "73bb6795c50ce1f7673474d5b054d24ada5da45325bb94a662b62bf0605e8e58",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Crítica à divulgação de uma pesquisa que coloca Flávio Bolsonaro à frente de Lula por margem estreita e é apresentada como instrumento de construção de narrativa política.\",\n  \"subtopics\": [\n    \"Contratação da pesquisa por Folha e Globo\",\n    \"Margem de erro e vantagem incerta\",\n    \"Registro no TSE como selo de credibilidade\",\n    \"Amostra e período das entrevistas\",\n    \"Teste da reação do público e construção da ideia de disputa\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A pesquisa não parece simples.\",\n    \"A incerteza permite manipular a narrativa.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha e Globo\",\n      \"action\": \"contratam\",\n      \"object\": \"pesquisa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"object\": \"Flávio Bolsonaro à frente de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"divulgar resultado da pesquisa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"base_action\": \"divulga Flávio Bolsonaro à frente de Lula\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"funciona como\",\n      \"object\": \"selo de credibilidade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"funcionar como selo de credibilidade\",\n      \"negation_scope\": null,\n      \"signed_action\": \"funciona como selo de credibilidade\",\n      \"base_action\": \"funciona como selo de credibilidade\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eleitores\",\n      \"action\": \"foram ouvidos\",\n      \"object\": \"em cidades\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir eleitores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram ouvidos\",\n      \"base_action\": \"foram ouvidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"interviewed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"interview_start_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"interview_end_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"vantagem\",\n      \"action\": \"nem sequer é segura\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser segura\",\n      \"negation_scope\": \"é segura\",\n      \"signed_action\": \"nem sequer é segura\",\n      \"base_action\": \"é segura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agentes não especificados\",\n      \"action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"object\": \"a reação do público e a ideia de disputa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"testar a reação do público e empurrar a ideia de disputa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"base_action\": \"estão testando a reação do público e empurrando a ideia de disputa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"incerteza\",\n      \"action\": \"não atrapalha\",\n      \"object\": \"a narrativa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"atrapalhar a narrativa\",\n      \"negation_scope\": \"atrapalha\",\n      \"signed_action\": \"não atrapalha a narrativa\",\n      \"base_action\": \"atrapalha a narrativa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"incerteza\",\n      \"action\": \"permite manipulá-la\",\n      \"object\": \"a narrativa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"permitir manipular a narrativa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"permite manipulá-la\",\n      \"base_action\": \"permite manipulá-la\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A pesquisa é retratada como uma tentativa de testar a reação do público e promover uma disputa política, com a incerteza apresentada como elemento útil à manipulação da narrativa.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "010774e8cc18a3d4dc92e99800bae19fce2bd9fc7d48dcaf399012a365e13c4b"
+}

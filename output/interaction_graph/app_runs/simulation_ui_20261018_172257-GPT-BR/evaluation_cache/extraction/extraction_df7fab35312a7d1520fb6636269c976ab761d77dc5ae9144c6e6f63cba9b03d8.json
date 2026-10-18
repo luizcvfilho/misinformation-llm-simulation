@@ -1,0 +1,173 @@
+{
+  "inputs": {
+    "text": "Não dá para chamar isso de coincidência: depois que Marçal apoiou Flávio Bolsonaro, a campanha de Lula pediu ao TSE para suspender o Instagram dele, com mais de 14 milhões de seguidores, bloquear o B22token e tentar cassar a chapa. E o TSE já havia barrado a candidatura presidencial de Marçal. Falam em combater irregularidades, mas o alvo é claro: reduzir alcance, cortar mobilização e decidir quem pode falar com os eleitores. Quando o poder chama isso de defesa da democracia, vale desconfiar de quem está tentando controlar a conversa.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Pedidos da campanha de Lula ao TSE contra Marçal e seus canais de mobilização após seu apoio a Flávio Bolsonaro",
+    "subtopics": [
+      "Pedido para suspender o Instagram de Marçal",
+      "Pedido para bloquear B22token e tentar cassar a chapa",
+      "Decisão anterior do TSE contra a candidatura presidencial de Marçal"
+    ],
+    "central_entities": [
+      "Marçal",
+      "Flávio Bolsonaro",
+      "campanha de Lula",
+      "TSE",
+      "Instagram",
+      "B22token"
+    ],
+    "central_relations": [
+      {
+        "subject": "Marçal",
+        "action": "apoiou",
+        "object": "Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "apoiar",
+        "negation_scope": null,
+        "signed_action": "apoiou",
+        "base_action": "apoiou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "campanha de Lula",
+        "action": "pediu ao TSE para suspender o Instagram dele",
+        "object": "Instagram",
+        "polarity": "affirmed",
+        "predicate": "pedir suspensão",
+        "negation_scope": null,
+        "signed_action": "pediu ao TSE para suspender o Instagram dele",
+        "base_action": "pediu ao TSE para suspender o Instagram dele",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "follower_count",
+            "value": 14000000.0,
+            "unit": "follower",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "mais de 14 milhões de seguidores"
+          }
+        ]
+      },
+      {
+        "subject": "campanha de Lula",
+        "action": "pediu ao TSE para bloquear",
+        "object": "B22token",
+        "polarity": "affirmed",
+        "predicate": "pedir bloqueio",
+        "negation_scope": null,
+        "signed_action": "pediu ao TSE para bloquear o B22token",
+        "base_action": "pediu ao TSE para bloquear o B22token",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "campanha de Lula",
+        "action": "pediu ao TSE para tentar cassar",
+        "object": "a chapa",
+        "polarity": "affirmed",
+        "predicate": "pedir tentativa de cassação",
+        "negation_scope": null,
+        "signed_action": "pediu ao TSE para tentar cassar a chapa",
+        "base_action": "pediu ao TSE para tentar cassar a chapa",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "TSE",
+        "action": "já havia barrado",
+        "object": "a candidatura presidencial de Marçal",
+        "polarity": "affirmed",
+        "predicate": "barrar candidatura",
+        "negation_scope": null,
+        "signed_action": "já havia barrado a candidatura presidencial de Marçal",
+        "base_action": "já havia barrado a candidatura presidencial de Marçal",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento cético que apresenta os pedidos como tentativa de controlar a conversa política e questiona sua justificativa como defesa da democracia.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O autor afirma que não se trata de coincidência.",
+      "O autor interpreta que o alvo é reduzir alcance, cortar mobilização e decidir quem pode falar com os eleitores.",
+      "O autor recomenda desconfiar de quem apresenta essas ações como defesa da democracia."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "e2d116faebf09bc3ed0e7fa31efc38afc47101c65e7c34b8f23d8f4fbc5bb8f1",
+      "input_sha256": "34400b6a6cef9553733add4f7124bc9c8c4a9b0606d5f95a4a07d8304d726785",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Pedidos da campanha de Lula ao TSE contra Marçal e seus canais de mobilização após seu apoio a Flávio Bolsonaro\",\n  \"subtopics\": [\n    \"Pedido para suspender o Instagram de Marçal\",\n    \"Pedido para bloquear B22token e tentar cassar a chapa\",\n    \"Decisão anterior do TSE contra a candidatura presidencial de Marçal\"\n  ],\n  \"central_entities\": [\n    \"Marçal\",\n    \"Flávio Bolsonaro\",\n    \"campanha de Lula\",\n    \"TSE\",\n    \"Instagram\",\n    \"B22token\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O autor afirma que não se trata de coincidência.\",\n    \"O autor interpreta que o alvo é reduzir alcance, cortar mobilização e decidir quem pode falar com os eleitores.\",\n    \"O autor recomenda desconfiar de quem apresenta essas ações como defesa da democracia.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Marçal\",\n      \"action\": \"apoiou\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apoiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apoiou\",\n      \"base_action\": \"apoiou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"object\": \"Instagram\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir suspensão\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"base_action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"follower_count\",\n          \"kind\": \"count\",\n          \"value\": 14000000,\n          \"unit\": \"follower\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 14 milhões de seguidores\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para bloquear\",\n      \"object\": \"B22token\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir bloqueio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para bloquear o B22token\",\n      \"base_action\": \"pediu ao TSE para bloquear o B22token\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para tentar cassar\",\n      \"object\": \"a chapa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir tentativa de cassação\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para tentar cassar a chapa\",\n      \"base_action\": \"pediu ao TSE para tentar cassar a chapa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"já havia barrado\",\n      \"object\": \"a candidatura presidencial de Marçal\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"barrar candidatura\",\n      \"negation_scope\": null,\n      \"signed_action\": \"já havia barrado a candidatura presidencial de Marçal\",\n      \"base_action\": \"já havia barrado a candidatura presidencial de Marçal\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético que apresenta os pedidos como tentativa de controlar a conversa política e questiona sua justificativa como defesa da democracia.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "e2d116faebf09bc3ed0e7fa31efc38afc47101c65e7c34b8f23d8f4fbc5bb8f1",
+          "input_sha256": "34400b6a6cef9553733add4f7124bc9c8c4a9b0606d5f95a4a07d8304d726785",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Pedidos da campanha de Lula ao TSE contra Marçal e seus canais de mobilização após seu apoio a Flávio Bolsonaro\",\n  \"subtopics\": [\n    \"Pedido para suspender o Instagram de Marçal\",\n    \"Pedido para bloquear B22token e tentar cassar a chapa\",\n    \"Decisão anterior do TSE contra a candidatura presidencial de Marçal\"\n  ],\n  \"central_entities\": [\n    \"Marçal\",\n    \"Flávio Bolsonaro\",\n    \"campanha de Lula\",\n    \"TSE\",\n    \"Instagram\",\n    \"B22token\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O autor afirma que não se trata de coincidência.\",\n    \"O autor interpreta que o alvo é reduzir alcance, cortar mobilização e decidir quem pode falar com os eleitores.\",\n    \"O autor recomenda desconfiar de quem apresenta essas ações como defesa da democracia.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Marçal\",\n      \"action\": \"apoiou\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apoiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apoiou\",\n      \"base_action\": \"apoiou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"object\": \"Instagram\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir suspensão\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"base_action\": \"pediu ao TSE para suspender o Instagram dele\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"follower_count\",\n          \"kind\": \"count\",\n          \"value\": 14000000,\n          \"unit\": \"follower\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 14 milhões de seguidores\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para bloquear\",\n      \"object\": \"B22token\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir bloqueio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para bloquear o B22token\",\n      \"base_action\": \"pediu ao TSE para bloquear o B22token\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"campanha de Lula\",\n      \"action\": \"pediu ao TSE para tentar cassar\",\n      \"object\": \"a chapa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir tentativa de cassação\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu ao TSE para tentar cassar a chapa\",\n      \"base_action\": \"pediu ao TSE para tentar cassar a chapa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"já havia barrado\",\n      \"object\": \"a candidatura presidencial de Marçal\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"barrar candidatura\",\n      \"negation_scope\": null,\n      \"signed_action\": \"já havia barrado a candidatura presidencial de Marçal\",\n      \"base_action\": \"já havia barrado a candidatura presidencial de Marçal\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético que apresenta os pedidos como tentativa de controlar a conversa política e questiona sua justificativa como defesa da democracia.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "0ee4bf1fd8790055a90c87c1e5117ed4ad15fdca7d864fd9f31cecc6e67501b7"
+}

@@ -1,0 +1,163 @@
+{
+  "inputs": {
+    "text": "Lula está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral, sem mostrar claramente quem pagará a conta. O Senado não pode trocar prudência por pressão política: uma mudança feita para agradar no discurso pode ameaçar empregos e a segurança de famílias que dependem deles. Trabalhador merece respeito, mas respeito também é não tratar custos e consequências como se fossem detalhe.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Crítica à promessa eleitoral de Lula sobre mudanças na jornada de trabalho sem redução salarial e sem esclarecimento dos custos.",
+    "subtopics": [
+      "Fim da escala 6x1 e jornada 5x2",
+      "Possíveis impactos sobre empregos e famílias",
+      "Prudência do Senado diante da pressão política"
+    ],
+    "central_entities": [
+      "Lula",
+      "Senado",
+      "Trabalhador",
+      "famílias"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lula",
+        "action": "está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral",
+        "object": "o fim da escala 6x1 e uma jornada 5x2 sem redução salarial",
+        "polarity": "affirmed",
+        "predicate": "vender",
+        "negation_scope": null,
+        "signed_action": "está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral",
+        "base_action": "está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "current_schedule_pattern",
+            "value": "6x1",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "6x1"
+          },
+          {
+            "role": "proposed_schedule_pattern",
+            "value": "5x2",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "5x2"
+          }
+        ]
+      },
+      {
+        "subject": "Lula",
+        "action": "sem mostrar claramente quem pagará a conta",
+        "object": "quem pagará a conta",
+        "polarity": "negated",
+        "predicate": "mostrar",
+        "negation_scope": "mostrar claramente quem pagará a conta",
+        "signed_action": "sem mostrar claramente quem pagará a conta",
+        "base_action": "mostrar claramente quem pagará a conta",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "uma mudança feita para agradar no discurso",
+        "action": "pode ameaçar",
+        "object": "empregos e a segurança de famílias que dependem deles",
+        "polarity": "affirmed",
+        "predicate": "ameaçar",
+        "negation_scope": null,
+        "signed_action": "pode ameaçar",
+        "base_action": "pode ameaçar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "Senado",
+        "action": "não pode trocar prudência por pressão política",
+        "object": "prudência por pressão política",
+        "polarity": "negated",
+        "predicate": "trocar",
+        "negation_scope": "pode trocar prudência por pressão política",
+        "signed_action": "não pode trocar prudência por pressão política",
+        "base_action": "pode trocar prudência por pressão política",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento crítico de uma promessa eleitoral cujos custos não são esclarecidos e que poderia ameaçar empregos e a segurança das famílias.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O Senado não deve trocar prudência por pressão política.",
+      "Trabalhador merece respeito.",
+      "Respeito também significa não tratar custos e consequências como detalhes."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "6872bffd640b648bff6803e7dc9b882e1d4aefa1070ae963e5af5541da91622c",
+      "input_sha256": "40ddaa43974a8eb7dc57b94ddb7cbf926b665488388b17d73624064ee057abd2",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Crítica à promessa eleitoral de Lula sobre mudanças na jornada de trabalho sem redução salarial e sem esclarecimento dos custos.\",\n  \"subtopics\": [\n    \"Fim da escala 6x1 e jornada 5x2\",\n    \"Possíveis impactos sobre empregos e famílias\",\n    \"Prudência do Senado diante da pressão política\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Senado\",\n    \"Trabalhador\",\n    \"famílias\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O Senado não deve trocar prudência por pressão política.\",\n    \"Trabalhador merece respeito.\",\n    \"Respeito também significa não tratar custos e consequências como detalhes.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"object\": \"o fim da escala 6x1 e uma jornada 5x2 sem redução salarial\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"base_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"current_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        },\n        {\n          \"role\": \"proposed_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"5x2\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"5x2\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"sem mostrar claramente quem pagará a conta\",\n      \"object\": \"quem pagará a conta\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"mostrar\",\n      \"negation_scope\": \"mostrar claramente quem pagará a conta\",\n      \"signed_action\": \"sem mostrar claramente quem pagará a conta\",\n      \"base_action\": \"mostrar claramente quem pagará a conta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"uma mudança feita para agradar no discurso\",\n      \"action\": \"pode ameaçar\",\n      \"object\": \"empregos e a segurança de famílias que dependem deles\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ameaçar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode ameaçar\",\n      \"base_action\": \"pode ameaçar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não pode trocar prudência por pressão política\",\n      \"object\": \"prudência por pressão política\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"trocar\",\n      \"negation_scope\": \"pode trocar prudência por pressão política\",\n      \"signed_action\": \"não pode trocar prudência por pressão política\",\n      \"base_action\": \"pode trocar prudência por pressão política\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico de uma promessa eleitoral cujos custos não são esclarecidos e que poderia ameaçar empregos e a segurança das famílias.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "6872bffd640b648bff6803e7dc9b882e1d4aefa1070ae963e5af5541da91622c",
+          "input_sha256": "40ddaa43974a8eb7dc57b94ddb7cbf926b665488388b17d73624064ee057abd2",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Crítica à promessa eleitoral de Lula sobre mudanças na jornada de trabalho sem redução salarial e sem esclarecimento dos custos.\",\n  \"subtopics\": [\n    \"Fim da escala 6x1 e jornada 5x2\",\n    \"Possíveis impactos sobre empregos e famílias\",\n    \"Prudência do Senado diante da pressão política\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Senado\",\n    \"Trabalhador\",\n    \"famílias\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O Senado não deve trocar prudência por pressão política.\",\n    \"Trabalhador merece respeito.\",\n    \"Respeito também significa não tratar custos e consequências como detalhes.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"object\": \"o fim da escala 6x1 e uma jornada 5x2 sem redução salarial\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"base_action\": \"está a vender o fim da escala 6x1 e uma jornada 5x2 sem redução salarial como promessa eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"current_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        },\n        {\n          \"role\": \"proposed_schedule_pattern\",\n          \"kind\": \"identifier\",\n          \"value\": \"5x2\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"5x2\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"sem mostrar claramente quem pagará a conta\",\n      \"object\": \"quem pagará a conta\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"mostrar\",\n      \"negation_scope\": \"mostrar claramente quem pagará a conta\",\n      \"signed_action\": \"sem mostrar claramente quem pagará a conta\",\n      \"base_action\": \"mostrar claramente quem pagará a conta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"uma mudança feita para agradar no discurso\",\n      \"action\": \"pode ameaçar\",\n      \"object\": \"empregos e a segurança de famílias que dependem deles\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ameaçar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode ameaçar\",\n      \"base_action\": \"pode ameaçar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"não pode trocar prudência por pressão política\",\n      \"object\": \"prudência por pressão política\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"trocar\",\n      \"negation_scope\": \"pode trocar prudência por pressão política\",\n      \"signed_action\": \"não pode trocar prudência por pressão política\",\n      \"base_action\": \"pode trocar prudência por pressão política\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico de uma promessa eleitoral cujos custos não são esclarecidos e que poderia ameaçar empregos e a segurança das famílias.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "3d96c79042eef72c0fe0d5a0eedc8854dd5dd8f29cc6494f4c17f6b21f722d61"
+}

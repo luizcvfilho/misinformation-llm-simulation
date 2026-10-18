@@ -1,0 +1,239 @@
+{
+  "inputs": {
+    "text": "A Folha e o Globo contratam, e o Datafolha divulga Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro, de dois pontos. O registro no TSE funciona como selo de credibilidade. Foram ouvidos 2.520 eleitores em 153 cidades, entre terça-feira (6) e quarta-feira (7), num cenário de virada em que a vantagem nem sequer é segura. Estão testando a reação do público e empurrando a ideia de disputa; a incerteza não atrapalha a narrativa — é justamente o que permite manipulá-la.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Datafolha poll showing Flávio Bolsonaro narrowly ahead of Lula and the article's criticism of its media framing",
+    "subtopics": [
+      "Poll lead within the margin of error",
+      "Survey sample and field dates",
+      "TSE registration as a credibility signal",
+      "Alleged manipulation of the narrative"
+    ],
+    "central_entities": [
+      "Folha",
+      "Globo",
+      "Datafolha",
+      "Flávio Bolsonaro",
+      "Lula",
+      "TSE"
+    ],
+    "central_relations": [
+      {
+        "subject": "Folha",
+        "action": "contratam",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "contratam",
+        "negation_scope": null,
+        "signed_action": "contratam",
+        "base_action": "contratam",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Globo",
+        "action": "contratam",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "contratam",
+        "negation_scope": null,
+        "signed_action": "contratam",
+        "base_action": "contratam",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Datafolha",
+        "action": "divulga",
+        "object": "Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro",
+        "polarity": "affirmed",
+        "predicate": "divulga",
+        "negation_scope": null,
+        "signed_action": "divulga",
+        "base_action": "divulga",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "lead_difference",
+            "value": 2.0,
+            "unit": "point",
+            "kind": "number",
+            "status": "exact",
+            "expression": "dois pontos"
+          }
+        ]
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "a vantagem sobre Lula nem sequer é segura",
+        "object": "Lula",
+        "polarity": "negated",
+        "predicate": "é segura",
+        "negation_scope": "nem sequer",
+        "signed_action": "nem sequer é segura",
+        "base_action": "é segura",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Datafolha",
+        "action": "ouviu",
+        "object": "eleitores em cidades, entre terça-feira e quarta-feira",
+        "polarity": "affirmed",
+        "predicate": "ouviu",
+        "negation_scope": null,
+        "signed_action": "ouviu",
+        "base_action": "ouviu",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "surveyed_voters",
+            "value": 2520.0,
+            "unit": "voter",
+            "kind": "count",
+            "status": "exact",
+            "expression": "2.520 eleitores"
+          },
+          {
+            "role": "survey_city_count",
+            "value": 153.0,
+            "unit": "city",
+            "kind": "count",
+            "status": "exact",
+            "expression": "153 cidades"
+          },
+          {
+            "role": "field_start_day",
+            "value": 6.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "6"
+          },
+          {
+            "role": "field_end_day",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "7"
+          }
+        ]
+      },
+      {
+        "subject": "TSE",
+        "action": "é associado a um registro que funciona como",
+        "object": "selo de credibilidade",
+        "polarity": "affirmed",
+        "predicate": "funciona como",
+        "negation_scope": null,
+        "signed_action": "funciona como",
+        "base_action": "funciona como",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The text frames the poll's uncertain lead as part of an effort to manufacture a competitive narrative and manipulate it.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The text argues that uncertainty enables manipulation of the narrative."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "90ec2937685245b44641bc7425b7cc272d555bb527457ebf4a633f0641a5f26a",
+      "input_sha256": "277e7e44b5d97bfcb339f908f3130463b0863b7ea05e7269efcd7de986428866",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Datafolha poll showing Flávio Bolsonaro narrowly ahead of Lula and the article's criticism of its media framing\",\n  \"subtopics\": [\n    \"Poll lead within the margin of error\",\n    \"Survey sample and field dates\",\n    \"TSE registration as a credibility signal\",\n    \"Alleged manipulation of the narrative\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The text argues that uncertainty enables manipulation of the narrative.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Globo\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"divulga\",\n      \"object\": \"Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"divulga\",\n      \"negation_scope\": null,\n      \"signed_action\": \"divulga\",\n      \"base_action\": \"divulga\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lead_difference\",\n          \"kind\": \"number\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"a vantagem sobre Lula nem sequer é segura\",\n      \"object\": \"Lula\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"é segura\",\n      \"negation_scope\": \"nem sequer\",\n      \"signed_action\": \"nem sequer é segura\",\n      \"base_action\": \"é segura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores em cidades, entre terça-feira e quarta-feira\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouviu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ouviu\",\n      \"base_action\": \"ouviu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_city_count\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"field_start_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6\"\n        },\n        {\n          \"role\": \"field_end_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"é associado a um registro que funciona como\",\n      \"object\": \"selo de credibilidade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"funciona como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"funciona como\",\n      \"base_action\": \"funciona como\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The text frames the poll's uncertain lead as part of an effort to manufacture a competitive narrative and manipulate it.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "fd5242439bcc1b36ce3607908fd7f944f9cdcf9ccb37e99f100fbb4d363e9b62",
+          "input_sha256": "277e7e44b5d97bfcb339f908f3130463b0863b7ea05e7269efcd7de986428866",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Divulgação de pesquisa eleitoral que coloca Flávio Bolsonaro à frente de Lula por dois pontos, no limite da margem de erro.\",\n  \"subtopics\": [\n    \"Contratação da pesquisa por A Folha e o Globo\",\n    \"Registro no TSE como selo de credibilidade\",\n    \"Amostra de eleitores e cidades pesquisadas\",\n    \"Incerteza sobre a vantagem e enquadramento da disputa\"\n  ],\n  \"central_entities\": [\n    \"A Folha\",\n    \"o Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\",\n    \"eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A incerteza não atrapalha a narrativa; é justamente o que permite manipulá-la.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"A Folha\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"o Globo\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"divulga\",\n      \"object\": \"Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"divulga\",\n      \"negation_scope\": null,\n      \"signed_action\": \"divulga\",\n      \"base_action\": \"divulga\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_difference\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"funciona como\",\n      \"object\": \"selo de credibilidade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"funciona como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"funciona como\",\n      \"base_action\": \"funciona como\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eleitores\",\n      \"action\": \"foram ouvidos\",\n      \"object\": \"em cidades, entre terça-feira (6) e quarta-feira (7)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foram ouvidos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram ouvidos\",\n      \"base_action\": \"foram ouvidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a vantagem\",\n      \"action\": \"nem sequer é segura\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"é segura\",\n      \"negation_scope\": \"nem sequer\",\n      \"signed_action\": \"nem sequer é segura\",\n      \"base_action\": \"é segura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": null,\n      \"action\": \"estão testando\",\n      \"object\": \"a reação do público\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estão testando\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estão testando\",\n      \"base_action\": \"estão testando\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": null,\n      \"action\": \"empurrando\",\n      \"object\": \"a ideia de disputa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"empurrando\",\n      \"negation_scope\": null,\n      \"signed_action\": \"empurrando\",\n      \"base_action\": \"empurrando\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico da pesquisa como instrumento para promover uma narrativa de disputa, com a incerteza apresentada como passível de manipulação.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "invalid",
+          "validation_issues": [
+            "Relation 6 has incomplete required fields",
+            "Relation 7 has incomplete required fields"
+          ]
+        },
+        {
+          "attempt": 2,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "90ec2937685245b44641bc7425b7cc272d555bb527457ebf4a633f0641a5f26a",
+          "input_sha256": "277e7e44b5d97bfcb339f908f3130463b0863b7ea05e7269efcd7de986428866",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Datafolha poll showing Flávio Bolsonaro narrowly ahead of Lula and the article's criticism of its media framing\",\n  \"subtopics\": [\n    \"Poll lead within the margin of error\",\n    \"Survey sample and field dates\",\n    \"TSE registration as a credibility signal\",\n    \"Alleged manipulation of the narrative\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The text argues that uncertainty enables manipulation of the narrative.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Globo\",\n      \"action\": \"contratam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratam\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contratam\",\n      \"base_action\": \"contratam\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"divulga\",\n      \"object\": \"Flávio Bolsonaro à frente de Lula por uma diferença no limite da margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"divulga\",\n      \"negation_scope\": null,\n      \"signed_action\": \"divulga\",\n      \"base_action\": \"divulga\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lead_difference\",\n          \"kind\": \"number\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"a vantagem sobre Lula nem sequer é segura\",\n      \"object\": \"Lula\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"é segura\",\n      \"negation_scope\": \"nem sequer\",\n      \"signed_action\": \"nem sequer é segura\",\n      \"base_action\": \"é segura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores em cidades, entre terça-feira e quarta-feira\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouviu\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ouviu\",\n      \"base_action\": \"ouviu\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_city_count\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"field_start_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6\"\n        },\n        {\n          \"role\": \"field_end_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"é associado a um registro que funciona como\",\n      \"object\": \"selo de credibilidade\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"funciona como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"funciona como\",\n      \"base_action\": \"funciona como\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The text frames the poll's uncertain lead as part of an effort to manufacture a competitive narrative and manipulate it.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "validation_feedback": "Relation 6 has incomplete required fields; Relation 7 has incomplete required fields",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "3e3c85f48e56815d767897bc65520f330dd2440e581a1fb23160c24c276f2854"
+}

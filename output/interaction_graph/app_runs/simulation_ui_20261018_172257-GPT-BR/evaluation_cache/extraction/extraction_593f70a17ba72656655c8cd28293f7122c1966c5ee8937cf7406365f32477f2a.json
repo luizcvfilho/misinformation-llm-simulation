@@ -1,0 +1,250 @@
+{
+  "inputs": {
+    "text": "A partir deste sábado (10), candidatos que disputam o segundo turno das Eleições 2026, marcado para daqui a 15 dias, não podem ser presos ou detidos. A determinação está prevista no Código Eleitoral Brasileiro e busca garantir o equilíbrio e a regularidade do processo eleitoral.\n\nSegundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação, marcada para 25 de outubro.\n\nA única exceção é o flagrante delito. Nesse caso, a pessoa detida deve ser levada imediatamente à presença de um juiz, que avaliará a legalidade da prisão. Flagrante delito ocorre quando alguém é pego cometendo um crime, logo após cometê-lo ou com armas e objetos que façam presumir sua autoria.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Restrição temporária à prisão ou detenção de candidatos no segundo turno das Eleições 2026",
+    "subtopics": [
+      "Período de imunidade eleitoral",
+      "Exceção de flagrante delito",
+      "Avaliação judicial da legalidade da prisão"
+    ],
+    "central_entities": [
+      "candidatos",
+      "Eleições 2026",
+      "Código Eleitoral Brasileiro",
+      "Tribunal Superior Eleitoral (TSE)",
+      "juiz"
+    ],
+    "central_relations": [
+      {
+        "subject": "candidatos",
+        "action": "disputam o segundo turno das Eleições 2026",
+        "object": "Eleições 2026",
+        "polarity": "affirmed",
+        "predicate": "disputar",
+        "negation_scope": null,
+        "signed_action": "disputam o segundo turno das Eleições 2026",
+        "base_action": "disputam o segundo turno das Eleições 2026",
+        "duration_status": "exact",
+        "duration_value": 15.0,
+        "duration_unit": "day",
+        "duration_expression": "daqui a 15 dias",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          },
+          {
+            "role": "second_round_countdown",
+            "value": 15.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "daqui a 15 dias"
+          }
+        ]
+      },
+      {
+        "subject": "candidatos",
+        "action": "não podem ser presos ou detidos",
+        "object": "presos ou detidos",
+        "polarity": "negated",
+        "predicate": "ser preso ou detido",
+        "negation_scope": "não podem ser presos ou detidos",
+        "signed_action": "não podem ser presos ou detidos",
+        "base_action": "podem ser presos ou detidos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "restriction_start_date",
+            "value": "2026-10-10",
+            "unit": null,
+            "kind": "date",
+            "status": "exact",
+            "expression": "sábado (10)"
+          }
+        ]
+      },
+      {
+        "subject": "Código Eleitoral Brasileiro",
+        "action": "prevê a determinação",
+        "object": "a determinação",
+        "polarity": "affirmed",
+        "predicate": "prever",
+        "negation_scope": null,
+        "signed_action": "está prevista no Código Eleitoral Brasileiro",
+        "base_action": "está prevista no Código Eleitoral Brasileiro",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a determinação",
+        "action": "busca garantir o equilíbrio e a regularidade do processo eleitoral",
+        "object": "o equilíbrio e a regularidade do processo eleitoral",
+        "polarity": "affirmed",
+        "predicate": "buscar garantir",
+        "negation_scope": null,
+        "signed_action": "busca garantir o equilíbrio e a regularidade do processo eleitoral",
+        "base_action": "busca garantir o equilíbrio e a regularidade do processo eleitoral",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Tribunal Superior Eleitoral (TSE)",
+        "action": "afirma que a imunidade temporária se estende até 48h após o encerramento da votação",
+        "object": "a imunidade temporária",
+        "polarity": "affirmed",
+        "predicate": "afirmar que se estende",
+        "negation_scope": null,
+        "signed_action": "Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação",
+        "base_action": "Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48h após o encerramento da votação",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "post_voting_immunity_period",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48h após o encerramento da votação"
+          },
+          {
+            "role": "voting_date",
+            "value": "2026-10-25",
+            "unit": null,
+            "kind": "date",
+            "status": "exact",
+            "expression": "25 de outubro"
+          }
+        ]
+      },
+      {
+        "subject": "flagrante delito",
+        "action": "é a única exceção",
+        "object": "a restrição à prisão ou detenção",
+        "polarity": "affirmed",
+        "predicate": "ser exceção",
+        "negation_scope": null,
+        "signed_action": "A única exceção é o flagrante delito",
+        "base_action": "A única exceção é o flagrante delito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a pessoa detida",
+        "action": "deve ser levada imediatamente à presença de um juiz",
+        "object": "juiz",
+        "polarity": "affirmed",
+        "predicate": "ser levada à presença",
+        "negation_scope": null,
+        "signed_action": "deve ser levada imediatamente à presença de um juiz",
+        "base_action": "deve ser levada imediatamente à presença de um juiz",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "juiz",
+        "action": "avaliará a legalidade da prisão",
+        "object": "a legalidade da prisão",
+        "polarity": "affirmed",
+        "predicate": "avaliar",
+        "negation_scope": null,
+        "signed_action": "avaliará a legalidade da prisão",
+        "base_action": "avaliará a legalidade da prisão",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A imunidade temporária de candidatos é apresentada como uma garantia de equilíbrio e regularidade eleitoral, com exceção para flagrante delito e controle judicial.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "30ea1c5100f76a415d6df5349d6c5249a52d30b296adfd176b1211f01d12243f",
+      "input_sha256": "04a818c5ea9a48bd117d3429c61646bd3007b20b1d78efe248f7f5c55fdb4fb5",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Restrição temporária à prisão ou detenção de candidatos no segundo turno das Eleições 2026\",\n  \"subtopics\": [\n    \"Período de imunidade eleitoral\",\n    \"Exceção de flagrante delito\",\n    \"Avaliação judicial da legalidade da prisão\"\n  ],\n  \"central_entities\": [\n    \"candidatos\",\n    \"Eleições 2026\",\n    \"Código Eleitoral Brasileiro\",\n    \"Tribunal Superior Eleitoral (TSE)\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"disputam o segundo turno das Eleições 2026\",\n      \"object\": \"Eleições 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"disputar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"disputam o segundo turno das Eleições 2026\",\n      \"base_action\": \"disputam o segundo turno das Eleições 2026\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 15,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"daqui a 15 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        },\n        {\n          \"role\": \"second_round_countdown\",\n          \"kind\": \"duration\",\n          \"value\": 15,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"daqui a 15 dias\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"não podem ser presos ou detidos\",\n      \"object\": \"presos ou detidos\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser preso ou detido\",\n      \"negation_scope\": \"não podem ser presos ou detidos\",\n      \"signed_action\": \"não podem ser presos ou detidos\",\n      \"base_action\": \"podem ser presos ou detidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"restriction_start_date\",\n          \"kind\": \"date\",\n          \"value\": \"2026-10-10\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Código Eleitoral Brasileiro\",\n      \"action\": \"prevê a determinação\",\n      \"object\": \"a determinação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está prevista no Código Eleitoral Brasileiro\",\n      \"base_action\": \"está prevista no Código Eleitoral Brasileiro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a determinação\",\n      \"action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"object\": \"o equilíbrio e a regularidade do processo eleitoral\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"buscar garantir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"base_action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tribunal Superior Eleitoral (TSE)\",\n      \"action\": \"afirma que a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"object\": \"a imunidade temporária\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar que se estende\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"base_action\": \"Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h após o encerramento da votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"post_voting_immunity_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h após o encerramento da votação\"\n        },\n        {\n          \"role\": \"voting_date\",\n          \"kind\": \"date\",\n          \"value\": \"2026-10-25\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"flagrante delito\",\n      \"action\": \"é a única exceção\",\n      \"object\": \"a restrição à prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser exceção\",\n      \"negation_scope\": null,\n      \"signed_action\": \"A única exceção é o flagrante delito\",\n      \"base_action\": \"A única exceção é o flagrante delito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa detida\",\n      \"action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser levada à presença\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"base_action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"juiz\",\n      \"action\": \"avaliará a legalidade da prisão\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"avaliará a legalidade da prisão\",\n      \"base_action\": \"avaliará a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A imunidade temporária de candidatos é apresentada como uma garantia de equilíbrio e regularidade eleitoral, com exceção para flagrante delito e controle judicial.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "30ea1c5100f76a415d6df5349d6c5249a52d30b296adfd176b1211f01d12243f",
+          "input_sha256": "04a818c5ea9a48bd117d3429c61646bd3007b20b1d78efe248f7f5c55fdb4fb5",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Restrição temporária à prisão ou detenção de candidatos no segundo turno das Eleições 2026\",\n  \"subtopics\": [\n    \"Período de imunidade eleitoral\",\n    \"Exceção de flagrante delito\",\n    \"Avaliação judicial da legalidade da prisão\"\n  ],\n  \"central_entities\": [\n    \"candidatos\",\n    \"Eleições 2026\",\n    \"Código Eleitoral Brasileiro\",\n    \"Tribunal Superior Eleitoral (TSE)\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"disputam o segundo turno das Eleições 2026\",\n      \"object\": \"Eleições 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"disputar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"disputam o segundo turno das Eleições 2026\",\n      \"base_action\": \"disputam o segundo turno das Eleições 2026\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 15,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"daqui a 15 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        },\n        {\n          \"role\": \"second_round_countdown\",\n          \"kind\": \"duration\",\n          \"value\": 15,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"daqui a 15 dias\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"não podem ser presos ou detidos\",\n      \"object\": \"presos ou detidos\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser preso ou detido\",\n      \"negation_scope\": \"não podem ser presos ou detidos\",\n      \"signed_action\": \"não podem ser presos ou detidos\",\n      \"base_action\": \"podem ser presos ou detidos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"restriction_start_date\",\n          \"kind\": \"date\",\n          \"value\": \"2026-10-10\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Código Eleitoral Brasileiro\",\n      \"action\": \"prevê a determinação\",\n      \"object\": \"a determinação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está prevista no Código Eleitoral Brasileiro\",\n      \"base_action\": \"está prevista no Código Eleitoral Brasileiro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a determinação\",\n      \"action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"object\": \"o equilíbrio e a regularidade do processo eleitoral\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"buscar garantir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"base_action\": \"busca garantir o equilíbrio e a regularidade do processo eleitoral\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tribunal Superior Eleitoral (TSE)\",\n      \"action\": \"afirma que a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"object\": \"a imunidade temporária\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar que se estende\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"base_action\": \"Segundo o Tribunal Superior Eleitoral (TSE), a imunidade temporária se estende até 48h após o encerramento da votação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h após o encerramento da votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"post_voting_immunity_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h após o encerramento da votação\"\n        },\n        {\n          \"role\": \"voting_date\",\n          \"kind\": \"date\",\n          \"value\": \"2026-10-25\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"flagrante delito\",\n      \"action\": \"é a única exceção\",\n      \"object\": \"a restrição à prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser exceção\",\n      \"negation_scope\": null,\n      \"signed_action\": \"A única exceção é o flagrante delito\",\n      \"base_action\": \"A única exceção é o flagrante delito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa detida\",\n      \"action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser levada à presença\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"base_action\": \"deve ser levada imediatamente à presença de um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"juiz\",\n      \"action\": \"avaliará a legalidade da prisão\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"avaliará a legalidade da prisão\",\n      \"base_action\": \"avaliará a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A imunidade temporária de candidatos é apresentada como uma garantia de equilíbrio e regularidade eleitoral, com exceção para flagrante delito e controle judicial.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "f47d56469c1a6bfae7936535617f415aa806062a51ae7fc8364a8bdfc4310412"
+}

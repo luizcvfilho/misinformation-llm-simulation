@@ -1,0 +1,258 @@
+{
+  "inputs": {
+    "text": "A discussão sobre o fim da escala 6x1 está sendo conduzida em torno do calendário eleitoral. Alcolumbre diz que a PEC seguirá o rito, mas admite que o primeiro turno pode acontecer já na semana que vem; a oposição prefere deixar para depois do segundo turno. O conflito de datas parece menos uma divergência inocente e mais uma disputa por quem ficará com o crédito — ou por quem conseguirá adiar a decisão.\n\nA promessa de 40 horas semanais, sem redução salarial e com dois dias de descanso, é atraente, mas a proposta ainda precisa de 49 votos em dois turnos. Enquanto os candidatos falam, quem controla a pauta também controla o destino da PEC. No fim, a vitrine é para o público; é o calendário que mostra onde está o poder.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Debate sobre o fim da escala 6x1 e disputa pelo calendário eleitoral da PEC",
+    "subtopics": [
+      "Possível votação antes do segundo turno",
+      "Crédito político e controle da pauta",
+      "Promessa de 40 horas semanais e dois dias de descanso",
+      "Votos necessários para aprovar a proposta"
+    ],
+    "central_entities": [
+      "escala 6x1",
+      "Alcolumbre",
+      "PEC",
+      "oposição",
+      "candidatos",
+      "A promessa",
+      "a proposta"
+    ],
+    "central_relations": [
+      {
+        "subject": "Alcolumbre",
+        "action": "diz que a PEC seguirá o rito",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "seguir o rito",
+        "negation_scope": null,
+        "signed_action": "seguirá o rito",
+        "base_action": "seguir o rito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Alcolumbre",
+        "action": "admite que o primeiro turno pode acontecer já na semana que vem",
+        "object": "primeiro turno",
+        "polarity": "affirmed",
+        "predicate": "acontecer",
+        "negation_scope": null,
+        "signed_action": "pode acontecer já na semana que vem",
+        "base_action": "acontecer",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "oposição",
+        "action": "prefere deixar para depois do segundo turno",
+        "object": "votação da PEC",
+        "polarity": "affirmed",
+        "predicate": "preferir deixar",
+        "negation_scope": null,
+        "signed_action": "prefere deixar para depois do segundo turno",
+        "base_action": "preferir deixar para depois do segundo turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "turn_count",
+            "value": 2.0,
+            "unit": "turn",
+            "kind": "count",
+            "status": "exact",
+            "expression": "segundo turno"
+          }
+        ]
+      },
+      {
+        "subject": "A promessa",
+        "action": "prevê 40 horas semanais",
+        "object": "40 horas semanais",
+        "polarity": "affirmed",
+        "predicate": "prever",
+        "negation_scope": null,
+        "signed_action": "prevê 40 horas semanais",
+        "base_action": "prever 40 horas semanais",
+        "duration_status": "exact",
+        "duration_value": 40.0,
+        "duration_unit": "hour",
+        "duration_expression": "40 horas semanais",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "weekly_work_duration",
+            "value": 40.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "40 horas semanais"
+          }
+        ]
+      },
+      {
+        "subject": "A promessa",
+        "action": "sem redução salarial",
+        "object": "salários",
+        "polarity": "negated",
+        "predicate": "reduzir",
+        "negation_scope": "redução salarial",
+        "signed_action": "sem redução salarial",
+        "base_action": "reduzir salários",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "A promessa",
+        "action": "prevê dois dias de descanso",
+        "object": "dois dias de descanso",
+        "polarity": "affirmed",
+        "predicate": "prever",
+        "negation_scope": null,
+        "signed_action": "prevê dois dias de descanso",
+        "base_action": "prever dois dias de descanso",
+        "duration_status": "exact",
+        "duration_value": 2.0,
+        "duration_unit": "day",
+        "duration_expression": "dois dias de descanso",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "rest_duration",
+            "value": 2.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "dois dias de descanso"
+          }
+        ]
+      },
+      {
+        "subject": "a proposta",
+        "action": "precisa de 49 votos em dois turnos",
+        "object": "votos",
+        "polarity": "affirmed",
+        "predicate": "precisar",
+        "negation_scope": null,
+        "signed_action": "precisa de 49 votos em dois turnos",
+        "base_action": "precisar de 49 votos em dois turnos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "required_votes",
+            "value": 49.0,
+            "unit": "vote",
+            "kind": "count",
+            "status": "exact",
+            "expression": "49 votos"
+          },
+          {
+            "role": "voting_round_count",
+            "value": 2.0,
+            "unit": "round",
+            "kind": "count",
+            "status": "exact",
+            "expression": "dois turnos"
+          }
+        ]
+      },
+      {
+        "subject": "candidatos",
+        "action": "falam",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "falar",
+        "negation_scope": null,
+        "signed_action": "falam",
+        "base_action": "falar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A disputa sobre o calendário eleitoral é apresentada como uma disputa por crédito político e controle do destino da PEC.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A promessa de 40 horas semanais, sem redução salarial e com dois dias de descanso, é atraente.",
+      "O conflito de datas parece uma disputa por crédito ou por adiamento da decisão.",
+      "O calendário é apresentado como indicador de onde está o poder."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "b35096c2903c5ec1c09801cb1ec82effcf2c47bb169fe5247667f583862ce804",
+      "input_sha256": "d9b881f1e1f82d57d4221ca184a163af592e99340957148acc138ad123130c88",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Debate sobre o fim da escala 6x1 e disputa pelo calendário eleitoral da PEC\",\n  \"subtopics\": [\n    \"Possível votação antes do segundo turno\",\n    \"Crédito político e controle da pauta\",\n    \"Promessa de 40 horas semanais e dois dias de descanso\",\n    \"Votos necessários para aprovar a proposta\"\n  ],\n  \"central_entities\": [\n    \"escala 6x1\",\n    \"Alcolumbre\",\n    \"PEC\",\n    \"oposição\",\n    \"candidatos\",\n    \"A promessa\",\n    \"a proposta\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A promessa de 40 horas semanais, sem redução salarial e com dois dias de descanso, é atraente.\",\n    \"O conflito de datas parece uma disputa por crédito ou por adiamento da decisão.\",\n    \"O calendário é apresentado como indicador de onde está o poder.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Alcolumbre\",\n      \"action\": \"diz que a PEC seguirá o rito\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"seguir o rito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"seguirá o rito\",\n      \"base_action\": \"seguir o rito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Alcolumbre\",\n      \"action\": \"admite que o primeiro turno pode acontecer já na semana que vem\",\n      \"object\": \"primeiro turno\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acontecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode acontecer já na semana que vem\",\n      \"base_action\": \"acontecer\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"prefere deixar para depois do segundo turno\",\n      \"object\": \"votação da PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"preferir deixar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prefere deixar para depois do segundo turno\",\n      \"base_action\": \"preferir deixar para depois do segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"turn_count\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"turn\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"prevê 40 horas semanais\",\n      \"object\": \"40 horas semanais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prevê 40 horas semanais\",\n      \"base_action\": \"prever 40 horas semanais\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 40,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"40 horas semanais\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"weekly_work_duration\",\n          \"kind\": \"duration\",\n          \"value\": 40,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"40 horas semanais\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"sem redução salarial\",\n      \"object\": \"salários\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"reduzir\",\n      \"negation_scope\": \"redução salarial\",\n      \"signed_action\": \"sem redução salarial\",\n      \"base_action\": \"reduzir salários\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"prevê dois dias de descanso\",\n      \"object\": \"dois dias de descanso\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prevê dois dias de descanso\",\n      \"base_action\": \"prever dois dias de descanso\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 2,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"dois dias de descanso\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"rest_duration\",\n          \"kind\": \"duration\",\n          \"value\": 2,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"dois dias de descanso\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a proposta\",\n      \"action\": \"precisa de 49 votos em dois turnos\",\n      \"object\": \"votos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"precisar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"precisa de 49 votos em dois turnos\",\n      \"base_action\": \"precisar de 49 votos em dois turnos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"required_votes\",\n          \"kind\": \"count\",\n          \"value\": 49,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"49 votos\"\n        },\n        {\n          \"role\": \"voting_round_count\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"dois turnos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"falam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"falar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"falam\",\n      \"base_action\": \"falar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa sobre o calendário eleitoral é apresentada como uma disputa por crédito político e controle do destino da PEC.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "b35096c2903c5ec1c09801cb1ec82effcf2c47bb169fe5247667f583862ce804",
+          "input_sha256": "d9b881f1e1f82d57d4221ca184a163af592e99340957148acc138ad123130c88",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Debate sobre o fim da escala 6x1 e disputa pelo calendário eleitoral da PEC\",\n  \"subtopics\": [\n    \"Possível votação antes do segundo turno\",\n    \"Crédito político e controle da pauta\",\n    \"Promessa de 40 horas semanais e dois dias de descanso\",\n    \"Votos necessários para aprovar a proposta\"\n  ],\n  \"central_entities\": [\n    \"escala 6x1\",\n    \"Alcolumbre\",\n    \"PEC\",\n    \"oposição\",\n    \"candidatos\",\n    \"A promessa\",\n    \"a proposta\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A promessa de 40 horas semanais, sem redução salarial e com dois dias de descanso, é atraente.\",\n    \"O conflito de datas parece uma disputa por crédito ou por adiamento da decisão.\",\n    \"O calendário é apresentado como indicador de onde está o poder.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Alcolumbre\",\n      \"action\": \"diz que a PEC seguirá o rito\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"seguir o rito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"seguirá o rito\",\n      \"base_action\": \"seguir o rito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Alcolumbre\",\n      \"action\": \"admite que o primeiro turno pode acontecer já na semana que vem\",\n      \"object\": \"primeiro turno\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acontecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode acontecer já na semana que vem\",\n      \"base_action\": \"acontecer\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"prefere deixar para depois do segundo turno\",\n      \"object\": \"votação da PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"preferir deixar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prefere deixar para depois do segundo turno\",\n      \"base_action\": \"preferir deixar para depois do segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"turn_count\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"turn\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"prevê 40 horas semanais\",\n      \"object\": \"40 horas semanais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prevê 40 horas semanais\",\n      \"base_action\": \"prever 40 horas semanais\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 40,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"40 horas semanais\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"weekly_work_duration\",\n          \"kind\": \"duration\",\n          \"value\": 40,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"40 horas semanais\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"sem redução salarial\",\n      \"object\": \"salários\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"reduzir\",\n      \"negation_scope\": \"redução salarial\",\n      \"signed_action\": \"sem redução salarial\",\n      \"base_action\": \"reduzir salários\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"A promessa\",\n      \"action\": \"prevê dois dias de descanso\",\n      \"object\": \"dois dias de descanso\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prever\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prevê dois dias de descanso\",\n      \"base_action\": \"prever dois dias de descanso\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 2,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"dois dias de descanso\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"rest_duration\",\n          \"kind\": \"duration\",\n          \"value\": 2,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"dois dias de descanso\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"a proposta\",\n      \"action\": \"precisa de 49 votos em dois turnos\",\n      \"object\": \"votos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"precisar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"precisa de 49 votos em dois turnos\",\n      \"base_action\": \"precisar de 49 votos em dois turnos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"required_votes\",\n          \"kind\": \"count\",\n          \"value\": 49,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"49 votos\"\n        },\n        {\n          \"role\": \"voting_round_count\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"dois turnos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"candidatos\",\n      \"action\": \"falam\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"falar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"falam\",\n      \"base_action\": \"falar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa sobre o calendário eleitoral é apresentada como uma disputa por crédito político e controle do destino da PEC.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "c3041203aab4e8438806152f6093812c4016487b5f94b041f98b5b37871a09fd"
+}

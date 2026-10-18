@@ -1,0 +1,147 @@
+{
+  "inputs": {
+    "text": "Essa negativa de Tarcísio não é um desmentido: é parte do roteiro. Em público, diz que está comprometido com São Paulo; nos bastidores, a conversa sobre 2030 e uma eventual sucessão de Flávio Bolsonaro já serve para medir a reação e preparar a troca. Com mais de 60% dos votos, ele tem força para ser empurrado como opção. O “Tem nada a ver” parece menos uma resposta do que uma maneira de manter o público fora da negociação até decidirem que chegou a hora de anunciá-la.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "A negativa pública de Tarcísio e as conversas de bastidores sobre uma possível sucessão política em 2030",
+    "subtopics": [
+      "Compromisso público com São Paulo",
+      "Conversas sobre a sucessão de Flávio Bolsonaro",
+      "Apoio eleitoral de mais de 60% dos votos",
+      "Negociação mantida fora do alcance do público"
+    ],
+    "central_entities": [
+      "Tarcísio",
+      "São Paulo",
+      "Flávio Bolsonaro"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tarcísio",
+        "action": "diz que está comprometido",
+        "object": "São Paulo",
+        "polarity": "affirmed",
+        "predicate": "dizer que está comprometido",
+        "negation_scope": null,
+        "signed_action": "diz que está comprometido",
+        "base_action": "diz que está comprometido",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a conversa sobre 2030 e uma eventual sucessão de Flávio Bolsonaro",
+        "action": "serve para medir a reação e preparar a troca",
+        "object": "medir a reação e preparar a troca",
+        "polarity": "affirmed",
+        "predicate": "servir para",
+        "negation_scope": null,
+        "signed_action": "serve para medir a reação e preparar a troca",
+        "base_action": "serve para medir a reação e preparar a troca",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "succession_year",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      },
+      {
+        "subject": "Tarcísio",
+        "action": "tem força para ser empurrado como opção",
+        "object": "ser empurrado como opção",
+        "polarity": "affirmed",
+        "predicate": "ter força",
+        "negation_scope": null,
+        "signed_action": "tem força para ser empurrado como opção",
+        "base_action": "tem força para ser empurrado como opção",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_share",
+            "value": 60.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "approximate",
+            "expression": "mais de 60%"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A negativa pública é apresentada como estratégia para conduzir conversas de bastidores sobre uma possível troca política.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A negativa de Tarcísio não seria um desmentido, mas parte de um roteiro político.",
+      "A frase “Tem nada a ver” parece servir para manter o público fora da negociação até decidirem anunciar a troca."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "a1a6fc56a01c2ded3770f4e5d0cdab1de24f97b9b8fcc1515169ce30cb13b164",
+      "input_sha256": "71363d44ecccf21eb1e4eb68c1814078e337054f4a89674d8e17fe5d20d8d903",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"A negativa pública de Tarcísio e as conversas de bastidores sobre uma possível sucessão política em 2030\",\n  \"subtopics\": [\n    \"Compromisso público com São Paulo\",\n    \"Conversas sobre a sucessão de Flávio Bolsonaro\",\n    \"Apoio eleitoral de mais de 60% dos votos\",\n    \"Negociação mantida fora do alcance do público\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio\",\n    \"São Paulo\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A negativa de Tarcísio não seria um desmentido, mas parte de um roteiro político.\",\n    \"A frase “Tem nada a ver” parece servir para manter o público fora da negociação até decidirem anunciar a troca.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio\",\n      \"action\": \"diz que está comprometido\",\n      \"object\": \"São Paulo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizer que está comprometido\",\n      \"negation_scope\": null,\n      \"signed_action\": \"diz que está comprometido\",\n      \"base_action\": \"diz que está comprometido\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a conversa sobre 2030 e uma eventual sucessão de Flávio Bolsonaro\",\n      \"action\": \"serve para medir a reação e preparar a troca\",\n      \"object\": \"medir a reação e preparar a troca\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"servir para\",\n      \"negation_scope\": null,\n      \"signed_action\": \"serve para medir a reação e preparar a troca\",\n      \"base_action\": \"serve para medir a reação e preparar a troca\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"succession_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio\",\n      \"action\": \"tem força para ser empurrado como opção\",\n      \"object\": \"ser empurrado como opção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter força\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem força para ser empurrado como opção\",\n      \"base_action\": \"tem força para ser empurrado como opção\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A negativa pública é apresentada como estratégia para conduzir conversas de bastidores sobre uma possível troca política.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "a1a6fc56a01c2ded3770f4e5d0cdab1de24f97b9b8fcc1515169ce30cb13b164",
+          "input_sha256": "71363d44ecccf21eb1e4eb68c1814078e337054f4a89674d8e17fe5d20d8d903",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"A negativa pública de Tarcísio e as conversas de bastidores sobre uma possível sucessão política em 2030\",\n  \"subtopics\": [\n    \"Compromisso público com São Paulo\",\n    \"Conversas sobre a sucessão de Flávio Bolsonaro\",\n    \"Apoio eleitoral de mais de 60% dos votos\",\n    \"Negociação mantida fora do alcance do público\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio\",\n    \"São Paulo\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A negativa de Tarcísio não seria um desmentido, mas parte de um roteiro político.\",\n    \"A frase “Tem nada a ver” parece servir para manter o público fora da negociação até decidirem anunciar a troca.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio\",\n      \"action\": \"diz que está comprometido\",\n      \"object\": \"São Paulo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizer que está comprometido\",\n      \"negation_scope\": null,\n      \"signed_action\": \"diz que está comprometido\",\n      \"base_action\": \"diz que está comprometido\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a conversa sobre 2030 e uma eventual sucessão de Flávio Bolsonaro\",\n      \"action\": \"serve para medir a reação e preparar a troca\",\n      \"object\": \"medir a reação e preparar a troca\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"servir para\",\n      \"negation_scope\": null,\n      \"signed_action\": \"serve para medir a reação e preparar a troca\",\n      \"base_action\": \"serve para medir a reação e preparar a troca\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"succession_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio\",\n      \"action\": \"tem força para ser empurrado como opção\",\n      \"object\": \"ser empurrado como opção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter força\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem força para ser empurrado como opção\",\n      \"base_action\": \"tem força para ser empurrado como opção\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A negativa pública é apresentada como estratégia para conduzir conversas de bastidores sobre uma possível troca política.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "baee827451eeb9a06deca9defe5017b65b9974844ba670e4c49c878ae933da75"
+}

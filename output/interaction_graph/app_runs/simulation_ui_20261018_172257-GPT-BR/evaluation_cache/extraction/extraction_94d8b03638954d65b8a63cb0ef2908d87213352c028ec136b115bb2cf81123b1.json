@@ -1,0 +1,190 @@
+{
+  "inputs": {
+    "text": "PSTU e PCB estão a pedir um voto em Lula no segundo turno, marcado para 25 de outubro, não por alinhamento com o PT, mas para barrar a extrema-direita e a volta da família Bolsonaro ao poder. O PSTU chamou-lhe “voto crítico no 13” e deixou claro que isso não significa apoiar um eventual governo petista; o PCB também reconheceu que mantém diferenças programáticas com o PT.\n\nÉ uma escolha defensiva, mas politicamente importante: diante do risco de avanço da extrema-direita, as duas siglas priorizam impedir esse cenário sem abandonar as suas críticas à política tradicional. O desafio, depois da eleição, será transformar essa unidade contra a ameaça em pressão por mudanças que enfrentem a desigualdade e protejam quem costuma pagar o preço mais alto das disputas de poder.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "PSTU e PCB pedem voto em Lula no segundo turno para barrar a extrema-direita",
+    "subtopics": [
+      "O voto crítico do PSTU não implica apoio a um eventual governo petista",
+      "O PCB mantém diferenças programáticas com o PT",
+      "Pressão por mudanças após a eleição"
+    ],
+    "central_entities": [
+      "PSTU",
+      "PCB",
+      "Lula",
+      "PT",
+      "extrema-direita",
+      "família Bolsonaro"
+    ],
+    "central_relations": [
+      {
+        "subject": "PSTU",
+        "action": "está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "object": "Lula",
+        "polarity": "affirmed",
+        "predicate": "pedir voto em",
+        "negation_scope": null,
+        "signed_action": "está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "base_action": "pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": [
+          {
+            "role": "election_day",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          }
+        ]
+      },
+      {
+        "subject": "PCB",
+        "action": "está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "object": "Lula",
+        "polarity": "affirmed",
+        "predicate": "pedir voto em",
+        "negation_scope": null,
+        "signed_action": "está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "base_action": "pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": [
+          {
+            "role": "election_day",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          }
+        ]
+      },
+      {
+        "subject": "PSTU",
+        "action": "chamou-lhe “voto crítico no 13”",
+        "object": "voto crítico",
+        "polarity": "affirmed",
+        "predicate": "chamar",
+        "negation_scope": null,
+        "signed_action": "chamou-lhe “voto crítico no 13”",
+        "base_action": "chamar-lhe “voto crítico no 13”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "ballot_identifier",
+            "value": "13",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "13"
+          }
+        ]
+      },
+      {
+        "subject": "PSTU",
+        "action": "deixou claro que isso não significa apoiar um eventual governo petista",
+        "object": "um eventual governo petista",
+        "polarity": "negated",
+        "predicate": "significar apoiar",
+        "negation_scope": "significa",
+        "signed_action": "não significa apoiar",
+        "base_action": "significar apoiar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PCB",
+        "action": "reconheceu que mantém diferenças programáticas com o PT",
+        "object": "diferenças programáticas com o PT",
+        "polarity": "affirmed",
+        "predicate": "manter diferenças programáticas com",
+        "negation_scope": null,
+        "signed_action": "mantém diferenças programáticas com o PT",
+        "base_action": "manter diferenças programáticas com o PT",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Voto defensivo contra o avanço da extrema-direita, sem abandono das críticas ao PT e à política tradicional.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A escolha é defensiva, mas politicamente importante.",
+      "Depois da eleição, a unidade contra a ameaça deve transformar-se em pressão por mudanças que enfrentem a desigualdade e protejam quem costuma pagar o preço mais alto das disputas de poder."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "c47232f3af050c9ef15e0df166d4149783e44d32c4430f1ab961986249cd9a72",
+      "input_sha256": "38492b57d4380c5addbb068df120bb4b720be5c63c4680a94713ee83a5d8a970",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"PSTU e PCB pedem voto em Lula no segundo turno para barrar a extrema-direita\",\n  \"subtopics\": [\n    \"O voto crítico do PSTU não implica apoio a um eventual governo petista\",\n    \"O PCB mantém diferenças programáticas com o PT\",\n    \"Pressão por mudanças após a eleição\"\n  ],\n  \"central_entities\": [\n    \"PSTU\",\n    \"PCB\",\n    \"Lula\",\n    \"PT\",\n    \"extrema-direita\",\n    \"família Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A escolha é defensiva, mas politicamente importante.\",\n    \"Depois da eleição, a unidade contra a ameaça deve transformar-se em pressão por mudanças que enfrentem a desigualdade e protejam quem costuma pagar o preço mais alto das disputas de poder.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir voto em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir voto em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"chamou-lhe “voto crítico no 13”\",\n      \"object\": \"voto crítico\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"chamou-lhe “voto crítico no 13”\",\n      \"base_action\": \"chamar-lhe “voto crítico no 13”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"ballot_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"13\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"13\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"deixou claro que isso não significa apoiar um eventual governo petista\",\n      \"object\": \"um eventual governo petista\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"significar apoiar\",\n      \"negation_scope\": \"significa\",\n      \"signed_action\": \"não significa apoiar\",\n      \"base_action\": \"significar apoiar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"reconheceu que mantém diferenças programáticas com o PT\",\n      \"object\": \"diferenças programáticas com o PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"manter diferenças programáticas com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mantém diferenças programáticas com o PT\",\n      \"base_action\": \"manter diferenças programáticas com o PT\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Voto defensivo contra o avanço da extrema-direita, sem abandono das críticas ao PT e à política tradicional.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "c47232f3af050c9ef15e0df166d4149783e44d32c4430f1ab961986249cd9a72",
+          "input_sha256": "38492b57d4380c5addbb068df120bb4b720be5c63c4680a94713ee83a5d8a970",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"PSTU e PCB pedem voto em Lula no segundo turno para barrar a extrema-direita\",\n  \"subtopics\": [\n    \"O voto crítico do PSTU não implica apoio a um eventual governo petista\",\n    \"O PCB mantém diferenças programáticas com o PT\",\n    \"Pressão por mudanças após a eleição\"\n  ],\n  \"central_entities\": [\n    \"PSTU\",\n    \"PCB\",\n    \"Lula\",\n    \"PT\",\n    \"extrema-direita\",\n    \"família Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A escolha é defensiva, mas politicamente importante.\",\n    \"Depois da eleição, a unidade contra a ameaça deve transformar-se em pressão por mudanças que enfrentem a desigualdade e protejam quem costuma pagar o preço mais alto das disputas de poder.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir voto em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir voto em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está a pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"pedir um voto em Lula para barrar a extrema-direita e a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"chamou-lhe “voto crítico no 13”\",\n      \"object\": \"voto crítico\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"chamou-lhe “voto crítico no 13”\",\n      \"base_action\": \"chamar-lhe “voto crítico no 13”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"ballot_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"13\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"13\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"deixou claro que isso não significa apoiar um eventual governo petista\",\n      \"object\": \"um eventual governo petista\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"significar apoiar\",\n      \"negation_scope\": \"significa\",\n      \"signed_action\": \"não significa apoiar\",\n      \"base_action\": \"significar apoiar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"reconheceu que mantém diferenças programáticas com o PT\",\n      \"object\": \"diferenças programáticas com o PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"manter diferenças programáticas com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mantém diferenças programáticas com o PT\",\n      \"base_action\": \"manter diferenças programáticas com o PT\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Voto defensivo contra o avanço da extrema-direita, sem abandono das críticas ao PT e à política tradicional.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "acfa5eb15e7e8d1399ddb230a82fca863d377abb590048316361fab6924ad351"
+}

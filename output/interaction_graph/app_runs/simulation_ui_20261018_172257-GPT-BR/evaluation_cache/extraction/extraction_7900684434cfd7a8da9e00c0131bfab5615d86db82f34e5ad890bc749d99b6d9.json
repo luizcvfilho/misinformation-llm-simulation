@@ -1,0 +1,172 @@
+{
+  "inputs": {
+    "text": "A 16 dias do segundo turno, marcado para 25 de outubro, o governo anunciou zerar os tributos federais sobre a gasolina — uma redução de R$ 0,89 por litro — e ampliar benefícios ao etanol e ao diesel. O custo mensal estimado da medida sobe de R$ 2,1 bilhões para R$ 2,8 bilhões.\n\nCombustível mais barato pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida. Mas esse alívio temporário, anunciado tão perto da eleição, não resolve as causas da insegurança econômica nem garante proteção duradoura para quem mais precisa. É preciso perguntar quem se beneficia dessas renúncias e por que bilhões são mobilizados agora, enquanto políticas permanentes para enfrentar a desigualdade continuam sendo indispensáveis.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Anúncio de redução de tributos sobre combustíveis e ampliação de benefícios antes do segundo turno",
+    "subtopics": [
+      "Redução do preço da gasolina",
+      "Aumento do custo mensal estimado da medida",
+      "Alívio econômico temporário e falta de proteção duradoura"
+    ],
+    "central_entities": [
+      "governo",
+      "gasolina",
+      "etanol",
+      "diesel"
+    ],
+    "central_relations": [
+      {
+        "subject": "governo",
+        "action": "anunciou zerar os tributos federais sobre a gasolina",
+        "object": "gasolina",
+        "polarity": "affirmed",
+        "predicate": "zerar os tributos federais",
+        "negation_scope": null,
+        "signed_action": "anunciou zerar os tributos federais sobre a gasolina",
+        "base_action": "anunciou zerar os tributos federais sobre a gasolina",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "gasoline_tax_reduction",
+            "value": 0.89,
+            "unit": "R$ per liter",
+            "kind": "measurement",
+            "status": "exact",
+            "expression": "R$ 0,89 por litro"
+          }
+        ]
+      },
+      {
+        "subject": "governo",
+        "action": "anunciou ampliar benefícios ao etanol e ao diesel",
+        "object": "etanol e diesel",
+        "polarity": "affirmed",
+        "predicate": "ampliar benefícios",
+        "negation_scope": null,
+        "signed_action": "anunciou ampliar benefícios ao etanol e ao diesel",
+        "base_action": "anunciou ampliar benefícios ao etanol e ao diesel",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "custo mensal estimado da medida",
+        "action": "sobe de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "sobe",
+        "negation_scope": null,
+        "signed_action": "sobe de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "base_action": "sobe de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "monthly_estimated_cost_before",
+            "value": 2100000000.0,
+            "unit": "R$",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,1 bilhões"
+          },
+          {
+            "role": "monthly_estimated_cost_after",
+            "value": 2800000000.0,
+            "unit": "R$",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,8 bilhões"
+          }
+        ]
+      },
+      {
+        "subject": "Combustível mais barato",
+        "action": "pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida",
+        "object": "quem depende dele para trabalhar e já sente o peso do custo de vida",
+        "polarity": "affirmed",
+        "predicate": "aliviar",
+        "negation_scope": null,
+        "signed_action": "pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida",
+        "base_action": "pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Medida sobre combustíveis anunciada perto da eleição, apresentada como alívio temporário e contrastada com a necessidade de proteção econômica duradoura.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O alívio temporário não resolve as causas da insegurança econômica nem garante proteção duradoura para quem mais precisa.",
+      "É preciso questionar quem se beneficia das renúncias e por que bilhões são mobilizados agora.",
+      "Políticas permanentes para enfrentar a desigualdade continuam sendo indispensáveis."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "9fe3aebb72929646beb535b0ecd2fecae7d7f0ef5c93dc248c11bb1eeeadb666",
+      "input_sha256": "e11388f4fc5cfa74012d664c1a2970fd1164519851ac8be094c7bb3caa996272",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Anúncio de redução de tributos sobre combustíveis e ampliação de benefícios antes do segundo turno\",\n  \"subtopics\": [\n    \"Redução do preço da gasolina\",\n    \"Aumento do custo mensal estimado da medida\",\n    \"Alívio econômico temporário e falta de proteção duradoura\"\n  ],\n  \"central_entities\": [\n    \"governo\",\n    \"gasolina\",\n    \"etanol\",\n    \"diesel\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O alívio temporário não resolve as causas da insegurança econômica nem garante proteção duradoura para quem mais precisa.\",\n    \"É preciso questionar quem se beneficia das renúncias e por que bilhões são mobilizados agora.\",\n    \"Políticas permanentes para enfrentar a desigualdade continuam sendo indispensáveis.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"zerar os tributos federais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"base_action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"gasoline_tax_reduction\",\n          \"kind\": \"measurement\",\n          \"value\": 0.89,\n          \"unit\": \"R$ per liter\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"object\": \"etanol e diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar benefícios\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"base_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"custo mensal estimado da medida\",\n      \"action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"sobe\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"base_action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"monthly_estimated_cost_before\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"R$\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"monthly_estimated_cost_after\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"R$\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Combustível mais barato\",\n      \"action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"object\": \"quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"base_action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Medida sobre combustíveis anunciada perto da eleição, apresentada como alívio temporário e contrastada com a necessidade de proteção econômica duradoura.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "9fe3aebb72929646beb535b0ecd2fecae7d7f0ef5c93dc248c11bb1eeeadb666",
+          "input_sha256": "e11388f4fc5cfa74012d664c1a2970fd1164519851ac8be094c7bb3caa996272",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Anúncio de redução de tributos sobre combustíveis e ampliação de benefícios antes do segundo turno\",\n  \"subtopics\": [\n    \"Redução do preço da gasolina\",\n    \"Aumento do custo mensal estimado da medida\",\n    \"Alívio econômico temporário e falta de proteção duradoura\"\n  ],\n  \"central_entities\": [\n    \"governo\",\n    \"gasolina\",\n    \"etanol\",\n    \"diesel\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O alívio temporário não resolve as causas da insegurança econômica nem garante proteção duradoura para quem mais precisa.\",\n    \"É preciso questionar quem se beneficia das renúncias e por que bilhões são mobilizados agora.\",\n    \"Políticas permanentes para enfrentar a desigualdade continuam sendo indispensáveis.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"zerar os tributos federais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"base_action\": \"anunciou zerar os tributos federais sobre a gasolina\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"gasoline_tax_reduction\",\n          \"kind\": \"measurement\",\n          \"value\": 0.89,\n          \"unit\": \"R$ per liter\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"object\": \"etanol e diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar benefícios\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"base_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"custo mensal estimado da medida\",\n      \"action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"sobe\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"base_action\": \"sobe de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"monthly_estimated_cost_before\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"R$\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"monthly_estimated_cost_after\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"R$\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Combustível mais barato\",\n      \"action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"object\": \"quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"base_action\": \"pode aliviar quem depende dele para trabalhar e já sente o peso do custo de vida\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Medida sobre combustíveis anunciada perto da eleição, apresentada como alívio temporário e contrastada com a necessidade de proteção econômica duradoura.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "d70acacb0106787dd9ef9e07b66b4597b428e6c2d2c127462681c29e2d1e3ef1"
+}

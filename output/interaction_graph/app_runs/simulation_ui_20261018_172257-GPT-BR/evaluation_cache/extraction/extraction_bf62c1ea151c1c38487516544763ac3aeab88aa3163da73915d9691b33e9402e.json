@@ -1,0 +1,181 @@
+{
+  "inputs": {
+    "text": "Flávio Bolsonaro (PL) disse nesta quinta-feira, 8, que, se for eleito presidente, pretende que o fim da reeleição também valha para ele. Autor da PEC que propõe acabar com a reeleição, defendeu ainda que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030.\n\n“Propus para mim. Tem que valer para mim. Eu sou autor da PEC [proposta de emenda à Constituição] que acaba com reeleição. Não estou disputando poder, não sou Lula que gastou R$ 350 bilhões nos últimos dias para tentar se reeleger. A reeleição precisa acabar. Eu sou autor da PEC e usarei o capital político de um presidente para aprovar. Mas tem que ser para o meu mandato”, declarou.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Flávio Bolsonaro’s proposal to end presidential reelection, including for himself and to bar relatives from candidacy",
+    "subtopics": [
+      "Applying the reelection limit to his own mandate",
+      "Preventing relatives from running, including Jair Bolsonaro in 2030",
+      "Using presidential political capital to approve the PEC",
+      "Criticism of Lula’s reelection spending"
+    ],
+    "central_entities": [
+      "Flávio Bolsonaro",
+      "PL",
+      "PEC",
+      "Jair Bolsonaro",
+      "Lula"
+    ],
+    "central_relations": [
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "pretende que o fim da reeleição também valha para ele, se for eleito presidente",
+        "object": "fim da reeleição para Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "pretender",
+        "negation_scope": null,
+        "signed_action": "pretende que o fim da reeleição também valha para ele, se for eleito presidente",
+        "base_action": "pretende que o fim da reeleição também valha para ele, se for eleito presidente",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "é autor da PEC que propõe acabar com a reeleição",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "ser autor",
+        "negation_scope": null,
+        "signed_action": "é autor da PEC que propõe acabar com a reeleição",
+        "base_action": "é autor da PEC que propõe acabar com a reeleição",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "defendeu que a medida impeça a candidatura de parentes",
+        "object": "candidatura de parentes, incluindo Jair Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "defender impedir",
+        "negation_scope": null,
+        "signed_action": "defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030",
+        "base_action": "defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": [
+          {
+            "role": "candidacy_year",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "usarei o capital político de um presidente para aprovar a PEC",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "usar para aprovar",
+        "negation_scope": null,
+        "signed_action": "usarei o capital político de um presidente para aprovar",
+        "base_action": "usarei o capital político de um presidente para aprovar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Lula",
+        "action": "gastou R$ 350 bilhões nos últimos dias para tentar se reeleger, segundo Flávio Bolsonaro",
+        "object": "R$ 350 bilhões para tentar se reeleger",
+        "polarity": "affirmed",
+        "predicate": "gastar",
+        "negation_scope": null,
+        "signed_action": "gastou R$ 350 bilhões nos últimos dias para tentar se reeleger",
+        "base_action": "gastou R$ 350 bilhões nos últimos dias para tentar se reeleger",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": "day",
+        "duration_expression": "nos últimos dias",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "reelection_spending",
+            "value": 350000000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 350 bilhões"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Flávio Bolsonaro presents ending reelection as a limit he would accept for himself and advocates barring relatives from candidacy, while contrasting his proposal with Lula’s alleged reelection spending.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A reeleição precisa acabar.",
+      "A medida deve impedir a candidatura de parentes."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "36cc77cef73641ec4a41a48d5a50d6fef8cf6cd40de5f4252d883ddb634fc9f5",
+      "input_sha256": "c48361d570bb06f3a977f14dacaa4488a108d126715eff3a6afc6a0dfdfb9b14",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Flávio Bolsonaro’s proposal to end presidential reelection, including for himself and to bar relatives from candidacy\",\n  \"subtopics\": [\n    \"Applying the reelection limit to his own mandate\",\n    \"Preventing relatives from running, including Jair Bolsonaro in 2030\",\n    \"Using presidential political capital to approve the PEC\",\n    \"Criticism of Lula’s reelection spending\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"PL\",\n    \"PEC\",\n    \"Jair Bolsonaro\",\n    \"Lula\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A reeleição precisa acabar.\",\n    \"A medida deve impedir a candidatura de parentes.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"object\": \"fim da reeleição para Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pretender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"base_action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser autor\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"base_action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"defendeu que a medida impeça a candidatura de parentes\",\n      \"object\": \"candidatura de parentes, incluindo Jair Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defender impedir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030\",\n      \"base_action\": \"defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"candidacy_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"usarei o capital político de um presidente para aprovar a PEC\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"usar para aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"usarei o capital político de um presidente para aprovar\",\n      \"base_action\": \"usarei o capital político de um presidente para aprovar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger, segundo Flávio Bolsonaro\",\n      \"object\": \"R$ 350 bilhões para tentar se reeleger\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"gastar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger\",\n      \"base_action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"nos últimos dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"reelection_spending\",\n          \"kind\": \"money\",\n          \"value\": 350000000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 350 bilhões\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Flávio Bolsonaro presents ending reelection as a limit he would accept for himself and advocates barring relatives from candidacy, while contrasting his proposal with Lula’s alleged reelection spending.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "36cc77cef73641ec4a41a48d5a50d6fef8cf6cd40de5f4252d883ddb634fc9f5",
+          "input_sha256": "c48361d570bb06f3a977f14dacaa4488a108d126715eff3a6afc6a0dfdfb9b14",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Flávio Bolsonaro’s proposal to end presidential reelection, including for himself and to bar relatives from candidacy\",\n  \"subtopics\": [\n    \"Applying the reelection limit to his own mandate\",\n    \"Preventing relatives from running, including Jair Bolsonaro in 2030\",\n    \"Using presidential political capital to approve the PEC\",\n    \"Criticism of Lula’s reelection spending\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"PL\",\n    \"PEC\",\n    \"Jair Bolsonaro\",\n    \"Lula\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A reeleição precisa acabar.\",\n    \"A medida deve impedir a candidatura de parentes.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"object\": \"fim da reeleição para Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pretender\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"base_action\": \"pretende que o fim da reeleição também valha para ele, se for eleito presidente\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser autor\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"base_action\": \"é autor da PEC que propõe acabar com a reeleição\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"defendeu que a medida impeça a candidatura de parentes\",\n      \"object\": \"candidatura de parentes, incluindo Jair Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defender impedir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030\",\n      \"base_action\": \"defendeu que a medida impeça a candidatura de parentes, incluindo a de seu pai, Jair Bolsonaro, em 2030\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": [\n        {\n          \"role\": \"candidacy_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"usarei o capital político de um presidente para aprovar a PEC\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"usar para aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"usarei o capital político de um presidente para aprovar\",\n      \"base_action\": \"usarei o capital político de um presidente para aprovar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger, segundo Flávio Bolsonaro\",\n      \"object\": \"R$ 350 bilhões para tentar se reeleger\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"gastar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger\",\n      \"base_action\": \"gastou R$ 350 bilhões nos últimos dias para tentar se reeleger\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"nos últimos dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"reelection_spending\",\n          \"kind\": \"money\",\n          \"value\": 350000000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 350 bilhões\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Flávio Bolsonaro presents ending reelection as a limit he would accept for himself and advocates barring relatives from candidacy, while contrasting his proposal with Lula’s alleged reelection spending.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "b5309d394dd2b96414220532d190de8f6d566543b0393a0bd925b7de366c92e2"
+}

@@ -1,0 +1,168 @@
+{
+  "inputs": {
+    "text": "A Justiça de Alagoas condenou Soraya Thronicke a pagar R$ 50 mil a Alfredo Gaspar por lhe atribuir publicamente a prática de estupro sem apresentar provas. A imunidade parlamentar não pode transformar acusações criminais em instrumento político sem consequências: num Estado de direito, a responsabilidade e a presunção de inocência devem valer para todos.\n\nTrês dias antes, Gilmar Mendes arquivou a representação da Polícia Federal, seguindo a posição da PGR de que não havia indícios suficientes para abrir inquérito. Isso não encerra todas as alegações possíveis, mas mostra por que é perigoso tratar acusações como factos antes de haver sustentação. Proteger quem denuncia abusos é importante; usar essa proteção para dispensar provas ou atacar a reputação alheia não é justiça — é desordem.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Condenação de Soraya Thronicke por atribuir publicamente a Alfredo Gaspar a prática de estupro sem apresentar provas",
+    "subtopics": [
+      "Indenização de R$ 50 mil",
+      "Arquivamento de representação da Polícia Federal por Gilmar Mendes",
+      "Posição da PGR sobre a falta de indícios suficientes para abrir inquérito",
+      "Responsabilidade por acusações e proteção de denunciantes"
+    ],
+    "central_entities": [
+      "Justiça de Alagoas",
+      "Soraya Thronicke",
+      "Alfredo Gaspar",
+      "Gilmar Mendes",
+      "Polícia Federal",
+      "PGR"
+    ],
+    "central_relations": [
+      {
+        "subject": "Justiça de Alagoas",
+        "action": "condenou a pagar",
+        "object": "R$ 50 mil a Alfredo Gaspar",
+        "polarity": "affirmed",
+        "predicate": "condenar a pagar",
+        "negation_scope": null,
+        "signed_action": "condenou a pagar",
+        "base_action": "condenou a pagar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "damages_amount",
+            "value": 50000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 50 mil"
+          }
+        ]
+      },
+      {
+        "subject": "Soraya Thronicke",
+        "action": "atribuir publicamente a prática de estupro sem apresentar provas",
+        "object": "a prática de estupro a Alfredo Gaspar",
+        "polarity": "affirmed",
+        "predicate": "atribuir",
+        "negation_scope": null,
+        "signed_action": "atribuir publicamente a prática de estupro sem apresentar provas",
+        "base_action": "atribuir publicamente a prática de estupro sem apresentar provas",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Gilmar Mendes",
+        "action": "arquivou",
+        "object": "a representação da Polícia Federal",
+        "polarity": "affirmed",
+        "predicate": "arquivar",
+        "negation_scope": null,
+        "signed_action": "arquivou",
+        "base_action": "arquivou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "time_offset",
+            "value": 3.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "Três dias antes"
+          }
+        ]
+      },
+      {
+        "subject": "PGR",
+        "action": "não havia indícios suficientes para abrir inquérito",
+        "object": "indícios suficientes para abrir inquérito",
+        "polarity": "negated",
+        "predicate": "haver indícios suficientes",
+        "negation_scope": "havia indícios suficientes",
+        "signed_action": "não havia indícios suficientes para abrir inquérito",
+        "base_action": "havia indícios suficientes para abrir inquérito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "O texto enquadra a condenação e o arquivamento como motivos para cobrar responsabilidade e cautela diante de acusações sem sustentação, reconhecendo a importância de proteger denunciantes.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A imunidade parlamentar não deve transformar acusações criminais em instrumento político sem consequências.",
+      "A responsabilidade e a presunção de inocência devem valer para todos.",
+      "É perigoso tratar acusações como fatos antes de haver sustentação.",
+      "Proteger quem denuncia abusos é importante, mas essa proteção não deve dispensar provas nem justificar ataques à reputação alheia."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "1667aa277ce6b072e4d34b28194c7740b27f78143a6b7f73eb46f0c60c4df77f",
+      "input_sha256": "49b26019478b66b77c6e8c3aedfb39b163ede340dd6b968b6363218b8c686810",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Condenação de Soraya Thronicke por atribuir publicamente a Alfredo Gaspar a prática de estupro sem apresentar provas\",\n  \"subtopics\": [\n    \"Indenização de R$ 50 mil\",\n    \"Arquivamento de representação da Polícia Federal por Gilmar Mendes\",\n    \"Posição da PGR sobre a falta de indícios suficientes para abrir inquérito\",\n    \"Responsabilidade por acusações e proteção de denunciantes\"\n  ],\n  \"central_entities\": [\n    \"Justiça de Alagoas\",\n    \"Soraya Thronicke\",\n    \"Alfredo Gaspar\",\n    \"Gilmar Mendes\",\n    \"Polícia Federal\",\n    \"PGR\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A imunidade parlamentar não deve transformar acusações criminais em instrumento político sem consequências.\",\n    \"A responsabilidade e a presunção de inocência devem valer para todos.\",\n    \"É perigoso tratar acusações como fatos antes de haver sustentação.\",\n    \"Proteger quem denuncia abusos é importante, mas essa proteção não deve dispensar provas nem justificar ataques à reputação alheia.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Justiça de Alagoas\",\n      \"action\": \"condenou a pagar\",\n      \"object\": \"R$ 50 mil a Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"condenar a pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"condenou a pagar\",\n      \"base_action\": \"condenou a pagar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"damages_amount\",\n          \"kind\": \"money\",\n          \"value\": 50000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 50 mil\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Soraya Thronicke\",\n      \"action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"object\": \"a prática de estupro a Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"atribuir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"base_action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"arquivou\",\n      \"object\": \"a representação da Polícia Federal\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"arquivar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"arquivou\",\n      \"base_action\": \"arquivou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"time_offset\",\n          \"kind\": \"duration\",\n          \"value\": 3,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"Três dias antes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PGR\",\n      \"action\": \"não havia indícios suficientes para abrir inquérito\",\n      \"object\": \"indícios suficientes para abrir inquérito\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"haver indícios suficientes\",\n      \"negation_scope\": \"havia indícios suficientes\",\n      \"signed_action\": \"não havia indícios suficientes para abrir inquérito\",\n      \"base_action\": \"havia indícios suficientes para abrir inquérito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"O texto enquadra a condenação e o arquivamento como motivos para cobrar responsabilidade e cautela diante de acusações sem sustentação, reconhecendo a importância de proteger denunciantes.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "1667aa277ce6b072e4d34b28194c7740b27f78143a6b7f73eb46f0c60c4df77f",
+          "input_sha256": "49b26019478b66b77c6e8c3aedfb39b163ede340dd6b968b6363218b8c686810",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Condenação de Soraya Thronicke por atribuir publicamente a Alfredo Gaspar a prática de estupro sem apresentar provas\",\n  \"subtopics\": [\n    \"Indenização de R$ 50 mil\",\n    \"Arquivamento de representação da Polícia Federal por Gilmar Mendes\",\n    \"Posição da PGR sobre a falta de indícios suficientes para abrir inquérito\",\n    \"Responsabilidade por acusações e proteção de denunciantes\"\n  ],\n  \"central_entities\": [\n    \"Justiça de Alagoas\",\n    \"Soraya Thronicke\",\n    \"Alfredo Gaspar\",\n    \"Gilmar Mendes\",\n    \"Polícia Federal\",\n    \"PGR\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A imunidade parlamentar não deve transformar acusações criminais em instrumento político sem consequências.\",\n    \"A responsabilidade e a presunção de inocência devem valer para todos.\",\n    \"É perigoso tratar acusações como fatos antes de haver sustentação.\",\n    \"Proteger quem denuncia abusos é importante, mas essa proteção não deve dispensar provas nem justificar ataques à reputação alheia.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Justiça de Alagoas\",\n      \"action\": \"condenou a pagar\",\n      \"object\": \"R$ 50 mil a Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"condenar a pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"condenou a pagar\",\n      \"base_action\": \"condenou a pagar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"damages_amount\",\n          \"kind\": \"money\",\n          \"value\": 50000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 50 mil\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Soraya Thronicke\",\n      \"action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"object\": \"a prática de estupro a Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"atribuir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"base_action\": \"atribuir publicamente a prática de estupro sem apresentar provas\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"arquivou\",\n      \"object\": \"a representação da Polícia Federal\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"arquivar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"arquivou\",\n      \"base_action\": \"arquivou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"time_offset\",\n          \"kind\": \"duration\",\n          \"value\": 3,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"Três dias antes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PGR\",\n      \"action\": \"não havia indícios suficientes para abrir inquérito\",\n      \"object\": \"indícios suficientes para abrir inquérito\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"haver indícios suficientes\",\n      \"negation_scope\": \"havia indícios suficientes\",\n      \"signed_action\": \"não havia indícios suficientes para abrir inquérito\",\n      \"base_action\": \"havia indícios suficientes para abrir inquérito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"O texto enquadra a condenação e o arquivamento como motivos para cobrar responsabilidade e cautela diante de acusações sem sustentação, reconhecendo a importância de proteger denunciantes.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "8dc3f5288a5d7a7c90ac1fced4265bc905d9fe77a0df03d6416ec522f2278762"
+}

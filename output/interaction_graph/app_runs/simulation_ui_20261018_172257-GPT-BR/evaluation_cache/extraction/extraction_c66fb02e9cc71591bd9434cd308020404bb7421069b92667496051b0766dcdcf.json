@@ -1,0 +1,215 @@
+{
+  "inputs": {
+    "text": "Estão usando as pesquisas antigas para vender a ideia de que o resultado já está encaminhado. A Atlas/Bloomberg diz que Flávio Bolsonaro tem 52,8% dos votos válidos contra 47,2% de Lula, com coleta entre 3 e 8 e divulgação em 9/10 — mas esse tipo de número também serve para moldar expectativas antes da votação. Em 2022, a primeira Datafolha apontava Lula com 53% e Bolsonaro com 47%; em 2018, Bolsonaro tinha 58% contra 42% de Haddad. A comparação não prova que a história vai se repetir: parece mais uma tentativa de enquadrar a disputa e preparar o público para aceitar qualquer desfecho conveniente.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Questionamento do uso de pesquisas eleitorais antigas para moldar expectativas sobre a disputa entre Flávio Bolsonaro e Lula.",
+    "subtopics": [
+      "Resultados atribuídos à Atlas/Bloomberg",
+      "Comparação com pesquisas eleitorais de 2022 e 2018",
+      "Enquadramento público dos possíveis resultados"
+    ],
+    "central_entities": [
+      "Atlas/Bloomberg",
+      "Flávio Bolsonaro",
+      "Lula",
+      "Datafolha",
+      "Bolsonaro",
+      "Haddad"
+    ],
+    "central_relations": [
+      {
+        "subject": "Atlas/Bloomberg",
+        "action": "diz",
+        "object": "Flávio Bolsonaro tem 52,8% dos votos válidos contra 47,2% de Lula",
+        "polarity": "affirmed",
+        "predicate": "dizer",
+        "negation_scope": null,
+        "signed_action": "diz",
+        "base_action": "diz",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "flávio_bolsonaro_valid_vote_share",
+            "value": 52.8,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "52,8%"
+          },
+          {
+            "role": "lula_valid_vote_share",
+            "value": 47.2,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "47,2%"
+          }
+        ]
+      },
+      {
+        "subject": "Datafolha",
+        "action": "apontava",
+        "object": "Lula com 53% e Bolsonaro com 47%",
+        "polarity": "affirmed",
+        "predicate": "apontar",
+        "negation_scope": null,
+        "signed_action": "apontava",
+        "base_action": "apontava",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "survey_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          },
+          {
+            "role": "lula_vote_share",
+            "value": 53.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "53%"
+          },
+          {
+            "role": "bolsonaro_vote_share",
+            "value": 47.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "47%"
+          }
+        ]
+      },
+      {
+        "subject": "Bolsonaro",
+        "action": "tinha",
+        "object": "58% contra 42% de Haddad",
+        "polarity": "affirmed",
+        "predicate": "ter",
+        "negation_scope": null,
+        "signed_action": "tinha",
+        "base_action": "tinha",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "survey_year",
+            "value": 2018.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2018"
+          },
+          {
+            "role": "bolsonaro_vote_share",
+            "value": 58.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "58%"
+          },
+          {
+            "role": "haddad_vote_share",
+            "value": 42.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "42%"
+          }
+        ]
+      },
+      {
+        "subject": "A comparação",
+        "action": "não prova",
+        "object": "que a história vai se repetir",
+        "polarity": "negated",
+        "predicate": "provar",
+        "negation_scope": "prova",
+        "signed_action": "não prova",
+        "base_action": "prova",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento cético: a comparação entre pesquisas é apresentada como possível tentativa de moldar expectativas, não como prova de que a história se repetirá.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Pesquisas antigas estão sendo usadas para vender a ideia de que o resultado já está encaminhado.",
+      "Os números podem servir para moldar expectativas antes da votação.",
+      "A comparação parece uma tentativa de enquadrar a disputa e preparar o público para aceitar qualquer desfecho conveniente."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "d7b6af8c5cfd69648a710d6873845ddd439d98521b5ca3fc5ddba18f8099da87",
+      "input_sha256": "a16bcd6033eb372cd35361e06867649bbced40fe28ce0c9a31bc73fc33e7f80d",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Questionamento do uso de pesquisas eleitorais antigas para moldar expectativas sobre a disputa entre Flávio Bolsonaro e Lula.\",\n  \"subtopics\": [\n    \"Resultados atribuídos à Atlas/Bloomberg\",\n    \"Comparação com pesquisas eleitorais de 2022 e 2018\",\n    \"Enquadramento público dos possíveis resultados\"\n  ],\n  \"central_entities\": [\n    \"Atlas/Bloomberg\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"Datafolha\",\n    \"Bolsonaro\",\n    \"Haddad\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Pesquisas antigas estão sendo usadas para vender a ideia de que o resultado já está encaminhado.\",\n    \"Os números podem servir para moldar expectativas antes da votação.\",\n    \"A comparação parece uma tentativa de enquadrar a disputa e preparar o público para aceitar qualquer desfecho conveniente.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Atlas/Bloomberg\",\n      \"action\": \"diz\",\n      \"object\": \"Flávio Bolsonaro tem 52,8% dos votos válidos contra 47,2% de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"diz\",\n      \"base_action\": \"diz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"flávio_bolsonaro_valid_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 52.8,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"52,8%\"\n        },\n        {\n          \"role\": \"lula_valid_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 47.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"47,2%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"apontava\",\n      \"object\": \"Lula com 53% e Bolsonaro com 47%\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apontar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apontava\",\n      \"base_action\": \"apontava\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        },\n        {\n          \"role\": \"lula_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 53,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"53%\"\n        },\n        {\n          \"role\": \"bolsonaro_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 47,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"47%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Bolsonaro\",\n      \"action\": \"tinha\",\n      \"object\": \"58% contra 42% de Haddad\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tinha\",\n      \"base_action\": \"tinha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_year\",\n          \"kind\": \"year\",\n          \"value\": 2018,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2018\"\n        },\n        {\n          \"role\": \"bolsonaro_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 58,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"58%\"\n        },\n        {\n          \"role\": \"haddad_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 42,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"42%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A comparação\",\n      \"action\": \"não prova\",\n      \"object\": \"que a história vai se repetir\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provar\",\n      \"negation_scope\": \"prova\",\n      \"signed_action\": \"não prova\",\n      \"base_action\": \"prova\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético: a comparação entre pesquisas é apresentada como possível tentativa de moldar expectativas, não como prova de que a história se repetirá.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "d7b6af8c5cfd69648a710d6873845ddd439d98521b5ca3fc5ddba18f8099da87",
+          "input_sha256": "a16bcd6033eb372cd35361e06867649bbced40fe28ce0c9a31bc73fc33e7f80d",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Questionamento do uso de pesquisas eleitorais antigas para moldar expectativas sobre a disputa entre Flávio Bolsonaro e Lula.\",\n  \"subtopics\": [\n    \"Resultados atribuídos à Atlas/Bloomberg\",\n    \"Comparação com pesquisas eleitorais de 2022 e 2018\",\n    \"Enquadramento público dos possíveis resultados\"\n  ],\n  \"central_entities\": [\n    \"Atlas/Bloomberg\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"Datafolha\",\n    \"Bolsonaro\",\n    \"Haddad\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Pesquisas antigas estão sendo usadas para vender a ideia de que o resultado já está encaminhado.\",\n    \"Os números podem servir para moldar expectativas antes da votação.\",\n    \"A comparação parece uma tentativa de enquadrar a disputa e preparar o público para aceitar qualquer desfecho conveniente.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Atlas/Bloomberg\",\n      \"action\": \"diz\",\n      \"object\": \"Flávio Bolsonaro tem 52,8% dos votos válidos contra 47,2% de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"diz\",\n      \"base_action\": \"diz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"flávio_bolsonaro_valid_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 52.8,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"52,8%\"\n        },\n        {\n          \"role\": \"lula_valid_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 47.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"47,2%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"apontava\",\n      \"object\": \"Lula com 53% e Bolsonaro com 47%\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apontar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"apontava\",\n      \"base_action\": \"apontava\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        },\n        {\n          \"role\": \"lula_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 53,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"53%\"\n        },\n        {\n          \"role\": \"bolsonaro_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 47,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"47%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Bolsonaro\",\n      \"action\": \"tinha\",\n      \"object\": \"58% contra 42% de Haddad\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tinha\",\n      \"base_action\": \"tinha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_year\",\n          \"kind\": \"year\",\n          \"value\": 2018,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2018\"\n        },\n        {\n          \"role\": \"bolsonaro_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 58,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"58%\"\n        },\n        {\n          \"role\": \"haddad_vote_share\",\n          \"kind\": \"percentage\",\n          \"value\": 42,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"42%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A comparação\",\n      \"action\": \"não prova\",\n      \"object\": \"que a história vai se repetir\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"provar\",\n      \"negation_scope\": \"prova\",\n      \"signed_action\": \"não prova\",\n      \"base_action\": \"prova\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético: a comparação entre pesquisas é apresentada como possível tentativa de moldar expectativas, não como prova de que a história se repetirá.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "dd33c1830e64af6d77cdf2b91a1ad9520a69ce65de23a9fd350659ecc40c8a47"
+}

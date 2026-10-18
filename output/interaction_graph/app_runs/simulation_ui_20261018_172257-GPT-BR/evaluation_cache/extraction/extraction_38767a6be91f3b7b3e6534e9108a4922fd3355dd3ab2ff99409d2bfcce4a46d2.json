@@ -1,0 +1,222 @@
+{
+  "inputs": {
+    "text": "PSTU e PCB, dois partidos de esquerda que ficaram abaixo de 1% no primeiro turno, decidiram apoiar Lula no segundo turno, marcado para 25 de outubro. O próprio PSTU chamou a escolha de “voto crítico no 13” e deixou claro que não está a endossar um eventual governo petista; o PCB também reconheceu diferenças programáticas com o PT. Ou seja, o principal elo entre eles é impedir a volta da família Bolsonaro ao poder. É uma aliança de conveniência, não uma adesão a um projecto comum — e partidos com votação tão reduzida procuram agora pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL).",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "PSTU e PCB apoiam Lula no segundo turno como aliança tática contra a família Bolsonaro",
+    "subtopics": [
+      "Votação inferior a 1% no primeiro turno",
+      "Voto crítico do PSTU e ausência de endosso a um eventual governo petista",
+      "Diferenças programáticas entre PCB e PT",
+      "Disputa entre Lula e Flávio Bolsonaro (PL)"
+    ],
+    "central_entities": [
+      "PSTU",
+      "PCB",
+      "Lula",
+      "PT",
+      "família Bolsonaro",
+      "Flávio Bolsonaro (PL)"
+    ],
+    "central_relations": [
+      {
+        "subject": "PSTU e PCB",
+        "action": "decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder",
+        "object": "Lula",
+        "polarity": "affirmed",
+        "predicate": "apoiar",
+        "negation_scope": null,
+        "signed_action": "decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder",
+        "base_action": "decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PSTU",
+        "action": "ficou abaixo de 1% no primeiro turno",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ficou abaixo de",
+        "negation_scope": null,
+        "signed_action": "ficou abaixo de 1% no primeiro turno",
+        "base_action": "ficou abaixo de 1% no primeiro turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_share_upper_bound",
+            "value": 1.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "abaixo de 1%"
+          }
+        ]
+      },
+      {
+        "subject": "PCB",
+        "action": "ficou abaixo de 1% no primeiro turno",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ficou abaixo de",
+        "negation_scope": null,
+        "signed_action": "ficou abaixo de 1% no primeiro turno",
+        "base_action": "ficou abaixo de 1% no primeiro turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_share_upper_bound",
+            "value": 1.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "abaixo de 1%"
+          }
+        ]
+      },
+      {
+        "subject": "PSTU",
+        "action": "chamou a escolha de “voto crítico no 13”",
+        "object": "“voto crítico no 13”",
+        "polarity": "affirmed",
+        "predicate": "chamou de",
+        "negation_scope": null,
+        "signed_action": "chamou a escolha de “voto crítico no 13”",
+        "base_action": "chamou a escolha de “voto crítico no 13”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_identifier",
+            "value": "13",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "13"
+          }
+        ]
+      },
+      {
+        "subject": "PSTU",
+        "action": "não está a endossar um eventual governo petista",
+        "object": "um eventual governo petista",
+        "polarity": "negated",
+        "predicate": "endossar",
+        "negation_scope": "endossar um eventual governo petista",
+        "signed_action": "não está a endossar um eventual governo petista",
+        "base_action": "está a endossar um eventual governo petista",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PCB",
+        "action": "reconheceu diferenças programáticas com o PT",
+        "object": "PT",
+        "polarity": "affirmed",
+        "predicate": "reconheceu diferenças programáticas com",
+        "negation_scope": null,
+        "signed_action": "reconheceu diferenças programáticas com o PT",
+        "base_action": "reconheceu diferenças programáticas com o PT",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PSTU e PCB",
+        "action": "procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)",
+        "object": "disputa que opõe Lula a Flávio Bolsonaro (PL)",
+        "polarity": "affirmed",
+        "predicate": "procuram pesar",
+        "negation_scope": null,
+        "signed_action": "procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)",
+        "base_action": "procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Apoio eleitoral apresentado como aliança tática contra a volta da família Bolsonaro ao poder, sem adesão programática comum.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A aliança é de conveniência, não uma adesão a um projecto comum."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "6bc9afe2db4d522fe8ef0b822009fc5e7c3af2face9c56175deed480fef4a82f",
+      "input_sha256": "b86c6b8f6c838fc389b1da17608c930fe5ef3e2c9cf728730f66cda22ea7d659",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"PSTU e PCB apoiam Lula no segundo turno como aliança tática contra a família Bolsonaro\",\n  \"subtopics\": [\n    \"Votação inferior a 1% no primeiro turno\",\n    \"Voto crítico do PSTU e ausência de endosso a um eventual governo petista\",\n    \"Diferenças programáticas entre PCB e PT\",\n    \"Disputa entre Lula e Flávio Bolsonaro (PL)\"\n  ],\n  \"central_entities\": [\n    \"PSTU\",\n    \"PCB\",\n    \"Lula\",\n    \"PT\",\n    \"família Bolsonaro\",\n    \"Flávio Bolsonaro (PL)\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A aliança é de conveniência, não uma adesão a um projecto comum.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PSTU e PCB\",\n      \"action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apoiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou abaixo de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"base_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share_upper_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 1,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"abaixo de 1%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou abaixo de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"base_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share_upper_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 1,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"abaixo de 1%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"object\": \"“voto crítico no 13”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamou de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"base_action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"13\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"13\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"não está a endossar um eventual governo petista\",\n      \"object\": \"um eventual governo petista\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"endossar\",\n      \"negation_scope\": \"endossar um eventual governo petista\",\n      \"signed_action\": \"não está a endossar um eventual governo petista\",\n      \"base_action\": \"está a endossar um eventual governo petista\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"reconheceu diferenças programáticas com o PT\",\n      \"object\": \"PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reconheceu diferenças programáticas com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reconheceu diferenças programáticas com o PT\",\n      \"base_action\": \"reconheceu diferenças programáticas com o PT\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PSTU e PCB\",\n      \"action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"object\": \"disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"procuram pesar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"base_action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Apoio eleitoral apresentado como aliança tática contra a volta da família Bolsonaro ao poder, sem adesão programática comum.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "6bc9afe2db4d522fe8ef0b822009fc5e7c3af2face9c56175deed480fef4a82f",
+          "input_sha256": "b86c6b8f6c838fc389b1da17608c930fe5ef3e2c9cf728730f66cda22ea7d659",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"PSTU e PCB apoiam Lula no segundo turno como aliança tática contra a família Bolsonaro\",\n  \"subtopics\": [\n    \"Votação inferior a 1% no primeiro turno\",\n    \"Voto crítico do PSTU e ausência de endosso a um eventual governo petista\",\n    \"Diferenças programáticas entre PCB e PT\",\n    \"Disputa entre Lula e Flávio Bolsonaro (PL)\"\n  ],\n  \"central_entities\": [\n    \"PSTU\",\n    \"PCB\",\n    \"Lula\",\n    \"PT\",\n    \"família Bolsonaro\",\n    \"Flávio Bolsonaro (PL)\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A aliança é de conveniência, não uma adesão a um projecto comum.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PSTU e PCB\",\n      \"action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apoiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"base_action\": \"decidiram apoiar Lula no segundo turno para impedir a volta da família Bolsonaro ao poder\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou abaixo de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"base_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share_upper_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 1,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"abaixo de 1%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou abaixo de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"base_action\": \"ficou abaixo de 1% no primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_share_upper_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 1,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"abaixo de 1%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"object\": \"“voto crítico no 13”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"chamou de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"base_action\": \"chamou a escolha de “voto crítico no 13”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"13\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"13\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PSTU\",\n      \"action\": \"não está a endossar um eventual governo petista\",\n      \"object\": \"um eventual governo petista\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"endossar\",\n      \"negation_scope\": \"endossar um eventual governo petista\",\n      \"signed_action\": \"não está a endossar um eventual governo petista\",\n      \"base_action\": \"está a endossar um eventual governo petista\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PCB\",\n      \"action\": \"reconheceu diferenças programáticas com o PT\",\n      \"object\": \"PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reconheceu diferenças programáticas com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"reconheceu diferenças programáticas com o PT\",\n      \"base_action\": \"reconheceu diferenças programáticas com o PT\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PSTU e PCB\",\n      \"action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"object\": \"disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"procuram pesar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"base_action\": \"procuram pesar numa disputa que opõe Lula a Flávio Bolsonaro (PL)\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Apoio eleitoral apresentado como aliança tática contra a volta da família Bolsonaro ao poder, sem adesão programática comum.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "c957231259e3b25c4b4eec60f55f5733b69cfcf7c20cb1ade5aed8f120c74a98"
+}

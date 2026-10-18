@@ -1,0 +1,171 @@
+{
+  "inputs": {
+    "text": "A partir deste sábado (10), candidaturas que disputam o segundo turno, em 25 de outubro, terão proteção contra prisão ou detenção até 48 horas após a votação. É uma barreira necessária contra o uso do aparato estatal para intimidar adversários e distorcer a participação política — um risco especialmente grave quando o poder institucional é desigual. A proteção não elimina a responsabilização: em flagrante delito, a prisão pode ocorrer, mas deve ser imediatamente examinada por um juiz. Proteger a disputa democrática e garantir que a lei valha para todos precisam caminhar juntos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Proteção de candidaturas contra prisão ou detenção no segundo turno, com exceção para flagrante delito",
+    "subtopics": [
+      "Proteção eleitoral temporária",
+      "Exceção para prisão em flagrante",
+      "Exame imediato por um juiz",
+      "Proteção da disputa democrática"
+    ],
+    "central_entities": [
+      "candidaturas",
+      "aparato estatal",
+      "adversários",
+      "juiz"
+    ],
+    "central_relations": [
+      {
+        "subject": "candidaturas",
+        "action": "terão proteção contra",
+        "object": "prisão ou detenção",
+        "polarity": "affirmed",
+        "predicate": "ter proteção contra",
+        "negation_scope": null,
+        "signed_action": "terão proteção contra",
+        "base_action": "terão proteção contra",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48 horas após a votação",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "protection_start_day",
+            "value": 10.0,
+            "unit": "day",
+            "kind": "number",
+            "status": "exact",
+            "expression": "sábado (10)"
+          },
+          {
+            "role": "runoff_day",
+            "value": 25.0,
+            "unit": "day",
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          },
+          {
+            "role": "post_vote_protection_period",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48 horas após a votação"
+          }
+        ]
+      },
+      {
+        "subject": "A proteção",
+        "action": "não elimina",
+        "object": "a responsabilização",
+        "polarity": "negated",
+        "predicate": "eliminar",
+        "negation_scope": "elimina a responsabilização",
+        "signed_action": "não elimina",
+        "base_action": "elimina",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a prisão",
+        "action": "pode ocorrer em flagrante delito",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ocorrer",
+        "negation_scope": null,
+        "signed_action": "pode ocorrer em flagrante delito",
+        "base_action": "pode ocorrer em flagrante delito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "a prisão",
+        "action": "deve ser imediatamente examinada por",
+        "object": "juiz",
+        "polarity": "affirmed",
+        "predicate": "ser examinada por",
+        "negation_scope": null,
+        "signed_action": "deve ser imediatamente examinada por",
+        "base_action": "deve ser imediatamente examinada por",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A proteção da disputa democrática contra possível intimidação pelo aparato estatal é apresentada junto à preservação da responsabilização legal.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A proteção é apresentada como uma barreira necessária contra o uso do aparato estatal para intimidar adversários e distorcer a participação política.",
+      "Proteger a disputa democrática e garantir que a lei valha para todos precisam caminhar juntos."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2668787706efe6a56a2f849ebd1d0442a3d60858deef2b0a8946718bed78a994",
+      "input_sha256": "daf48f5e68fcfb40d781aea9f1dd22f03b28e8e936515c5dd6d73ca93d05b56a",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Proteção de candidaturas contra prisão ou detenção no segundo turno, com exceção para flagrante delito\",\n  \"subtopics\": [\n    \"Proteção eleitoral temporária\",\n    \"Exceção para prisão em flagrante\",\n    \"Exame imediato por um juiz\",\n    \"Proteção da disputa democrática\"\n  ],\n  \"central_entities\": [\n    \"candidaturas\",\n    \"aparato estatal\",\n    \"adversários\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A proteção é apresentada como uma barreira necessária contra o uso do aparato estatal para intimidar adversários e distorcer a participação política.\",\n    \"Proteger a disputa democrática e garantir que a lei valha para todos precisam caminhar juntos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidaturas\",\n      \"action\": \"terão proteção contra\",\n      \"object\": \"prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter proteção contra\",\n      \"negation_scope\": null,\n      \"signed_action\": \"terão proteção contra\",\n      \"base_action\": \"terão proteção contra\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas após a votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protection_start_day\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"runoff_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        },\n        {\n          \"role\": \"post_vote_protection_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas após a votação\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A proteção\",\n      \"action\": \"não elimina\",\n      \"object\": \"a responsabilização\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"eliminar\",\n      \"negation_scope\": \"elimina a responsabilização\",\n      \"signed_action\": \"não elimina\",\n      \"base_action\": \"elimina\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a prisão\",\n      \"action\": \"pode ocorrer em flagrante delito\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ocorrer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode ocorrer em flagrante delito\",\n      \"base_action\": \"pode ocorrer em flagrante delito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a prisão\",\n      \"action\": \"deve ser imediatamente examinada por\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser examinada por\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deve ser imediatamente examinada por\",\n      \"base_action\": \"deve ser imediatamente examinada por\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção da disputa democrática contra possível intimidação pelo aparato estatal é apresentada junto à preservação da responsabilização legal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "2668787706efe6a56a2f849ebd1d0442a3d60858deef2b0a8946718bed78a994",
+          "input_sha256": "daf48f5e68fcfb40d781aea9f1dd22f03b28e8e936515c5dd6d73ca93d05b56a",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Proteção de candidaturas contra prisão ou detenção no segundo turno, com exceção para flagrante delito\",\n  \"subtopics\": [\n    \"Proteção eleitoral temporária\",\n    \"Exceção para prisão em flagrante\",\n    \"Exame imediato por um juiz\",\n    \"Proteção da disputa democrática\"\n  ],\n  \"central_entities\": [\n    \"candidaturas\",\n    \"aparato estatal\",\n    \"adversários\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A proteção é apresentada como uma barreira necessária contra o uso do aparato estatal para intimidar adversários e distorcer a participação política.\",\n    \"Proteger a disputa democrática e garantir que a lei valha para todos precisam caminhar juntos.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidaturas\",\n      \"action\": \"terão proteção contra\",\n      \"object\": \"prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter proteção contra\",\n      \"negation_scope\": null,\n      \"signed_action\": \"terão proteção contra\",\n      \"base_action\": \"terão proteção contra\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas após a votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"protection_start_day\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"runoff_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        },\n        {\n          \"role\": \"post_vote_protection_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas após a votação\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A proteção\",\n      \"action\": \"não elimina\",\n      \"object\": \"a responsabilização\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"eliminar\",\n      \"negation_scope\": \"elimina a responsabilização\",\n      \"signed_action\": \"não elimina\",\n      \"base_action\": \"elimina\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a prisão\",\n      \"action\": \"pode ocorrer em flagrante delito\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ocorrer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode ocorrer em flagrante delito\",\n      \"base_action\": \"pode ocorrer em flagrante delito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a prisão\",\n      \"action\": \"deve ser imediatamente examinada por\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser examinada por\",\n      \"negation_scope\": null,\n      \"signed_action\": \"deve ser imediatamente examinada por\",\n      \"base_action\": \"deve ser imediatamente examinada por\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A proteção da disputa democrática contra possível intimidação pelo aparato estatal é apresentada junto à preservação da responsabilização legal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "3dd5cf76aec0952efc0e0182fe468cf038158fc017cf5925b40a9c10446dee29"
+}

@@ -1,0 +1,148 @@
+{
+  "inputs": {
+    "text": "Isso parece uma operação para mudar o foco: em vez de discutir o financiamento de Dark Horse, colocam a Veja na defensiva, questionam o áudio e citam perícias para semear dúvidas sobre a reportagem. A PF negar que Vorcaro tenha deposto sobre o suposto documentário de Lula não apaga o que Flávio Bolsonaro confirmou: segundo a própria PF, ele pediu R$ 131 milhões a Vorcaro, e R$ 60 milhões teriam sido pagos. A máquina institucional parece trabalhar para que a disputa sobre a gravação engula justamente essa parte, a que mais incomoda.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Alegado desvio de foco da discussão sobre o financiamento de Dark Horse e o pedido de dinheiro a Vorcaro",
+    "subtopics": [
+      "A PF nega que Vorcaro tenha deposto sobre o suposto documentário de Lula",
+      "Questionamentos sobre o áudio e citações de perícias",
+      "Pedido de R$ 131 milhões e pagamento alegado de R$ 60 milhões"
+    ],
+    "central_entities": [
+      "Dark Horse",
+      "Veja",
+      "PF",
+      "Vorcaro",
+      "Lula",
+      "Flávio Bolsonaro"
+    ],
+    "central_relations": [
+      {
+        "subject": "PF",
+        "action": "negar",
+        "object": "que Vorcaro tenha deposto sobre o suposto documentário de Lula",
+        "polarity": "affirmed",
+        "predicate": "negar",
+        "negation_scope": null,
+        "signed_action": "negar",
+        "base_action": "negar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "confirmou que pediu R$ 131 milhões",
+        "object": "Vorcaro",
+        "polarity": "affirmed",
+        "predicate": "pedir",
+        "negation_scope": null,
+        "signed_action": "pediu R$ 131 milhões",
+        "base_action": "pediu R$ 131 milhões",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "requested_amount",
+            "value": 131000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 131 milhões"
+          }
+        ]
+      },
+      {
+        "subject": "R$ 60 milhões",
+        "action": "teriam sido pagos",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "pagar",
+        "negation_scope": null,
+        "signed_action": "teriam sido pagos",
+        "base_action": "teriam sido pagos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "paid_amount",
+            "value": 60000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 60 milhões"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "O texto apresenta os questionamentos sobre a gravação como uma possível estratégia para desviar a atenção do financiamento de Dark Horse e do pedido atribuído a Flávio Bolsonaro.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A disputa sobre a gravação parece desviar o foco do financiamento de Dark Horse e do pedido de dinheiro a Vorcaro."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "b609d60413e7277cfe865bdc1f78c98b14e2fc38a208f30d6c287dbd10d47509",
+      "input_sha256": "02013e5d8e39557a8e29e11a0d8c52b4d704a3eeef2422f636037d9e385e415b",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Alegado desvio de foco da discussão sobre o financiamento de Dark Horse e o pedido de dinheiro a Vorcaro\",\n  \"subtopics\": [\n    \"A PF nega que Vorcaro tenha deposto sobre o suposto documentário de Lula\",\n    \"Questionamentos sobre o áudio e citações de perícias\",\n    \"Pedido de R$ 131 milhões e pagamento alegado de R$ 60 milhões\"\n  ],\n  \"central_entities\": [\n    \"Dark Horse\",\n    \"Veja\",\n    \"PF\",\n    \"Vorcaro\",\n    \"Lula\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A disputa sobre a gravação parece desviar o foco do financiamento de Dark Horse e do pedido de dinheiro a Vorcaro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PF\",\n      \"action\": \"negar\",\n      \"object\": \"que Vorcaro tenha deposto sobre o suposto documentário de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negar\",\n      \"base_action\": \"negar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"confirmou que pediu R$ 131 milhões\",\n      \"object\": \"Vorcaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu R$ 131 milhões\",\n      \"base_action\": \"pediu R$ 131 milhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"requested_amount\",\n          \"kind\": \"money\",\n          \"value\": 131000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 131 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"R$ 60 milhões\",\n      \"action\": \"teriam sido pagos\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"teriam sido pagos\",\n      \"base_action\": \"teriam sido pagos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"paid_amount\",\n          \"kind\": \"money\",\n          \"value\": 60000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 60 milhões\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"O texto apresenta os questionamentos sobre a gravação como uma possível estratégia para desviar a atenção do financiamento de Dark Horse e do pedido atribuído a Flávio Bolsonaro.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "b609d60413e7277cfe865bdc1f78c98b14e2fc38a208f30d6c287dbd10d47509",
+          "input_sha256": "02013e5d8e39557a8e29e11a0d8c52b4d704a3eeef2422f636037d9e385e415b",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Alegado desvio de foco da discussão sobre o financiamento de Dark Horse e o pedido de dinheiro a Vorcaro\",\n  \"subtopics\": [\n    \"A PF nega que Vorcaro tenha deposto sobre o suposto documentário de Lula\",\n    \"Questionamentos sobre o áudio e citações de perícias\",\n    \"Pedido de R$ 131 milhões e pagamento alegado de R$ 60 milhões\"\n  ],\n  \"central_entities\": [\n    \"Dark Horse\",\n    \"Veja\",\n    \"PF\",\n    \"Vorcaro\",\n    \"Lula\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A disputa sobre a gravação parece desviar o foco do financiamento de Dark Horse e do pedido de dinheiro a Vorcaro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"PF\",\n      \"action\": \"negar\",\n      \"object\": \"que Vorcaro tenha deposto sobre o suposto documentário de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negar\",\n      \"base_action\": \"negar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"confirmou que pediu R$ 131 milhões\",\n      \"object\": \"Vorcaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pediu R$ 131 milhões\",\n      \"base_action\": \"pediu R$ 131 milhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"requested_amount\",\n          \"kind\": \"money\",\n          \"value\": 131000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 131 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"R$ 60 milhões\",\n      \"action\": \"teriam sido pagos\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"teriam sido pagos\",\n      \"base_action\": \"teriam sido pagos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"paid_amount\",\n          \"kind\": \"money\",\n          \"value\": 60000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 60 milhões\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"O texto apresenta os questionamentos sobre a gravação como uma possível estratégia para desviar a atenção do financiamento de Dark Horse e do pedido atribuído a Flávio Bolsonaro.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "c3ec9c93f1a9e429817dea3002089636c2b1bdcf99b0bc33bbfa0561ae488de1"
+}

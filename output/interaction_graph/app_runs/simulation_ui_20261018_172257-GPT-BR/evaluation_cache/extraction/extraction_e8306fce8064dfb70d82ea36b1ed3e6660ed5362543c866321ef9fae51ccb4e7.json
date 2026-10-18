@@ -1,0 +1,239 @@
+{
+  "inputs": {
+    "text": "Essa pesquisa já chega embalada para produzir uma narrativa: a Folha e a Globo contrataram o levantamento, e o Datafolha anuncia que Flávio Bolsonaro começa à frente de Lula — justamente no limite da margem de erro de dois pontos. Com 2.520 eleitores ouvidos em 153 cidades, entre terça-feira (6) e quarta-feira (7), vendem isso como sinal de virada, embora a própria margem torne a vantagem incerta. O registro no TSE não transforma a pesquisa em verdade; só dá aparência de chancela. O mais provável é que estejam testando e empurrando um clima de disputa antes mesmo de haver um resultado confiável.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Enquadramento crítico de uma pesquisa eleitoral que aponta Flávio Bolsonaro à frente de Lula",
+    "subtopics": [
+      "Contratação do levantamento pela Folha e pela Globo",
+      "Margem de erro e incerteza da vantagem",
+      "Registro da pesquisa no TSE",
+      "Possível tentativa de criar clima de disputa"
+    ],
+    "central_entities": [
+      "Folha",
+      "Globo",
+      "Datafolha",
+      "Flávio Bolsonaro",
+      "Lula",
+      "TSE"
+    ],
+    "central_relations": [
+      {
+        "subject": "Folha",
+        "action": "contrataram",
+        "object": "levantamento",
+        "polarity": "affirmed",
+        "predicate": "contratar",
+        "negation_scope": null,
+        "signed_action": "contrataram",
+        "base_action": "contrataram",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Globo",
+        "action": "contrataram",
+        "object": "levantamento",
+        "polarity": "affirmed",
+        "predicate": "contratar",
+        "negation_scope": null,
+        "signed_action": "contrataram",
+        "base_action": "contrataram",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Datafolha",
+        "action": "anuncia",
+        "object": "Flávio Bolsonaro começa à frente de Lula",
+        "polarity": "affirmed",
+        "predicate": "anunciar",
+        "negation_scope": null,
+        "signed_action": "anuncia",
+        "base_action": "anuncia",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "margin_of_error",
+            "value": 2.0,
+            "unit": "point",
+            "kind": "measurement",
+            "status": "exact",
+            "expression": "dois pontos"
+          }
+        ]
+      },
+      {
+        "subject": "pesquisa",
+        "action": "ouviu eleitores em cidades",
+        "object": "eleitores",
+        "polarity": "affirmed",
+        "predicate": "ouvir",
+        "negation_scope": null,
+        "signed_action": "ouvidos",
+        "base_action": "ouvidos",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": "entre terça-feira (6) e quarta-feira (7)",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "surveyed_voters",
+            "value": 2520.0,
+            "unit": "voter",
+            "kind": "count",
+            "status": "exact",
+            "expression": "2.520 eleitores"
+          },
+          {
+            "role": "survey_cities",
+            "value": 153.0,
+            "unit": "city",
+            "kind": "count",
+            "status": "exact",
+            "expression": "153 cidades"
+          },
+          {
+            "role": "fieldwork_day",
+            "value": 6.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "terça-feira (6)"
+          },
+          {
+            "role": "fieldwork_day",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "quarta-feira (7)"
+          }
+        ]
+      },
+      {
+        "subject": "vantagem",
+        "action": "torna incerta",
+        "object": "a margem de erro",
+        "polarity": "affirmed",
+        "predicate": "tornar incerta",
+        "negation_scope": null,
+        "signed_action": "torna incerta",
+        "base_action": "torna incerta",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "registro no TSE",
+        "action": "não transforma",
+        "object": "a pesquisa em verdade",
+        "polarity": "negated",
+        "predicate": "transformar",
+        "negation_scope": "transforma",
+        "signed_action": "não transforma",
+        "base_action": "transforma",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "registro no TSE",
+        "action": "dá aparência de chancela",
+        "object": "pesquisa",
+        "polarity": "affirmed",
+        "predicate": "dar aparência de chancela",
+        "negation_scope": null,
+        "signed_action": "dá aparência de chancela",
+        "base_action": "dá aparência de chancela",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento cético: a pesquisa é apresentada como possível sinal de virada, mas a vantagem está no limite da margem de erro e não constitui resultado confiável.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O registro no TSE só dá aparência de chancela, não transforma a pesquisa em verdade.",
+      "É provável que estejam testando e empurrando um clima de disputa antes de haver um resultado confiável.",
+      "Apresentar a vantagem como sinal de virada é questionável diante da margem de erro."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "e0fca0be67921c436be9ebba3404a47e996f106a412c231d185562605fcae5ee",
+      "input_sha256": "5969a54a0700e3d8ad0673d28d82332a96fe82812dd101f62055c36c91d7dcb5",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Enquadramento crítico de uma pesquisa eleitoral que aponta Flávio Bolsonaro à frente de Lula\",\n  \"subtopics\": [\n    \"Contratação do levantamento pela Folha e pela Globo\",\n    \"Margem de erro e incerteza da vantagem\",\n    \"Registro da pesquisa no TSE\",\n    \"Possível tentativa de criar clima de disputa\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O registro no TSE só dá aparência de chancela, não transforma a pesquisa em verdade.\",\n    \"É provável que estejam testando e empurrando um clima de disputa antes de haver um resultado confiável.\",\n    \"Apresentar a vantagem como sinal de virada é questionável diante da margem de erro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha\",\n      \"action\": \"contrataram\",\n      \"object\": \"levantamento\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contrataram\",\n      \"base_action\": \"contrataram\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Globo\",\n      \"action\": \"contrataram\",\n      \"object\": \"levantamento\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contrataram\",\n      \"base_action\": \"contrataram\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"anuncia\",\n      \"object\": \"Flávio Bolsonaro começa à frente de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"anunciar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anuncia\",\n      \"base_action\": \"anuncia\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"ouviu eleitores em cidades\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ouvidos\",\n      \"base_action\": \"ouvidos\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"entre terça-feira (6) e quarta-feira (7)\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"fieldwork_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"fieldwork_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"vantagem\",\n      \"action\": \"torna incerta\",\n      \"object\": \"a margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tornar incerta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"torna incerta\",\n      \"base_action\": \"torna incerta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"não transforma\",\n      \"object\": \"a pesquisa em verdade\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"transformar\",\n      \"negation_scope\": \"transforma\",\n      \"signed_action\": \"não transforma\",\n      \"base_action\": \"transforma\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"dá aparência de chancela\",\n      \"object\": \"pesquisa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar aparência de chancela\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dá aparência de chancela\",\n      \"base_action\": \"dá aparência de chancela\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético: a pesquisa é apresentada como possível sinal de virada, mas a vantagem está no limite da margem de erro e não constitui resultado confiável.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "e0fca0be67921c436be9ebba3404a47e996f106a412c231d185562605fcae5ee",
+          "input_sha256": "5969a54a0700e3d8ad0673d28d82332a96fe82812dd101f62055c36c91d7dcb5",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Enquadramento crítico de uma pesquisa eleitoral que aponta Flávio Bolsonaro à frente de Lula\",\n  \"subtopics\": [\n    \"Contratação do levantamento pela Folha e pela Globo\",\n    \"Margem de erro e incerteza da vantagem\",\n    \"Registro da pesquisa no TSE\",\n    \"Possível tentativa de criar clima de disputa\"\n  ],\n  \"central_entities\": [\n    \"Folha\",\n    \"Globo\",\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O registro no TSE só dá aparência de chancela, não transforma a pesquisa em verdade.\",\n    \"É provável que estejam testando e empurrando um clima de disputa antes de haver um resultado confiável.\",\n    \"Apresentar a vantagem como sinal de virada é questionável diante da margem de erro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Folha\",\n      \"action\": \"contrataram\",\n      \"object\": \"levantamento\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contrataram\",\n      \"base_action\": \"contrataram\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Globo\",\n      \"action\": \"contrataram\",\n      \"object\": \"levantamento\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"contratar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"contrataram\",\n      \"base_action\": \"contrataram\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"anuncia\",\n      \"object\": \"Flávio Bolsonaro começa à frente de Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"anunciar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anuncia\",\n      \"base_action\": \"anuncia\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"ouviu eleitores em cidades\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ouvidos\",\n      \"base_action\": \"ouvidos\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"entre terça-feira (6) e quarta-feira (7)\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"surveyed_voters\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"voter\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_cities\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"fieldwork_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"terça-feira (6)\"\n        },\n        {\n          \"role\": \"fieldwork_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"quarta-feira (7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"vantagem\",\n      \"action\": \"torna incerta\",\n      \"object\": \"a margem de erro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tornar incerta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"torna incerta\",\n      \"base_action\": \"torna incerta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"não transforma\",\n      \"object\": \"a pesquisa em verdade\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"transformar\",\n      \"negation_scope\": \"transforma\",\n      \"signed_action\": \"não transforma\",\n      \"base_action\": \"transforma\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"registro no TSE\",\n      \"action\": \"dá aparência de chancela\",\n      \"object\": \"pesquisa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar aparência de chancela\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dá aparência de chancela\",\n      \"base_action\": \"dá aparência de chancela\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento cético: a pesquisa é apresentada como possível sinal de virada, mas a vantagem está no limite da margem de erro e não constitui resultado confiável.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "0a2ee24a175ea36ebf58624ab57a844584c509f42be459f036738de489e9bf14"
+}

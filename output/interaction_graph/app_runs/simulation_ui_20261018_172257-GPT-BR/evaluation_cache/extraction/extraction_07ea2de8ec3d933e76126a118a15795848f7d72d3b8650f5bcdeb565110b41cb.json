@@ -1,0 +1,230 @@
+{
+  "inputs": {
+    "text": "O sistema do TSE marcou como “falta” pessoas que dizem ter votado no primeiro turno de domingo (4), e só depois da repercussão veio a promessa de mudar o status para “em processamento”. A causa? O TSE ainda não informou. Esse silêncio, junto com a mudança no registro, não inspira confiança: parece mais uma tentativa de ganhar tempo e controlar a narrativa do que um simples detalhe técnico.\n\nE isso acontece justamente numa eleição em que a abstenção passou de 33,4 milhões — 21,08% do eleitorado, o maior nível desde 1998. Quando os registros de quem compareceu podem aparecer como ausência, fica impossível tratar os números como se fossem incontestáveis. Há algo muito conveniente nessa confusão.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Falhas no registro de comparecimento de eleitores e falta de explicação do TSE",
+    "subtopics": [
+      "Promessa de alterar o status dos registros para “em processamento”",
+      "Abstenção eleitoral de 21,08%",
+      "Desconfiança sobre a confiabilidade dos registros"
+    ],
+    "central_entities": [
+      "TSE",
+      "sistema do TSE",
+      "pessoas",
+      "eleitorado"
+    ],
+    "central_relations": [
+      {
+        "subject": "sistema do TSE",
+        "action": "marcou como “falta”",
+        "object": "pessoas",
+        "polarity": "affirmed",
+        "predicate": "marcou",
+        "negation_scope": null,
+        "signed_action": "marcou como “falta”",
+        "base_action": "marcou como “falta”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "pessoas",
+        "action": "dizem ter votado no primeiro turno de domingo",
+        "object": "primeiro turno de domingo",
+        "polarity": "affirmed",
+        "predicate": "dizem ter votado",
+        "negation_scope": null,
+        "signed_action": "dizem ter votado no primeiro turno de domingo",
+        "base_action": "dizem ter votado no primeiro turno de domingo",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "day_of_month",
+            "value": 4.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "4"
+          }
+        ]
+      },
+      {
+        "subject": "status",
+        "action": "teve mudança prometida para",
+        "object": "“em processamento”",
+        "polarity": "affirmed",
+        "predicate": "mudar",
+        "negation_scope": null,
+        "signed_action": "promessa de mudar o status para “em processamento”",
+        "base_action": "promessa de mudar o status para “em processamento”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "TSE",
+        "action": "ainda não informou",
+        "object": "a causa",
+        "polarity": "negated",
+        "predicate": "informou",
+        "negation_scope": "informou",
+        "signed_action": "ainda não informou",
+        "base_action": "informou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "abstenção",
+        "action": "passou de",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "passou de",
+        "negation_scope": null,
+        "signed_action": "passou de 33,4 milhões",
+        "base_action": "passou de 33,4 milhões",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "abstention_count",
+            "value": 33400000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "33,4 milhões"
+          }
+        ]
+      },
+      {
+        "subject": "abstenção",
+        "action": "foi",
+        "object": "do eleitorado",
+        "polarity": "affirmed",
+        "predicate": "foi",
+        "negation_scope": null,
+        "signed_action": "foi 21,08% do eleitorado",
+        "base_action": "foi 21,08% do eleitorado",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "abstention_rate",
+            "value": 21.08,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "21,08%"
+          }
+        ]
+      },
+      {
+        "subject": "abstenção",
+        "action": "foi o maior nível desde",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "foi",
+        "negation_scope": null,
+        "signed_action": "foi o maior nível desde 1998",
+        "base_action": "foi o maior nível desde 1998",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "comparison_year",
+            "value": 1998.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "1998"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A confiabilidade dos registros de comparecimento é questionada após relatos de eleitores marcados como ausentes e a falta de explicação do TSE.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O silêncio do TSE e a mudança no registro não inspiram confiança.",
+      "A mudança parece uma tentativa de ganhar tempo e controlar a narrativa, em vez de um simples detalhe técnico.",
+      "Há algo muito conveniente nessa confusão."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "5ceb24992450d07a4aa27033488dcfdc12ed637377864f72867646f0513b3729",
+      "input_sha256": "03162e3f3f9b7a3bb13efa661c47e3e4b90d31282178f2e8d65d560833d2a119",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Falhas no registro de comparecimento de eleitores e falta de explicação do TSE\",\n  \"subtopics\": [\n    \"Promessa de alterar o status dos registros para “em processamento”\",\n    \"Abstenção eleitoral de 21,08%\",\n    \"Desconfiança sobre a confiabilidade dos registros\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"sistema do TSE\",\n    \"pessoas\",\n    \"eleitorado\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O silêncio do TSE e a mudança no registro não inspiram confiança.\",\n    \"A mudança parece uma tentativa de ganhar tempo e controlar a narrativa, em vez de um simples detalhe técnico.\",\n    \"Há algo muito conveniente nessa confusão.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"sistema do TSE\",\n      \"action\": \"marcou como “falta”\",\n      \"object\": \"pessoas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcou\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcou como “falta”\",\n      \"base_action\": \"marcou como “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pessoas\",\n      \"action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"object\": \"primeiro turno de domingo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizem ter votado\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"base_action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 4,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"4\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"status\",\n      \"action\": \"teve mudança prometida para\",\n      \"object\": \"“em processamento”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mudar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"promessa de mudar o status para “em processamento”\",\n      \"base_action\": \"promessa de mudar o status para “em processamento”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"ainda não informou\",\n      \"object\": \"a causa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"informou\",\n      \"negation_scope\": \"informou\",\n      \"signed_action\": \"ainda não informou\",\n      \"base_action\": \"informou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"passou de\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"passou de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"passou de 33,4 milhões\",\n      \"base_action\": \"passou de 33,4 milhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_count\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"33,4 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"foi\",\n      \"object\": \"do eleitorado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foi\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi 21,08% do eleitorado\",\n      \"base_action\": \"foi 21,08% do eleitorado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"foi o maior nível desde\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foi\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi o maior nível desde 1998\",\n      \"base_action\": \"foi o maior nível desde 1998\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 1998,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"1998\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A confiabilidade dos registros de comparecimento é questionada após relatos de eleitores marcados como ausentes e a falta de explicação do TSE.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "5ceb24992450d07a4aa27033488dcfdc12ed637377864f72867646f0513b3729",
+          "input_sha256": "03162e3f3f9b7a3bb13efa661c47e3e4b90d31282178f2e8d65d560833d2a119",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Falhas no registro de comparecimento de eleitores e falta de explicação do TSE\",\n  \"subtopics\": [\n    \"Promessa de alterar o status dos registros para “em processamento”\",\n    \"Abstenção eleitoral de 21,08%\",\n    \"Desconfiança sobre a confiabilidade dos registros\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"sistema do TSE\",\n    \"pessoas\",\n    \"eleitorado\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O silêncio do TSE e a mudança no registro não inspiram confiança.\",\n    \"A mudança parece uma tentativa de ganhar tempo e controlar a narrativa, em vez de um simples detalhe técnico.\",\n    \"Há algo muito conveniente nessa confusão.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"sistema do TSE\",\n      \"action\": \"marcou como “falta”\",\n      \"object\": \"pessoas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcou\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcou como “falta”\",\n      \"base_action\": \"marcou como “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pessoas\",\n      \"action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"object\": \"primeiro turno de domingo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dizem ter votado\",\n      \"negation_scope\": null,\n      \"signed_action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"base_action\": \"dizem ter votado no primeiro turno de domingo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 4,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"4\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"status\",\n      \"action\": \"teve mudança prometida para\",\n      \"object\": \"“em processamento”\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mudar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"promessa de mudar o status para “em processamento”\",\n      \"base_action\": \"promessa de mudar o status para “em processamento”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"ainda não informou\",\n      \"object\": \"a causa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"informou\",\n      \"negation_scope\": \"informou\",\n      \"signed_action\": \"ainda não informou\",\n      \"base_action\": \"informou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"passou de\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"passou de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"passou de 33,4 milhões\",\n      \"base_action\": \"passou de 33,4 milhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_count\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"33,4 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"foi\",\n      \"object\": \"do eleitorado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foi\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi 21,08% do eleitorado\",\n      \"base_action\": \"foi 21,08% do eleitorado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"abstenção\",\n      \"action\": \"foi o maior nível desde\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"foi\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi o maior nível desde 1998\",\n      \"base_action\": \"foi o maior nível desde 1998\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 1998,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"1998\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A confiabilidade dos registros de comparecimento é questionada após relatos de eleitores marcados como ausentes e a falta de explicação do TSE.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "42c28069288109803f2198e292b9bf183694b4d7874067d14f4dafc874d740c6"
+}

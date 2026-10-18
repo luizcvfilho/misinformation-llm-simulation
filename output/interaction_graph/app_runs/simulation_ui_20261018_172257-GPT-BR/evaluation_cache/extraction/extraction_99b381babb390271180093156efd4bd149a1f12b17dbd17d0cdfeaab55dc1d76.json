@@ -1,0 +1,213 @@
+{
+  "inputs": {
+    "text": "A primeira pesquisa de segundo turno do Datafolha mostra Flávio Bolsonaro com uma vantagem mínima sobre Lula, ainda dentro da margem de erro de dois pontos. Não é um resultado consolidado: com 95% de confiança, o levantamento retrata uma disputa apertada, não um mandato para qualquer projeto político.\n\nForam ouvidos 2.520 eleitores em 153 cidades, nos dias 6 e 7; a pesquisa está registrada no TSE. Num cenário tão equilibrado, importa discutir quem será protegido e quem pagará o preço das escolhas políticas — especialmente os grupos mais vulneráveis e os trabalhadores.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Pesquisa de segundo turno do Datafolha indica disputa apertada entre Flávio Bolsonaro e Lula",
+    "subtopics": [
+      "Vantagem dentro da margem de erro",
+      "Amostra, período e registro da pesquisa",
+      "Possíveis impactos das escolhas políticas sobre grupos vulneráveis e trabalhadores"
+    ],
+    "central_entities": [
+      "Datafolha",
+      "Flávio Bolsonaro",
+      "Lula",
+      "TSE",
+      "eleitores",
+      "grupos mais vulneráveis",
+      "trabalhadores"
+    ],
+    "central_relations": [
+      {
+        "subject": "Datafolha",
+        "action": "mostra Flávio Bolsonaro com uma vantagem mínima sobre",
+        "object": "Lula",
+        "polarity": "affirmed",
+        "predicate": "mostrar_vantagem_sobre",
+        "negation_scope": null,
+        "signed_action": "mostra Flávio Bolsonaro com uma vantagem mínima sobre",
+        "base_action": "mostra Flávio Bolsonaro com uma vantagem mínima sobre",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "margin_of_error",
+            "value": 2.0,
+            "unit": "point",
+            "kind": "measurement",
+            "status": "exact",
+            "expression": "dois pontos"
+          },
+          {
+            "role": "confidence_level",
+            "value": 95.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "95%"
+          }
+        ]
+      },
+      {
+        "subject": "levantamento",
+        "action": "retrata uma disputa apertada",
+        "object": "disputa",
+        "polarity": "affirmed",
+        "predicate": "retratar_disputa",
+        "negation_scope": null,
+        "signed_action": "retrata uma disputa apertada",
+        "base_action": "retrata uma disputa apertada",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "resultado",
+        "action": "não é consolidado",
+        "object": "",
+        "polarity": "negated",
+        "predicate": "ser_consolidado",
+        "negation_scope": "ser consolidado",
+        "signed_action": "não é consolidado",
+        "base_action": "é consolidado",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "pesquisa",
+        "action": "ouviu",
+        "object": "eleitores",
+        "polarity": "affirmed",
+        "predicate": "ouvir_eleitores",
+        "negation_scope": null,
+        "signed_action": "Foram ouvidos",
+        "base_action": "Foram ouvidos",
+        "duration_status": "ambiguous",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": "nos dias 6 e 7",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "survey_respondent_count",
+            "value": 2520.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "2.520 eleitores"
+          },
+          {
+            "role": "survey_city_count",
+            "value": 153.0,
+            "unit": "city",
+            "kind": "count",
+            "status": "exact",
+            "expression": "153 cidades"
+          },
+          {
+            "role": "survey_day",
+            "value": 6.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "6"
+          },
+          {
+            "role": "survey_day",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "7"
+          }
+        ]
+      },
+      {
+        "subject": "pesquisa",
+        "action": "está registrada no",
+        "object": "TSE",
+        "polarity": "affirmed",
+        "predicate": "estar_registrada_em",
+        "negation_scope": null,
+        "signed_action": "está registrada no",
+        "base_action": "está registrada no",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A disputa é apresentada como apertada e inconclusiva, com ênfase editorial em quem será protegido e em quem arcará com os custos das escolhas políticas.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Importa discutir quem será protegido e quem pagará o preço das escolhas políticas, especialmente os grupos mais vulneráveis e os trabalhadores."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "cf8e33c1af9224c562a3aae84ac9cd9381efce95bf1615408a044c9fb8968e7a",
+      "input_sha256": "ca9f98a4499b4ff07e00894cbef9e6f0cb7437257092e2bb4fd9647d6714953e",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Pesquisa de segundo turno do Datafolha indica disputa apertada entre Flávio Bolsonaro e Lula\",\n  \"subtopics\": [\n    \"Vantagem dentro da margem de erro\",\n    \"Amostra, período e registro da pesquisa\",\n    \"Possíveis impactos das escolhas políticas sobre grupos vulneráveis e trabalhadores\"\n  ],\n  \"central_entities\": [\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\",\n    \"eleitores\",\n    \"grupos mais vulneráveis\",\n    \"trabalhadores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Importa discutir quem será protegido e quem pagará o preço das escolhas políticas, especialmente os grupos mais vulneráveis e os trabalhadores.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mostrar_vantagem_sobre\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"base_action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        },\n        {\n          \"role\": \"confidence_level\",\n          \"kind\": \"percentage\",\n          \"value\": 95,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"95%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"levantamento\",\n      \"action\": \"retrata uma disputa apertada\",\n      \"object\": \"disputa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retratar_disputa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retrata uma disputa apertada\",\n      \"base_action\": \"retrata uma disputa apertada\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"resultado\",\n      \"action\": \"não é consolidado\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser_consolidado\",\n      \"negation_scope\": \"ser consolidado\",\n      \"signed_action\": \"não é consolidado\",\n      \"base_action\": \"é consolidado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir_eleitores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Foram ouvidos\",\n      \"base_action\": \"Foram ouvidos\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"nos dias 6 e 7\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_respondent_count\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_city_count\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"survey_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6\"\n        },\n        {\n          \"role\": \"survey_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"está registrada no\",\n      \"object\": \"TSE\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estar_registrada_em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está registrada no\",\n      \"base_action\": \"está registrada no\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa é apresentada como apertada e inconclusiva, com ênfase editorial em quem será protegido e em quem arcará com os custos das escolhas políticas.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "cf8e33c1af9224c562a3aae84ac9cd9381efce95bf1615408a044c9fb8968e7a",
+          "input_sha256": "ca9f98a4499b4ff07e00894cbef9e6f0cb7437257092e2bb4fd9647d6714953e",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Pesquisa de segundo turno do Datafolha indica disputa apertada entre Flávio Bolsonaro e Lula\",\n  \"subtopics\": [\n    \"Vantagem dentro da margem de erro\",\n    \"Amostra, período e registro da pesquisa\",\n    \"Possíveis impactos das escolhas políticas sobre grupos vulneráveis e trabalhadores\"\n  ],\n  \"central_entities\": [\n    \"Datafolha\",\n    \"Flávio Bolsonaro\",\n    \"Lula\",\n    \"TSE\",\n    \"eleitores\",\n    \"grupos mais vulneráveis\",\n    \"trabalhadores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Importa discutir quem será protegido e quem pagará o preço das escolhas políticas, especialmente os grupos mais vulneráveis e os trabalhadores.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Datafolha\",\n      \"action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"object\": \"Lula\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mostrar_vantagem_sobre\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"base_action\": \"mostra Flávio Bolsonaro com uma vantagem mínima sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"margin_of_error\",\n          \"kind\": \"measurement\",\n          \"value\": 2,\n          \"unit\": \"point\",\n          \"status\": \"exact\",\n          \"expression\": \"dois pontos\"\n        },\n        {\n          \"role\": \"confidence_level\",\n          \"kind\": \"percentage\",\n          \"value\": 95,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"95%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"levantamento\",\n      \"action\": \"retrata uma disputa apertada\",\n      \"object\": \"disputa\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retratar_disputa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retrata uma disputa apertada\",\n      \"base_action\": \"retrata uma disputa apertada\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"resultado\",\n      \"action\": \"não é consolidado\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser_consolidado\",\n      \"negation_scope\": \"ser consolidado\",\n      \"signed_action\": \"não é consolidado\",\n      \"base_action\": \"é consolidado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"ouviu\",\n      \"object\": \"eleitores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ouvir_eleitores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Foram ouvidos\",\n      \"base_action\": \"Foram ouvidos\",\n      \"duration_status\": \"ambiguous\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": \"nos dias 6 e 7\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"survey_respondent_count\",\n          \"kind\": \"count\",\n          \"value\": 2520,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"2.520 eleitores\"\n        },\n        {\n          \"role\": \"survey_city_count\",\n          \"kind\": \"count\",\n          \"value\": 153,\n          \"unit\": \"city\",\n          \"status\": \"exact\",\n          \"expression\": \"153 cidades\"\n        },\n        {\n          \"role\": \"survey_day\",\n          \"kind\": \"number\",\n          \"value\": 6,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6\"\n        },\n        {\n          \"role\": \"survey_day\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"pesquisa\",\n      \"action\": \"está registrada no\",\n      \"object\": \"TSE\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estar_registrada_em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está registrada no\",\n      \"base_action\": \"está registrada no\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A disputa é apresentada como apertada e inconclusiva, com ênfase editorial em quem será protegido e em quem arcará com os custos das escolhas políticas.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "41fc14e8fb0d795ab36f074ad40c473d8b9d231780b057c042cf49ae7ef3ecd3"
+}

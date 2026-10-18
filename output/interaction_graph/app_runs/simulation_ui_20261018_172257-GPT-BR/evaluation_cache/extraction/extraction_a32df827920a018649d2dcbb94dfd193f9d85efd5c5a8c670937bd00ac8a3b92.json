@@ -1,0 +1,206 @@
+{
+  "inputs": {
+    "text": "O TSE marcou como “falta” pessoas que afirmam ter votado e só prometeu alterar o registro para “em processamento” depois da repercussão, sem explicar a causa. Chamam isso de detalhe técnico, mas o silêncio e a mudança de status parecem uma forma de ganhar tempo e conduzir a narrativa. E acontece numa eleição com mais de 33,4 milhões de abstenções — 21,08% do eleitorado, o maior nível desde 1998. Se até a presença de eleitores pode ser registrada como ausência, por que deveríamos aceitar os números sem questionar? Essa confusão é conveniente demais para ser descartada como simples erro.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Questionamentos sobre o registro de votos pelo TSE e a transparência dos dados eleitorais",
+    "subtopics": [
+      "Pessoas registradas como ausentes apesar de afirmarem que votaram",
+      "Promessa de alterar o status do registro após repercussão",
+      "Abstenções eleitorais e comparação histórica",
+      "Suspeitas sobre a confiabilidade dos números"
+    ],
+    "central_entities": [
+      "TSE",
+      "pessoas",
+      "eleição",
+      "eleitorado",
+      "eleitores"
+    ],
+    "central_relations": [
+      {
+        "subject": "TSE",
+        "action": "marcou como “falta”",
+        "object": "pessoas",
+        "polarity": "affirmed",
+        "predicate": "marcar como falta",
+        "negation_scope": null,
+        "signed_action": "marcou como “falta”",
+        "base_action": "marcou como “falta”",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "pessoas",
+        "action": "afirmam ter votado",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "afirmar ter votado",
+        "negation_scope": null,
+        "signed_action": "afirmam ter votado",
+        "base_action": "afirmam ter votado",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "TSE",
+        "action": "prometeu alterar o registro para “em processamento” depois da repercussão",
+        "object": "registro",
+        "polarity": "affirmed",
+        "predicate": "prometer alterar",
+        "negation_scope": null,
+        "signed_action": "prometeu alterar o registro para “em processamento” depois da repercussão",
+        "base_action": "prometeu alterar o registro para “em processamento” depois da repercussão",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "TSE",
+        "action": "sem explicar a causa",
+        "object": "a causa",
+        "polarity": "negated",
+        "predicate": "explicar",
+        "negation_scope": "explicar a causa",
+        "signed_action": "sem explicar a causa",
+        "base_action": "explicar a causa",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "eleição",
+        "action": "teve",
+        "object": "abstenções",
+        "polarity": "affirmed",
+        "predicate": "ter abstenções",
+        "negation_scope": null,
+        "signed_action": "teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado",
+        "base_action": "teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "abstention_count",
+            "value": 33400000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "mais de 33,4 milhões"
+          },
+          {
+            "role": "electorate_abstention_rate",
+            "value": 21.08,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "21,08%"
+          }
+        ]
+      },
+      {
+        "subject": "eleição",
+        "action": "teve o maior nível de abstenções desde 1998",
+        "object": "abstenções",
+        "polarity": "affirmed",
+        "predicate": "ter o maior nível de abstenções",
+        "negation_scope": null,
+        "signed_action": "o maior nível desde 1998",
+        "base_action": "o maior nível desde 1998",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "comparison_year",
+            "value": 1998.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "1998"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Enquadramento crítico que associa a mudança tardia do status e a falta de explicação a dúvidas sobre a transparência e a confiabilidade dos dados eleitorais.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O silêncio e a mudança de status parecem uma forma de ganhar tempo e conduzir a narrativa.",
+      "Os números eleitorais deveriam ser questionados.",
+      "A confusão parece conveniente demais para ser descartada como simples erro."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "0489c20dae202b7dc7080f11227a9d0b3f05b43c334e9521a33fdc9eeb5992ed",
+      "input_sha256": "4bc1a309c8637f45f1e559dee32af9cdf7948253f94d7685e2912ddc66211e7f",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Questionamentos sobre o registro de votos pelo TSE e a transparência dos dados eleitorais\",\n  \"subtopics\": [\n    \"Pessoas registradas como ausentes apesar de afirmarem que votaram\",\n    \"Promessa de alterar o status do registro após repercussão\",\n    \"Abstenções eleitorais e comparação histórica\",\n    \"Suspeitas sobre a confiabilidade dos números\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"pessoas\",\n    \"eleição\",\n    \"eleitorado\",\n    \"eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O silêncio e a mudança de status parecem uma forma de ganhar tempo e conduzir a narrativa.\",\n    \"Os números eleitorais deveriam ser questionados.\",\n    \"A confusão parece conveniente demais para ser descartada como simples erro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"marcou como “falta”\",\n      \"object\": \"pessoas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar como falta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcou como “falta”\",\n      \"base_action\": \"marcou como “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pessoas\",\n      \"action\": \"afirmam ter votado\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar ter votado\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmam ter votado\",\n      \"base_action\": \"afirmam ter votado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"object\": \"registro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prometer alterar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"base_action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"sem explicar a causa\",\n      \"object\": \"a causa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"explicar\",\n      \"negation_scope\": \"explicar a causa\",\n      \"signed_action\": \"sem explicar a causa\",\n      \"base_action\": \"explicar a causa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eleição\",\n      \"action\": \"teve\",\n      \"object\": \"abstenções\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter abstenções\",\n      \"negation_scope\": null,\n      \"signed_action\": \"teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado\",\n      \"base_action\": \"teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_count\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 33,4 milhões\"\n        },\n        {\n          \"role\": \"electorate_abstention_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"eleição\",\n      \"action\": \"teve o maior nível de abstenções desde 1998\",\n      \"object\": \"abstenções\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter o maior nível de abstenções\",\n      \"negation_scope\": null,\n      \"signed_action\": \"o maior nível desde 1998\",\n      \"base_action\": \"o maior nível desde 1998\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 1998,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"1998\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico que associa a mudança tardia do status e a falta de explicação a dúvidas sobre a transparência e a confiabilidade dos dados eleitorais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "0489c20dae202b7dc7080f11227a9d0b3f05b43c334e9521a33fdc9eeb5992ed",
+          "input_sha256": "4bc1a309c8637f45f1e559dee32af9cdf7948253f94d7685e2912ddc66211e7f",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Questionamentos sobre o registro de votos pelo TSE e a transparência dos dados eleitorais\",\n  \"subtopics\": [\n    \"Pessoas registradas como ausentes apesar de afirmarem que votaram\",\n    \"Promessa de alterar o status do registro após repercussão\",\n    \"Abstenções eleitorais e comparação histórica\",\n    \"Suspeitas sobre a confiabilidade dos números\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"pessoas\",\n    \"eleição\",\n    \"eleitorado\",\n    \"eleitores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O silêncio e a mudança de status parecem uma forma de ganhar tempo e conduzir a narrativa.\",\n    \"Os números eleitorais deveriam ser questionados.\",\n    \"A confusão parece conveniente demais para ser descartada como simples erro.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"marcou como “falta”\",\n      \"object\": \"pessoas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar como falta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcou como “falta”\",\n      \"base_action\": \"marcou como “falta”\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"pessoas\",\n      \"action\": \"afirmam ter votado\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar ter votado\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmam ter votado\",\n      \"base_action\": \"afirmam ter votado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"object\": \"registro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"prometer alterar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"base_action\": \"prometeu alterar o registro para “em processamento” depois da repercussão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"sem explicar a causa\",\n      \"object\": \"a causa\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"explicar\",\n      \"negation_scope\": \"explicar a causa\",\n      \"signed_action\": \"sem explicar a causa\",\n      \"base_action\": \"explicar a causa\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"eleição\",\n      \"action\": \"teve\",\n      \"object\": \"abstenções\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter abstenções\",\n      \"negation_scope\": null,\n      \"signed_action\": \"teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado\",\n      \"base_action\": \"teve mais de 33,4 milhões de abstenções — 21,08% do eleitorado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"abstention_count\",\n          \"kind\": \"count\",\n          \"value\": 33400000,\n          \"unit\": \"person\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 33,4 milhões\"\n        },\n        {\n          \"role\": \"electorate_abstention_rate\",\n          \"kind\": \"percentage\",\n          \"value\": 21.08,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,08%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"eleição\",\n      \"action\": \"teve o maior nível de abstenções desde 1998\",\n      \"object\": \"abstenções\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter o maior nível de abstenções\",\n      \"negation_scope\": null,\n      \"signed_action\": \"o maior nível desde 1998\",\n      \"base_action\": \"o maior nível desde 1998\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 1998,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"1998\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico que associa a mudança tardia do status e a falta de explicação a dúvidas sobre a transparência e a confiabilidade dos dados eleitorais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "38f45e5e6cc7388e89b16187dbe3690e52b90f9efe2f6f9103a0e174ad98f617"
+}

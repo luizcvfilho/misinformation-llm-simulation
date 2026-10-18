@@ -1,0 +1,150 @@
+{
+  "inputs": {
+    "text": "Isso não parece apenas uma medida social: em plena campanha de reeleição, Celina Leão aparece diante de representantes de 16 tabelionatos oferecendo alívio a famílias endividadas. A operação tem toda a cara de uma aliança conveniente entre governo e cartórios: transforma a angústia de quem deve em vitrine eleitoral e concentra nessas instituições o controle sobre como os protestos serão resolvidos. Falam em retirar protestos “indevidos” sem custo e baratear a regularização, mas isso não explica por que as famílias chegaram a esse ponto. Se o protesto pode custar mais que a própria conta, reduzir a tarifa é um paliativo útil para a campanha — e uma forma de desviar o foco do sistema que mantém tanta gente presa às dívidas.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Alívio para famílias endividadas apresentado por Celina Leão em contexto de campanha de reeleição",
+    "subtopics": [
+      "Retirada de protestos “indevidos” sem custo",
+      "Redução do custo de regularização",
+      "Crítica ao uso eleitoral da medida e ao sistema de endividamento"
+    ],
+    "central_entities": [
+      "Celina Leão",
+      "16 tabelionatos",
+      "famílias endividadas",
+      "governo",
+      "cartórios",
+      "protestos"
+    ],
+    "central_relations": [
+      {
+        "subject": "Celina Leão",
+        "action": "aparece diante de representantes de 16 tabelionatos oferecendo alívio a famílias endividadas",
+        "object": "famílias endividadas",
+        "polarity": "affirmed",
+        "predicate": "oferecer alívio",
+        "negation_scope": null,
+        "signed_action": "oferecendo alívio",
+        "base_action": "oferecendo alívio",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "tabelionatos_count",
+            "value": 16.0,
+            "unit": "tabelionato",
+            "kind": "count",
+            "status": "exact",
+            "expression": "16 tabelionatos"
+          }
+        ]
+      },
+      {
+        "subject": "representantes de 16 tabelionatos",
+        "action": "Falam em retirar protestos “indevidos” sem custo e baratear a regularização",
+        "object": "protestos",
+        "polarity": "affirmed",
+        "predicate": "retirar e baratear",
+        "negation_scope": null,
+        "signed_action": "retirar protestos “indevidos” sem custo e baratear a regularização",
+        "base_action": "retirar protestos “indevidos” sem custo e baratear a regularização",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "tabelionatos_count",
+            "value": 16.0,
+            "unit": "tabelionato",
+            "kind": "count",
+            "status": "exact",
+            "expression": "16 tabelionatos"
+          }
+        ]
+      },
+      {
+        "subject": "protestos",
+        "action": "pode custar mais que a própria conta",
+        "object": "a própria conta",
+        "polarity": "affirmed",
+        "predicate": "custar mais que",
+        "negation_scope": null,
+        "signed_action": "pode custar mais que a própria conta",
+        "base_action": "pode custar mais que a própria conta",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A medida é enquadrada criticamente como alívio para endividados usado como vitrine eleitoral, sem enfrentar as causas do endividamento.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A operação parece uma aliança conveniente entre governo e cartórios.",
+      "A medida transforma a angústia de quem deve em vitrine eleitoral e concentra nos cartórios o controle sobre a resolução dos protestos.",
+      "Reduzir a tarifa é um paliativo útil para a campanha e desvia o foco do sistema que mantém pessoas presas às dívidas."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "97b2bd3ae01c784cc62c360a7a8189b3c661a0001db2f07f3de8d055fd0a311c",
+      "input_sha256": "5bf4718cd46005f95bbbb8c71e0db9b7d2ea185f0ebdd788f65d3aeb1cc433b8",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Alívio para famílias endividadas apresentado por Celina Leão em contexto de campanha de reeleição\",\n  \"subtopics\": [\n    \"Retirada de protestos “indevidos” sem custo\",\n    \"Redução do custo de regularização\",\n    \"Crítica ao uso eleitoral da medida e ao sistema de endividamento\"\n  ],\n  \"central_entities\": [\n    \"Celina Leão\",\n    \"16 tabelionatos\",\n    \"famílias endividadas\",\n    \"governo\",\n    \"cartórios\",\n    \"protestos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A operação parece uma aliança conveniente entre governo e cartórios.\",\n    \"A medida transforma a angústia de quem deve em vitrine eleitoral e concentra nos cartórios o controle sobre a resolução dos protestos.\",\n    \"Reduzir a tarifa é um paliativo útil para a campanha e desvia o foco do sistema que mantém pessoas presas às dívidas.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Celina Leão\",\n      \"action\": \"aparece diante de representantes de 16 tabelionatos oferecendo alívio a famílias endividadas\",\n      \"object\": \"famílias endividadas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"oferecer alívio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"oferecendo alívio\",\n      \"base_action\": \"oferecendo alívio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tabelionatos_count\",\n          \"kind\": \"count\",\n          \"value\": 16,\n          \"unit\": \"tabelionato\",\n          \"status\": \"exact\",\n          \"expression\": \"16 tabelionatos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"representantes de 16 tabelionatos\",\n      \"action\": \"Falam em retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"object\": \"protestos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retirar e baratear\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"base_action\": \"retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tabelionatos_count\",\n          \"kind\": \"count\",\n          \"value\": 16,\n          \"unit\": \"tabelionato\",\n          \"status\": \"exact\",\n          \"expression\": \"16 tabelionatos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"protestos\",\n      \"action\": \"pode custar mais que a própria conta\",\n      \"object\": \"a própria conta\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"custar mais que\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode custar mais que a própria conta\",\n      \"base_action\": \"pode custar mais que a própria conta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A medida é enquadrada criticamente como alívio para endividados usado como vitrine eleitoral, sem enfrentar as causas do endividamento.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "97b2bd3ae01c784cc62c360a7a8189b3c661a0001db2f07f3de8d055fd0a311c",
+          "input_sha256": "5bf4718cd46005f95bbbb8c71e0db9b7d2ea185f0ebdd788f65d3aeb1cc433b8",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Alívio para famílias endividadas apresentado por Celina Leão em contexto de campanha de reeleição\",\n  \"subtopics\": [\n    \"Retirada de protestos “indevidos” sem custo\",\n    \"Redução do custo de regularização\",\n    \"Crítica ao uso eleitoral da medida e ao sistema de endividamento\"\n  ],\n  \"central_entities\": [\n    \"Celina Leão\",\n    \"16 tabelionatos\",\n    \"famílias endividadas\",\n    \"governo\",\n    \"cartórios\",\n    \"protestos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A operação parece uma aliança conveniente entre governo e cartórios.\",\n    \"A medida transforma a angústia de quem deve em vitrine eleitoral e concentra nos cartórios o controle sobre a resolução dos protestos.\",\n    \"Reduzir a tarifa é um paliativo útil para a campanha e desvia o foco do sistema que mantém pessoas presas às dívidas.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Celina Leão\",\n      \"action\": \"aparece diante de representantes de 16 tabelionatos oferecendo alívio a famílias endividadas\",\n      \"object\": \"famílias endividadas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"oferecer alívio\",\n      \"negation_scope\": null,\n      \"signed_action\": \"oferecendo alívio\",\n      \"base_action\": \"oferecendo alívio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tabelionatos_count\",\n          \"kind\": \"count\",\n          \"value\": 16,\n          \"unit\": \"tabelionato\",\n          \"status\": \"exact\",\n          \"expression\": \"16 tabelionatos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"representantes de 16 tabelionatos\",\n      \"action\": \"Falam em retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"object\": \"protestos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"retirar e baratear\",\n      \"negation_scope\": null,\n      \"signed_action\": \"retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"base_action\": \"retirar protestos “indevidos” sem custo e baratear a regularização\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tabelionatos_count\",\n          \"kind\": \"count\",\n          \"value\": 16,\n          \"unit\": \"tabelionato\",\n          \"status\": \"exact\",\n          \"expression\": \"16 tabelionatos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"protestos\",\n      \"action\": \"pode custar mais que a própria conta\",\n      \"object\": \"a própria conta\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"custar mais que\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode custar mais que a própria conta\",\n      \"base_action\": \"pode custar mais que a própria conta\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A medida é enquadrada criticamente como alívio para endividados usado como vitrine eleitoral, sem enfrentar as causas do endividamento.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "9202b4157f333ca8f7d9475b338e480eebde0d048c3e30e4f3e47c189ce36985"
+}

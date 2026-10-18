@@ -1,0 +1,147 @@
+{
+  "inputs": {
+    "text": "Carlinhos Maia, com mais de 36 milhões de seguidores, ainda não decidiu entre Lula e Flávio Bolsonaro no segundo turno de 2026. Não há prova de que tenha recebido um Pix para defender Lula, e espalhar isso como fato é irresponsável. Mas a patrulha política revela o problema: querem transformar qualquer pessoa conhecida em cabo eleitoral e tratar a discordância como traição. Ninguém deve ser forçado a vestir a camisa de um grupo; ainda assim, o país precisa olhar com seriedade para as propostas e para as consequências de cada escolha — não para a pressão da militância.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Indecisão de Carlinhos Maia sobre apoiar candidatos no segundo turno de 2026 e pressão política por posicionamento",
+    "subtopics": [
+      "Alegação sem prova de pagamento via Pix para defender Lula",
+      "Pressão para que pessoas conhecidas atuem como cabos eleitorais",
+      "Avaliação de propostas e consequências em vez de pressão da militância"
+    ],
+    "central_entities": [
+      "Carlinhos Maia",
+      "Lula",
+      "Flávio Bolsonaro"
+    ],
+    "central_relations": [
+      {
+        "subject": "Carlinhos Maia",
+        "action": "tem mais de 36 milhões de seguidores",
+        "object": "seguidores",
+        "polarity": "affirmed",
+        "predicate": "tem seguidores",
+        "negation_scope": null,
+        "signed_action": "tem mais de 36 milhões de seguidores",
+        "base_action": "tem seguidores",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "follower_count",
+            "value": 36000000.0,
+            "unit": "follower",
+            "kind": "count",
+            "status": "approximate",
+            "expression": "mais de 36 milhões"
+          }
+        ]
+      },
+      {
+        "subject": "Carlinhos Maia",
+        "action": "ainda não decidiu entre",
+        "object": "Lula e Flávio Bolsonaro",
+        "polarity": "negated",
+        "predicate": "decidiu entre",
+        "negation_scope": "não decidiu",
+        "signed_action": "ainda não decidiu entre",
+        "base_action": "decidiu entre",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          }
+        ]
+      },
+      {
+        "subject": "Carlinhos Maia",
+        "action": "Não há prova de que tenha recebido um Pix para defender Lula",
+        "object": "Lula",
+        "polarity": "negated",
+        "predicate": "há prova de que tenha recebido um Pix para defender",
+        "negation_scope": "Não há prova",
+        "signed_action": "Não há prova de que tenha recebido um Pix para defender Lula",
+        "base_action": "há prova de que tenha recebido um Pix para defender Lula",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Crítica à pressão política para que pessoas conhecidas declarem apoio e à transformação da discordância em traição.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Espalhar como fato que Carlinhos Maia recebeu um Pix para defender Lula é irresponsável.",
+      "Ninguém deve ser forçado a vestir a camisa de um grupo.",
+      "O país precisa olhar com seriedade para as propostas e as consequências de cada escolha, não para a pressão da militância."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "7ad7ea810031b5e1bf9b72834fad3e760dea2136ae0e7e55372890f18869c1e5",
+      "input_sha256": "1f1478e2bf0542536352a2ff5dee9492e43eba93a2089ef7bc7e5f00dfc3ea0b",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Indecisão de Carlinhos Maia sobre apoiar candidatos no segundo turno de 2026 e pressão política por posicionamento\",\n  \"subtopics\": [\n    \"Alegação sem prova de pagamento via Pix para defender Lula\",\n    \"Pressão para que pessoas conhecidas atuem como cabos eleitorais\",\n    \"Avaliação de propostas e consequências em vez de pressão da militância\"\n  ],\n  \"central_entities\": [\n    \"Carlinhos Maia\",\n    \"Lula\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Espalhar como fato que Carlinhos Maia recebeu um Pix para defender Lula é irresponsável.\",\n    \"Ninguém deve ser forçado a vestir a camisa de um grupo.\",\n    \"O país precisa olhar com seriedade para as propostas e as consequências de cada escolha, não para a pressão da militância.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"tem mais de 36 milhões de seguidores\",\n      \"object\": \"seguidores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tem seguidores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem mais de 36 milhões de seguidores\",\n      \"base_action\": \"tem seguidores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"follower_count\",\n          \"kind\": \"count\",\n          \"value\": 36000000,\n          \"unit\": \"follower\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 36 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"ainda não decidiu entre\",\n      \"object\": \"Lula e Flávio Bolsonaro\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"decidiu entre\",\n      \"negation_scope\": \"não decidiu\",\n      \"signed_action\": \"ainda não decidiu entre\",\n      \"base_action\": \"decidiu entre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"Não há prova de que tenha recebido um Pix para defender Lula\",\n      \"object\": \"Lula\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"há prova de que tenha recebido um Pix para defender\",\n      \"negation_scope\": \"Não há prova\",\n      \"signed_action\": \"Não há prova de que tenha recebido um Pix para defender Lula\",\n      \"base_action\": \"há prova de que tenha recebido um Pix para defender Lula\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica à pressão política para que pessoas conhecidas declarem apoio e à transformação da discordância em traição.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "7ad7ea810031b5e1bf9b72834fad3e760dea2136ae0e7e55372890f18869c1e5",
+          "input_sha256": "1f1478e2bf0542536352a2ff5dee9492e43eba93a2089ef7bc7e5f00dfc3ea0b",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Indecisão de Carlinhos Maia sobre apoiar candidatos no segundo turno de 2026 e pressão política por posicionamento\",\n  \"subtopics\": [\n    \"Alegação sem prova de pagamento via Pix para defender Lula\",\n    \"Pressão para que pessoas conhecidas atuem como cabos eleitorais\",\n    \"Avaliação de propostas e consequências em vez de pressão da militância\"\n  ],\n  \"central_entities\": [\n    \"Carlinhos Maia\",\n    \"Lula\",\n    \"Flávio Bolsonaro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Espalhar como fato que Carlinhos Maia recebeu um Pix para defender Lula é irresponsável.\",\n    \"Ninguém deve ser forçado a vestir a camisa de um grupo.\",\n    \"O país precisa olhar com seriedade para as propostas e as consequências de cada escolha, não para a pressão da militância.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"tem mais de 36 milhões de seguidores\",\n      \"object\": \"seguidores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"tem seguidores\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem mais de 36 milhões de seguidores\",\n      \"base_action\": \"tem seguidores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"follower_count\",\n          \"kind\": \"count\",\n          \"value\": 36000000,\n          \"unit\": \"follower\",\n          \"status\": \"approximate\",\n          \"expression\": \"mais de 36 milhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"ainda não decidiu entre\",\n      \"object\": \"Lula e Flávio Bolsonaro\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"decidiu entre\",\n      \"negation_scope\": \"não decidiu\",\n      \"signed_action\": \"ainda não decidiu entre\",\n      \"base_action\": \"decidiu entre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Carlinhos Maia\",\n      \"action\": \"Não há prova de que tenha recebido um Pix para defender Lula\",\n      \"object\": \"Lula\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"há prova de que tenha recebido um Pix para defender\",\n      \"negation_scope\": \"Não há prova\",\n      \"signed_action\": \"Não há prova de que tenha recebido um Pix para defender Lula\",\n      \"base_action\": \"há prova de que tenha recebido um Pix para defender Lula\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica à pressão política para que pessoas conhecidas declarem apoio e à transformação da discordância em traição.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "683af9ef9b7874533c42dfea43f1bb342adc35877394b360a9c291fc5e658c23"
+}

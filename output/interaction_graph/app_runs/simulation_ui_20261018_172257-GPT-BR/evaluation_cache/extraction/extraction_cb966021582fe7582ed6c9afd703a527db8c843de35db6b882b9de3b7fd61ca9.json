@@ -1,0 +1,230 @@
+{
+  "inputs": {
+    "text": "Reduzir impostos sobre combustíveis é o mínimo para aliviar famílias e trabalhadores, mas anunciar a medida a 16 dias do segundo turno, marcado para 25 de outubro, tem evidente cheiro de cálculo eleitoral. Zerar R$ 0,89 por litro de PIS/Cofins e Cide, ampliar a desoneração do etanol hidratado e elevar subvenções ao etanol e ao diesel aumenta o custo mensal estimado de R$ 2,1 bilhões para R$ 2,8 bilhões — dinheiro que sai dos contribuintes.\n\nO país precisa de uma política fiscal séria e duradoura, não de medidas de ocasião para conquistar aplausos às vésperas da votação. O Estado não deve tratar o bolso das famílias como instrumento de campanha: aliviar o custo de vida é importante, mas sem responsabilidade com o dinheiro público esse alívio pode cobrar a conta depois.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Crítica à redução de impostos sobre combustíveis anunciada às vésperas do segundo turno e ao seu custo fiscal",
+    "subtopics": [
+      "Desoneração de PIS/Cofins e Cide",
+      "Subvenções ao etanol e ao diesel",
+      "Cálculo eleitoral",
+      "Responsabilidade com o dinheiro público"
+    ],
+    "central_entities": [
+      "famílias",
+      "trabalhadores",
+      "PIS/Cofins",
+      "Cide",
+      "etanol hidratado",
+      "etanol",
+      "diesel",
+      "contribuintes",
+      "Estado",
+      "país",
+      "segundo turno"
+    ],
+    "central_relations": [
+      {
+        "subject": "Reduzir impostos sobre combustíveis",
+        "action": "aliviar famílias e trabalhadores",
+        "object": "famílias e trabalhadores",
+        "polarity": "affirmed",
+        "predicate": "aliviar",
+        "negation_scope": null,
+        "signed_action": "aliviar famílias e trabalhadores",
+        "base_action": "aliviar famílias e trabalhadores",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      },
+      {
+        "subject": "anunciar a medida",
+        "action": "ocorre a 16 dias do segundo turno",
+        "object": "segundo turno",
+        "polarity": "affirmed",
+        "predicate": "ocorre",
+        "negation_scope": null,
+        "signed_action": "anunciar a medida a 16 dias do segundo turno",
+        "base_action": "anunciar a medida a 16 dias do segundo turno",
+        "duration_status": "exact",
+        "duration_value": 16.0,
+        "duration_unit": "day",
+        "duration_expression": "16 dias",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "announcement_lead_time",
+            "value": 16.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "16 dias"
+          },
+          {
+            "role": "runoff_day_of_month",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          }
+        ]
+      },
+      {
+        "subject": "Zerar PIS/Cofins e Cide, ampliar a desoneração do etanol hidratado e elevar subvenções ao etanol e ao diesel",
+        "action": "aumenta",
+        "object": "custo mensal estimado",
+        "polarity": "affirmed",
+        "predicate": "aumenta",
+        "negation_scope": null,
+        "signed_action": "aumenta o custo mensal estimado",
+        "base_action": "aumenta o custo mensal estimado",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "tax_reduction_per_liter",
+            "value": 0.89,
+            "unit": "BRL/liter",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 0,89 por litro"
+          },
+          {
+            "role": "lower_bound",
+            "value": 2100000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,1 bilhões"
+          },
+          {
+            "role": "upper_bound",
+            "value": 2800000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,8 bilhões"
+          }
+        ]
+      },
+      {
+        "subject": "dinheiro",
+        "action": "sai de",
+        "object": "contribuintes",
+        "polarity": "affirmed",
+        "predicate": "sai",
+        "negation_scope": null,
+        "signed_action": "sai dos contribuintes",
+        "base_action": "sai dos contribuintes",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "país",
+        "action": "precisa de",
+        "object": "uma política fiscal séria e duradoura",
+        "polarity": "affirmed",
+        "predicate": "precisa",
+        "negation_scope": null,
+        "signed_action": "precisa de uma política fiscal séria e duradoura",
+        "base_action": "precisa de uma política fiscal séria e duradoura",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      },
+      {
+        "subject": "Estado",
+        "action": "não deve tratar o bolso das famílias como instrumento de campanha",
+        "object": "o bolso das famílias como instrumento de campanha",
+        "polarity": "negated",
+        "predicate": "deve tratar",
+        "negation_scope": "deve tratar o bolso das famílias como instrumento de campanha",
+        "signed_action": "não deve tratar o bolso das famílias como instrumento de campanha",
+        "base_action": "deve tratar o bolso das famílias como instrumento de campanha",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "recommendation",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Editorial apresenta a redução de impostos sobre combustíveis como alívio necessário, mas critica seu anúncio às vésperas da votação e alerta para o custo aos contribuintes e a falta de responsabilidade fiscal.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Reduzir impostos sobre combustíveis é o mínimo para aliviar famílias e trabalhadores.",
+      "Anunciar a medida perto do segundo turno tem evidente cheiro de cálculo eleitoral.",
+      "O país precisa de uma política fiscal séria e duradoura, não de medidas de ocasião para conquistar aplausos.",
+      "O Estado não deve tratar o bolso das famílias como instrumento de campanha.",
+      "Aliviar o custo de vida é importante, mas sem responsabilidade com o dinheiro público esse alívio pode cobrar a conta depois."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "781a5a90876341c176ca6c930420c2ad50ae38841609abaae8c66265ad2c1f70",
+      "input_sha256": "5a0b3d29ea374b830ac063b176285c2724159a66ceeed8dbe1a326ed7d524c7c",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Crítica à redução de impostos sobre combustíveis anunciada às vésperas do segundo turno e ao seu custo fiscal\",\n  \"subtopics\": [\n    \"Desoneração de PIS/Cofins e Cide\",\n    \"Subvenções ao etanol e ao diesel\",\n    \"Cálculo eleitoral\",\n    \"Responsabilidade com o dinheiro público\"\n  ],\n  \"central_entities\": [\n    \"famílias\",\n    \"trabalhadores\",\n    \"PIS/Cofins\",\n    \"Cide\",\n    \"etanol hidratado\",\n    \"etanol\",\n    \"diesel\",\n    \"contribuintes\",\n    \"Estado\",\n    \"país\",\n    \"segundo turno\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Reduzir impostos sobre combustíveis é o mínimo para aliviar famílias e trabalhadores.\",\n    \"Anunciar a medida perto do segundo turno tem evidente cheiro de cálculo eleitoral.\",\n    \"O país precisa de uma política fiscal séria e duradoura, não de medidas de ocasião para conquistar aplausos.\",\n    \"O Estado não deve tratar o bolso das famílias como instrumento de campanha.\",\n    \"Aliviar o custo de vida é importante, mas sem responsabilidade com o dinheiro público esse alívio pode cobrar a conta depois.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Reduzir impostos sobre combustíveis\",\n      \"action\": \"aliviar famílias e trabalhadores\",\n      \"object\": \"famílias e trabalhadores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aliviar famílias e trabalhadores\",\n      \"base_action\": \"aliviar famílias e trabalhadores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"anunciar a medida\",\n      \"action\": \"ocorre a 16 dias do segundo turno\",\n      \"object\": \"segundo turno\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ocorre\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciar a medida a 16 dias do segundo turno\",\n      \"base_action\": \"anunciar a medida a 16 dias do segundo turno\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 16,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"16 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"announcement_lead_time\",\n          \"kind\": \"duration\",\n          \"value\": 16,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"16 dias\"\n        },\n        {\n          \"role\": \"runoff_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Zerar PIS/Cofins e Cide, ampliar a desoneração do etanol hidratado e elevar subvenções ao etanol e ao diesel\",\n      \"action\": \"aumenta\",\n      \"object\": \"custo mensal estimado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aumenta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aumenta o custo mensal estimado\",\n      \"base_action\": \"aumenta o custo mensal estimado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tax_reduction_per_liter\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL/liter\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        },\n        {\n          \"role\": \"lower_bound\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"upper_bound\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"dinheiro\",\n      \"action\": \"sai de\",\n      \"object\": \"contribuintes\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"sai\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sai dos contribuintes\",\n      \"base_action\": \"sai dos contribuintes\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"país\",\n      \"action\": \"precisa de\",\n      \"object\": \"uma política fiscal séria e duradoura\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"precisa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"precisa de uma política fiscal séria e duradoura\",\n      \"base_action\": \"precisa de uma política fiscal séria e duradoura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Estado\",\n      \"action\": \"não deve tratar o bolso das famílias como instrumento de campanha\",\n      \"object\": \"o bolso das famílias como instrumento de campanha\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve tratar\",\n      \"negation_scope\": \"deve tratar o bolso das famílias como instrumento de campanha\",\n      \"signed_action\": \"não deve tratar o bolso das famílias como instrumento de campanha\",\n      \"base_action\": \"deve tratar o bolso das famílias como instrumento de campanha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Editorial apresenta a redução de impostos sobre combustíveis como alívio necessário, mas critica seu anúncio às vésperas da votação e alerta para o custo aos contribuintes e a falta de responsabilidade fiscal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "781a5a90876341c176ca6c930420c2ad50ae38841609abaae8c66265ad2c1f70",
+          "input_sha256": "5a0b3d29ea374b830ac063b176285c2724159a66ceeed8dbe1a326ed7d524c7c",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Crítica à redução de impostos sobre combustíveis anunciada às vésperas do segundo turno e ao seu custo fiscal\",\n  \"subtopics\": [\n    \"Desoneração de PIS/Cofins e Cide\",\n    \"Subvenções ao etanol e ao diesel\",\n    \"Cálculo eleitoral\",\n    \"Responsabilidade com o dinheiro público\"\n  ],\n  \"central_entities\": [\n    \"famílias\",\n    \"trabalhadores\",\n    \"PIS/Cofins\",\n    \"Cide\",\n    \"etanol hidratado\",\n    \"etanol\",\n    \"diesel\",\n    \"contribuintes\",\n    \"Estado\",\n    \"país\",\n    \"segundo turno\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Reduzir impostos sobre combustíveis é o mínimo para aliviar famílias e trabalhadores.\",\n    \"Anunciar a medida perto do segundo turno tem evidente cheiro de cálculo eleitoral.\",\n    \"O país precisa de uma política fiscal séria e duradoura, não de medidas de ocasião para conquistar aplausos.\",\n    \"O Estado não deve tratar o bolso das famílias como instrumento de campanha.\",\n    \"Aliviar o custo de vida é importante, mas sem responsabilidade com o dinheiro público esse alívio pode cobrar a conta depois.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Reduzir impostos sobre combustíveis\",\n      \"action\": \"aliviar famílias e trabalhadores\",\n      \"object\": \"famílias e trabalhadores\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aliviar famílias e trabalhadores\",\n      \"base_action\": \"aliviar famílias e trabalhadores\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"anunciar a medida\",\n      \"action\": \"ocorre a 16 dias do segundo turno\",\n      \"object\": \"segundo turno\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ocorre\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciar a medida a 16 dias do segundo turno\",\n      \"base_action\": \"anunciar a medida a 16 dias do segundo turno\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 16,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"16 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"announcement_lead_time\",\n          \"kind\": \"duration\",\n          \"value\": 16,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"16 dias\"\n        },\n        {\n          \"role\": \"runoff_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Zerar PIS/Cofins e Cide, ampliar a desoneração do etanol hidratado e elevar subvenções ao etanol e ao diesel\",\n      \"action\": \"aumenta\",\n      \"object\": \"custo mensal estimado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aumenta\",\n      \"negation_scope\": null,\n      \"signed_action\": \"aumenta o custo mensal estimado\",\n      \"base_action\": \"aumenta o custo mensal estimado\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tax_reduction_per_liter\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL/liter\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        },\n        {\n          \"role\": \"lower_bound\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"upper_bound\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"BRL\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"dinheiro\",\n      \"action\": \"sai de\",\n      \"object\": \"contribuintes\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"sai\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sai dos contribuintes\",\n      \"base_action\": \"sai dos contribuintes\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"país\",\n      \"action\": \"precisa de\",\n      \"object\": \"uma política fiscal séria e duradoura\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"precisa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"precisa de uma política fiscal séria e duradoura\",\n      \"base_action\": \"precisa de uma política fiscal séria e duradoura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Estado\",\n      \"action\": \"não deve tratar o bolso das famílias como instrumento de campanha\",\n      \"object\": \"o bolso das famílias como instrumento de campanha\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"deve tratar\",\n      \"negation_scope\": \"deve tratar o bolso das famílias como instrumento de campanha\",\n      \"signed_action\": \"não deve tratar o bolso das famílias como instrumento de campanha\",\n      \"base_action\": \"deve tratar o bolso das famílias como instrumento de campanha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"recommendation\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Editorial apresenta a redução de impostos sobre combustíveis como alívio necessário, mas critica seu anúncio às vésperas da votação e alerta para o custo aos contribuintes e a falta de responsabilidade fiscal.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "174c0bf2a92f9187ccdfcad3ea3651d9d099860b651d36d67b0f6014d67d7a07"
+}

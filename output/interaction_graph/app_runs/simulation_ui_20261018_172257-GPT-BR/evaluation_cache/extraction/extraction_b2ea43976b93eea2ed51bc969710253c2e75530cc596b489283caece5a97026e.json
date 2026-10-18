@@ -1,0 +1,239 @@
+{
+  "inputs": {
+    "text": "A 16 dias do segundo turno, marcado para 25 de outubro, o governo anunciou zerar os tributos federais sobre a gasolina, baixar o preço em R$ 0,89 por litro e ampliar benefícios ao etanol e ao diesel. O custo mensal estimado subiu de R$ 2,1 bilhões para R$ 2,8 bilhões.\n\nCombustível mais barato pode aliviar quem precisa dele para trabalhar, mas esta renúncia fiscal não é uma política social duradoura. Na prática, tende a favorecer mais quem consegue consumir mais combustível — e não resolve a insegurança econômica nem as desigualdades que tornam tantas pessoas vulneráveis aos aumentos de preços. Com a eleição tão próxima, a medida parece sobretudo uma tentativa de comprar alívio imediato, enquanto o compromisso permanente com quem mais precisa continua em falta.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Anúncio de cortes nos tributos sobre combustíveis e ampliação de benefícios perto do segundo turno, com crítica à medida como alívio imediato e política social não duradoura.",
+    "subtopics": [
+      "Redução anunciada no preço da gasolina",
+      "Aumento do custo mensal estimado",
+      "Possível benefício para quem depende de combustível para trabalhar",
+      "Efeitos distributivos e insegurança econômica"
+    ],
+    "central_entities": [
+      "governo",
+      "segundo turno",
+      "gasolina",
+      "etanol",
+      "diesel"
+    ],
+    "central_relations": [
+      {
+        "subject": "governo",
+        "action": "anunciou zerar os tributos federais sobre",
+        "object": "gasolina",
+        "polarity": "affirmed",
+        "predicate": "zerar tributos federais",
+        "negation_scope": null,
+        "signed_action": "anunciou zerar os tributos federais sobre",
+        "base_action": "anunciou zerar os tributos federais sobre",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "governo",
+        "action": "anunciou baixar o preço em R$ 0,89 por litro",
+        "object": "gasolina",
+        "polarity": "affirmed",
+        "predicate": "baixar preço",
+        "negation_scope": null,
+        "signed_action": "anunciou baixar o preço em R$ 0,89 por litro",
+        "base_action": "anunciou baixar o preço em R$ 0,89 por litro",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "price_reduction",
+            "value": 0.89,
+            "unit": "BRL por litro",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 0,89 por litro"
+          }
+        ]
+      },
+      {
+        "subject": "governo",
+        "action": "anunciou ampliar benefícios ao",
+        "object": "etanol e ao diesel",
+        "polarity": "affirmed",
+        "predicate": "ampliar benefícios",
+        "negation_scope": null,
+        "signed_action": "anunciou ampliar benefícios ao etanol e ao diesel",
+        "base_action": "anunciou ampliar benefícios ao etanol e ao diesel",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "custo mensal estimado",
+        "action": "subiu de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "object": "R$ 2,8 bilhões",
+        "polarity": "affirmed",
+        "predicate": "subir",
+        "negation_scope": null,
+        "signed_action": "subiu de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "base_action": "subiu de R$ 2,1 bilhões para R$ 2,8 bilhões",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "previous_monthly_cost",
+            "value": 2.1,
+            "unit": "bilhões de BRL por mês",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,1 bilhões"
+          },
+          {
+            "role": "revised_monthly_cost",
+            "value": 2.8,
+            "unit": "bilhões de BRL por mês",
+            "kind": "money",
+            "status": "approximate",
+            "expression": "R$ 2,8 bilhões"
+          }
+        ]
+      },
+      {
+        "subject": "Combustível mais barato",
+        "action": "pode aliviar",
+        "object": "quem precisa dele para trabalhar",
+        "polarity": "affirmed",
+        "predicate": "aliviar",
+        "negation_scope": null,
+        "signed_action": "pode aliviar",
+        "base_action": "pode aliviar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "renúncia fiscal",
+        "action": "não é uma política social duradoura",
+        "object": "uma política social duradoura",
+        "polarity": "negated",
+        "predicate": "ser política social duradoura",
+        "negation_scope": "não",
+        "signed_action": "não é uma política social duradoura",
+        "base_action": "é uma política social duradoura",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a medida",
+        "action": "tende a favorecer mais quem consegue consumir mais combustível",
+        "object": "quem consegue consumir mais combustível",
+        "polarity": "affirmed",
+        "predicate": "favorecer",
+        "negation_scope": null,
+        "signed_action": "tende a favorecer mais quem consegue consumir mais combustível",
+        "base_action": "tende a favorecer mais quem consegue consumir mais combustível",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "a medida",
+        "action": "não resolve a insegurança econômica nem as desigualdades",
+        "object": "a insegurança econômica nem as desigualdades",
+        "polarity": "negated",
+        "predicate": "resolver",
+        "negation_scope": "não",
+        "signed_action": "não resolve a insegurança econômica nem as desigualdades",
+        "base_action": "resolve a insegurança econômica nem as desigualdades",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A medida é apresentada como alívio imediato anunciado perto do segundo turno, mas insuficiente para enfrentar vulnerabilidade econômica e desigualdades.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A renúncia fiscal não é uma política social duradoura.",
+      "A medida tende a favorecer mais quem consegue consumir mais combustível.",
+      "A medida não resolve a insegurança econômica nem as desigualdades que tornam pessoas vulneráveis aos aumentos de preços.",
+      "Com a eleição próxima, a medida parece sobretudo uma tentativa de comprar alívio imediato, enquanto falta compromisso permanente com quem mais precisa."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "f9b8017f3c84a105e5139f812683966f5e691ee9cd42c59ee2f756e4abb46128",
+      "input_sha256": "d101536da9e2b6c1fcd7f341a3dfecaebf4d22e6890e800b0cf74e088538f703",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Anúncio de cortes nos tributos sobre combustíveis e ampliação de benefícios perto do segundo turno, com crítica à medida como alívio imediato e política social não duradoura.\",\n  \"subtopics\": [\n    \"Redução anunciada no preço da gasolina\",\n    \"Aumento do custo mensal estimado\",\n    \"Possível benefício para quem depende de combustível para trabalhar\",\n    \"Efeitos distributivos e insegurança econômica\"\n  ],\n  \"central_entities\": [\n    \"governo\",\n    \"segundo turno\",\n    \"gasolina\",\n    \"etanol\",\n    \"diesel\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A renúncia fiscal não é uma política social duradoura.\",\n    \"A medida tende a favorecer mais quem consegue consumir mais combustível.\",\n    \"A medida não resolve a insegurança econômica nem as desigualdades que tornam pessoas vulneráveis aos aumentos de preços.\",\n    \"Com a eleição próxima, a medida parece sobretudo uma tentativa de comprar alívio imediato, enquanto falta compromisso permanente com quem mais precisa.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou zerar os tributos federais sobre\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"zerar tributos federais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou zerar os tributos federais sobre\",\n      \"base_action\": \"anunciou zerar os tributos federais sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"baixar preço\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"base_action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"price_reduction\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL por litro\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou ampliar benefícios ao\",\n      \"object\": \"etanol e ao diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar benefícios\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"base_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"custo mensal estimado\",\n      \"action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"object\": \"R$ 2,8 bilhões\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"base_action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"previous_monthly_cost\",\n          \"kind\": \"money\",\n          \"value\": 2.1,\n          \"unit\": \"bilhões de BRL por mês\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"revised_monthly_cost\",\n          \"kind\": \"money\",\n          \"value\": 2.8,\n          \"unit\": \"bilhões de BRL por mês\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Combustível mais barato\",\n      \"action\": \"pode aliviar\",\n      \"object\": \"quem precisa dele para trabalhar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode aliviar\",\n      \"base_action\": \"pode aliviar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"renúncia fiscal\",\n      \"action\": \"não é uma política social duradoura\",\n      \"object\": \"uma política social duradoura\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser política social duradoura\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não é uma política social duradoura\",\n      \"base_action\": \"é uma política social duradoura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a medida\",\n      \"action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"object\": \"quem consegue consumir mais combustível\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"favorecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"base_action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a medida\",\n      \"action\": \"não resolve a insegurança econômica nem as desigualdades\",\n      \"object\": \"a insegurança econômica nem as desigualdades\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"resolver\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não resolve a insegurança econômica nem as desigualdades\",\n      \"base_action\": \"resolve a insegurança econômica nem as desigualdades\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A medida é apresentada como alívio imediato anunciado perto do segundo turno, mas insuficiente para enfrentar vulnerabilidade econômica e desigualdades.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "f9b8017f3c84a105e5139f812683966f5e691ee9cd42c59ee2f756e4abb46128",
+          "input_sha256": "d101536da9e2b6c1fcd7f341a3dfecaebf4d22e6890e800b0cf74e088538f703",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Anúncio de cortes nos tributos sobre combustíveis e ampliação de benefícios perto do segundo turno, com crítica à medida como alívio imediato e política social não duradoura.\",\n  \"subtopics\": [\n    \"Redução anunciada no preço da gasolina\",\n    \"Aumento do custo mensal estimado\",\n    \"Possível benefício para quem depende de combustível para trabalhar\",\n    \"Efeitos distributivos e insegurança econômica\"\n  ],\n  \"central_entities\": [\n    \"governo\",\n    \"segundo turno\",\n    \"gasolina\",\n    \"etanol\",\n    \"diesel\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A renúncia fiscal não é uma política social duradoura.\",\n    \"A medida tende a favorecer mais quem consegue consumir mais combustível.\",\n    \"A medida não resolve a insegurança econômica nem as desigualdades que tornam pessoas vulneráveis aos aumentos de preços.\",\n    \"Com a eleição próxima, a medida parece sobretudo uma tentativa de comprar alívio imediato, enquanto falta compromisso permanente com quem mais precisa.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou zerar os tributos federais sobre\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"zerar tributos federais\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou zerar os tributos federais sobre\",\n      \"base_action\": \"anunciou zerar os tributos federais sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"object\": \"gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"baixar preço\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"base_action\": \"anunciou baixar o preço em R$ 0,89 por litro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"price_reduction\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL por litro\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"anunciou ampliar benefícios ao\",\n      \"object\": \"etanol e ao diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar benefícios\",\n      \"negation_scope\": null,\n      \"signed_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"base_action\": \"anunciou ampliar benefícios ao etanol e ao diesel\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"custo mensal estimado\",\n      \"action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"object\": \"R$ 2,8 bilhões\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"base_action\": \"subiu de R$ 2,1 bilhões para R$ 2,8 bilhões\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"previous_monthly_cost\",\n          \"kind\": \"money\",\n          \"value\": 2.1,\n          \"unit\": \"bilhões de BRL por mês\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"revised_monthly_cost\",\n          \"kind\": \"money\",\n          \"value\": 2.8,\n          \"unit\": \"bilhões de BRL por mês\",\n          \"status\": \"approximate\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Combustível mais barato\",\n      \"action\": \"pode aliviar\",\n      \"object\": \"quem precisa dele para trabalhar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aliviar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pode aliviar\",\n      \"base_action\": \"pode aliviar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"renúncia fiscal\",\n      \"action\": \"não é uma política social duradoura\",\n      \"object\": \"uma política social duradoura\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser política social duradoura\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não é uma política social duradoura\",\n      \"base_action\": \"é uma política social duradoura\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a medida\",\n      \"action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"object\": \"quem consegue consumir mais combustível\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"favorecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"base_action\": \"tende a favorecer mais quem consegue consumir mais combustível\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a medida\",\n      \"action\": \"não resolve a insegurança econômica nem as desigualdades\",\n      \"object\": \"a insegurança econômica nem as desigualdades\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"resolver\",\n      \"negation_scope\": \"não\",\n      \"signed_action\": \"não resolve a insegurança econômica nem as desigualdades\",\n      \"base_action\": \"resolve a insegurança econômica nem as desigualdades\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A medida é apresentada como alívio imediato anunciado perto do segundo turno, mas insuficiente para enfrentar vulnerabilidade econômica e desigualdades.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "f509b2b25e7cbbac51ed4db03e4af658413d83a7cf9ea9ec79f9d78058c7dcf0"
+}

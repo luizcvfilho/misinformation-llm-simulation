@@ -1,0 +1,166 @@
+{
+  "inputs": {
+    "text": "A condenação de Soraya Thronicke a pagar R$ 50 mil a Alfredo Gaspar deveria servir de alerta: acusação de estupro não é instrumento de disputa política, e uma acusação sem sustentação pode destruir reputações e corroer a confiança pública. Três dias antes, Gilmar Mendes arquivou a representação, acolhendo o parecer da PGR de que não havia base indiciária para abrir inquérito. Isso não prova, por si só, o que ocorreu; prova que não se pode tratar uma alegação gravíssima como fato estabelecido.\n\nImunidade parlamentar e liberdade de expressão não significam impunidade. Quem ocupa cargo público deve dar exemplo de respeito à lei, à presunção de inocência e à dignidade alheia. Sem esses limites, não há debate responsável: há vale-tudo, e são as instituições e a ordem pública que pagam a conta.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Condenação de Soraya Thronicke e limites no tratamento político de uma acusação de estupro",
+    "subtopics": [
+      "Arquivamento de representação por falta de base indiciária",
+      "Presunção de inocência e liberdade de expressão",
+      "Responsabilidade de ocupantes de cargos públicos"
+    ],
+    "central_entities": [
+      "Soraya Thronicke",
+      "Alfredo Gaspar",
+      "Gilmar Mendes",
+      "PGR"
+    ],
+    "central_relations": [
+      {
+        "subject": "Soraya Thronicke",
+        "action": "foi condenada a pagar",
+        "object": "Alfredo Gaspar",
+        "polarity": "affirmed",
+        "predicate": "condenar a pagar",
+        "negation_scope": null,
+        "signed_action": "condenação de Soraya Thronicke a pagar",
+        "base_action": "condenação de Soraya Thronicke a pagar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "payment_amount",
+            "value": 50000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 50 mil"
+          }
+        ]
+      },
+      {
+        "subject": "Gilmar Mendes",
+        "action": "arquivou",
+        "object": "a representação",
+        "polarity": "affirmed",
+        "predicate": "arquivar",
+        "negation_scope": null,
+        "signed_action": "arquivou a representação",
+        "base_action": "arquivou a representação",
+        "duration_status": "exact",
+        "duration_value": 3.0,
+        "duration_unit": "day",
+        "duration_expression": "Três dias antes",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "elapsed_time",
+            "value": 3.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "Três dias antes"
+          }
+        ]
+      },
+      {
+        "subject": "Gilmar Mendes",
+        "action": "acolheu",
+        "object": "o parecer da PGR",
+        "polarity": "affirmed",
+        "predicate": "acolher",
+        "negation_scope": null,
+        "signed_action": "acolhendo o parecer da PGR",
+        "base_action": "acolhendo o parecer da PGR",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PGR",
+        "action": "não havia base indiciária para abrir",
+        "object": "inquérito",
+        "polarity": "negated",
+        "predicate": "haver base indiciária",
+        "negation_scope": "não havia",
+        "signed_action": "não havia base indiciária para abrir inquérito",
+        "base_action": "havia base indiciária para abrir inquérito",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Comentário crítico que usa a condenação e o arquivamento da representação para defender cautela, presunção de inocência e responsabilidade no debate público.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A condenação deveria servir de alerta contra o uso de acusações de estupro como instrumento de disputa política.",
+      "Uma acusação sem sustentação pode destruir reputações e corroer a confiança pública.",
+      "Imunidade parlamentar e liberdade de expressão não significam impunidade.",
+      "Quem ocupa cargo público deve respeitar a lei, a presunção de inocência e a dignidade alheia.",
+      "Sem esses limites, não há debate responsável."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "ffd0194ee8d248c6b9960565f7b503af3c6ba22db7e407802b821ad86f9232c8",
+      "input_sha256": "ddf97c53e5aabcba4c2b78e4f6b8228b76c87638041360a1af0866a501d9a0e5",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Condenação de Soraya Thronicke e limites no tratamento político de uma acusação de estupro\",\n  \"subtopics\": [\n    \"Arquivamento de representação por falta de base indiciária\",\n    \"Presunção de inocência e liberdade de expressão\",\n    \"Responsabilidade de ocupantes de cargos públicos\"\n  ],\n  \"central_entities\": [\n    \"Soraya Thronicke\",\n    \"Alfredo Gaspar\",\n    \"Gilmar Mendes\",\n    \"PGR\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A condenação deveria servir de alerta contra o uso de acusações de estupro como instrumento de disputa política.\",\n    \"Uma acusação sem sustentação pode destruir reputações e corroer a confiança pública.\",\n    \"Imunidade parlamentar e liberdade de expressão não significam impunidade.\",\n    \"Quem ocupa cargo público deve respeitar a lei, a presunção de inocência e a dignidade alheia.\",\n    \"Sem esses limites, não há debate responsável.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Soraya Thronicke\",\n      \"action\": \"foi condenada a pagar\",\n      \"object\": \"Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"condenar a pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"condenação de Soraya Thronicke a pagar\",\n      \"base_action\": \"condenação de Soraya Thronicke a pagar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"payment_amount\",\n          \"kind\": \"money\",\n          \"value\": 50000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 50 mil\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"arquivou\",\n      \"object\": \"a representação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"arquivar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"arquivou a representação\",\n      \"base_action\": \"arquivou a representação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 3,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"Três dias antes\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"elapsed_time\",\n          \"kind\": \"duration\",\n          \"value\": 3,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"Três dias antes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"acolheu\",\n      \"object\": \"o parecer da PGR\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acolher\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acolhendo o parecer da PGR\",\n      \"base_action\": \"acolhendo o parecer da PGR\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PGR\",\n      \"action\": \"não havia base indiciária para abrir\",\n      \"object\": \"inquérito\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"haver base indiciária\",\n      \"negation_scope\": \"não havia\",\n      \"signed_action\": \"não havia base indiciária para abrir inquérito\",\n      \"base_action\": \"havia base indiciária para abrir inquérito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Comentário crítico que usa a condenação e o arquivamento da representação para defender cautela, presunção de inocência e responsabilidade no debate público.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "ffd0194ee8d248c6b9960565f7b503af3c6ba22db7e407802b821ad86f9232c8",
+          "input_sha256": "ddf97c53e5aabcba4c2b78e4f6b8228b76c87638041360a1af0866a501d9a0e5",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Condenação de Soraya Thronicke e limites no tratamento político de uma acusação de estupro\",\n  \"subtopics\": [\n    \"Arquivamento de representação por falta de base indiciária\",\n    \"Presunção de inocência e liberdade de expressão\",\n    \"Responsabilidade de ocupantes de cargos públicos\"\n  ],\n  \"central_entities\": [\n    \"Soraya Thronicke\",\n    \"Alfredo Gaspar\",\n    \"Gilmar Mendes\",\n    \"PGR\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A condenação deveria servir de alerta contra o uso de acusações de estupro como instrumento de disputa política.\",\n    \"Uma acusação sem sustentação pode destruir reputações e corroer a confiança pública.\",\n    \"Imunidade parlamentar e liberdade de expressão não significam impunidade.\",\n    \"Quem ocupa cargo público deve respeitar a lei, a presunção de inocência e a dignidade alheia.\",\n    \"Sem esses limites, não há debate responsável.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Soraya Thronicke\",\n      \"action\": \"foi condenada a pagar\",\n      \"object\": \"Alfredo Gaspar\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"condenar a pagar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"condenação de Soraya Thronicke a pagar\",\n      \"base_action\": \"condenação de Soraya Thronicke a pagar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"payment_amount\",\n          \"kind\": \"money\",\n          \"value\": 50000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 50 mil\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"arquivou\",\n      \"object\": \"a representação\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"arquivar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"arquivou a representação\",\n      \"base_action\": \"arquivou a representação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 3,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"Três dias antes\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"elapsed_time\",\n          \"kind\": \"duration\",\n          \"value\": 3,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"Três dias antes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Gilmar Mendes\",\n      \"action\": \"acolheu\",\n      \"object\": \"o parecer da PGR\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acolher\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acolhendo o parecer da PGR\",\n      \"base_action\": \"acolhendo o parecer da PGR\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PGR\",\n      \"action\": \"não havia base indiciária para abrir\",\n      \"object\": \"inquérito\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"haver base indiciária\",\n      \"negation_scope\": \"não havia\",\n      \"signed_action\": \"não havia base indiciária para abrir inquérito\",\n      \"base_action\": \"havia base indiciária para abrir inquérito\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Comentário crítico que usa a condenação e o arquivamento da representação para defender cautela, presunção de inocência e responsabilidade no debate público.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "a94b7b12798f5e166a3769e69e77a1b46c8bad10d4ea315dd51ba33012c45387"
+}
