@@ -16,6 +16,7 @@ from misinformation_simulation.analysis.stdi_evaluation import (
     EVALUATION_LABELS,
     available_evaluations,
 )
+from misinformation_simulation.apps.evaluation_selector import render_evaluation_selector
 from misinformation_simulation.apps.interaction_graph_attempts import find_attempts
 from misinformation_simulation.apps.interaction_graph_bulk_editor import render_bulk_node_editor
 from misinformation_simulation.apps.interaction_graph_canvas import render_graph_canvas
@@ -74,9 +75,8 @@ from misinformation_simulation.llm.service_tier import (
 from misinformation_simulation.simulation import run_news_interaction_graph
 from misinformation_simulation.simulation.io import resolve_project_path
 from misinformation_simulation.text_metrics.vad import DEFAULT_VAD_MODEL_NAME
-from misinformation_simulation.text_metrics.vad_evaluation import VAD_METHODS
 
-GRAPH_OUTPUT_LAYOUT_VERSION = 40
+GRAPH_OUTPUT_LAYOUT_VERSION = 41
 
 __all__ = [
     "render_sidebar",
@@ -165,17 +165,20 @@ def _render_execution_settings(
         index=widget_default("graph_rewrite_mode", GRAPH_REWRITE_MODES.index("interpretive"), 0),
         format_func=GRAPH_REWRITE_MODE_LABELS.__getitem__,
         key="graph_rewrite_mode",
-        help=(
-            "Applies to every node and every queued graph in this execution. "
-            "Faithful preserves factual content. Interpretive permits omissions and "
-            "unsupported causal interpretations according to each personality."
-        ),
+        help="Applies to every node and every queued graph in this execution.",
     )
     if rewrite_mode == "interpretive":
         st.caption(
-            "Experimental: each person receives only the previous message. Interpretations "
-            "may change, while retained names, numbers, dates, and quotes must remain accurate. "
-            "Greater STDI measures drift; it does not establish realism or factual falsity."
+            "Each person interprets and passes along only the previous message according to "
+            "their personality. They may omit context and add unsupported interpretations "
+            "of causes or intentions. Retained names, numbers, dates, and quotes must remain "
+            "accurate, without inventing concrete details."
+        )
+    else:
+        st.caption(
+            "Each person rewrites the received text according to their personality, changing "
+            "framing, emphasis, tone, and vocabulary while preserving factual content and "
+            "adding no new information."
         )
     with st.expander("Dataset columns"):
         default_text_column = (
@@ -246,24 +249,16 @@ def _render_execution_settings(
             "are generated. The first run may download the model."
         )
 
-        evaluate_dual_stdi = st.checkbox(
-            "Dual STDI (embeddings + LLM judge)",
-            value=widget_default("evaluate_dual_stdi", True, False),
-            key="evaluate_dual_stdi",
+        stdi_method = render_evaluation_selector(
+            "STDI method",
+            key="stdi_comparison_method",
+            methods={"cluster": "Cluster", "llm": "LLM", "dual": "Dual"},
             help=(
-                "Calculate both structural evaluations and average their complete scores "
-                "using the selected VAD. Disable to choose Cluster or LLM alone."
+                "Cluster uses embeddings; LLM uses a judge. Dual calculates both structural "
+                "evaluations and averages their complete scores using the selected VAD."
             ),
         )
-        single_stdi_method = "cluster"
-        if not evaluate_dual_stdi:
-            single_stdi_method = st.selectbox(
-                "STDI method",
-                options=["cluster", "llm"],
-                format_func=lambda method: {"cluster": "Cluster", "llm": "LLM"}[method],
-                key="single_stdi_method",
-            )
-        judge_requested = evaluate_dual_stdi or single_stdi_method == "llm"
+        judge_requested = stdi_method in {"dual", "llm"}
         repeat_judge = st.checkbox(
             "Repeat LLM judge evaluation",
             value=widget_default("repeat_stdi_judge", True, False),
@@ -294,16 +289,14 @@ def _render_execution_settings(
     vad_expander = st.expander("VAD evaluation")
     advanced_settings = _render_advanced_settings()
     with vad_expander:
-        vad_method = st.selectbox(
+        vad_method = render_evaluation_selector(
             "VAD method",
-            options=VAD_METHODS,
-            index=widget_default("vad_method", VAD_METHODS.index("dual"), 0),
-            format_func=lambda method: {
+            key="vad_method",
+            methods={
                 "model": DEFAULT_VAD_MODEL_NAME,
                 "llm": "LLM",
                 "dual": "Dual",
-            }[method],
-            key="vad_method",
+            },
             help=(
                 "Dual averages VAD drifts. With Dual STDI, each branch uses its corresponding VAD."
             ),
@@ -337,7 +330,7 @@ def _render_execution_settings(
         "max_rows": max_rows,
         "allow_title_fallback": allow_title_fallback,
         "rewrite_mode": rewrite_mode,
-        "stdi_comparison_method": "dual" if evaluate_dual_stdi else single_stdi_method,
+        "stdi_comparison_method": stdi_method,
         "vad_method": vad_method,
         "vad_llm_model": vad_llm_model,
         "vad_llm_provider": vad_llm_provider,

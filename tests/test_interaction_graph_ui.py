@@ -163,8 +163,7 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     app.selectbox(key="graph_rewrite_mode").set_value("interpretive").run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["rewrite_mode"] == "interpretive"
-    dual_control = next(control for control in app.checkbox if control.key == "evaluate_dual_stdi")
-    assert dual_control.value is True
+    assert app.selectbox(key="stdi_comparison_method").value == "dual"
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
     assert app.session_state.test_settings["stdi_judge_repeats"] == 3
     repeats_control = app.checkbox(key="repeat_stdi_judge")
@@ -177,12 +176,12 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     assert app.number_input(key="stdi_judge_repeats").disabled
     app.checkbox(key="repeat_stdi_judge").check().run(timeout=30)
     assert app.session_state.test_settings["stdi_judge_repeats"] == 5
-    app.checkbox(key="evaluate_dual_stdi").uncheck().run(timeout=30)
+    app.selectbox(key="stdi_comparison_method").set_value("cluster").run(timeout=30)
     assert not app.exception
     assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
     assert app.checkbox(key="repeat_stdi_judge").disabled
     assert app.number_input(key="stdi_judge_repeats").disabled
-    app.checkbox(key="evaluate_dual_stdi").check().run(timeout=30)
+    app.selectbox(key="stdi_comparison_method").set_value("dual").run(timeout=30)
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
     assert app.session_state.test_settings["stdi_judge_repeats"] == 5
 
@@ -211,6 +210,7 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     assert app.session_state.test_settings["vad_method"] == "dual"
     assert not app.selectbox(key="vad_llm_model_option").disabled
     assert app.selectbox(key="vad_method").options == [DEFAULT_VAD_MODEL_NAME, "LLM", "Dual"]
+    assert app.selectbox(key="stdi_comparison_method").options == ["Cluster", "LLM", "Dual"]
     assert [expander.label for expander in app.expander] == [
         "Dataset columns",
         "STDI evaluation",
@@ -224,10 +224,10 @@ st.session_state.test_settings = _render_execution_settings(df, df.columns.tolis
     assert app.session_state.test_settings["vad_method"] == "dual"
     assert app.session_state.test_settings["stdi_comparison_method"] == "dual"
     assert not app.selectbox(key="vad_llm_model_option").disabled
-    app.checkbox(key="evaluate_dual_stdi").uncheck().run(timeout=30)
+    app.selectbox(key="stdi_comparison_method").set_value("cluster").run(timeout=30)
     assert app.session_state.test_settings["stdi_comparison_method"] == "cluster"
     assert app.session_state.test_settings["vad_method"] == "dual"
-    app.selectbox(key="single_stdi_method").set_value("llm").run(timeout=30)
+    app.selectbox(key="stdi_comparison_method").set_value("llm").run(timeout=30)
     assert app.session_state.test_settings["stdi_comparison_method"] == "llm"
     assert not app.checkbox(key="repeat_stdi_judge").disabled
     assert app.session_state.test_settings["stdi_judge_repeats"] == 3

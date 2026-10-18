@@ -158,6 +158,8 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
         "Run recovery",
     ]
     app.text_input(key="current_graph_name").set_value("Edited graph").run(timeout=45)
+    app.selectbox(key="stdi_comparison_method").set_value("llm")
+    app.selectbox(key="vad_method").set_value("model").run(timeout=45)
     app.number_input(key="simulation_execution_settings_max_rows").set_value(7).run(timeout=45)
     app.multiselect(key="simulation_advanced_settings_rpm_providers").set_value(
         ["gemini", "grok"]
@@ -182,6 +184,8 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     )
     assert not app.exception
     assert app.text_input(key="current_graph_name").value == "Edited graph"
+    assert app.selectbox(key="stdi_comparison_method").value == "llm"
+    assert app.selectbox(key="vad_method").value == "model"
     assert app.number_input(key="simulation_execution_settings_max_rows").value == 7
     assert app.selectbox(key="openai_service_tier").value == "flex"
     assert app.checkbox(key="openai_flex_fallback").value is True

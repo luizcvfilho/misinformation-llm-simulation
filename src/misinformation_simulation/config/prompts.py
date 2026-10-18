@@ -37,8 +37,8 @@ Original text:
 GRAPH_REWRITE_MODES = ("faithful", "interpretive")
 
 GRAPH_REWRITE_MODE_LABELS = {
-    "faithful": "Faithful rewrite (preserve facts)",
-    "interpretive": "Interpretive relay (experimental)",
+    "faithful": "Fact-preserving rewrite",
+    "interpretive": "Interpretive relay",
 }
 
 INTERPRETIVE_SYSTEM_INSTRUCTION = (
