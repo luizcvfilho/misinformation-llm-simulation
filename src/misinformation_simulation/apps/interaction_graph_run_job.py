@@ -33,7 +33,11 @@ from misinformation_simulation.llm.credentials import ProviderAPIKeys, use_api_c
 from misinformation_simulation.llm.flex_fallback import FlexFallback, use_flex_fallback
 from misinformation_simulation.llm.pricing import load_pricing
 from misinformation_simulation.llm.progress import use_run_identity
-from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
+from misinformation_simulation.llm.rate_limit import (
+    SharedRequestLimiter,
+    request_limits_from_settings,
+    use_shared_limiter,
+)
 from misinformation_simulation.llm.recovery import (
     RecoverySession,
     RequestContext,
@@ -122,8 +126,9 @@ def _run_with_recovery(
     api_credentials: Mapping[str, ProviderAPIKeys] | None = None,
     **kwargs,
 ) -> None:
-    rpm = int(kwargs["settings"].get("max_requests_per_minute", 0)) or None
-    limiter = SharedRequestLimiter(rpm, job.cancel_event.is_set)
+    limiter = SharedRequestLimiter(
+        request_limits_from_settings(kwargs["settings"]), job.cancel_event.is_set
+    )
     try:
         with (
             use_api_credentials(api_credentials),
@@ -438,7 +443,8 @@ class _SequentialQueue:
                 news_id_column=self.settings["news_id_column"] or None,
                 max_rows=int(self.settings["max_rows"]),
                 sleep_seconds=float(self.settings["sleep_seconds"]),
-                max_requests_per_minute=int(self.settings["max_requests_per_minute"]) or None,
+                max_requests_per_minute=int(self.settings.get("max_requests_per_minute", 0))
+                or None,
                 retry_attempts=int(self.settings["retry_attempts"]),
                 allow_title_fallback=self.settings["allow_title_fallback"],
                 rewrite_mode=self.settings.get("rewrite_mode", "faithful"),

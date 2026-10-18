@@ -435,17 +435,7 @@ def _render_advanced_settings() -> dict[str, Any]:
             ),
             key="simulation_advanced_settings_max_simultaneous_runs",
         )
-        max_requests_per_minute = st.number_input(
-            "Max requests per minute",
-            min_value=0,
-            value=widget_default("simulation_advanced_settings_max_requests_per_minute", 0, "min"),
-            step=1,
-            help=(
-                "Shared by all news runs, nodes, evaluations and retries. "
-                "Requests are spaced evenly. Use 0 to disable the RPM limit."
-            ),
-            key="simulation_advanced_settings_max_requests_per_minute",
-        )
+        provider_rpm_limits = _render_provider_rpm_limits()
         retry_attempts = st.number_input(
             "Retry attempts",
             min_value=1,
@@ -498,7 +488,7 @@ def _render_advanced_settings() -> dict[str, Any]:
         "openai_flex_retry_seconds": float(openai_flex_retry_minutes) * 60,
         "reuse_previous_results": reuse_previous_results,
         "api_pricing_path": api_pricing_path,
-        "max_requests_per_minute": max_requests_per_minute,
+        "provider_rpm_limits": provider_rpm_limits,
         "max_simultaneous_runs": max_simultaneous_runs,
         "retry_attempts": retry_attempts,
         "topic_drift_provider": topic_drift_provider,
@@ -506,6 +496,40 @@ def _render_advanced_settings() -> dict[str, Any]:
         "output_dir": output_dir,
         "output_prefix": output_prefix,
     }
+
+
+def _render_provider_rpm_limits() -> dict[str, int]:
+    legacy_rpm = st.session_state.get("simulation_advanced_settings_max_requests_per_minute", 0)
+    legacy_provider = st.session_state.get("simulation_advanced_settings_rpm_provider", "gemini")
+    providers = st.multiselect(
+        "Providers with RPM limits",
+        options=[provider for provider in AVAILABLE_PROVIDERS if provider != "local"],
+        default=widget_default(
+            "simulation_advanced_settings_rpm_providers",
+            [legacy_provider] if legacy_rpm else [],
+            [],
+        ),
+        key="simulation_advanced_settings_rpm_providers",
+        help="Select any number of providers and set a separate RPM limit for each.",
+    )
+    st.caption(
+        "Each provider has an independent budget shared by its models, keys, news runs, "
+        "evaluations and retries. Requests are spaced evenly. "
+        "Providers left unselected or set to 0 have no RPM cap."
+    )
+    limits = {}
+    for provider in providers:
+        key = f"simulation_advanced_settings_provider_rpm_{provider}"
+        limits[provider] = int(
+            st.number_input(
+                f"Max requests per minute ({provider})",
+                min_value=0,
+                value=widget_default(key, legacy_rpm if provider == legacy_provider else 0, "min"),
+                step=1,
+                key=key,
+            )
+        )
+    return limits
 
 
 def _render_topic_drift_model_selector(provider: str = DEFAULT_LLM_PROVIDER.value) -> str:

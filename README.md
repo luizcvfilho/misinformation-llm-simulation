@@ -627,8 +627,8 @@ Duplicate key values are tried once. All-key exhaustion still requires normal re
 non-quota errors retain normal error handling. This does not create Google quota:
 keys in one project share limits. With three independent projects each having an
 unused 500 RPD allowance, 1,200 rewrites fit within the nominal 1,500-request total,
-subject to retries and other traffic. The existing global RPM cap still applies to
-every provider; use `12` RPM and up to `5` simultaneous news runs for the reported
+subject to retries and other traffic. Select `gemini` under **Providers with RPM limits**,
+with `12` RPM and up to `5` simultaneous news runs for the reported
 15 RPM per-project limits. TPM remains enforced by the provider.
 
 The **API keys** section requests missing credentials for every provider used by the selected
@@ -1101,10 +1101,17 @@ embedding comparison is fitted once to the complete prepared corpus of each grap
 then news evaluations resume within the same worker limit. Prepared news waiting for
 that fit releases its worker slot. Local model loading and inference are serialized.
 
-**Max requests per minute** is shared across all API calls in the execution, including
-all nodes, evaluations, credential attempts and retries. Requests use a FIFO queue and
-even spacing; `0` disables the RPM cap. This is one conservative budget across providers,
-not a separate allowance per worker. Provider token limits still apply. Temporary
+**Providers with RPM limits** accepts any number of remote providers. Each selected
+provider gets its own **Max requests per minute** field and an independent budget,
+shared across its models, nodes, news runs, keys and retries. For Gemini rewrites with
+OpenAI evaluations, select only `gemini` and set its limit to `12`; OpenAI stays uncapped.
+You can also select `chatgpt` with a different limit. Providers do not consume each
+other's budgets or wait for each other's request spacing, even when calls are queued.
+Limited calls use FIFO admission per provider and even spacing. Leaving a provider
+unselected or setting its limit to `0` disables its RPM cap. Budgets are shared across
+workers and saved with attempts for retry and restart. Legacy single-provider settings
+retain their scope; older attempts without `rpm_provider` retain their global budget.
+Provider token limits still apply. Temporary
 429/503 failures use bounded retries and a shared cooldown; exhausted retry budgets
 appear in recovery. Credential and account failures block new calls to the affected
 provider until a recovery decision is made. Calls already sent may finish.

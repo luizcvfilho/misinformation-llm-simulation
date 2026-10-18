@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from collections import deque
+from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from threading import Condition
@@ -14,14 +15,17 @@ _shared: ContextVar[SharedRequestLimiter | None] = ContextVar(
 
 
 class SharedRequestLimiter:
-    """FIFO admission shared by every API call in an execution, including retries."""
+    """Share independent provider RPM budgets, or a legacy global budget."""
 
-    def __init__(self, rpm: int | None, cancel_check=lambda: False):
-        self.interval = 60.0 / rpm if rpm else 0.0
+    def __init__(self, rpm: int | Mapping[str, int | None] | None, cancel_check=lambda: False):
+        limits = rpm if isinstance(rpm, Mapping) else {None: rpm}
+        self.intervals = {
+            provider: 60.0 / limit if limit else 0.0 for provider, limit in limits.items()
+        }
         self.cancel_check = cancel_check
         self.condition = Condition()
         self.queue = deque()
-        self.next_request = 0.0
+        self.next_requests: dict[str | None, float] = {}
         self.cooldown_until = 0.0
         self.gates: dict[str, int] = {}
 
@@ -39,6 +43,10 @@ class SharedRequestLimiter:
             self.cooldown_until = max(self.cooldown_until, time.monotonic() + seconds)
             self.condition.notify_all()
 
+    def _request_delay(self, provider: str, now: float) -> float:
+        next_request = self.next_requests.get(provider, self.next_requests.get(None, 0.0))
+        return max(next_request, self.cooldown_until) - now
+
     def acquire(self, provider: str):
         from misinformation_simulation.llm.recovery import RecoveryCancelled
 
@@ -54,12 +62,21 @@ class SharedRequestLimiter:
                         session.check_cancelled()
                     if self.cancel_check():
                         raise RecoveryCancelled("Execution cancelled while waiting for API quota.")
+                    now = time.monotonic()
                     eligible = next(
-                        (item for item in self.queue if not self.gates.get(item[1])), None
+                        (
+                            item
+                            for item in self.queue
+                            if not self.gates.get(item[1])
+                            and self._request_delay(item[1], now) <= 0
+                        ),
+                        None,
                     )
-                    delay = max(self.next_request, self.cooldown_until) - time.monotonic()
+                    delay = self._request_delay(provider, now)
                     if eligible and eligible[0] is ticket and delay <= 0:
-                        self.next_request = time.monotonic() + self.interval
+                        budget = provider if provider in self.intervals else None
+                        if budget in self.intervals:
+                            self.next_requests[budget] = time.monotonic() + self.intervals[budget]
                         return
                     if not announced:
                         emit_event("rate_limit_wait", delay=max(0, delay), provider=provider)
@@ -68,6 +85,15 @@ class SharedRequestLimiter:
             finally:
                 self.queue.remove((ticket, provider))
                 self.condition.notify_all()
+
+
+def request_limits_from_settings(settings: Mapping) -> int | Mapping[str, int | None] | None:
+    if (limits := settings.get("provider_rpm_limits")) is not None:
+        return limits
+    rpm = int(settings.get("max_requests_per_minute", 0)) or None
+    if provider := settings.get("rpm_provider"):
+        return {provider: rpm}
+    return rpm
 
 
 @contextmanager

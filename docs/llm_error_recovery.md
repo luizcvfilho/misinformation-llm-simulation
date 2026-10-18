@@ -64,10 +64,16 @@ Google applies [quotas per project](https://ai.google.dev/gemini-api/docs/rate-l
 not per key. Three keys in one project cannot multiply its quota. Three independent
 projects each with 500 unused RPD provide a nominal total of 1,500 requests;
 1,200 logical rewrites leave room for 300 other attempts. Other traffic and retries
-can reduce that margin. Keep the shared **Max requests per minute** at `12` for
-15 RPM projects, even with five concurrent news runs. That control still includes
-OpenAI evaluation calls; this change does not introduce separate provider RPM
-budgets or proactive TPM limiting. Restart Graph Studio after updating the code.
+can reduce that margin. Select `gemini` under **Providers with RPM limits** and set
+**Max requests per minute (gemini)** to `12` for 15 RPM projects, even with five
+concurrent news runs. You may select more providers and assign a different RPM
+to each. Each provider's models, keys and retries share its own budget; OpenAI
+evaluation calls do not consume Gemini's budget or wait for its request spacing.
+Unselected providers and limits set to `0` remain uncapped. All provider budgets
+are saved with run attempts and retained during recovery. Legacy single-provider
+settings retain their scope; older attempts without a provider selection retain
+their global RPM budget. There is no proactive TPM limiting. Restart Graph Studio
+after updating the code.
 
 ## Two OpenAI credentials
 

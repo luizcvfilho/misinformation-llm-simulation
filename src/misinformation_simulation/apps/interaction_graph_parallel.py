@@ -33,6 +33,7 @@ from misinformation_simulation.llm.progress import use_run_identity
 from misinformation_simulation.llm.rate_limit import (
     SharedRequestLimiter,
     get_shared_limiter,
+    request_limits_from_settings,
     use_shared_limiter,
 )
 from misinformation_simulation.llm.recovery import RecoverySession, safe_message, use_recovery
@@ -433,7 +434,7 @@ class _ParallelQueue:
             else None
         )
         self.limiter = get_shared_limiter() or SharedRequestLimiter(
-            int(self.settings.get("max_requests_per_minute", 0)) or None,
+            request_limits_from_settings(self.settings),
             self.job.cancel_event.is_set,
         )
         self._create_tasks()

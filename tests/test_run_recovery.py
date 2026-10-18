@@ -105,6 +105,7 @@ def test_cancellation_preserves_cause_without_becoming_a_failure(tmp_path, had_e
 
 def test_recovery_restores_inputs_and_starts_a_fresh_linked_attempt(tmp_path):
     attempt = make_attempt(tmp_path)
+    attempt.record["settings"]["provider_rpm_limits"] = {"gemini": 12, "chatgpt": 60}
     attempt.finish("failed", error=RuntimeError("Provider unavailable"))
     (attempt.path.parent / "call_checkpoint").mkdir()
     before = attempt.path.read_bytes()
@@ -113,6 +114,7 @@ def test_recovery_restores_inputs_and_starts_a_fresh_linked_attempt(tmp_path):
         pd.testing.assert_frame_equal(data, frame())
         assert selected[0]["name"] == "Graph"
         assert configuration["reuse_previous_results"] is False
+        assert configuration["provider_rpm_limits"] == {"gemini": 12, "chatgpt": 60}
         assert configuration["_parent_attempt"] == str(attempt.path.resolve())
         assert ("_recovery_checkpoint" in configuration) == (mode == "retry")
     assert attempt.path.read_bytes() == before

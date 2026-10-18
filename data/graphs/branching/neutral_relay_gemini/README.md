@@ -32,16 +32,17 @@ outputs on October 17, 2026; all matched. Preserve the input file and row order.
 | Allow temporary fallback to Standard | Enabled; retry Flex after 5 minutes |
 | Reuse compatible results from previous executions | Enabled |
 | Simultaneous news runs | `5` (`1` also works) |
-| Max requests per minute | `12` |
+| Providers with RPM limits | Only `gemini` selected |
+| Max requests per minute (gemini) | `12` |
 | Sleep between requests (seconds) | `0` |
 | Retry attempts | `5` |
 | Output prefix | A new execution name identifying Gemini |
 
 The user reported project limits of **15 RPM, 250,000 input TPM, and 500 RPD**
 for this model on October 17, 2026. The 12 RPM setting leaves request headroom;
-it is a shared limit across every provider, evaluation, and retry in this
-execution, so it also slows OpenAI evaluation calls. Parallel news processing
-uses that same cap and does not multiply the per-project rate. Do not use
+it is shared across Gemini models, keys, and retries in this execution.
+OpenAI evaluation calls do not consume this budget or wait for its spacing.
+Parallel news processing uses that same cap and does not multiply the per-project rate. Do not use
 `Sleep between requests` alone as quota protection.
 
 Keep `GEMINI_API_KEY` and `CHATGPT_API_KEY` (or `OPENAI_API_KEY`) configured in
@@ -73,7 +74,7 @@ projects' daily quotas reset. The pool learns quota holds from API responses:
 daily exhaustion holds that key/model until midnight Pacific; temporary limits
 use the API retry delay or 60 seconds. Duplicate key values do not create extra
 slots. Inspect AI Studio usage for each project and preserve the headroom for
-retries. The global 12 RPM cap still applies across providers and keys.
+retries. The shared 12 RPM cap applies to Gemini calls across all configured keys.
 
 If all configured projects' daily quotas are exhausted:
 

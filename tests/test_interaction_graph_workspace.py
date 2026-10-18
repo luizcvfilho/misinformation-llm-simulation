@@ -156,6 +156,13 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     ]
     app.text_input(key="current_graph_name").set_value("Edited graph").run(timeout=45)
     app.number_input(key="simulation_execution_settings_max_rows").set_value(7).run(timeout=45)
+    app.multiselect(key="simulation_advanced_settings_rpm_providers").set_value(
+        ["gemini", "grok"]
+    ).run(timeout=45)
+    app.number_input(key="simulation_advanced_settings_provider_rpm_gemini").set_value(12)
+    app.number_input(key="simulation_advanced_settings_provider_rpm_grok").set_value(60).run(
+        timeout=45
+    )
     next(button for button in app.button if button.label == "Analyze this run").click().run(
         timeout=45
     )
@@ -173,6 +180,12 @@ def test_analyze_run_switches_page_and_preserves_simulation_settings(tmp_path, m
     assert not app.exception
     assert app.text_input(key="current_graph_name").value == "Edited graph"
     assert app.number_input(key="simulation_execution_settings_max_rows").value == 7
+    assert app.multiselect(key="simulation_advanced_settings_rpm_providers").value == [
+        "gemini",
+        "grok",
+    ]
+    assert app.number_input(key="simulation_advanced_settings_provider_rpm_gemini").value == 12
+    assert app.number_input(key="simulation_advanced_settings_provider_rpm_grok").value == 60
     assert app.session_state[counts_key] == {"News": 1}
     assert not any("default value but also" in record.getMessage() for record in caplog.records)
 

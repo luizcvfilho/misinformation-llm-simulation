@@ -17,7 +17,11 @@ from misinformation_simulation.apps.interaction_graph_run_job import GraphRunJob
 from misinformation_simulation.apps.interaction_graph_ui import create_default_node_form
 from misinformation_simulation.llm.flex_fallback import get_flex_fallback
 from misinformation_simulation.llm.progress import progress_context
-from misinformation_simulation.llm.rate_limit import SharedRequestLimiter, use_shared_limiter
+from misinformation_simulation.llm.rate_limit import (
+    SharedRequestLimiter,
+    get_shared_limiter,
+    use_shared_limiter,
+)
 from misinformation_simulation.llm.recovery import (
     PermissionStore,
     RecoveryCancelled,
@@ -178,8 +182,9 @@ def test_deferred_evaluations_fit_the_whole_graph_once_without_deadlock(tmp_path
     assert job.events.queue[-1][1]["completed"] == 1
 
 
-def test_rpm_is_shared_by_actual_attempts_and_context_propagates():
-    limiter = SharedRequestLimiter(6000)
+@pytest.mark.parametrize("limits", [6000, {"gemini": 6000, "chatgpt": 3000}])
+def test_rpm_is_shared_by_actual_attempts_and_context_propagates(limits):
+    limiter = SharedRequestLimiter(limits)
     barrier = Barrier(3)
     admitted = []
     lock = Lock()
@@ -198,6 +203,69 @@ def test_rpm_is_shared_by_actual_attempts_and_context_propagates():
     gaps = [right - left for left, right in zip(admitted, admitted[1:], strict=False)]
     assert len(admitted) == 6
     assert all(gap >= 0.008 for gap in gaps)
+
+
+@pytest.mark.parametrize("limits", [{"gemini": 1}, {"gemini": 1, "chatgpt": 60}])
+def test_other_provider_bypasses_pending_rpm_wait_without_releasing_limited_provider(
+    monkeypatch, limits
+):
+    from misinformation_simulation.llm import rate_limit
+
+    waiting = Event()
+    stop = Event()
+    limiter = SharedRequestLimiter(limits, stop.is_set)
+    monkeypatch.setattr(rate_limit, "emit_event", lambda *_args, **_kwargs: waiting.set())
+    limiter.acquire("gemini")
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        gemini = pool.submit(limiter.acquire, "gemini")
+        try:
+            assert waiting.wait(2)
+            gpt = pool.submit(limiter.acquire, "chatgpt")
+            assert gpt.result(timeout=2) is None
+            assert not gemini.done()
+        finally:
+            stop.set()
+        with pytest.raises(RecoveryCancelled):
+            gemini.result(timeout=2)
+    assert not limiter.queue
+
+
+@pytest.mark.parametrize("background", [False, True])
+@pytest.mark.parametrize("workers", [1, 3])
+def test_execution_retains_provider_rpm_limits(tmp_path, background, workers):
+    from misinformation_simulation.apps.interaction_graph_run_job import start_graph_run_job
+
+    limiters = []
+
+    def runner(**kwargs):
+        limiter = get_shared_limiter()
+        assert limiter.intervals == {"gemini": 0.01, "chatgpt": 0.02}
+        with api_request(provider="gemini", model="rewrite"):
+            pass
+        next_request = limiter.next_requests["gemini"]
+        with api_request(provider="chatgpt", model="evaluate"):
+            pass
+        assert limiter.next_requests["gemini"] == next_request
+        assert "chatgpt" in limiter.next_requests
+        limiters.append(limiter)
+        return SimulationResult(dict(rows_processed=1, steps_total=0, cancelled=False), [])
+
+    configuration = settings(tmp_path, rows=1, limit=workers)
+    configuration.pop("max_requests_per_minute")
+    configuration["provider_rpm_limits"] = {"gemini": 6000, "chatgpt": 3000}
+    kwargs = dict(
+        df=frame(1), graphs=graphs(1), settings=configuration, runner=runner, queue_mode=False
+    )
+    if background:
+        job = start_graph_run_job(**kwargs)
+        job.thread.join(timeout=10)
+        assert not job.thread.is_alive()
+    else:
+        job = GraphRunJob()
+        run_parallel_queue(job=job, **kwargs)
+    assert len(limiters) == 1
+    assert job.events.queue[-1][1]["completed"] == 1
+    assert get_shared_limiter() is None
 
 
 def test_failed_graph_fit_finalizes_every_prepared_run(tmp_path):
@@ -376,6 +444,8 @@ def test_ui_exposes_and_retains_simultaneous_run_setting(tmp_path):
         """
 import streamlit as st
 from misinformation_simulation.apps.interaction_graph_sections import _render_advanced_settings
+from misinformation_simulation.apps.interaction_graph_workspace import retain_workspace_widgets
+retain_workspace_widgets()
 st.session_state.settings = _render_advanced_settings()
 """,
         encoding="utf-8",
@@ -387,6 +457,47 @@ st.session_state.settings = _render_advanced_settings()
     control.set_value(5).run()
     assert not ui.exception
     assert ui.session_state.settings["max_simultaneous_runs"] == 5
+    providers = ui.multiselect(key="simulation_advanced_settings_rpm_providers")
+    assert "local" not in providers.options
+    assert ui.session_state.settings["provider_rpm_limits"] == {}
+    providers.set_value(["gemini", "chatgpt"]).run()
+    ui.number_input(key="simulation_advanced_settings_provider_rpm_gemini").set_value(12)
+    ui.number_input(key="simulation_advanced_settings_provider_rpm_chatgpt").set_value(60).run()
+    assert not ui.exception
+    assert ui.session_state.settings["provider_rpm_limits"] == {"gemini": 12, "chatgpt": 60}
+    ui.multiselect(key="simulation_advanced_settings_rpm_providers").set_value(["chatgpt"]).run()
+    assert not ui.exception
+    assert ui.session_state.settings["provider_rpm_limits"] == {"chatgpt": 60}
+    ui.multiselect(key="simulation_advanced_settings_rpm_providers").set_value(
+        ["gemini", "chatgpt", "grok", "deepseek", "openrouter"]
+    ).run()
+    assert not ui.exception
+    assert ui.session_state.settings["provider_rpm_limits"] == {
+        "gemini": 12,
+        "chatgpt": 60,
+        "grok": 0,
+        "deepseek": 0,
+        "openrouter": 0,
+    }
+    ui.multiselect(key="simulation_advanced_settings_rpm_providers").set_value([]).run()
+    assert not ui.exception
+    assert ui.session_state.settings["provider_rpm_limits"] == {}
+
+
+def test_ui_restores_previous_single_provider_rpm_configuration():
+    from streamlit.testing.v1 import AppTest
+
+    ui = AppTest.from_string(
+        "import streamlit as st\n"
+        "from misinformation_simulation.apps.interaction_graph_sections import "
+        "_render_provider_rpm_limits\n"
+        "st.session_state.limits = _render_provider_rpm_limits()\n"
+    )
+    ui.session_state["simulation_advanced_settings_rpm_provider"] = "grok"
+    ui.session_state["simulation_advanced_settings_max_requests_per_minute"] = 25
+    ui.run(timeout=25)
+    assert not ui.exception
+    assert ui.session_state.limits == {"grok": 25}
 
 
 class ConstantEmbedder:
