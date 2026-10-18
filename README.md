@@ -604,6 +604,21 @@ choose which key to try first; each manual retry can try both keys once. Interac
 and notebooks use a local dialog or terminal input. See
 [interactive LLM error recovery](docs/llm_error_recovery.md) for details and unattended behavior.
 
+To check all three Gemini keys before running a simulation, save them in `.env` and run:
+
+```powershell
+uv run python scripts/check_gemini_keys.py --model gemini-3.5-flash-lite
+```
+
+Use the same model selected for the simulation. The script makes one small generation
+request per distinct key, with a 30-second request timeout, no retries, and no credential
+failover. It prints each variable's status without displaying key values; missing or
+duplicate keys are reported explicitly. Exit code `0` means all three distinct keys
+generated text; otherwise it returns `1`. These are real API calls and consume quota
+(and may incur charges on paid projects). Keys entered only in Graph Studio are scoped
+to that browser session and are not available to this command. Success confirms access
+at the time of the check, not enough quota for an entire simulation.
+
 Gemini can use three distinct keys. On a quota error (HTTP 429), the same pending
 request tries another configured key. The working key stays active for subsequent
 calls across concurrent news runs. Daily-exhausted keys are held until midnight
