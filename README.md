@@ -102,6 +102,20 @@ the interaction-graph workflow with `description` as the text column; `category`
 group. Review the source package README's use conditions before sharing data or executed outputs.
 The notebook does not run simulations.
 
+The consolidated-corpus selection in `output/elections_2026/corpus_selection/` contains
+two CSV files with the same 100 posts from 26 accounts classified as national outlets
+in the supplied corpus:
+
+- `simulation_news_100.csv`: original captions and source metadata.
+- `simulation_news_100_cleaned.csv`: captions with publisher calls to action,
+  hashtags, author/media credits and image descriptions removed. Only `description`,
+  `words`, `substantive_words` and `text_sha256` differ from the original CSV.
+
+Use the cleaned CSV's `description` as simulation text and `article_id` as news ID.
+Both files preserve the same item numbers and identifiers. The source corpus and
+exploratory notebook remain unchanged. Keep the caption extracts local and follow
+the source package's data-use conditions.
+
 ### Interaction-graph STDI analysis
 
 Interaction graphs also support explicitly configured branching trees. Shared nodes run
