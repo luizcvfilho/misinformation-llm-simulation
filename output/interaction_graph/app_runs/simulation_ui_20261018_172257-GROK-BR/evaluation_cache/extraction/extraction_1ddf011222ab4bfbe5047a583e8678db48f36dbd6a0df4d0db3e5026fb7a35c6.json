@@ -1,0 +1,268 @@
+{
+  "inputs": {
+    "text": "Pessoal, o Senado está debatendo uma PEC que quer acabar com a escala 6x1 e impor uma redução para 40 horas semanais sem corte de salário, com dois dias de folga. Aprovada na Câmara em maio e na CCJ do Senado no início de setembro, essa proposta é mais uma interferência estatal que vai aumentar os custos para as empresas, reduzir oportunidades de emprego e prejudicar especialmente os trabalhadores mais vulneráveis que dependem da flexibilidade do mercado.\n\nNessa terça-feira foi a primeira sessão no Plenário, e o presidente Davi Alcolumbre afirmou que pode ser votada na semana que vem, antes das eleições. Felizmente a oposição está resistindo e não quer aprovar antes do segundo turno. Isso mostra que eles colocam em primeiro lugar a defesa da economia, da geração de empregos e da estabilidade das famílias, em vez de ceder a uma agenda que favorece controles excessivos e ignora as consequências reais para a ordem social e o crescimento do país.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Senate debate over a PEC to end the 6x1 work schedule and reduce weekly working hours without cutting pay",
+    "subtopics": [
+      "Proposed 40-hour workweek and two days off",
+      "Legislative progress in the Senate",
+      "Opposition to approval before the second round",
+      "Projected economic and employment impacts"
+    ],
+    "central_entities": [
+      "Senado",
+      "PEC",
+      "escala 6x1",
+      "Câmara",
+      "CCJ do Senado",
+      "Plenário",
+      "Davi Alcolumbre",
+      "oposição",
+      "empresas",
+      "trabalhadores mais vulneráveis"
+    ],
+    "central_relations": [
+      {
+        "subject": "Senado",
+        "action": "está debatendo",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "debater",
+        "negation_scope": null,
+        "signed_action": "está debatendo",
+        "base_action": "está debatendo",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PEC",
+        "action": "quer acabar com",
+        "object": "escala 6x1",
+        "polarity": "affirmed",
+        "predicate": "acabar com",
+        "negation_scope": null,
+        "signed_action": "quer acabar com",
+        "base_action": "quer acabar com",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "work_schedule_identifier",
+            "value": "6x1",
+            "unit": null,
+            "kind": "identifier",
+            "status": "exact",
+            "expression": "6x1"
+          }
+        ]
+      },
+      {
+        "subject": "PEC",
+        "action": "impor uma redução para 40 horas semanais, com dois dias de folga",
+        "object": "jornada de trabalho",
+        "polarity": "affirmed",
+        "predicate": "impor redução",
+        "negation_scope": null,
+        "signed_action": "impor uma redução para 40 horas semanais, com dois dias de folga",
+        "base_action": "impor uma redução para 40 horas semanais, com dois dias de folga",
+        "duration_status": "exact",
+        "duration_value": 40.0,
+        "duration_unit": "hour",
+        "duration_expression": "40 horas semanais",
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "weekly_work_hours",
+            "value": 40.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "40 horas semanais"
+          },
+          {
+            "role": "days_off",
+            "value": 2.0,
+            "unit": "day",
+            "kind": "count",
+            "status": "exact",
+            "expression": "dois dias de folga"
+          }
+        ]
+      },
+      {
+        "subject": "PEC",
+        "action": "sem corte de salário",
+        "object": "salário",
+        "polarity": "negated",
+        "predicate": "corte",
+        "negation_scope": "corte de salário",
+        "signed_action": "sem corte de salário",
+        "base_action": "corte de salário",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "PEC",
+        "action": "foi aprovada",
+        "object": "Câmara",
+        "polarity": "affirmed",
+        "predicate": "aprovar",
+        "negation_scope": null,
+        "signed_action": "foi aprovada na Câmara em maio",
+        "base_action": "foi aprovada na Câmara em maio",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "PEC",
+        "action": "foi aprovada",
+        "object": "CCJ do Senado",
+        "polarity": "affirmed",
+        "predicate": "aprovar",
+        "negation_scope": null,
+        "signed_action": "foi aprovada na CCJ do Senado no início de setembro",
+        "base_action": "foi aprovada na CCJ do Senado no início de setembro",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Davi Alcolumbre",
+        "action": "afirmou que pode ser votada na semana que vem, antes das eleições",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "poder ser votada",
+        "negation_scope": null,
+        "signed_action": "afirmou que pode ser votada na semana que vem, antes das eleições",
+        "base_action": "afirmou que pode ser votada na semana que vem, antes das eleições",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "oposição",
+        "action": "está resistindo",
+        "object": "PEC",
+        "polarity": "affirmed",
+        "predicate": "resistir",
+        "negation_scope": null,
+        "signed_action": "está resistindo",
+        "base_action": "está resistindo",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "oposição",
+        "action": "não quer aprovar antes do segundo turno",
+        "object": "PEC",
+        "polarity": "negated",
+        "predicate": "quer aprovar",
+        "negation_scope": "quer aprovar antes do segundo turno",
+        "signed_action": "não quer aprovar antes do segundo turno",
+        "base_action": "quer aprovar antes do segundo turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 2.0,
+            "unit": "round",
+            "kind": "count",
+            "status": "exact",
+            "expression": "segundo turno"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "The report frames the proposed labor reform as harmful state intervention and presents the opposition's resistance as economically protective.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The PEC is characterized as excessive state interference that will raise business costs, reduce employment opportunities, and harm especially vulnerable workers.",
+      "The opposition's resistance is praised as defending the economy, job creation, and family stability.",
+      "The proposal is characterized as favoring excessive controls while ignoring consequences for social order and national growth."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "b954909da5ea8c3a7af8e2335eb4aa4d3ef99bdb4dbc106b85a75cdad7cf0e2f",
+      "input_sha256": "b284732a08e116f0daf8c870705a1043ac4219c90d35fbea73764556399a80cd",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Senate debate over a PEC to end the 6x1 work schedule and reduce weekly working hours without cutting pay\",\n  \"subtopics\": [\n    \"Proposed 40-hour workweek and two days off\",\n    \"Legislative progress in the Senate\",\n    \"Opposition to approval before the second round\",\n    \"Projected economic and employment impacts\"\n  ],\n  \"central_entities\": [\n    \"Senado\",\n    \"PEC\",\n    \"escala 6x1\",\n    \"Câmara\",\n    \"CCJ do Senado\",\n    \"Plenário\",\n    \"Davi Alcolumbre\",\n    \"oposição\",\n    \"empresas\",\n    \"trabalhadores mais vulneráveis\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The PEC is characterized as excessive state interference that will raise business costs, reduce employment opportunities, and harm especially vulnerable workers.\",\n    \"The opposition's resistance is praised as defending the economy, job creation, and family stability.\",\n    \"The proposal is characterized as favoring excessive controls while ignoring consequences for social order and national growth.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"está debatendo\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"debater\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está debatendo\",\n      \"base_action\": \"está debatendo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"quer acabar com\",\n      \"object\": \"escala 6x1\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acabar com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"quer acabar com\",\n      \"base_action\": \"quer acabar com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"work_schedule_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"object\": \"jornada de trabalho\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"impor redução\",\n      \"negation_scope\": null,\n      \"signed_action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"base_action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 40,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"40 horas semanais\",\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"weekly_work_hours\",\n          \"kind\": \"duration\",\n          \"value\": 40,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"40 horas semanais\"\n        },\n        {\n          \"role\": \"days_off\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"dois dias de folga\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"sem corte de salário\",\n      \"object\": \"salário\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"corte\",\n      \"negation_scope\": \"corte de salário\",\n      \"signed_action\": \"sem corte de salário\",\n      \"base_action\": \"corte de salário\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"foi aprovada\",\n      \"object\": \"Câmara\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi aprovada na Câmara em maio\",\n      \"base_action\": \"foi aprovada na Câmara em maio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"foi aprovada\",\n      \"object\": \"CCJ do Senado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi aprovada na CCJ do Senado no início de setembro\",\n      \"base_action\": \"foi aprovada na CCJ do Senado no início de setembro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Davi Alcolumbre\",\n      \"action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"poder ser votada\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"base_action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"está resistindo\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"resistir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está resistindo\",\n      \"base_action\": \"está resistindo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"não quer aprovar antes do segundo turno\",\n      \"object\": \"PEC\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"quer aprovar\",\n      \"negation_scope\": \"quer aprovar antes do segundo turno\",\n      \"signed_action\": \"não quer aprovar antes do segundo turno\",\n      \"base_action\": \"quer aprovar antes do segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The report frames the proposed labor reform as harmful state intervention and presents the opposition's resistance as economically protective.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "b954909da5ea8c3a7af8e2335eb4aa4d3ef99bdb4dbc106b85a75cdad7cf0e2f",
+          "input_sha256": "b284732a08e116f0daf8c870705a1043ac4219c90d35fbea73764556399a80cd",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Senate debate over a PEC to end the 6x1 work schedule and reduce weekly working hours without cutting pay\",\n  \"subtopics\": [\n    \"Proposed 40-hour workweek and two days off\",\n    \"Legislative progress in the Senate\",\n    \"Opposition to approval before the second round\",\n    \"Projected economic and employment impacts\"\n  ],\n  \"central_entities\": [\n    \"Senado\",\n    \"PEC\",\n    \"escala 6x1\",\n    \"Câmara\",\n    \"CCJ do Senado\",\n    \"Plenário\",\n    \"Davi Alcolumbre\",\n    \"oposição\",\n    \"empresas\",\n    \"trabalhadores mais vulneráveis\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The PEC is characterized as excessive state interference that will raise business costs, reduce employment opportunities, and harm especially vulnerable workers.\",\n    \"The opposition's resistance is praised as defending the economy, job creation, and family stability.\",\n    \"The proposal is characterized as favoring excessive controls while ignoring consequences for social order and national growth.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Senado\",\n      \"action\": \"está debatendo\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"debater\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está debatendo\",\n      \"base_action\": \"está debatendo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"quer acabar com\",\n      \"object\": \"escala 6x1\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acabar com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"quer acabar com\",\n      \"base_action\": \"quer acabar com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"work_schedule_identifier\",\n          \"kind\": \"identifier\",\n          \"value\": \"6x1\",\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"6x1\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"object\": \"jornada de trabalho\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"impor redução\",\n      \"negation_scope\": null,\n      \"signed_action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"base_action\": \"impor uma redução para 40 horas semanais, com dois dias de folga\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 40,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"40 horas semanais\",\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"weekly_work_hours\",\n          \"kind\": \"duration\",\n          \"value\": 40,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"40 horas semanais\"\n        },\n        {\n          \"role\": \"days_off\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"dois dias de folga\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"sem corte de salário\",\n      \"object\": \"salário\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"corte\",\n      \"negation_scope\": \"corte de salário\",\n      \"signed_action\": \"sem corte de salário\",\n      \"base_action\": \"corte de salário\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"foi aprovada\",\n      \"object\": \"Câmara\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi aprovada na Câmara em maio\",\n      \"base_action\": \"foi aprovada na Câmara em maio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"PEC\",\n      \"action\": \"foi aprovada\",\n      \"object\": \"CCJ do Senado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"aprovar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi aprovada na CCJ do Senado no início de setembro\",\n      \"base_action\": \"foi aprovada na CCJ do Senado no início de setembro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Davi Alcolumbre\",\n      \"action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"poder ser votada\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"base_action\": \"afirmou que pode ser votada na semana que vem, antes das eleições\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"está resistindo\",\n      \"object\": \"PEC\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"resistir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"está resistindo\",\n      \"base_action\": \"está resistindo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"oposição\",\n      \"action\": \"não quer aprovar antes do segundo turno\",\n      \"object\": \"PEC\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"quer aprovar\",\n      \"negation_scope\": \"quer aprovar antes do segundo turno\",\n      \"signed_action\": \"não quer aprovar antes do segundo turno\",\n      \"base_action\": \"quer aprovar antes do segundo turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"The report frames the proposed labor reform as harmful state intervention and presents the opposition's resistance as economically protective.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "da79a21cc3c36c628529b40f3d5a061fd4d759b19b746ed2f4e730fef0395783"
+}

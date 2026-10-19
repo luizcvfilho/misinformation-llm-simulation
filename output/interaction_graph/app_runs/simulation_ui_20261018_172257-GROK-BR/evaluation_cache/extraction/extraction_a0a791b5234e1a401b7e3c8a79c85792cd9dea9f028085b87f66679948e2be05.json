@@ -1,0 +1,200 @@
+{
+  "inputs": {
+    "text": "Olha só isso que me mandaram: a partir deste sábado (10), os candidatos do segundo turno das Eleições 2026 não podem ser presos nem detidos, segundo o TSE, e essa proteção vai até 48 horas depois da votação marcada para o dia 25. Eles alegam que é para garantir o equilíbrio do processo, mas isso é uma manobra óbvia das elites para blindar seus aliados de qualquer prisão no período crítico. A única brecha é o flagrante delito, quando a pessoa é pega no ato, mas mesmo assim tem que ir direto para um juiz avaliar. Na prática, é coordenação escondida para manipular o resultado e evitar que contas sejam cobradas antes da eleição.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Restrição à prisão e detenção de candidatos no segundo turno das Eleições 2026",
+    "subtopics": [
+      "Período de proteção antes e depois da votação",
+      "Exceção para flagrante delito",
+      "Alegação de equilíbrio do processo",
+      "Acusação de proteção política e manipulação eleitoral"
+    ],
+    "central_entities": [
+      "TSE",
+      "Eleições 2026",
+      "candidatos do segundo turno",
+      "Eles",
+      "flagrante delito",
+      "a pessoa",
+      "um juiz",
+      "elites",
+      "aliados"
+    ],
+    "central_relations": [
+      {
+        "subject": "candidatos do segundo turno",
+        "action": "não podem ser presos nem detidos, segundo o TSE",
+        "object": "durante o período que começa neste sábado (10) e vai até 48 horas depois da votação marcada para o dia 25",
+        "polarity": "negated",
+        "predicate": "ser preso ou detido",
+        "negation_scope": "não podem ser presos nem detidos",
+        "signed_action": "não podem ser presos nem detidos",
+        "base_action": "ser presos ou detidos",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48 horas depois da votação",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "start_calendar_day",
+            "value": 10.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "sábado (10)"
+          },
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "Eleições 2026"
+          },
+          {
+            "role": "voting_calendar_day",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "dia 25"
+          },
+          {
+            "role": "protection_duration",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48 horas"
+          }
+        ]
+      },
+      {
+        "subject": "Eles",
+        "action": "alegam que é para garantir",
+        "object": "o equilíbrio do processo",
+        "polarity": "affirmed",
+        "predicate": "alegar que a proteção visa garantir",
+        "negation_scope": null,
+        "signed_action": "alegam que é para garantir",
+        "base_action": "alegam que é para garantir",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "flagrante delito",
+        "action": "é a única brecha",
+        "object": "a restrição à prisão ou detenção",
+        "polarity": "affirmed",
+        "predicate": "ser exceção",
+        "negation_scope": null,
+        "signed_action": "é a única brecha",
+        "base_action": "é a única brecha",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a pessoa",
+        "action": "é pega no ato",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ser pega no ato",
+        "negation_scope": null,
+        "signed_action": "é pega no ato",
+        "base_action": "é pega no ato",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a pessoa",
+        "action": "tem que ir direto para um juiz avaliar",
+        "object": "um juiz",
+        "polarity": "affirmed",
+        "predicate": "ir para avaliação judicial",
+        "negation_scope": null,
+        "signed_action": "tem que ir direto para um juiz avaliar",
+        "base_action": "tem que ir direto para um juiz avaliar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A notícia apresenta a regra eleitoral e sua exceção, contrapondo a justificativa atribuída de equilíbrio do processo a acusações de proteção política e manipulação.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A proteção é uma manobra óbvia das elites para blindar seus aliados de qualquer prisão no período crítico.",
+      "Na prática, há uma coordenação escondida para manipular o resultado e evitar que contas sejam cobradas antes da eleição."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "99114e1e8d95e8929db274c9f7d994f0082300b7149e78b1c1e331fd9ecbef2a",
+      "input_sha256": "ab8b92fa3a2d120397826b1f1db92efbfcb142b3769b6d5213c9f61c7b3b7e27",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Restrição à prisão e detenção de candidatos no segundo turno das Eleições 2026\",\n  \"subtopics\": [\n    \"Período de proteção antes e depois da votação\",\n    \"Exceção para flagrante delito\",\n    \"Alegação de equilíbrio do processo\",\n    \"Acusação de proteção política e manipulação eleitoral\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Eleições 2026\",\n    \"candidatos do segundo turno\",\n    \"Eles\",\n    \"flagrante delito\",\n    \"a pessoa\",\n    \"um juiz\",\n    \"elites\",\n    \"aliados\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A proteção é uma manobra óbvia das elites para blindar seus aliados de qualquer prisão no período crítico.\",\n    \"Na prática, há uma coordenação escondida para manipular o resultado e evitar que contas sejam cobradas antes da eleição.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos do segundo turno\",\n      \"action\": \"não podem ser presos nem detidos, segundo o TSE\",\n      \"object\": \"durante o período que começa neste sábado (10) e vai até 48 horas depois da votação marcada para o dia 25\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser preso ou detido\",\n      \"negation_scope\": \"não podem ser presos nem detidos\",\n      \"signed_action\": \"não podem ser presos nem detidos\",\n      \"base_action\": \"ser presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas depois da votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_calendar_day\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Eleições 2026\"\n        },\n        {\n          \"role\": \"voting_calendar_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dia 25\"\n        },\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"alegam que é para garantir\",\n      \"object\": \"o equilíbrio do processo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alegar que a proteção visa garantir\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"alegam que é para garantir\",\n      \"base_action\": \"alegam que é para garantir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"flagrante delito\",\n      \"action\": \"é a única brecha\",\n      \"object\": \"a restrição à prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser exceção\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"é a única brecha\",\n      \"base_action\": \"é a única brecha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa\",\n      \"action\": \"é pega no ato\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser pega no ato\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"é pega no ato\",\n      \"base_action\": \"é pega no ato\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa\",\n      \"action\": \"tem que ir direto para um juiz avaliar\",\n      \"object\": \"um juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ir para avaliação judicial\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"tem que ir direto para um juiz avaliar\",\n      \"base_action\": \"tem que ir direto para um juiz avaliar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia apresenta a regra eleitoral e sua exceção, contrapondo a justificativa atribuída de equilíbrio do processo a acusações de proteção política e manipulação.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "99114e1e8d95e8929db274c9f7d994f0082300b7149e78b1c1e331fd9ecbef2a",
+          "input_sha256": "ab8b92fa3a2d120397826b1f1db92efbfcb142b3769b6d5213c9f61c7b3b7e27",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Restrição à prisão e detenção de candidatos no segundo turno das Eleições 2026\",\n  \"subtopics\": [\n    \"Período de proteção antes e depois da votação\",\n    \"Exceção para flagrante delito\",\n    \"Alegação de equilíbrio do processo\",\n    \"Acusação de proteção política e manipulação eleitoral\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Eleições 2026\",\n    \"candidatos do segundo turno\",\n    \"Eles\",\n    \"flagrante delito\",\n    \"a pessoa\",\n    \"um juiz\",\n    \"elites\",\n    \"aliados\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A proteção é uma manobra óbvia das elites para blindar seus aliados de qualquer prisão no período crítico.\",\n    \"Na prática, há uma coordenação escondida para manipular o resultado e evitar que contas sejam cobradas antes da eleição.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos do segundo turno\",\n      \"action\": \"não podem ser presos nem detidos, segundo o TSE\",\n      \"object\": \"durante o período que começa neste sábado (10) e vai até 48 horas depois da votação marcada para o dia 25\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser preso ou detido\",\n      \"negation_scope\": \"não podem ser presos nem detidos\",\n      \"signed_action\": \"não podem ser presos nem detidos\",\n      \"base_action\": \"ser presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48 horas depois da votação\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_calendar_day\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Eleições 2026\"\n        },\n        {\n          \"role\": \"voting_calendar_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dia 25\"\n        },\n        {\n          \"role\": \"protection_duration\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48 horas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"alegam que é para garantir\",\n      \"object\": \"o equilíbrio do processo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"alegar que a proteção visa garantir\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"alegam que é para garantir\",\n      \"base_action\": \"alegam que é para garantir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"flagrante delito\",\n      \"action\": \"é a única brecha\",\n      \"object\": \"a restrição à prisão ou detenção\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser exceção\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"é a única brecha\",\n      \"base_action\": \"é a única brecha\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa\",\n      \"action\": \"é pega no ato\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser pega no ato\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"é pega no ato\",\n      \"base_action\": \"é pega no ato\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa\",\n      \"action\": \"tem que ir direto para um juiz avaliar\",\n      \"object\": \"um juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ir para avaliação judicial\",\n      \"negation_scope\": \"\",\n      \"signed_action\": \"tem que ir direto para um juiz avaliar\",\n      \"base_action\": \"tem que ir direto para um juiz avaliar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia apresenta a regra eleitoral e sua exceção, contrapondo a justificativa atribuída de equilíbrio do processo a acusações de proteção política e manipulação.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "5f16420c44822d0dd6f413bb79eaee4637b4bb79b8731a9e3e4658c2462cfbc5"
+}

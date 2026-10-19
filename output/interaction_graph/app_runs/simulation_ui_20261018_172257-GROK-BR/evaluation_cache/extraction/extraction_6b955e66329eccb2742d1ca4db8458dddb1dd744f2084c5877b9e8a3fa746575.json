@@ -1,0 +1,224 @@
+{
+  "inputs": {
+    "text": "Acabei de receber essa notícia: o ministro do Planejamento e Orçamento, Bruno Moretti, afirmou que o governo vai zerar a tributação federal sobre a gasolina, desonerando R$ 0,89 por litro referentes a PIS/Cofins e Cide, com o impacto subindo de R$ 2,1 bilhões para R$ 2,8 bilhões por mês. Isso acontece a 16 dias do segundo turno das eleições presidenciais, marcado para 25 de outubro. O ministro da Fazenda, Dario Durigan, completou que também vão desonerar o etanol hidratado e ampliar as subvenções ao etanol e ao diesel.\n\nComo já se via, trata-se de uma manobra desesperada e populista do governo para comprar votos às vésperas da eleição, sacrificando a disciplina fiscal e a ordem econômica em troca de ganhos políticos imediatos. Em vez de incentivar a responsabilidade pessoal das famílias e a força de uma nação ancorada em tradições sólidas, eles intervêm artificialmente no mercado, enfraquecendo a autoridade institucional e a continuidade cultural ao priorizar o assistencialismo de curto prazo sobre a estabilidade real que vem de valores nacionais e da ordem social.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Anúncio de desoneração federal de combustíveis e ampliação de subsídios antes do segundo turno presidencial",
+    "subtopics": [
+      "Redução da tributação sobre gasolina e etanol hidratado",
+      "Ampliação de subvenções ao etanol e ao diesel",
+      "Impacto fiscal mensal anunciado",
+      "Críticas à motivação política e aos efeitos econômicos da medida"
+    ],
+    "central_entities": [
+      "Bruno Moretti",
+      "governo",
+      "PIS/Cofins",
+      "Cide",
+      "Dario Durigan",
+      "eleições presidenciais"
+    ],
+    "central_relations": [
+      {
+        "subject": "Bruno Moretti",
+        "action": "afirmou que o governo vai zerar",
+        "object": "a tributação federal sobre a gasolina",
+        "polarity": "affirmed",
+        "predicate": "afirmar",
+        "negation_scope": null,
+        "signed_action": "afirmou que o governo vai zerar",
+        "base_action": "afirmou que o governo vai zerar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "tax_relief_per_liter",
+            "value": 0.89,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 0,89 por litro"
+          }
+        ]
+      },
+      {
+        "subject": "impacto",
+        "action": "subindo",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "subir",
+        "negation_scope": null,
+        "signed_action": "subindo",
+        "base_action": "subindo",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "monthly_impact_lower_bound",
+            "value": 2100000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 2,1 bilhões"
+          },
+          {
+            "role": "monthly_impact_upper_bound",
+            "value": 2800000000.0,
+            "unit": "BRL",
+            "kind": "money",
+            "status": "exact",
+            "expression": "R$ 2,8 bilhões"
+          }
+        ]
+      },
+      {
+        "subject": "Dario Durigan",
+        "action": "completou que também vão desonerar",
+        "object": "o etanol hidratado",
+        "polarity": "affirmed",
+        "predicate": "desonerar",
+        "negation_scope": null,
+        "signed_action": "vão desonerar",
+        "base_action": "desonerar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Dario Durigan",
+        "action": "completou que também vão ampliar",
+        "object": "as subvenções ao etanol e ao diesel",
+        "polarity": "affirmed",
+        "predicate": "ampliar",
+        "negation_scope": null,
+        "signed_action": "vão ampliar",
+        "base_action": "ampliar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "governo",
+        "action": "acontece a 16 dias do",
+        "object": "segundo turno das eleições presidenciais",
+        "polarity": "affirmed",
+        "predicate": "acontecer",
+        "negation_scope": null,
+        "signed_action": "acontece a 16 dias do",
+        "base_action": "acontece",
+        "duration_status": "exact",
+        "duration_value": 16.0,
+        "duration_unit": "day",
+        "duration_expression": "16 dias",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "time_before_second_round",
+            "value": 16.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "16 dias"
+          }
+        ]
+      },
+      {
+        "subject": "segundo turno das eleições presidenciais",
+        "action": "marcado para",
+        "object": "25 de outubro",
+        "polarity": "affirmed",
+        "predicate": "marcar",
+        "negation_scope": null,
+        "signed_action": "marcado para",
+        "base_action": "marcado para",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_day",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "25 de outubro"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Anúncio de medidas sobre combustíveis às vésperas da eleição, apresentado pelo texto como uma manobra populista com custos fiscais e institucionais.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A medida é uma manobra desesperada e populista para comprar votos, sacrificando a disciplina fiscal e a ordem econômica por ganhos políticos imediatos.",
+      "A intervenção artificial no mercado enfraquece a autoridade institucional e a continuidade cultural, ao priorizar o assistencialismo de curto prazo sobre a estabilidade."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "408d4acb5d0081bb00358e6117be64a86baa89c417cd97ee695aecd913c0a04e",
+      "input_sha256": "f78999587a4e24a37ea3a73891eeb47f253151a77b3b62dbfe0df2a3cc00dbc2",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Anúncio de desoneração federal de combustíveis e ampliação de subsídios antes do segundo turno presidencial\",\n  \"subtopics\": [\n    \"Redução da tributação sobre gasolina e etanol hidratado\",\n    \"Ampliação de subvenções ao etanol e ao diesel\",\n    \"Impacto fiscal mensal anunciado\",\n    \"Críticas à motivação política e aos efeitos econômicos da medida\"\n  ],\n  \"central_entities\": [\n    \"Bruno Moretti\",\n    \"governo\",\n    \"PIS/Cofins\",\n    \"Cide\",\n    \"Dario Durigan\",\n    \"eleições presidenciais\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A medida é uma manobra desesperada e populista para comprar votos, sacrificando a disciplina fiscal e a ordem econômica por ganhos políticos imediatos.\",\n    \"A intervenção artificial no mercado enfraquece a autoridade institucional e a continuidade cultural, ao priorizar o assistencialismo de curto prazo sobre a estabilidade.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Bruno Moretti\",\n      \"action\": \"afirmou que o governo vai zerar\",\n      \"object\": \"a tributação federal sobre a gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmou que o governo vai zerar\",\n      \"base_action\": \"afirmou que o governo vai zerar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tax_relief_per_liter\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"impacto\",\n      \"action\": \"subindo\",\n      \"object\": null,\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subindo\",\n      \"base_action\": \"subindo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"monthly_impact_lower_bound\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"monthly_impact_upper_bound\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Dario Durigan\",\n      \"action\": \"completou que também vão desonerar\",\n      \"object\": \"o etanol hidratado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"desonerar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vão desonerar\",\n      \"base_action\": \"desonerar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Dario Durigan\",\n      \"action\": \"completou que também vão ampliar\",\n      \"object\": \"as subvenções ao etanol e ao diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vão ampliar\",\n      \"base_action\": \"ampliar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"acontece a 16 dias do\",\n      \"object\": \"segundo turno das eleições presidenciais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acontecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acontece a 16 dias do\",\n      \"base_action\": \"acontece\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 16,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"16 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"time_before_second_round\",\n          \"kind\": \"duration\",\n          \"value\": 16,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"16 dias\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"segundo turno das eleições presidenciais\",\n      \"action\": \"marcado para\",\n      \"object\": \"25 de outubro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcado para\",\n      \"base_action\": \"marcado para\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Anúncio de medidas sobre combustíveis às vésperas da eleição, apresentado pelo texto como uma manobra populista com custos fiscais e institucionais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "408d4acb5d0081bb00358e6117be64a86baa89c417cd97ee695aecd913c0a04e",
+          "input_sha256": "f78999587a4e24a37ea3a73891eeb47f253151a77b3b62dbfe0df2a3cc00dbc2",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Anúncio de desoneração federal de combustíveis e ampliação de subsídios antes do segundo turno presidencial\",\n  \"subtopics\": [\n    \"Redução da tributação sobre gasolina e etanol hidratado\",\n    \"Ampliação de subvenções ao etanol e ao diesel\",\n    \"Impacto fiscal mensal anunciado\",\n    \"Críticas à motivação política e aos efeitos econômicos da medida\"\n  ],\n  \"central_entities\": [\n    \"Bruno Moretti\",\n    \"governo\",\n    \"PIS/Cofins\",\n    \"Cide\",\n    \"Dario Durigan\",\n    \"eleições presidenciais\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A medida é uma manobra desesperada e populista para comprar votos, sacrificando a disciplina fiscal e a ordem econômica por ganhos políticos imediatos.\",\n    \"A intervenção artificial no mercado enfraquece a autoridade institucional e a continuidade cultural, ao priorizar o assistencialismo de curto prazo sobre a estabilidade.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Bruno Moretti\",\n      \"action\": \"afirmou que o governo vai zerar\",\n      \"object\": \"a tributação federal sobre a gasolina\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"afirmou que o governo vai zerar\",\n      \"base_action\": \"afirmou que o governo vai zerar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"tax_relief_per_liter\",\n          \"kind\": \"money\",\n          \"value\": 0.89,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 0,89 por litro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"impacto\",\n      \"action\": \"subindo\",\n      \"object\": null,\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subindo\",\n      \"base_action\": \"subindo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"monthly_impact_lower_bound\",\n          \"kind\": \"money\",\n          \"value\": 2100000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 2,1 bilhões\"\n        },\n        {\n          \"role\": \"monthly_impact_upper_bound\",\n          \"kind\": \"money\",\n          \"value\": 2800000000,\n          \"unit\": \"BRL\",\n          \"status\": \"exact\",\n          \"expression\": \"R$ 2,8 bilhões\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Dario Durigan\",\n      \"action\": \"completou que também vão desonerar\",\n      \"object\": \"o etanol hidratado\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"desonerar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vão desonerar\",\n      \"base_action\": \"desonerar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Dario Durigan\",\n      \"action\": \"completou que também vão ampliar\",\n      \"object\": \"as subvenções ao etanol e ao diesel\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ampliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vão ampliar\",\n      \"base_action\": \"ampliar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"governo\",\n      \"action\": \"acontece a 16 dias do\",\n      \"object\": \"segundo turno das eleições presidenciais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"acontecer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"acontece a 16 dias do\",\n      \"base_action\": \"acontece\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 16,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"16 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"time_before_second_round\",\n          \"kind\": \"duration\",\n          \"value\": 16,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"16 dias\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"segundo turno das eleições presidenciais\",\n      \"action\": \"marcado para\",\n      \"object\": \"25 de outubro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcado para\",\n      \"base_action\": \"marcado para\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_day\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"25 de outubro\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Anúncio de medidas sobre combustíveis às vésperas da eleição, apresentado pelo texto como uma manobra populista com custos fiscais e institucionais.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "3b633832de8e377bbceebe993e426cba0ebc2dd517b66bc9df33353bd370130c"
+}

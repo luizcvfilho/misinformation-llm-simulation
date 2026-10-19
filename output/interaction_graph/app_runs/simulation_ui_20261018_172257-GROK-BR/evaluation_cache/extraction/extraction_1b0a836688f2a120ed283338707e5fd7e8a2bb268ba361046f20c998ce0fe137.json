@@ -1,0 +1,145 @@
+{
+  "inputs": {
+    "text": "O prefeito de São Paulo, Ricardo Nunes do MDB, declarou que Jair Bolsonaro provavelmente não aceitaria um ministério em um governo do filho Flávio Bolsonaro do PL, caso este vença Lula no segundo turno de 2026. Segundo ele, “Eu acho que ele nem aceitaria. Uma pessoa que foi presidente participar de um governo, acho que nem aceitaria”, embora pudesse dar uma contribuição. \n\nIsso expõe de forma escancarada como setores da direita insistem em preservar o poder por meio de sucessões familiares, ignorando as desigualdades estruturais e históricas que oprimem os trabalhadores, as populações negras e todos os grupos marginalizados. Em vez de defender reformas institucionais por justiça social, direitos laborais e proteção dos mais vulneráveis, eles reforçam dinâmicas de elite que perpetuam a exclusão e bloqueiam qualquer mudança real em favor dos oprimidos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um possível governo de Flávio Bolsonaro.",
+    "subtopics": [
+      "Possível sucessão familiar na direita",
+      "Desigualdade estrutural e exclusão social",
+      "Reformas institucionais e justiça social"
+    ],
+    "central_entities": [
+      "São Paulo",
+      "Ricardo Nunes",
+      "MDB",
+      "Jair Bolsonaro",
+      "Flávio Bolsonaro",
+      "PL",
+      "Lula",
+      "setores da direita",
+      "trabalhadores",
+      "populações negras",
+      "grupos marginalizados"
+    ],
+    "central_relations": [
+      {
+        "subject": "Jair Bolsonaro",
+        "action": "provavelmente não aceitaria",
+        "object": "um ministério em um governo do filho Flávio Bolsonaro",
+        "polarity": "negated",
+        "predicate": "aceitar um ministério",
+        "negation_scope": "não aceitaria",
+        "signed_action": "provavelmente não aceitaria",
+        "base_action": "aceitaria",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "vença",
+        "object": "Lula no segundo turno de 2026",
+        "polarity": "affirmed",
+        "predicate": "vencer",
+        "negation_scope": null,
+        "signed_action": "vença",
+        "base_action": "vença",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          }
+        ]
+      },
+      {
+        "subject": "Jair Bolsonaro",
+        "action": "pudesse dar",
+        "object": "uma contribuição",
+        "polarity": "affirmed",
+        "predicate": "dar contribuição",
+        "negation_scope": null,
+        "signed_action": "pudesse dar",
+        "base_action": "pudesse dar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Enquadramento crítico da sucessão familiar na direita e de seus efeitos sobre grupos marginalizados.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O texto critica setores da direita por preservar o poder por meio de sucessões familiares e por reforçar dinâmicas de elite que perpetuam a exclusão.",
+      "O texto defende reformas institucionais voltadas à justiça social, aos direitos laborais e à proteção dos mais vulneráveis."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "3ce0ff429e8e20353cd9fec112b108692a169f7e714607973555416ccfce64a8",
+      "input_sha256": "8caa19fc66e4020101685559b114a19194d01b7a3b0e10aea69cdf34ca766b6f",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um possível governo de Flávio Bolsonaro.\",\n  \"subtopics\": [\n    \"Possível sucessão familiar na direita\",\n    \"Desigualdade estrutural e exclusão social\",\n    \"Reformas institucionais e justiça social\"\n  ],\n  \"central_entities\": [\n    \"São Paulo\",\n    \"Ricardo Nunes\",\n    \"MDB\",\n    \"Jair Bolsonaro\",\n    \"Flávio Bolsonaro\",\n    \"PL\",\n    \"Lula\",\n    \"setores da direita\",\n    \"trabalhadores\",\n    \"populações negras\",\n    \"grupos marginalizados\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto critica setores da direita por preservar o poder por meio de sucessões familiares e por reforçar dinâmicas de elite que perpetuam a exclusão.\",\n    \"O texto defende reformas institucionais voltadas à justiça social, aos direitos laborais e à proteção dos mais vulneráveis.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Jair Bolsonaro\",\n      \"action\": \"provavelmente não aceitaria\",\n      \"object\": \"um ministério em um governo do filho Flávio Bolsonaro\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"aceitar um ministério\",\n      \"negation_scope\": \"não aceitaria\",\n      \"signed_action\": \"provavelmente não aceitaria\",\n      \"base_action\": \"aceitaria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"vença\",\n      \"object\": \"Lula no segundo turno de 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vencer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vença\",\n      \"base_action\": \"vença\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Jair Bolsonaro\",\n      \"action\": \"pudesse dar\",\n      \"object\": \"uma contribuição\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar contribuição\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pudesse dar\",\n      \"base_action\": \"pudesse dar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico da sucessão familiar na direita e de seus efeitos sobre grupos marginalizados.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "3ce0ff429e8e20353cd9fec112b108692a169f7e714607973555416ccfce64a8",
+          "input_sha256": "8caa19fc66e4020101685559b114a19194d01b7a3b0e10aea69cdf34ca766b6f",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um possível governo de Flávio Bolsonaro.\",\n  \"subtopics\": [\n    \"Possível sucessão familiar na direita\",\n    \"Desigualdade estrutural e exclusão social\",\n    \"Reformas institucionais e justiça social\"\n  ],\n  \"central_entities\": [\n    \"São Paulo\",\n    \"Ricardo Nunes\",\n    \"MDB\",\n    \"Jair Bolsonaro\",\n    \"Flávio Bolsonaro\",\n    \"PL\",\n    \"Lula\",\n    \"setores da direita\",\n    \"trabalhadores\",\n    \"populações negras\",\n    \"grupos marginalizados\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto critica setores da direita por preservar o poder por meio de sucessões familiares e por reforçar dinâmicas de elite que perpetuam a exclusão.\",\n    \"O texto defende reformas institucionais voltadas à justiça social, aos direitos laborais e à proteção dos mais vulneráveis.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Jair Bolsonaro\",\n      \"action\": \"provavelmente não aceitaria\",\n      \"object\": \"um ministério em um governo do filho Flávio Bolsonaro\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"aceitar um ministério\",\n      \"negation_scope\": \"não aceitaria\",\n      \"signed_action\": \"provavelmente não aceitaria\",\n      \"base_action\": \"aceitaria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"vença\",\n      \"object\": \"Lula no segundo turno de 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"vencer\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vença\",\n      \"base_action\": \"vença\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Jair Bolsonaro\",\n      \"action\": \"pudesse dar\",\n      \"object\": \"uma contribuição\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar contribuição\",\n      \"negation_scope\": null,\n      \"signed_action\": \"pudesse dar\",\n      \"base_action\": \"pudesse dar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento crítico da sucessão familiar na direita e de seus efeitos sobre grupos marginalizados.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "f4d6ce210aa7248b40dad395296ced755683df9468eef623fcb1e4269f183dad"
+}

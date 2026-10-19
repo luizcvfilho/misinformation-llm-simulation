@@ -1,0 +1,134 @@
+{
+  "inputs": {
+    "text": "Olha só o que o prefeito de São Paulo, Ricardo Nunes (MDB), está dizendo: Jair Bolsonaro provavelmente não aceitaria um ministério em um governo do filho, Flávio Bolsonaro (PL), se ele vencer Lula no segundo turno de 2026. Segundo Nunes, “Eu acho que ele nem aceitaria. Uma pessoa que foi presidente participar de um governo, acho que nem aceitaria”, mas ele não veria problemas porque “poderia dar uma contribuição”. Isso me parece mais uma demonstração de que a direita prioriza discussões sobre sucessão familiar de poder em vez de enfrentar as desigualdades estruturais que afetam os mais pobres e vulneráveis, e de trabalhar por reformas que avancem a justiça social e os direitos dos trabalhadores.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um eventual governo de Flávio Bolsonaro.",
+    "subtopics": [
+      "Possível contribuição de Jair Bolsonaro a um governo do filho",
+      "Crítica à prioridade dada pela direita à sucessão familiar de poder",
+      "Desigualdades estruturais, justiça social e direitos dos trabalhadores"
+    ],
+    "central_entities": [
+      "São Paulo",
+      "Ricardo Nunes (MDB)",
+      "Jair Bolsonaro",
+      "Flávio Bolsonaro (PL)",
+      "Lula",
+      "direita",
+      "os mais pobres e vulneráveis",
+      "trabalhadores"
+    ],
+    "central_relations": [
+      {
+        "subject": "Ricardo Nunes (MDB)",
+        "action": "disse que Jair Bolsonaro provavelmente não aceitaria",
+        "object": "um ministério em um governo do filho, Flávio Bolsonaro (PL), se ele vencer Lula no segundo turno de 2026",
+        "polarity": "negated",
+        "predicate": "aceitar",
+        "negation_scope": "aceitaria um ministério",
+        "signed_action": "não aceitaria",
+        "base_action": "aceitaria",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 2.0,
+            "unit": "round",
+            "kind": "count",
+            "status": "exact",
+            "expression": "segundo turno"
+          },
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2026"
+          }
+        ]
+      },
+      {
+        "subject": "Ricardo Nunes (MDB)",
+        "action": "disse que Jair Bolsonaro poderia dar",
+        "object": "uma contribuição",
+        "polarity": "affirmed",
+        "predicate": "dar",
+        "negation_scope": null,
+        "signed_action": "poderia dar",
+        "base_action": "dar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "Crítica à prioridade atribuída à sucessão familiar de poder pela direita em detrimento do enfrentamento das desigualdades e do avanço da justiça social e dos direitos dos trabalhadores.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "Ricardo Nunes acha que Jair Bolsonaro nem aceitaria um ministério, mas não veria problemas porque poderia dar uma contribuição.",
+      "O autor considera que a direita prioriza discussões sobre sucessão familiar de poder em vez de enfrentar desigualdades estruturais e trabalhar por reformas em favor da justiça social e dos direitos dos trabalhadores."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "2c46fe1c7cb923682955881bb1cf0dfb62cc274922ba5df1e32ef24c5a190550",
+      "input_sha256": "d3a14dace6e768ff1d0dab2878ac115b7455688ec5cc14ee408aa55d44ce1b1b",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um eventual governo de Flávio Bolsonaro.\",\n  \"subtopics\": [\n    \"Possível contribuição de Jair Bolsonaro a um governo do filho\",\n    \"Crítica à prioridade dada pela direita à sucessão familiar de poder\",\n    \"Desigualdades estruturais, justiça social e direitos dos trabalhadores\"\n  ],\n  \"central_entities\": [\n    \"São Paulo\",\n    \"Ricardo Nunes (MDB)\",\n    \"Jair Bolsonaro\",\n    \"Flávio Bolsonaro (PL)\",\n    \"Lula\",\n    \"direita\",\n    \"os mais pobres e vulneráveis\",\n    \"trabalhadores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Ricardo Nunes acha que Jair Bolsonaro nem aceitaria um ministério, mas não veria problemas porque poderia dar uma contribuição.\",\n    \"O autor considera que a direita prioriza discussões sobre sucessão familiar de poder em vez de enfrentar desigualdades estruturais e trabalhar por reformas em favor da justiça social e dos direitos dos trabalhadores.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Ricardo Nunes (MDB)\",\n      \"action\": \"disse que Jair Bolsonaro provavelmente não aceitaria\",\n      \"object\": \"um ministério em um governo do filho, Flávio Bolsonaro (PL), se ele vencer Lula no segundo turno de 2026\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"aceitar\",\n      \"negation_scope\": \"aceitaria um ministério\",\n      \"signed_action\": \"não aceitaria\",\n      \"base_action\": \"aceitaria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Ricardo Nunes (MDB)\",\n      \"action\": \"disse que Jair Bolsonaro poderia dar\",\n      \"object\": \"uma contribuição\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"poderia dar\",\n      \"base_action\": \"dar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica à prioridade atribuída à sucessão familiar de poder pela direita em detrimento do enfrentamento das desigualdades e do avanço da justiça social e dos direitos dos trabalhadores.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "2c46fe1c7cb923682955881bb1cf0dfb62cc274922ba5df1e32ef24c5a190550",
+          "input_sha256": "d3a14dace6e768ff1d0dab2878ac115b7455688ec5cc14ee408aa55d44ce1b1b",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Ricardo Nunes afirma que Jair Bolsonaro provavelmente não aceitaria um ministério em um eventual governo de Flávio Bolsonaro.\",\n  \"subtopics\": [\n    \"Possível contribuição de Jair Bolsonaro a um governo do filho\",\n    \"Crítica à prioridade dada pela direita à sucessão familiar de poder\",\n    \"Desigualdades estruturais, justiça social e direitos dos trabalhadores\"\n  ],\n  \"central_entities\": [\n    \"São Paulo\",\n    \"Ricardo Nunes (MDB)\",\n    \"Jair Bolsonaro\",\n    \"Flávio Bolsonaro (PL)\",\n    \"Lula\",\n    \"direita\",\n    \"os mais pobres e vulneráveis\",\n    \"trabalhadores\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"Ricardo Nunes acha que Jair Bolsonaro nem aceitaria um ministério, mas não veria problemas porque poderia dar uma contribuição.\",\n    \"O autor considera que a direita prioriza discussões sobre sucessão familiar de poder em vez de enfrentar desigualdades estruturais e trabalhar por reformas em favor da justiça social e dos direitos dos trabalhadores.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Ricardo Nunes (MDB)\",\n      \"action\": \"disse que Jair Bolsonaro provavelmente não aceitaria\",\n      \"object\": \"um ministério em um governo do filho, Flávio Bolsonaro (PL), se ele vencer Lula no segundo turno de 2026\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"aceitar\",\n      \"negation_scope\": \"aceitaria um ministério\",\n      \"signed_action\": \"não aceitaria\",\n      \"base_action\": \"aceitaria\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"segundo turno\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Ricardo Nunes (MDB)\",\n      \"action\": \"disse que Jair Bolsonaro poderia dar\",\n      \"object\": \"uma contribuição\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"poderia dar\",\n      \"base_action\": \"dar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"Crítica à prioridade atribuída à sucessão familiar de poder pela direita em detrimento do enfrentamento das desigualdades e do avanço da justiça social e dos direitos dos trabalhadores.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "dfc5e1a36ffb4fd7bd0df3d25817631e086c821e1e335e671125c2d8e335d0e7"
+}

@@ -1,0 +1,156 @@
+{
+  "inputs": {
+    "text": "O Flávio Bolsonaro defendeu que os jovens possam tirar a Carteira Nacional de Habilitação a partir dos 16 anos. Ele fez essa declaração na terça-feira (6), em um evento em Goiânia, ao falar sobre a redução da maioridade penal. Hoje os brasileiros de 16 e 17 anos não podem tirar a CNH, o que exigiria mudar as regras. O candidato ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos. Essa posição é um passo firme em favor da responsabilidade pessoal e da punição real para quem viola a lei, em vez de cair na armadilha progressista de culpar a pobreza e a exclusão social por tudo. Em vez de tratar os infratores como vítimas e enfraquecer a autoridade, ele reforça a ordem necessária para proteger a sociedade, a família e os valores tradicionais que garantem a segurança de todos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Flávio Bolsonaro defende que jovens possam tirar a CNH a partir dos 16 anos, relacionando a proposta à redução da maioridade penal.",
+    "subtopics": [
+      "Regras atuais da CNH para jovens de 16 e 17 anos",
+      "Responsabilização de adolescentes envolvidos em crimes graves como adultos",
+      "Enquadramento editorial sobre punição, ordem e valores tradicionais"
+    ],
+    "central_entities": [
+      "Flávio Bolsonaro",
+      "Goiânia",
+      "jovens",
+      "CNH",
+      "brasileiros de 16 e 17 anos",
+      "adolescentes envolvidos em crimes graves"
+    ],
+    "central_relations": [
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "defendeu que os jovens possam tirar",
+        "object": "CNH a partir dos 16 anos",
+        "polarity": "affirmed",
+        "predicate": "defender que possam tirar",
+        "negation_scope": null,
+        "signed_action": "defendeu que os jovens possam tirar",
+        "base_action": "defendeu que os jovens possam tirar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "minimum_age",
+            "value": 16.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "16 anos"
+          }
+        ]
+      },
+      {
+        "subject": "Flávio Bolsonaro",
+        "action": "ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos",
+        "object": "adolescentes envolvidos em crimes graves",
+        "polarity": "affirmed",
+        "predicate": "ligar a proposta à defesa",
+        "negation_scope": null,
+        "signed_action": "ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos",
+        "base_action": "ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "brasileiros de 16 e 17 anos",
+        "action": "não podem tirar",
+        "object": "CNH",
+        "polarity": "negated",
+        "predicate": "poder tirar",
+        "negation_scope": "podem tirar",
+        "signed_action": "não podem tirar",
+        "base_action": "podem tirar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "lower_bound",
+            "value": 16.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "16"
+          },
+          {
+            "role": "upper_bound",
+            "value": 17.0,
+            "unit": "year",
+            "kind": "age",
+            "status": "exact",
+            "expression": "17 anos"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "A proposta é enquadrada como defesa da responsabilidade pessoal, da punição e da ordem, com crítica a explicações progressistas para a criminalidade.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A posição é apresentada como defesa firme da responsabilidade pessoal, da punição e da ordem, em oposição a explicações baseadas na pobreza e na exclusão social."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "1853a1fca355376fc4f8e728acf965951ded23b98e8bae56ad4794cdd6b8e372",
+      "input_sha256": "20c3f4d75e0d042ce96ae8d79ef1d6abdd9ab330fe76f5b4c2faed66a80cd21c",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Flávio Bolsonaro defende que jovens possam tirar a CNH a partir dos 16 anos, relacionando a proposta à redução da maioridade penal.\",\n  \"subtopics\": [\n    \"Regras atuais da CNH para jovens de 16 e 17 anos\",\n    \"Responsabilização de adolescentes envolvidos em crimes graves como adultos\",\n    \"Enquadramento editorial sobre punição, ordem e valores tradicionais\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"Goiânia\",\n    \"jovens\",\n    \"CNH\",\n    \"brasileiros de 16 e 17 anos\",\n    \"adolescentes envolvidos em crimes graves\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A posição é apresentada como defesa firme da responsabilidade pessoal, da punição e da ordem, em oposição a explicações baseadas na pobreza e na exclusão social.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"defendeu que os jovens possam tirar\",\n      \"object\": \"CNH a partir dos 16 anos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defender que possam tirar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que os jovens possam tirar\",\n      \"base_action\": \"defendeu que os jovens possam tirar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"minimum_age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"object\": \"adolescentes envolvidos em crimes graves\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ligar a proposta à defesa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"base_action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"brasileiros de 16 e 17 anos\",\n      \"action\": \"não podem tirar\",\n      \"object\": \"CNH\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"poder tirar\",\n      \"negation_scope\": \"podem tirar\",\n      \"signed_action\": \"não podem tirar\",\n      \"base_action\": \"podem tirar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lower_bound\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16\"\n        },\n        {\n          \"role\": \"upper_bound\",\n          \"kind\": \"age\",\n          \"value\": 17,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"17 anos\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A proposta é enquadrada como defesa da responsabilidade pessoal, da punição e da ordem, com crítica a explicações progressistas para a criminalidade.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "1853a1fca355376fc4f8e728acf965951ded23b98e8bae56ad4794cdd6b8e372",
+          "input_sha256": "20c3f4d75e0d042ce96ae8d79ef1d6abdd9ab330fe76f5b4c2faed66a80cd21c",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Flávio Bolsonaro defende que jovens possam tirar a CNH a partir dos 16 anos, relacionando a proposta à redução da maioridade penal.\",\n  \"subtopics\": [\n    \"Regras atuais da CNH para jovens de 16 e 17 anos\",\n    \"Responsabilização de adolescentes envolvidos em crimes graves como adultos\",\n    \"Enquadramento editorial sobre punição, ordem e valores tradicionais\"\n  ],\n  \"central_entities\": [\n    \"Flávio Bolsonaro\",\n    \"Goiânia\",\n    \"jovens\",\n    \"CNH\",\n    \"brasileiros de 16 e 17 anos\",\n    \"adolescentes envolvidos em crimes graves\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A posição é apresentada como defesa firme da responsabilidade pessoal, da punição e da ordem, em oposição a explicações baseadas na pobreza e na exclusão social.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"defendeu que os jovens possam tirar\",\n      \"object\": \"CNH a partir dos 16 anos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"defender que possam tirar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"defendeu que os jovens possam tirar\",\n      \"base_action\": \"defendeu que os jovens possam tirar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"minimum_age\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16 anos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Flávio Bolsonaro\",\n      \"action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"object\": \"adolescentes envolvidos em crimes graves\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ligar a proposta à defesa\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"base_action\": \"ligou diretamente a proposta à defesa de que adolescentes envolvidos em crimes graves respondam como adultos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"brasileiros de 16 e 17 anos\",\n      \"action\": \"não podem tirar\",\n      \"object\": \"CNH\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"poder tirar\",\n      \"negation_scope\": \"podem tirar\",\n      \"signed_action\": \"não podem tirar\",\n      \"base_action\": \"podem tirar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"lower_bound\",\n          \"kind\": \"age\",\n          \"value\": 16,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"16\"\n        },\n        {\n          \"role\": \"upper_bound\",\n          \"kind\": \"age\",\n          \"value\": 17,\n          \"unit\": \"year\",\n          \"status\": \"exact\",\n          \"expression\": \"17 anos\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"A proposta é enquadrada como defesa da responsabilidade pessoal, da punição e da ordem, com crítica a explicações progressistas para a criminalidade.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "eb3c8fb3e0e08933898cec089e5ad144d3ee2c0719ef697993f151eecfada8a7"
+}

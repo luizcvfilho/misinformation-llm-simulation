@@ -1,0 +1,205 @@
+{
+  "inputs": {
+    "text": "Olha só, o Tarcísio de Freitas negou nessa quarta-feira (7) qualquer acordo para disputar a Presidência em 2030, na sucessão de Flávio Bolsonaro. Ele disse que “Tem nada a ver. O meu acordo aqui é com a população de São Paulo de fazer um excelente mandato”. Reeleito em primeiro turno com mais de 60% dos votos, essas negações são o sinal clássico de que já existe um combinado nos bastidores para posicioná-lo no poder em 2030, enquanto fingem compromisso só com o estado pra enganar a população. É coordenação oculta das elites escondidas pra controlar a sucessão sem ninguém perceber.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Negação de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e interpretação de que haveria uma articulação nos bastidores.",
+    "subtopics": [
+      "Sucessão de Flávio Bolsonaro",
+      "Compromisso de Tarcísio de Freitas com a população de São Paulo",
+      "Reeleição em primeiro turno"
+    ],
+    "central_entities": [
+      "Tarcísio de Freitas",
+      "Flávio Bolsonaro",
+      "Presidência",
+      "São Paulo",
+      "população de São Paulo",
+      "elites escondidas"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "negou",
+        "object": "qualquer acordo para disputar a Presidência em 2030, na sucessão de Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "negar_acordo",
+        "negation_scope": null,
+        "signed_action": "negou",
+        "base_action": "negou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "year_of_proposed_presidential_race",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          },
+          {
+            "role": "day_of_month",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "(7)"
+          }
+        ]
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "disse que seu acordo é com",
+        "object": "a população de São Paulo para fazer um excelente mandato",
+        "polarity": "affirmed",
+        "predicate": "afirmar_acordo_e_compromisso",
+        "negation_scope": null,
+        "signed_action": "disse que seu acordo é com",
+        "base_action": "disse que seu acordo é com",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "foi reeleito em primeiro turno",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ser_reeleito",
+        "negation_scope": null,
+        "signed_action": "foi reeleito em primeiro turno",
+        "base_action": "foi reeleito em primeiro turno",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 1.0,
+            "unit": "round",
+            "kind": "count",
+            "status": "exact",
+            "expression": "primeiro turno"
+          },
+          {
+            "role": "vote_share_lower_bound",
+            "value": 60.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "mais de 60%"
+          }
+        ]
+      },
+      {
+        "subject": "um combinado nos bastidores",
+        "action": "posicionar no poder em 2030",
+        "object": "Tarcísio de Freitas",
+        "polarity": "affirmed",
+        "predicate": "posicionar_no_poder",
+        "negation_scope": null,
+        "signed_action": "posicioná-lo no poder em 2030",
+        "base_action": "posicioná-lo no poder em 2030",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": [
+          {
+            "role": "year_of_intended_positioning",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      },
+      {
+        "subject": "elites escondidas",
+        "action": "controlar",
+        "object": "a sucessão sem ninguém perceber",
+        "polarity": "affirmed",
+        "predicate": "controlar_sucessao",
+        "negation_scope": null,
+        "signed_action": "controlar a sucessão sem ninguém perceber",
+        "base_action": "controlar a sucessão sem ninguém perceber",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "As negativas são enquadradas como fachada para uma sucessão presidencial supostamente articulada nos bastidores.",
+    "has_internal_contradiction": true,
+    "internal_contradiction_score": 0.75,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "As negativas seriam um sinal clássico de acordo oculto e de fingimento de compromisso estadual para enganar a população."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "d6edaad1a0a3c4d668c55cddafa52ef63f8db8c269baed6a3f65de8d309efbe0",
+      "input_sha256": "f8832a4a550a6e55d8aa4d96793225b7df24b21442a3f3a70e8a6df748f63781",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Negação de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e interpretação de que haveria uma articulação nos bastidores.\",\n  \"subtopics\": [\n    \"Sucessão de Flávio Bolsonaro\",\n    \"Compromisso de Tarcísio de Freitas com a população de São Paulo\",\n    \"Reeleição em primeiro turno\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"Flávio Bolsonaro\",\n    \"Presidência\",\n    \"São Paulo\",\n    \"população de São Paulo\",\n    \"elites escondidas\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"As negativas seriam um sinal clássico de acordo oculto e de fingimento de compromisso estadual para enganar a população.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"qualquer acordo para disputar a Presidência em 2030, na sucessão de Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar_acordo\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"year_of_proposed_presidential_race\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        },\n        {\n          \"role\": \"day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"(7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"disse que seu acordo é com\",\n      \"object\": \"a população de São Paulo para fazer um excelente mandato\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar_acordo_e_compromisso\",\n      \"negation_scope\": null,\n      \"signed_action\": \"disse que seu acordo é com\",\n      \"base_action\": \"disse que seu acordo é com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"foi reeleito em primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser_reeleito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi reeleito em primeiro turno\",\n      \"base_action\": \"foi reeleito em primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"vote_share_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"um combinado nos bastidores\",\n      \"action\": \"posicionar no poder em 2030\",\n      \"object\": \"Tarcísio de Freitas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"posicionar_no_poder\",\n      \"negation_scope\": null,\n      \"signed_action\": \"posicioná-lo no poder em 2030\",\n      \"base_action\": \"posicioná-lo no poder em 2030\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"year_of_intended_positioning\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"elites escondidas\",\n      \"action\": \"controlar\",\n      \"object\": \"a sucessão sem ninguém perceber\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"controlar_sucessao\",\n      \"negation_scope\": null,\n      \"signed_action\": \"controlar a sucessão sem ninguém perceber\",\n      \"base_action\": \"controlar a sucessão sem ninguém perceber\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"As negativas são enquadradas como fachada para uma sucessão presidencial supostamente articulada nos bastidores.\",\n  \"has_internal_contradiction\": true,\n  \"internal_contradiction_score\": 0.75\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "d6edaad1a0a3c4d668c55cddafa52ef63f8db8c269baed6a3f65de8d309efbe0",
+          "input_sha256": "f8832a4a550a6e55d8aa4d96793225b7df24b21442a3f3a70e8a6df748f63781",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Negação de Tarcísio de Freitas sobre um acordo para disputar a Presidência em 2030 e interpretação de que haveria uma articulação nos bastidores.\",\n  \"subtopics\": [\n    \"Sucessão de Flávio Bolsonaro\",\n    \"Compromisso de Tarcísio de Freitas com a população de São Paulo\",\n    \"Reeleição em primeiro turno\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"Flávio Bolsonaro\",\n    \"Presidência\",\n    \"São Paulo\",\n    \"população de São Paulo\",\n    \"elites escondidas\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"As negativas seriam um sinal clássico de acordo oculto e de fingimento de compromisso estadual para enganar a população.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"qualquer acordo para disputar a Presidência em 2030, na sucessão de Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar_acordo\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"year_of_proposed_presidential_race\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        },\n        {\n          \"role\": \"day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"(7)\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"disse que seu acordo é com\",\n      \"object\": \"a população de São Paulo para fazer um excelente mandato\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"afirmar_acordo_e_compromisso\",\n      \"negation_scope\": null,\n      \"signed_action\": \"disse que seu acordo é com\",\n      \"base_action\": \"disse que seu acordo é com\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"foi reeleito em primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser_reeleito\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foi reeleito em primeiro turno\",\n      \"base_action\": \"foi reeleito em primeiro turno\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"count\",\n          \"value\": 1,\n          \"unit\": \"round\",\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"vote_share_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"um combinado nos bastidores\",\n      \"action\": \"posicionar no poder em 2030\",\n      \"object\": \"Tarcísio de Freitas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"posicionar_no_poder\",\n      \"negation_scope\": null,\n      \"signed_action\": \"posicioná-lo no poder em 2030\",\n      \"base_action\": \"posicioná-lo no poder em 2030\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": [\n        {\n          \"role\": \"year_of_intended_positioning\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"elites escondidas\",\n      \"action\": \"controlar\",\n      \"object\": \"a sucessão sem ninguém perceber\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"controlar_sucessao\",\n      \"negation_scope\": null,\n      \"signed_action\": \"controlar a sucessão sem ninguém perceber\",\n      \"base_action\": \"controlar a sucessão sem ninguém perceber\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"As negativas são enquadradas como fachada para uma sucessão presidencial supostamente articulada nos bastidores.\",\n  \"has_internal_contradiction\": true,\n  \"internal_contradiction_score\": 0.75\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "5c68811feb7768ef7021c7154be018edbc29da32aeda66c95cff73ec6ccc25ab"
+}

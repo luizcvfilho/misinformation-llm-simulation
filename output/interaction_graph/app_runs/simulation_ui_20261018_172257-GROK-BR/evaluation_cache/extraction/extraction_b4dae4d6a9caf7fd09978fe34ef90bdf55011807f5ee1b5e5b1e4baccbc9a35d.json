@@ -1,0 +1,362 @@
+{
+  "inputs": {
+    "text": "Recebi essa notícia sobre as eleições de domingo e vejo claramente o que está por trás. Os partidos de esquerda elegeram 47 mulheres para a Câmara, com a federação do PT, PCdoB e PV garantindo 34 cadeiras, a maior bancada feminina entre as forças partidárias. Mesmo assim, vão enfrentar um Congresso de maioria conservadora, o que preserva a ordem e a autoridade tradicionais que a sociedade brasileira ainda valoriza.\n\nAo todo foram 109 deputadas eleitas, contra 91 em 2022, subindo para 21,2% das 513 cadeiras, ainda bem distante dos 51,5% da população feminina. A Câmara segue dominada por homens brancos em 301 cadeiras, ou 58,7%. Entre as 47 de esquerda e centro-esquerda, destacam 20 negras e duas indígenas, mas o contraste com o PL é revelador: o PT elegeu 25 mulheres entre seus 70 deputados, enquanto o PL, com 121 parlamentares, elegeu só 22, ou 18,2%. \n\nIsso mostra que a esquerda insiste em priorizar identidade e agendas progressistas para ganhar espaço, enquanto os conservadores, como o partido de Flávio Bolsonaro, focam em valores de família, responsabilidade pessoal e continuidade cultural sem precisar recorrer a essas divisões. O resultado reforça que a maioria do Congresso resiste a essas tentativas de mudar o que é tradicional.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Eleição de mulheres para a Câmara e sua representação partidária, racial e de gênero",
+    "subtopics": [
+      "Representação de mulheres na Câmara",
+      "Diferenças entre PT e PL na eleição de mulheres",
+      "Representação de mulheres negras e indígenas",
+      "Maioria conservadora no Congresso"
+    ],
+    "central_entities": [
+      "Câmara",
+      "Congresso",
+      "partidos de esquerda",
+      "federação do PT, PCdoB e PV",
+      "PT",
+      "PCdoB",
+      "PV",
+      "PL",
+      "Flávio Bolsonaro",
+      "esquerda e centro-esquerda",
+      "homens brancos"
+    ],
+    "central_relations": [
+      {
+        "subject": "partidos de esquerda",
+        "action": "elegeram",
+        "object": "mulheres para a Câmara",
+        "polarity": "affirmed",
+        "predicate": "eleger",
+        "negation_scope": null,
+        "signed_action": "elegeram",
+        "base_action": "eleger",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "women_elected",
+            "value": 47.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "47 mulheres"
+          },
+          {
+            "role": "black_women_elected",
+            "value": 20.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "20 negras"
+          },
+          {
+            "role": "indigenous_women_elected",
+            "value": 2.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "duas indígenas"
+          }
+        ]
+      },
+      {
+        "subject": "federação do PT, PCdoB e PV",
+        "action": "garantindo",
+        "object": "cadeiras e a maior bancada feminina entre as forças partidárias",
+        "polarity": "affirmed",
+        "predicate": "garantir",
+        "negation_scope": null,
+        "signed_action": "garantindo",
+        "base_action": "garantir",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "seats",
+            "value": 34.0,
+            "unit": "seat",
+            "kind": "count",
+            "status": "exact",
+            "expression": "34 cadeiras"
+          }
+        ]
+      },
+      {
+        "subject": "Câmara",
+        "action": "teve deputadas eleitas",
+        "object": "109 deputadas eleitas, contra 91 em 2022",
+        "polarity": "affirmed",
+        "predicate": "ter",
+        "negation_scope": null,
+        "signed_action": "foram",
+        "base_action": "ser eleita",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "women_elected_current",
+            "value": 109.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "109 deputadas eleitas"
+          },
+          {
+            "role": "women_elected_previous",
+            "value": 91.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "91"
+          },
+          {
+            "role": "previous_election_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          }
+        ]
+      },
+      {
+        "subject": "Câmara",
+        "action": "subindo para",
+        "object": "a proporção de deputadas eleitas entre as cadeiras",
+        "polarity": "affirmed",
+        "predicate": "subir",
+        "negation_scope": null,
+        "signed_action": "subindo",
+        "base_action": "subir",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "women_seat_share",
+            "value": 21.2,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "21,2%"
+          },
+          {
+            "role": "total_seats",
+            "value": 513.0,
+            "unit": "seat",
+            "kind": "count",
+            "status": "exact",
+            "expression": "513 cadeiras"
+          },
+          {
+            "role": "female_population_share",
+            "value": 51.5,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "51,5%"
+          }
+        ]
+      },
+      {
+        "subject": "Câmara",
+        "action": "segue dominada",
+        "object": "por homens brancos",
+        "polarity": "affirmed",
+        "predicate": "dominar",
+        "negation_scope": null,
+        "signed_action": "segue dominada",
+        "base_action": "dominar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "seats_held_by_white_men",
+            "value": 301.0,
+            "unit": "seat",
+            "kind": "count",
+            "status": "exact",
+            "expression": "301 cadeiras"
+          },
+          {
+            "role": "seat_share_held_by_white_men",
+            "value": 58.7,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "58,7%"
+          }
+        ]
+      },
+      {
+        "subject": "PT",
+        "action": "elegeu",
+        "object": "mulheres entre seus deputados",
+        "polarity": "affirmed",
+        "predicate": "eleger",
+        "negation_scope": null,
+        "signed_action": "elegeu",
+        "base_action": "eleger",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "women_elected",
+            "value": 25.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "25 mulheres"
+          },
+          {
+            "role": "total_deputies",
+            "value": 70.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "70 deputados"
+          }
+        ]
+      },
+      {
+        "subject": "PL",
+        "action": "elegeu",
+        "object": "mulheres entre seus parlamentares",
+        "polarity": "affirmed",
+        "predicate": "eleger",
+        "negation_scope": null,
+        "signed_action": "elegeu",
+        "base_action": "eleger",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "total_parliamentarians",
+            "value": 121.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "121 parlamentares"
+          },
+          {
+            "role": "women_elected",
+            "value": 22.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "22"
+          },
+          {
+            "role": "women_share",
+            "value": 18.2,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "18,2%"
+          }
+        ]
+      },
+      {
+        "subject": "Congresso",
+        "action": "é de maioria conservadora",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "ser",
+        "negation_scope": null,
+        "signed_action": "é",
+        "base_action": "ser",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A notícia combina dados sobre o aumento da representação feminina com uma interpretação política favorável à continuidade de valores tradicionais e crítica às agendas progressistas.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A maioria conservadora no Congresso preserva a ordem e a autoridade tradicionais valorizadas pela sociedade brasileira.",
+      "A esquerda prioriza identidade e agendas progressistas para ganhar espaço.",
+      "Os conservadores focam em valores de família, responsabilidade pessoal e continuidade cultural sem recorrer a divisões identitárias.",
+      "A maioria do Congresso resiste a tentativas de mudar o que é tradicional."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "0ef72abbbccd4263f951ab593eda5750076b387ed1316dd65a5d09e1043c13d5",
+      "input_sha256": "aa539c9f7d16d327e7d13e88fc6323e1408c933632c6a1c2d60c1a3625aebd82",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Eleição de mulheres para a Câmara e sua representação partidária, racial e de gênero\",\n  \"subtopics\": [\n    \"Representação de mulheres na Câmara\",\n    \"Diferenças entre PT e PL na eleição de mulheres\",\n    \"Representação de mulheres negras e indígenas\",\n    \"Maioria conservadora no Congresso\"\n  ],\n  \"central_entities\": [\n    \"Câmara\",\n    \"Congresso\",\n    \"partidos de esquerda\",\n    \"federação do PT, PCdoB e PV\",\n    \"PT\",\n    \"PCdoB\",\n    \"PV\",\n    \"PL\",\n    \"Flávio Bolsonaro\",\n    \"esquerda e centro-esquerda\",\n    \"homens brancos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A maioria conservadora no Congresso preserva a ordem e a autoridade tradicionais valorizadas pela sociedade brasileira.\",\n    \"A esquerda prioriza identidade e agendas progressistas para ganhar espaço.\",\n    \"Os conservadores focam em valores de família, responsabilidade pessoal e continuidade cultural sem recorrer a divisões identitárias.\",\n    \"A maioria do Congresso resiste a tentativas de mudar o que é tradicional.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"partidos de esquerda\",\n      \"action\": \"elegeram\",\n      \"object\": \"mulheres para a Câmara\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeram\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 47,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"47 mulheres\"\n        },\n        {\n          \"role\": \"black_women_elected\",\n          \"kind\": \"count\",\n          \"value\": 20,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"20 negras\"\n        },\n        {\n          \"role\": \"indigenous_women_elected\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"duas indígenas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"federação do PT, PCdoB e PV\",\n      \"action\": \"garantindo\",\n      \"object\": \"cadeiras e a maior bancada feminina entre as forças partidárias\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"garantir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"garantindo\",\n      \"base_action\": \"garantir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"seats\",\n          \"kind\": \"count\",\n          \"value\": 34,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"34 cadeiras\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"teve deputadas eleitas\",\n      \"object\": \"109 deputadas eleitas, contra 91 em 2022\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram\",\n      \"base_action\": \"ser eleita\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected_current\",\n          \"kind\": \"count\",\n          \"value\": 109,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"109 deputadas eleitas\"\n        },\n        {\n          \"role\": \"women_elected_previous\",\n          \"kind\": \"count\",\n          \"value\": 91,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"91\"\n        },\n        {\n          \"role\": \"previous_election_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"subindo para\",\n      \"object\": \"a proporção de deputadas eleitas entre as cadeiras\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subindo\",\n      \"base_action\": \"subir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_seat_share\",\n          \"kind\": \"percentage\",\n          \"value\": 21.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,2%\"\n        },\n        {\n          \"role\": \"total_seats\",\n          \"kind\": \"count\",\n          \"value\": 513,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"513 cadeiras\"\n        },\n        {\n          \"role\": \"female_population_share\",\n          \"kind\": \"percentage\",\n          \"value\": 51.5,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"51,5%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"segue dominada\",\n      \"object\": \"por homens brancos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dominar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"segue dominada\",\n      \"base_action\": \"dominar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"seats_held_by_white_men\",\n          \"kind\": \"count\",\n          \"value\": 301,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"301 cadeiras\"\n        },\n        {\n          \"role\": \"seat_share_held_by_white_men\",\n          \"kind\": \"percentage\",\n          \"value\": 58.7,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"58,7%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PT\",\n      \"action\": \"elegeu\",\n      \"object\": \"mulheres entre seus deputados\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeu\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 25,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"25 mulheres\"\n        },\n        {\n          \"role\": \"total_deputies\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"70 deputados\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PL\",\n      \"action\": \"elegeu\",\n      \"object\": \"mulheres entre seus parlamentares\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeu\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"total_parliamentarians\",\n          \"kind\": \"count\",\n          \"value\": 121,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"121 parlamentares\"\n        },\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 22,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"22\"\n        },\n        {\n          \"role\": \"women_share\",\n          \"kind\": \"percentage\",\n          \"value\": 18.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"18,2%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Congresso\",\n      \"action\": \"é de maioria conservadora\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"ser\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia combina dados sobre o aumento da representação feminina com uma interpretação política favorável à continuidade de valores tradicionais e crítica às agendas progressistas.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "0ef72abbbccd4263f951ab593eda5750076b387ed1316dd65a5d09e1043c13d5",
+          "input_sha256": "aa539c9f7d16d327e7d13e88fc6323e1408c933632c6a1c2d60c1a3625aebd82",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Eleição de mulheres para a Câmara e sua representação partidária, racial e de gênero\",\n  \"subtopics\": [\n    \"Representação de mulheres na Câmara\",\n    \"Diferenças entre PT e PL na eleição de mulheres\",\n    \"Representação de mulheres negras e indígenas\",\n    \"Maioria conservadora no Congresso\"\n  ],\n  \"central_entities\": [\n    \"Câmara\",\n    \"Congresso\",\n    \"partidos de esquerda\",\n    \"federação do PT, PCdoB e PV\",\n    \"PT\",\n    \"PCdoB\",\n    \"PV\",\n    \"PL\",\n    \"Flávio Bolsonaro\",\n    \"esquerda e centro-esquerda\",\n    \"homens brancos\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A maioria conservadora no Congresso preserva a ordem e a autoridade tradicionais valorizadas pela sociedade brasileira.\",\n    \"A esquerda prioriza identidade e agendas progressistas para ganhar espaço.\",\n    \"Os conservadores focam em valores de família, responsabilidade pessoal e continuidade cultural sem recorrer a divisões identitárias.\",\n    \"A maioria do Congresso resiste a tentativas de mudar o que é tradicional.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"partidos de esquerda\",\n      \"action\": \"elegeram\",\n      \"object\": \"mulheres para a Câmara\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeram\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 47,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"47 mulheres\"\n        },\n        {\n          \"role\": \"black_women_elected\",\n          \"kind\": \"count\",\n          \"value\": 20,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"20 negras\"\n        },\n        {\n          \"role\": \"indigenous_women_elected\",\n          \"kind\": \"count\",\n          \"value\": 2,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"duas indígenas\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"federação do PT, PCdoB e PV\",\n      \"action\": \"garantindo\",\n      \"object\": \"cadeiras e a maior bancada feminina entre as forças partidárias\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"garantir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"garantindo\",\n      \"base_action\": \"garantir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"seats\",\n          \"kind\": \"count\",\n          \"value\": 34,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"34 cadeiras\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"teve deputadas eleitas\",\n      \"object\": \"109 deputadas eleitas, contra 91 em 2022\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter\",\n      \"negation_scope\": null,\n      \"signed_action\": \"foram\",\n      \"base_action\": \"ser eleita\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected_current\",\n          \"kind\": \"count\",\n          \"value\": 109,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"109 deputadas eleitas\"\n        },\n        {\n          \"role\": \"women_elected_previous\",\n          \"kind\": \"count\",\n          \"value\": 91,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"91\"\n        },\n        {\n          \"role\": \"previous_election_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"subindo para\",\n      \"object\": \"a proporção de deputadas eleitas entre as cadeiras\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"subir\",\n      \"negation_scope\": null,\n      \"signed_action\": \"subindo\",\n      \"base_action\": \"subir\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_seat_share\",\n          \"kind\": \"percentage\",\n          \"value\": 21.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"21,2%\"\n        },\n        {\n          \"role\": \"total_seats\",\n          \"kind\": \"count\",\n          \"value\": 513,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"513 cadeiras\"\n        },\n        {\n          \"role\": \"female_population_share\",\n          \"kind\": \"percentage\",\n          \"value\": 51.5,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"51,5%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Câmara\",\n      \"action\": \"segue dominada\",\n      \"object\": \"por homens brancos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"dominar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"segue dominada\",\n      \"base_action\": \"dominar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"seats_held_by_white_men\",\n          \"kind\": \"count\",\n          \"value\": 301,\n          \"unit\": \"seat\",\n          \"status\": \"exact\",\n          \"expression\": \"301 cadeiras\"\n        },\n        {\n          \"role\": \"seat_share_held_by_white_men\",\n          \"kind\": \"percentage\",\n          \"value\": 58.7,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"58,7%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PT\",\n      \"action\": \"elegeu\",\n      \"object\": \"mulheres entre seus deputados\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeu\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 25,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"25 mulheres\"\n        },\n        {\n          \"role\": \"total_deputies\",\n          \"kind\": \"count\",\n          \"value\": 70,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"70 deputados\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"PL\",\n      \"action\": \"elegeu\",\n      \"object\": \"mulheres entre seus parlamentares\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"eleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"elegeu\",\n      \"base_action\": \"eleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"total_parliamentarians\",\n          \"kind\": \"count\",\n          \"value\": 121,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"121 parlamentares\"\n        },\n        {\n          \"role\": \"women_elected\",\n          \"kind\": \"count\",\n          \"value\": 22,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"22\"\n        },\n        {\n          \"role\": \"women_share\",\n          \"kind\": \"percentage\",\n          \"value\": 18.2,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"18,2%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Congresso\",\n      \"action\": \"é de maioria conservadora\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"ser\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia combina dados sobre o aumento da representação feminina com uma interpretação política favorável à continuidade de valores tradicionais e crítica às agendas progressistas.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "7ba10d73384aeff9f06b37faf52baff1ef8a6d9da3209f456f29caa657d76041"
+}

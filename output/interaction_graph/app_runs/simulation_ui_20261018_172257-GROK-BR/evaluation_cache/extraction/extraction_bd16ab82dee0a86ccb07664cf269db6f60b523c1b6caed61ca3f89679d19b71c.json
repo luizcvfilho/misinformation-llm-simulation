@@ -1,0 +1,173 @@
+{
+  "inputs": {
+    "text": "O governador de São Paulo, Tarcísio de Freitas, negou nesta quarta-feira que exista qualquer acordo para disputar a Presidência em 2030, como sucessor de Flávio Bolsonaro. Durante um evento, ele afirmou que “Tem nada a ver. O meu acordo aqui é com a população de São Paulo de fazer um excelente mandato”. Reeleito em primeiro turno com mais de 60% dos votos, ele é visto dentro da direita como um nome forte para o Planalto. Para mim, isso é típico das manobras da direita brasileira: negam os planos de sucessão de poder para fingir compromisso com o povo, enquanto mantêm estruturas que protegem elites e perpetuam desigualdades históricas, em vez de avançar reformas que defendam direitos trabalhistas e grupos vulneráveis em São Paulo.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Tarcísio de Freitas nega acordo para disputar a Presidência em 2030",
+    "subtopics": [
+      "Compromisso declarado com a população de São Paulo",
+      "Reeleição e força política na direita",
+      "Crítica às estratégias e prioridades da direita brasileira"
+    ],
+    "central_entities": [
+      "Tarcísio de Freitas",
+      "São Paulo",
+      "Flávio Bolsonaro",
+      "Presidência",
+      "Planalto",
+      "direita",
+      "população de São Paulo"
+    ],
+    "central_relations": [
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "negou",
+        "object": "qualquer acordo para disputar a Presidência em 2030 como sucessor de Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "negar",
+        "negation_scope": null,
+        "signed_action": "negou",
+        "base_action": "negou",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "presidential_race_year",
+            "value": 2030.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2030"
+          }
+        ]
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "é com a população de São Paulo de fazer um excelente mandato",
+        "object": "população de São Paulo",
+        "polarity": "affirmed",
+        "predicate": "ter acordo com",
+        "negation_scope": null,
+        "signed_action": "é",
+        "base_action": "ser",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "foi reeleito em primeiro turno",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "reeleger",
+        "negation_scope": null,
+        "signed_action": "Reeleito",
+        "base_action": "reeleger",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "election_round",
+            "value": 1.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "primeiro turno"
+          },
+          {
+            "role": "vote_share_lower_bound",
+            "value": 60.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "mais de 60%"
+          }
+        ]
+      },
+      {
+        "subject": "Tarcísio de Freitas",
+        "action": "é visto dentro da direita como um nome forte para o Planalto",
+        "object": "nome forte para o Planalto",
+        "polarity": "affirmed",
+        "predicate": "ser visto como",
+        "negation_scope": null,
+        "signed_action": "é visto",
+        "base_action": "ser visto",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A notícia apresenta a negativa de Tarcísio de Freitas sobre uma candidatura futura e contrapõe sua declaração de compromisso com São Paulo a uma crítica editorial das estratégias da direita.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O texto opina que as manobras da direita brasileira negam planos de sucessão para fingir compromisso com o povo, protegem elites e perpetuam desigualdades, em vez de promover reformas que defendam direitos trabalhistas e grupos vulneráveis em São Paulo."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "a22269ccdc77c305ef5f3315ddd09f3c7cf04d3e3ef7256ab63ea3e03a473ce9",
+      "input_sha256": "fb73ffdaef001f86a3d0e2c85a9723c42ae318780c1da44899b9de7ceaee0ca0",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Tarcísio de Freitas nega acordo para disputar a Presidência em 2030\",\n  \"subtopics\": [\n    \"Compromisso declarado com a população de São Paulo\",\n    \"Reeleição e força política na direita\",\n    \"Crítica às estratégias e prioridades da direita brasileira\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"São Paulo\",\n    \"Flávio Bolsonaro\",\n    \"Presidência\",\n    \"Planalto\",\n    \"direita\",\n    \"população de São Paulo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto opina que as manobras da direita brasileira negam planos de sucessão para fingir compromisso com o povo, protegem elites e perpetuam desigualdades, em vez de promover reformas que defendam direitos trabalhistas e grupos vulneráveis em São Paulo.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"qualquer acordo para disputar a Presidência em 2030 como sucessor de Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"presidential_race_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"é com a população de São Paulo de fazer um excelente mandato\",\n      \"object\": \"população de São Paulo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter acordo com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"ser\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"foi reeleito em primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reeleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Reeleito\",\n      \"base_action\": \"reeleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"number\",\n          \"value\": 1,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"vote_share_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"é visto dentro da direita como um nome forte para o Planalto\",\n      \"object\": \"nome forte para o Planalto\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser visto como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é visto\",\n      \"base_action\": \"ser visto\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia apresenta a negativa de Tarcísio de Freitas sobre uma candidatura futura e contrapõe sua declaração de compromisso com São Paulo a uma crítica editorial das estratégias da direita.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "a22269ccdc77c305ef5f3315ddd09f3c7cf04d3e3ef7256ab63ea3e03a473ce9",
+          "input_sha256": "fb73ffdaef001f86a3d0e2c85a9723c42ae318780c1da44899b9de7ceaee0ca0",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Tarcísio de Freitas nega acordo para disputar a Presidência em 2030\",\n  \"subtopics\": [\n    \"Compromisso declarado com a população de São Paulo\",\n    \"Reeleição e força política na direita\",\n    \"Crítica às estratégias e prioridades da direita brasileira\"\n  ],\n  \"central_entities\": [\n    \"Tarcísio de Freitas\",\n    \"São Paulo\",\n    \"Flávio Bolsonaro\",\n    \"Presidência\",\n    \"Planalto\",\n    \"direita\",\n    \"população de São Paulo\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto opina que as manobras da direita brasileira negam planos de sucessão para fingir compromisso com o povo, protegem elites e perpetuam desigualdades, em vez de promover reformas que defendam direitos trabalhistas e grupos vulneráveis em São Paulo.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"negou\",\n      \"object\": \"qualquer acordo para disputar a Presidência em 2030 como sucessor de Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"negar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"negou\",\n      \"base_action\": \"negou\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"presidential_race_year\",\n          \"kind\": \"year\",\n          \"value\": 2030,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2030\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"é com a população de São Paulo de fazer um excelente mandato\",\n      \"object\": \"população de São Paulo\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ter acordo com\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"ser\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"foi reeleito em primeiro turno\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"reeleger\",\n      \"negation_scope\": null,\n      \"signed_action\": \"Reeleito\",\n      \"base_action\": \"reeleger\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"election_round\",\n          \"kind\": \"number\",\n          \"value\": 1,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"primeiro turno\"\n        },\n        {\n          \"role\": \"vote_share_lower_bound\",\n          \"kind\": \"percentage\",\n          \"value\": 60,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"mais de 60%\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tarcísio de Freitas\",\n      \"action\": \"é visto dentro da direita como um nome forte para o Planalto\",\n      \"object\": \"nome forte para o Planalto\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser visto como\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é visto\",\n      \"base_action\": \"ser visto\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A notícia apresenta a negativa de Tarcísio de Freitas sobre uma candidatura futura e contrapõe sua declaração de compromisso com São Paulo a uma crítica editorial das estratégias da direita.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "5cca4ceb3ad027e10d84e25773a979ccf43ca20502c1b6898f8a043be6c0e44d"
+}

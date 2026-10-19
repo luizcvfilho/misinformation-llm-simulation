@@ -1,0 +1,184 @@
+{
+  "inputs": {
+    "text": "O TSE determinou que o Facebook preste esclarecimentos sobre suposta restrição seletiva ao conteúdo da campanha do PT. Mas é evidente que isso não passa de uma encenação coordenada entre as instituições e as big techs para controlar o que circula. Essa ordem serve apenas pra fingir transparência enquanto apagam ou distorcem o que realmente ocorreu por trás dos bastidores.\n\nEles querem que a Meta guarde todos os registros, logs de moderação e dados desde 16 de agosto, explique perfil por perfil as reduções de alcance, exclusões de recomendação e restrições aplicadas aos perfis oficiais de Lula e contas de terceiros. Também mandam detalhar as anomalias nos vídeos de 7 de outubro, inclusive se houve recontagem ou expurgo de visualizações, o motivo exato da desabilitação da conta de anúncios em 23 de setembro, o que foi feito com a rede de 255 perfis e se a regra de exclusão de perfis de candidatos dos sistemas de recomendação é aplicada de forma idêntica para as duas candidaturas.\n\nNa prática, isso prova que a manipulação já estava em curso e agora tentam gerenciar a narrativa pra proteger os interesses ocultos por trás das eleições, com o sistema inteiro envolvido nessa trama.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Ordem do TSE para que Facebook esclareça supostas restrições ao conteúdo da campanha do PT",
+    "subtopics": [
+      "Solicitação de registros de moderação e dados",
+      "Reduções de alcance e recomendações em perfis",
+      "Anomalias em vídeos e desabilitação de conta de anúncios",
+      "Aplicação das regras às duas candidaturas",
+      "Alegações de manipulação e controle da narrativa"
+    ],
+    "central_entities": [
+      "TSE",
+      "Facebook",
+      "PT",
+      "Meta",
+      "Lula",
+      "big techs"
+    ],
+    "central_relations": [
+      {
+        "subject": "TSE",
+        "action": "determinou",
+        "object": "Facebook preste esclarecimentos sobre suposta restrição seletiva ao conteúdo da campanha do PT",
+        "polarity": "affirmed",
+        "predicate": "determinar",
+        "negation_scope": null,
+        "signed_action": "determinou",
+        "base_action": "determinar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Eles",
+        "action": "querem que a Meta guarde",
+        "object": "todos os registros, logs de moderação e dados desde 16 de agosto",
+        "polarity": "affirmed",
+        "predicate": "querer que guarde",
+        "negation_scope": null,
+        "signed_action": "querem que a Meta guarde",
+        "base_action": "querer que guarde",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": [
+          {
+            "role": "record_start_day_of_month",
+            "value": 16.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "16 de agosto"
+          }
+        ]
+      },
+      {
+        "subject": "Eles",
+        "action": "explique",
+        "object": "perfil por perfil as reduções de alcance, exclusões de recomendação e restrições aplicadas aos perfis oficiais de Lula e contas de terceiros",
+        "polarity": "affirmed",
+        "predicate": "pedir explicação",
+        "negation_scope": null,
+        "signed_action": "explique",
+        "base_action": "explique",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "attributed_intention",
+        "numeric_values": []
+      },
+      {
+        "subject": "Eles",
+        "action": "mandam detalhar",
+        "object": "as anomalias nos vídeos de 7 de outubro, inclusive se houve recontagem ou expurgo de visualizações, o motivo exato da desabilitação da conta de anúncios em 23 de setembro, o que foi feito com a rede de 255 perfis e se a regra de exclusão de perfis de candidatos dos sistemas de recomendação é aplicada de forma idêntica para as duas candidaturas",
+        "polarity": "affirmed",
+        "predicate": "mandar detalhar",
+        "negation_scope": null,
+        "signed_action": "mandam detalhar",
+        "base_action": "mandar detalhar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "video_anomaly_day_of_month",
+            "value": 7.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "7 de outubro"
+          },
+          {
+            "role": "ad_account_disabling_day_of_month",
+            "value": 23.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "23 de setembro"
+          },
+          {
+            "role": "profiles_in_network",
+            "value": 255.0,
+            "unit": "profile",
+            "kind": "count",
+            "status": "exact",
+            "expression": "255 perfis"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "Enquadramento acusatório que interpreta uma ordem de esclarecimento como parte de uma suposta manipulação e controle da narrativa eleitoral.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "O texto afirma como evidente que a ordem é uma encenação coordenada entre instituições e big techs para controlar o que circula.",
+      "O texto caracteriza a ordem como uma tentativa de fingir transparência e ocultar o que ocorreu nos bastidores.",
+      "O texto alega que a manipulação já estava em curso e que tentam gerenciar a narrativa para proteger interesses ocultos nas eleições, com o sistema inteiro envolvido."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "9b41f6cccd3666d92231d66e70d803b42c48be1a35d81f45ab33d42b24ad1434",
+      "input_sha256": "cb042bfb232284c965a42f1ff510358eb6353023df14e0c88970488bb3413a52",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Ordem do TSE para que Facebook esclareça supostas restrições ao conteúdo da campanha do PT\",\n  \"subtopics\": [\n    \"Solicitação de registros de moderação e dados\",\n    \"Reduções de alcance e recomendações em perfis\",\n    \"Anomalias em vídeos e desabilitação de conta de anúncios\",\n    \"Aplicação das regras às duas candidaturas\",\n    \"Alegações de manipulação e controle da narrativa\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Facebook\",\n    \"PT\",\n    \"Meta\",\n    \"Lula\",\n    \"big techs\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto afirma como evidente que a ordem é uma encenação coordenada entre instituições e big techs para controlar o que circula.\",\n    \"O texto caracteriza a ordem como uma tentativa de fingir transparência e ocultar o que ocorreu nos bastidores.\",\n    \"O texto alega que a manipulação já estava em curso e que tentam gerenciar a narrativa para proteger interesses ocultos nas eleições, com o sistema inteiro envolvido.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"determinou\",\n      \"object\": \"Facebook preste esclarecimentos sobre suposta restrição seletiva ao conteúdo da campanha do PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"determinar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"determinou\",\n      \"base_action\": \"determinar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"querem que a Meta guarde\",\n      \"object\": \"todos os registros, logs de moderação e dados desde 16 de agosto\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"querer que guarde\",\n      \"negation_scope\": null,\n      \"signed_action\": \"querem que a Meta guarde\",\n      \"base_action\": \"querer que guarde\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"record_start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 16,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"16 de agosto\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"explique\",\n      \"object\": \"perfil por perfil as reduções de alcance, exclusões de recomendação e restrições aplicadas aos perfis oficiais de Lula e contas de terceiros\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir explicação\",\n      \"negation_scope\": null,\n      \"signed_action\": \"explique\",\n      \"base_action\": \"explique\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"mandam detalhar\",\n      \"object\": \"as anomalias nos vídeos de 7 de outubro, inclusive se houve recontagem ou expurgo de visualizações, o motivo exato da desabilitação da conta de anúncios em 23 de setembro, o que foi feito com a rede de 255 perfis e se a regra de exclusão de perfis de candidatos dos sistemas de recomendação é aplicada de forma idêntica para as duas candidaturas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mandar detalhar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mandam detalhar\",\n      \"base_action\": \"mandar detalhar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"video_anomaly_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7 de outubro\"\n        },\n        {\n          \"role\": \"ad_account_disabling_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 23,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"23 de setembro\"\n        },\n        {\n          \"role\": \"profiles_in_network\",\n          \"kind\": \"count\",\n          \"value\": 255,\n          \"unit\": \"profile\",\n          \"status\": \"exact\",\n          \"expression\": \"255 perfis\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento acusatório que interpreta uma ordem de esclarecimento como parte de uma suposta manipulação e controle da narrativa eleitoral.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "9b41f6cccd3666d92231d66e70d803b42c48be1a35d81f45ab33d42b24ad1434",
+          "input_sha256": "cb042bfb232284c965a42f1ff510358eb6353023df14e0c88970488bb3413a52",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Ordem do TSE para que Facebook esclareça supostas restrições ao conteúdo da campanha do PT\",\n  \"subtopics\": [\n    \"Solicitação de registros de moderação e dados\",\n    \"Reduções de alcance e recomendações em perfis\",\n    \"Anomalias em vídeos e desabilitação de conta de anúncios\",\n    \"Aplicação das regras às duas candidaturas\",\n    \"Alegações de manipulação e controle da narrativa\"\n  ],\n  \"central_entities\": [\n    \"TSE\",\n    \"Facebook\",\n    \"PT\",\n    \"Meta\",\n    \"Lula\",\n    \"big techs\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"O texto afirma como evidente que a ordem é uma encenação coordenada entre instituições e big techs para controlar o que circula.\",\n    \"O texto caracteriza a ordem como uma tentativa de fingir transparência e ocultar o que ocorreu nos bastidores.\",\n    \"O texto alega que a manipulação já estava em curso e que tentam gerenciar a narrativa para proteger interesses ocultos nas eleições, com o sistema inteiro envolvido.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"TSE\",\n      \"action\": \"determinou\",\n      \"object\": \"Facebook preste esclarecimentos sobre suposta restrição seletiva ao conteúdo da campanha do PT\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"determinar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"determinou\",\n      \"base_action\": \"determinar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"querem que a Meta guarde\",\n      \"object\": \"todos os registros, logs de moderação e dados desde 16 de agosto\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"querer que guarde\",\n      \"negation_scope\": null,\n      \"signed_action\": \"querem que a Meta guarde\",\n      \"base_action\": \"querer que guarde\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": [\n        {\n          \"role\": \"record_start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 16,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"16 de agosto\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"explique\",\n      \"object\": \"perfil por perfil as reduções de alcance, exclusões de recomendação e restrições aplicadas aos perfis oficiais de Lula e contas de terceiros\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"pedir explicação\",\n      \"negation_scope\": null,\n      \"signed_action\": \"explique\",\n      \"base_action\": \"explique\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"attributed_intention\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Eles\",\n      \"action\": \"mandam detalhar\",\n      \"object\": \"as anomalias nos vídeos de 7 de outubro, inclusive se houve recontagem ou expurgo de visualizações, o motivo exato da desabilitação da conta de anúncios em 23 de setembro, o que foi feito com a rede de 255 perfis e se a regra de exclusão de perfis de candidatos dos sistemas de recomendação é aplicada de forma idêntica para as duas candidaturas\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"mandar detalhar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mandam detalhar\",\n      \"base_action\": \"mandar detalhar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"video_anomaly_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 7,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"7 de outubro\"\n        },\n        {\n          \"role\": \"ad_account_disabling_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 23,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"23 de setembro\"\n        },\n        {\n          \"role\": \"profiles_in_network\",\n          \"kind\": \"count\",\n          \"value\": 255,\n          \"unit\": \"profile\",\n          \"status\": \"exact\",\n          \"expression\": \"255 perfis\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"Enquadramento acusatório que interpreta uma ordem de esclarecimento como parte de uma suposta manipulação e controle da narrativa eleitoral.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "23fda7da7b4abb6845cad6861a8aa8500ea1cc02bed2edb98b168c6943e6df07"
+}

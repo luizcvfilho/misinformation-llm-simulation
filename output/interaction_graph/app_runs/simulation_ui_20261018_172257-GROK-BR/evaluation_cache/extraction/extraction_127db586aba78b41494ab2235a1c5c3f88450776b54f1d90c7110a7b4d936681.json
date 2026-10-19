@@ -1,0 +1,232 @@
+{
+  "inputs": {
+    "text": "O primeiro turno das eleições revelou de forma alarmante as desigualdades estruturais no Brasil, que afetam especialmente os mais vulneráveis e perpetuam a opressão histórica. Lula ficou 3,3 milhões de votos atrás de Flávio Bolsonaro e perdeu votos em 98% dos municípios em relação a 2022. Segundo o levantamento do cientista político Marco Antonio Faganello da FGV, o pior desempenho foi nos municípios menores, com até 50 mil habitantes, especialmente os dominados pelo agro. Evidentemente, isso não é mero acaso, mas o reflexo de estruturas históricas de exploração, onde o agronegócio mantém o controle sobre regiões pobres, explora trabalhadores vulneráveis e bloqueia avanços em justiça social, direitos trabalhistas e reformas institucionais que poderiam beneficiar os mais excluídos.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Lula’s election results and their framing as a reflection of structural inequalities in Brazil",
+    "subtopics": [
+      "Vote gap between Lula and Flávio Bolsonaro",
+      "Lula's losses across municipalities compared with 2022",
+      "Electoral performance in smaller, agro-dominated municipalities",
+      "The agronegócio's alleged role in exploitation and blocking social reforms"
+    ],
+    "central_entities": [
+      "Brasil",
+      "Lula",
+      "Flávio Bolsonaro",
+      "Marco Antonio Faganello",
+      "FGV",
+      "agronegócio",
+      "agro"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lula",
+        "action": "ficou 3,3 milhões de votos atrás de",
+        "object": "Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "ficar atrás",
+        "negation_scope": null,
+        "signed_action": "ficou 3,3 milhões de votos atrás de",
+        "base_action": "ficar atrás de",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_gap",
+            "value": 3300000.0,
+            "unit": "vote",
+            "kind": "count",
+            "status": "exact",
+            "expression": "3,3 milhões de votos"
+          }
+        ]
+      },
+      {
+        "subject": "Lula",
+        "action": "perdeu votos em 98% dos municípios em relação a 2022",
+        "object": "municípios",
+        "polarity": "affirmed",
+        "predicate": "perder votos",
+        "negation_scope": null,
+        "signed_action": "perdeu votos",
+        "base_action": "perder votos",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "municipal_share",
+            "value": 98.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "98%"
+          },
+          {
+            "role": "comparison_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          }
+        ]
+      },
+      {
+        "subject": "Marco Antonio Faganello",
+        "action": "levantamento apontou o pior desempenho de Lula em",
+        "object": "municípios menores, com até 50 mil habitantes, especialmente os dominados pelo agro",
+        "polarity": "affirmed",
+        "predicate": "apontar",
+        "negation_scope": null,
+        "signed_action": "levantamento apontou",
+        "base_action": "apontar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "population_upper_bound",
+            "value": 50000.0,
+            "unit": "inhabitant",
+            "kind": "count",
+            "status": "exact",
+            "expression": "50 mil habitantes"
+          }
+        ]
+      },
+      {
+        "subject": "agronegócio",
+        "action": "mantém o controle sobre",
+        "object": "regiões pobres",
+        "polarity": "affirmed",
+        "predicate": "manter o controle",
+        "negation_scope": null,
+        "signed_action": "mantém o controle sobre",
+        "base_action": "manter o controle sobre",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "agronegócio",
+        "action": "explora",
+        "object": "trabalhadores vulneráveis",
+        "polarity": "affirmed",
+        "predicate": "explorar",
+        "negation_scope": null,
+        "signed_action": "explora",
+        "base_action": "explorar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "agronegócio",
+        "action": "bloqueia avanços em",
+        "object": "justiça social, direitos trabalhistas e reformas institucionais",
+        "polarity": "affirmed",
+        "predicate": "bloquear",
+        "negation_scope": null,
+        "signed_action": "bloqueia avanços em",
+        "base_action": "bloquear avanços em",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "reformas institucionais",
+        "action": "poderiam beneficiar",
+        "object": "os mais excluídos",
+        "polarity": "affirmed",
+        "predicate": "beneficiar",
+        "negation_scope": null,
+        "signed_action": "poderiam beneficiar",
+        "base_action": "poder beneficiar",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "hypothesis",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "A structural-inequality critique presents agronegócio as reinforcing exploitation and obstructing social justice and labor reforms.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The election results are framed as an alarming manifestation of structural inequality and historical oppression.",
+      "The electoral outcome is interpreted as a reflection of historical exploitation rather than mere chance."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "cac079746067342935965f352a85b023453b35b569b064f67a91ece61a93fd3f",
+      "input_sha256": "4d889e65c0270fbd20bc64dbc9ccb18635197b3cb789735e52b0c8aa6b84c189",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Lula’s election results and their framing as a reflection of structural inequalities in Brazil\",\n  \"subtopics\": [\n    \"Vote gap between Lula and Flávio Bolsonaro\",\n    \"Lula's losses across municipalities compared with 2022\",\n    \"Electoral performance in smaller, agro-dominated municipalities\",\n    \"The agronegócio's alleged role in exploitation and blocking social reforms\"\n  ],\n  \"central_entities\": [\n    \"Brasil\",\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"Marco Antonio Faganello\",\n    \"FGV\",\n    \"agronegócio\",\n    \"agro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The election results are framed as an alarming manifestation of structural inequality and historical oppression.\",\n    \"The electoral outcome is interpreted as a reflection of historical exploitation rather than mere chance.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficar atrás\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficar atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"perdeu votos em 98% dos municípios em relação a 2022\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perder votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"perdeu votos\",\n      \"base_action\": \"perder votos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipal_share\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Marco Antonio Faganello\",\n      \"action\": \"levantamento apontou o pior desempenho de Lula em\",\n      \"object\": \"municípios menores, com até 50 mil habitantes, especialmente os dominados pelo agro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apontar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"levantamento apontou\",\n      \"base_action\": \"apontar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"population_upper_bound\",\n          \"kind\": \"count\",\n          \"value\": 50000,\n          \"unit\": \"inhabitant\",\n          \"status\": \"exact\",\n          \"expression\": \"50 mil habitantes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"mantém o controle sobre\",\n      \"object\": \"regiões pobres\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"manter o controle\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mantém o controle sobre\",\n      \"base_action\": \"manter o controle sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"explora\",\n      \"object\": \"trabalhadores vulneráveis\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"explorar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"explora\",\n      \"base_action\": \"explorar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"bloqueia avanços em\",\n      \"object\": \"justiça social, direitos trabalhistas e reformas institucionais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"bloquear\",\n      \"negation_scope\": null,\n      \"signed_action\": \"bloqueia avanços em\",\n      \"base_action\": \"bloquear avanços em\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"reformas institucionais\",\n      \"action\": \"poderiam beneficiar\",\n      \"object\": \"os mais excluídos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"beneficiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"poderiam beneficiar\",\n      \"base_action\": \"poder beneficiar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A structural-inequality critique presents agronegócio as reinforcing exploitation and obstructing social justice and labor reforms.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "cac079746067342935965f352a85b023453b35b569b064f67a91ece61a93fd3f",
+          "input_sha256": "4d889e65c0270fbd20bc64dbc9ccb18635197b3cb789735e52b0c8aa6b84c189",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Lula’s election results and their framing as a reflection of structural inequalities in Brazil\",\n  \"subtopics\": [\n    \"Vote gap between Lula and Flávio Bolsonaro\",\n    \"Lula's losses across municipalities compared with 2022\",\n    \"Electoral performance in smaller, agro-dominated municipalities\",\n    \"The agronegócio's alleged role in exploitation and blocking social reforms\"\n  ],\n  \"central_entities\": [\n    \"Brasil\",\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"Marco Antonio Faganello\",\n    \"FGV\",\n    \"agronegócio\",\n    \"agro\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The election results are framed as an alarming manifestation of structural inequality and historical oppression.\",\n    \"The electoral outcome is interpreted as a reflection of historical exploitation rather than mere chance.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficar atrás\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficar atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"perdeu votos em 98% dos municípios em relação a 2022\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perder votos\",\n      \"negation_scope\": null,\n      \"signed_action\": \"perdeu votos\",\n      \"base_action\": \"perder votos\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipal_share\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Marco Antonio Faganello\",\n      \"action\": \"levantamento apontou o pior desempenho de Lula em\",\n      \"object\": \"municípios menores, com até 50 mil habitantes, especialmente os dominados pelo agro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"apontar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"levantamento apontou\",\n      \"base_action\": \"apontar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"population_upper_bound\",\n          \"kind\": \"count\",\n          \"value\": 50000,\n          \"unit\": \"inhabitant\",\n          \"status\": \"exact\",\n          \"expression\": \"50 mil habitantes\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"mantém o controle sobre\",\n      \"object\": \"regiões pobres\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"manter o controle\",\n      \"negation_scope\": null,\n      \"signed_action\": \"mantém o controle sobre\",\n      \"base_action\": \"manter o controle sobre\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"explora\",\n      \"object\": \"trabalhadores vulneráveis\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"explorar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"explora\",\n      \"base_action\": \"explorar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"agronegócio\",\n      \"action\": \"bloqueia avanços em\",\n      \"object\": \"justiça social, direitos trabalhistas e reformas institucionais\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"bloquear\",\n      \"negation_scope\": null,\n      \"signed_action\": \"bloqueia avanços em\",\n      \"base_action\": \"bloquear avanços em\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"reformas institucionais\",\n      \"action\": \"poderiam beneficiar\",\n      \"object\": \"os mais excluídos\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"beneficiar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"poderiam beneficiar\",\n      \"base_action\": \"poder beneficiar\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"hypothesis\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"A structural-inequality critique presents agronegócio as reinforcing exploitation and obstructing social justice and labor reforms.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "abdd73e84d8732f547ee0034b3895eabe4a33c0a1d6ac519f9dd738e2ac74345"
+}
