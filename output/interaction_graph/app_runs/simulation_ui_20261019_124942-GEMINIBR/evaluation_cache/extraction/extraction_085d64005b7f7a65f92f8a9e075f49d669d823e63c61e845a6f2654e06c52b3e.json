@@ -1,0 +1,239 @@
+{
+  "inputs": {
+    "text": "É uma vergonha o que essa burocracia de Brasília está impondo à nossa nação, destruindo a ordem e zombando da responsabilidade individual bem debaixo do nosso nariz. A partir deste sábado (10), faltando apenas 15 dias para o pleito, esses candidatos que concorrem ao segundo turno das Eleições 2026 ganham simplesmente um passe livre para não serem presos ou detidos. É a impunidade institucionalizada sendo empurrada goela abaixo pelo Tribunal Superior Eleitoral (TSE) sob a desculpa esfarrapada de garantir o tal \"equilíbrio e a regularidade do processo eleitoral\".\n\nEssa imunidade temporária vai longe, estendendo-se até 48h após o encerramento da votação, marcada para o dia 25 de outubro. É revoltante ver esse privilégio escancarado para a classe política, que pisa na segurança da família brasileira e nos valores tradicionais de justiça que sustentam a nossa sociedade.\n\nPara piorar, a única exceção é o flagrante delito, que é quando alguém é pego no exato momento em que comete um crime, logo após cometê-lo ou ao ser encontrado com armas e objetos que façam presumir sua autoria. E olhe lá: mesmo se houver flagrante, a pessoa detida ainda tem que ser conduzida imediatamente à presença de um juiz, que vai avaliar a legalidade da prisão. É lamentável ver como as leis dão um jeito de blindar quem está no poder, destruindo a autoridade e a ordem que o nosso povo de bem tanto precisa.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Temporary restrictions on arresting candidates in the second round of Eleições 2026",
+    "subtopics": [
+      "Immunity period before and after voting",
+      "Exception for flagrante delito",
+      "Judicial review of detention",
+      "Criticism of the electoral rule as political privilege"
+    ],
+    "central_entities": [
+      "Brasília",
+      "candidatos que concorrem ao segundo turno das Eleições 2026",
+      "Eleições 2026",
+      "Tribunal Superior Eleitoral (TSE)",
+      "juiz"
+    ],
+    "central_relations": [
+      {
+        "subject": "candidatos que concorrem ao segundo turno das Eleições 2026",
+        "action": "ganham simplesmente um passe livre para não serem presos ou detidos",
+        "object": "",
+        "polarity": "negated",
+        "predicate": "ser presos ou detidos",
+        "negation_scope": "não serem presos ou detidos",
+        "signed_action": "não serem presos ou detidos",
+        "base_action": "serem presos ou detidos",
+        "duration_status": "exact",
+        "duration_value": 15.0,
+        "duration_unit": "day",
+        "duration_expression": "15 dias",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "start_day_of_month",
+            "value": 10.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "sábado (10)"
+          },
+          {
+            "role": "time_until_election",
+            "value": 15.0,
+            "unit": "day",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "15 dias"
+          },
+          {
+            "role": "election_year",
+            "value": 2026.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "Eleições 2026"
+          }
+        ]
+      },
+      {
+        "subject": "Tribunal Superior Eleitoral (TSE)",
+        "action": "sendo empurrada goela abaixo",
+        "object": "Essa imunidade temporária",
+        "polarity": "affirmed",
+        "predicate": "empurrar",
+        "negation_scope": null,
+        "signed_action": "sendo empurrada goela abaixo",
+        "base_action": "sendo empurrada goela abaixo",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "Essa imunidade temporária",
+        "action": "estendendo-se até 48h após o encerramento da votação",
+        "object": "candidatos que concorrem ao segundo turno das Eleições 2026",
+        "polarity": "affirmed",
+        "predicate": "estender-se",
+        "negation_scope": null,
+        "signed_action": "estendendo-se até 48h após o encerramento da votação",
+        "base_action": "estendendo-se após o encerramento da votação",
+        "duration_status": "exact",
+        "duration_value": 48.0,
+        "duration_unit": "hour",
+        "duration_expression": "48h",
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "post_voting_immunity_period",
+            "value": 48.0,
+            "unit": "hour",
+            "kind": "duration",
+            "status": "exact",
+            "expression": "48h"
+          }
+        ]
+      },
+      {
+        "subject": "votação",
+        "action": "marcada para o dia 25 de outubro",
+        "object": "",
+        "polarity": "affirmed",
+        "predicate": "marcar",
+        "negation_scope": null,
+        "signed_action": "marcada para o dia 25 de outubro",
+        "base_action": "marcada para o dia 25 de outubro",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "voting_day_of_month",
+            "value": 25.0,
+            "unit": null,
+            "kind": "number",
+            "status": "exact",
+            "expression": "dia 25 de outubro"
+          }
+        ]
+      },
+      {
+        "subject": "A única exceção",
+        "action": "é",
+        "object": "flagrante delito",
+        "polarity": "affirmed",
+        "predicate": "ser",
+        "negation_scope": null,
+        "signed_action": "é",
+        "base_action": "é",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "a pessoa detida",
+        "action": "tem que ser conduzida imediatamente à presença de um juiz",
+        "object": "juiz",
+        "polarity": "affirmed",
+        "predicate": "ser conduzida",
+        "negation_scope": null,
+        "signed_action": "tem que ser conduzida imediatamente à presença de um juiz",
+        "base_action": "tem que ser conduzida imediatamente à presença de um juiz",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      },
+      {
+        "subject": "juiz",
+        "action": "vai avaliar a legalidade da prisão",
+        "object": "a legalidade da prisão",
+        "polarity": "affirmed",
+        "predicate": "avaliar",
+        "negation_scope": null,
+        "signed_action": "vai avaliar a legalidade da prisão",
+        "base_action": "vai avaliar a legalidade da prisão",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": []
+      }
+    ],
+    "narrative_frame": "The rule is framed as political impunity and preferential treatment that weakens public order and justice.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "The rule is described as institutionalized impunity and a privilege for politicians.",
+      "The article calls the rule shameful, unjust, and damaging to public order and individual responsibility.",
+      "The article claims the laws shield those in power and undermine public safety and justice."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "fc5c9f09843964518c93b4da98eb1444f2e42044fcf4f5f76b5b80dfc56b6886",
+      "input_sha256": "4c1439dd18e9e970de28399ed63bbc45390954e0fc4385f7395b95257fe89881",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Temporary restrictions on arresting candidates in the second round of Eleições 2026\",\n  \"subtopics\": [\n    \"Immunity period before and after voting\",\n    \"Exception for flagrante delito\",\n    \"Judicial review of detention\",\n    \"Criticism of the electoral rule as political privilege\"\n  ],\n  \"central_entities\": [\n    \"Brasília\",\n    \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n    \"Eleições 2026\",\n    \"Tribunal Superior Eleitoral (TSE)\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The rule is described as institutionalized impunity and a privilege for politicians.\",\n    \"The article calls the rule shameful, unjust, and damaging to public order and individual responsibility.\",\n    \"The article claims the laws shield those in power and undermine public safety and justice.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n      \"action\": \"ganham simplesmente um passe livre para não serem presos ou detidos\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser presos ou detidos\",\n      \"negation_scope\": \"não serem presos ou detidos\",\n      \"signed_action\": \"não serem presos ou detidos\",\n      \"base_action\": \"serem presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 15,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"15 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"time_until_election\",\n          \"kind\": \"duration\",\n          \"value\": 15,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"15 dias\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Eleições 2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tribunal Superior Eleitoral (TSE)\",\n      \"action\": \"sendo empurrada goela abaixo\",\n      \"object\": \"Essa imunidade temporária\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"empurrar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sendo empurrada goela abaixo\",\n      \"base_action\": \"sendo empurrada goela abaixo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa imunidade temporária\",\n      \"action\": \"estendendo-se até 48h após o encerramento da votação\",\n      \"object\": \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estender-se\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estendendo-se até 48h após o encerramento da votação\",\n      \"base_action\": \"estendendo-se após o encerramento da votação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"post_voting_immunity_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"votação\",\n      \"action\": \"marcada para o dia 25 de outubro\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcada para o dia 25 de outubro\",\n      \"base_action\": \"marcada para o dia 25 de outubro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"voting_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dia 25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A única exceção\",\n      \"action\": \"é\",\n      \"object\": \"flagrante delito\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"é\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa detida\",\n      \"action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser conduzida\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"base_action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"juiz\",\n      \"action\": \"vai avaliar a legalidade da prisão\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vai avaliar a legalidade da prisão\",\n      \"base_action\": \"vai avaliar a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The rule is framed as political impunity and preferential treatment that weakens public order and justice.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "fc5c9f09843964518c93b4da98eb1444f2e42044fcf4f5f76b5b80dfc56b6886",
+          "input_sha256": "4c1439dd18e9e970de28399ed63bbc45390954e0fc4385f7395b95257fe89881",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Temporary restrictions on arresting candidates in the second round of Eleições 2026\",\n  \"subtopics\": [\n    \"Immunity period before and after voting\",\n    \"Exception for flagrante delito\",\n    \"Judicial review of detention\",\n    \"Criticism of the electoral rule as political privilege\"\n  ],\n  \"central_entities\": [\n    \"Brasília\",\n    \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n    \"Eleições 2026\",\n    \"Tribunal Superior Eleitoral (TSE)\",\n    \"juiz\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"The rule is described as institutionalized impunity and a privilege for politicians.\",\n    \"The article calls the rule shameful, unjust, and damaging to public order and individual responsibility.\",\n    \"The article claims the laws shield those in power and undermine public safety and justice.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n      \"action\": \"ganham simplesmente um passe livre para não serem presos ou detidos\",\n      \"object\": \"\",\n      \"polarity\": \"negated\",\n      \"predicate\": \"ser presos ou detidos\",\n      \"negation_scope\": \"não serem presos ou detidos\",\n      \"signed_action\": \"não serem presos ou detidos\",\n      \"base_action\": \"serem presos ou detidos\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 15,\n      \"duration_unit\": \"day\",\n      \"duration_expression\": \"15 dias\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"start_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 10,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"sábado (10)\"\n        },\n        {\n          \"role\": \"time_until_election\",\n          \"kind\": \"duration\",\n          \"value\": 15,\n          \"unit\": \"day\",\n          \"status\": \"exact\",\n          \"expression\": \"15 dias\"\n        },\n        {\n          \"role\": \"election_year\",\n          \"kind\": \"year\",\n          \"value\": 2026,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"Eleições 2026\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Tribunal Superior Eleitoral (TSE)\",\n      \"action\": \"sendo empurrada goela abaixo\",\n      \"object\": \"Essa imunidade temporária\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"empurrar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"sendo empurrada goela abaixo\",\n      \"base_action\": \"sendo empurrada goela abaixo\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"Essa imunidade temporária\",\n      \"action\": \"estendendo-se até 48h após o encerramento da votação\",\n      \"object\": \"candidatos que concorrem ao segundo turno das Eleições 2026\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"estender-se\",\n      \"negation_scope\": null,\n      \"signed_action\": \"estendendo-se até 48h após o encerramento da votação\",\n      \"base_action\": \"estendendo-se após o encerramento da votação\",\n      \"duration_status\": \"exact\",\n      \"duration_value\": 48,\n      \"duration_unit\": \"hour\",\n      \"duration_expression\": \"48h\",\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"post_voting_immunity_period\",\n          \"kind\": \"duration\",\n          \"value\": 48,\n          \"unit\": \"hour\",\n          \"status\": \"exact\",\n          \"expression\": \"48h\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"votação\",\n      \"action\": \"marcada para o dia 25 de outubro\",\n      \"object\": \"\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"marcar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"marcada para o dia 25 de outubro\",\n      \"base_action\": \"marcada para o dia 25 de outubro\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"voting_day_of_month\",\n          \"kind\": \"number\",\n          \"value\": 25,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"dia 25 de outubro\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A única exceção\",\n      \"action\": \"é\",\n      \"object\": \"flagrante delito\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser\",\n      \"negation_scope\": null,\n      \"signed_action\": \"é\",\n      \"base_action\": \"é\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"a pessoa detida\",\n      \"action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"object\": \"juiz\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ser conduzida\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"base_action\": \"tem que ser conduzida imediatamente à presença de um juiz\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    },\n    {\n      \"subject\": \"juiz\",\n      \"action\": \"vai avaliar a legalidade da prisão\",\n      \"object\": \"a legalidade da prisão\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"avaliar\",\n      \"negation_scope\": null,\n      \"signed_action\": \"vai avaliar a legalidade da prisão\",\n      \"base_action\": \"vai avaliar a legalidade da prisão\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": []\n    }\n  ],\n  \"narrative_frame\": \"The rule is framed as political impunity and preferential treatment that weakens public order and justice.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "3f82112ecb74682ac11289aa6a18d73af80877cbc443eabd01c9254c918d432a"
+}

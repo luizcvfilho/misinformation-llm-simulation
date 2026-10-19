@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "attempt_id": "dc59c39509bc49a09bd579f6be63da94",
+  "run_id": "g002_news000010",
+  "graph": {
+    "id": "53acc1449e524ac8a05185a1d097a288",
+    "name": "02_c_tree",
+    "nodes": [
+      {
+        "uid": "e27ba261351c4be7843826296547ee2c",
+        "node_id": "prefix_C",
+        "label": "1. ConservativeRight",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ConservativeRight",
+        "personality_custom": "",
+        "parent_uid": ""
+      },
+      {
+        "uid": "a63ac906e40a477ea28b0b5a29515875",
+        "node_id": "prefix_CC",
+        "label": "2. ConservativeRight",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ConservativeRight",
+        "personality_custom": "",
+        "parent_uid": "e27ba261351c4be7843826296547ee2c"
+      },
+      {
+        "uid": "ad6a76092466432f80536e5d3b07b935",
+        "node_id": "prefix_CCC",
+        "label": "3. ConservativeRight",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ConservativeRight",
+        "personality_custom": "",
+        "parent_uid": "a63ac906e40a477ea28b0b5a29515875"
+      },
+      {
+        "uid": "7a71ca93cc23421f91cc58355e73b85b",
+        "node_id": "prefix_CCCC",
+        "label": "4. ConservativeRight",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ConservativeRight",
+        "personality_custom": "",
+        "parent_uid": "ad6a76092466432f80536e5d3b07b935"
+      },
+      {
+        "uid": "24756b8078c149cf9cdfd1226fc6e91d",
+        "node_id": "prefix_CCP",
+        "label": "3. ProgressiveLeft",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ProgressiveLeft",
+        "personality_custom": "",
+        "parent_uid": "a63ac906e40a477ea28b0b5a29515875"
+      },
+      {
+        "uid": "95c4ba6c7484436f8be8afc3f1aaef1c",
+        "node_id": "prefix_CCPP",
+        "label": "4. ProgressiveLeft",
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "personality_mode": "preset",
+        "personality_preset": "ProgressiveLeft",
+        "personality_custom": "",
+        "parent_uid": "24756b8078c149cf9cdfd1226fc6e91d"
+      }
+    ]
+  },
+  "settings": {
+    "graph_name": "01_nnnn",
+    "text_column": "description",
+    "title_column": "title",
+    "news_id_column": "article_id",
+    "max_rows": 50,
+    "allow_title_fallback": true,
+    "rewrite_mode": "interpretive",
+    "stdi_comparison_method": "llm",
+    "vad_method": "llm",
+    "vad_llm_model": "gpt-6-luna",
+    "vad_llm_provider": "chatgpt",
+    "stdi_judge_repeats": 3,
+    "sleep_seconds": 0.0,
+    "openai_service_tier": "flex",
+    "openai_flex_fallback": true,
+    "openai_flex_retry_seconds": 300.0,
+    "reuse_previous_results": true,
+    "api_pricing_path": "",
+    "provider_rpm_limits": {
+      "gemini": 14
+    },
+    "max_simultaneous_runs": 10,
+    "retry_attempts": 5,
+    "topic_drift_provider": "chatgpt",
+    "topic_drift_model": "gpt-6-luna",
+    "output_dir": "output/interaction_graph/app_runs",
+    "output_prefix": "simulation_ui_20261019_124942-GEMINIBR",
+    "_track_news_runs": true
+  },
+  "dataset_row": 10,
+  "scope": "news",
+  "state": "completed",
+  "had_error": false,
+  "errors": [],
+  "location": {
+    "stage": "judge",
+    "node_id": "prefix_CCPP",
+    "news_id": "br2026_1858780728821997",
+    "row": 1,
+    "comparison": "vs previous",
+    "repeat": 3
+  },
+  "created_at": "2026-10-19T15:52:47.521969+00:00",
+  "parent_attempt": null,
+  "recovery_mode": null,
+  "manifest_path": "C:\\Users\\lcvf1\\OneDrive\\Documentos\\UFRJ\\TCC\\misinformation-llm-simulation\\output\\interaction_graph\\app_runs\\simulation_ui_20261019_124942-GEMINIBR\\02_02_c_tree\\news_runs\\g002_news000010\\run_attempt.json",
+  "updated_at": "2026-10-19T17:35:14.229706+00:00",
+  "corpus_path": "C:\\Users\\lcvf1\\OneDrive\\Documentos\\UFRJ\\TCC\\misinformation-llm-simulation\\output\\interaction_graph\\app_runs\\simulation_ui_20261019_124942-GEMINIBR\\02_02_c_tree\\recovery_corpus.json",
+  "evaluation_cache_path": "C:\\Users\\lcvf1\\OneDrive\\Documentos\\UFRJ\\TCC\\misinformation-llm-simulation\\output\\interaction_graph\\app_runs\\simulation_ui_20261019_124942-GEMINIBR\\evaluation_cache",
+  "summary_path": "C:\\Users\\lcvf1\\OneDrive\\Documentos\\UFRJ\\TCC\\misinformation-llm-simulation\\output\\interaction_graph\\app_runs\\simulation_ui_20261019_124942-GEMINIBR\\02_02_c_tree\\news_runs\\g002_news000010\\g002_news000010_summary.json",
+  "interruption": "completed"
+}

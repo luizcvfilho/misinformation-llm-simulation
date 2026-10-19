@@ -1,0 +1,170 @@
+{
+  "inputs": {
+    "text": "Meus amigos, o recado deste domingo de primeiro turno não poderia ser mais cristalino: o povo brasileiro de bem, que acorda cedo para trabalhar e defende os valores da nossa família e da nossa tradição, disse um basta definitivo para a incompetência e para a soberba da esquerda e das elites desconectadas da nossa realidade! Os dados trazidos pelo cientista político da FGV, Marco Antonio Faganello, escancaram o tamanho desse fracasso: Lula ficou nada menos do que 3,3 milhões de votos atrás de Flávio Bolsonaro, tendo perdido votos em 98% dos municípios em relação a 2022. \n\nEssa derrocada histórica é a resposta inevitável de uma nação que se sustenta no trabalho honesto e no patriotismo, bem longe dos gabinetes de Brasília. A rejeição a esse projeto estatizante e atrasado grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio — o verdadeiro motor que sustenta a economia do Brasil com suor, honra e produção. É a vitória categórica da ordem, da tradição e do homem do campo contra a demagogia que tenta dividir o nosso país. Não há disfarce que esconda: o Brasil produtivo e conservador retomou o seu protagonismo.",
+    "title": null,
+    "model": "gpt-6-luna",
+    "provider": "chatgpt",
+    "version": "structured_extraction_v5",
+    "endpoint_sha256": "ee071e382ae11baecc06ca51545a6d4f3fa74cb3ea12b605d63d0b19ae84fea7"
+  },
+  "output": {
+    "main_topic": "Interpretação política dos resultados do primeiro turno, destacando a desvantagem de Lula para Flávio Bolsonaro e perdas de votos em municípios.",
+    "subtopics": [
+      "Diferença de votos entre Lula e Flávio Bolsonaro",
+      "Perdas de votos de Lula em municípios em relação a 2022",
+      "Rejeição mais forte em municípios menores e regiões do agronegócio",
+      "Enquadramento conservador e rural do resultado eleitoral"
+    ],
+    "central_entities": [
+      "Lula",
+      "Flávio Bolsonaro",
+      "Marco Antonio Faganello",
+      "FGV",
+      "Brasil",
+      "agronegócio",
+      "esquerda",
+      "elites desconectadas da nossa realidade"
+    ],
+    "central_relations": [
+      {
+        "subject": "Lula",
+        "action": "ficou nada menos do que 3,3 milhões de votos atrás de",
+        "object": "Flávio Bolsonaro",
+        "polarity": "affirmed",
+        "predicate": "ficou atrás de",
+        "negation_scope": null,
+        "signed_action": "ficou nada menos do que 3,3 milhões de votos atrás de",
+        "base_action": "ficou nada menos do que 3,3 milhões de votos atrás de",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "vote_gap",
+            "value": 3300000.0,
+            "unit": "vote",
+            "kind": "count",
+            "status": "exact",
+            "expression": "3,3 milhões de votos"
+          }
+        ]
+      },
+      {
+        "subject": "Lula",
+        "action": "tendo perdido votos em 98% dos municípios em relação a 2022, segundo dados trazidos por Marco Antonio Faganello",
+        "object": "municípios",
+        "polarity": "affirmed",
+        "predicate": "perdeu votos em",
+        "negation_scope": null,
+        "signed_action": "tendo perdido votos em 98% dos municípios em relação a 2022",
+        "base_action": "tendo perdido votos em 98% dos municípios em relação a 2022",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "municipalities_share",
+            "value": 98.0,
+            "unit": "%",
+            "kind": "percentage",
+            "status": "exact",
+            "expression": "98%"
+          },
+          {
+            "role": "comparison_year",
+            "value": 2022.0,
+            "unit": null,
+            "kind": "year",
+            "status": "exact",
+            "expression": "2022"
+          }
+        ]
+      },
+      {
+        "subject": "A rejeição a esse projeto estatizante e atrasado",
+        "action": "grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio",
+        "object": "municípios menores e regiões movidas pelo agronegócio",
+        "polarity": "affirmed",
+        "predicate": "grita mais alto",
+        "negation_scope": null,
+        "signed_action": "grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio",
+        "base_action": "grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio",
+        "duration_status": "absent",
+        "duration_value": null,
+        "duration_unit": null,
+        "duration_expression": null,
+        "assertion_type": "asserted",
+        "numeric_values": [
+          {
+            "role": "population_threshold",
+            "value": 50000.0,
+            "unit": "person",
+            "kind": "count",
+            "status": "exact",
+            "expression": "50 mil habitantes"
+          }
+        ]
+      }
+    ],
+    "narrative_frame": "O texto apresenta o resultado do primeiro turno como rejeição à esquerda e às elites, e como vitória do Brasil conservador, produtivo e ligado ao campo.",
+    "has_internal_contradiction": false,
+    "internal_contradiction_score": 0.0,
+    "schema_version": 2,
+    "extraction_status": "valid",
+    "extraction_issues": [],
+    "opinions": [
+      "A esquerda e as elites são incompetentes e soberbas.",
+      "O resultado representa uma vitória da ordem, da tradição e do homem do campo sobre a demagogia.",
+      "O Brasil produtivo e conservador retomou o protagonismo."
+    ],
+    "provenance": {
+      "model": "gpt-6-luna",
+      "provider": "chatgpt",
+      "base_url": null,
+      "prompt_version": "structured_extraction_v5",
+      "prompt_sha256": "64d3774a3f3ede01e50d966a7e25e4ef5018a3fd4a7a8999043678729dce8f9c",
+      "input_sha256": "cf45c78307b0a23f62d9926b77d55e82425d91162c8b866411262640222f4a14",
+      "temperature_requested": 0.1,
+      "temperature_sent": null,
+      "raw_response": "{\n  \"main_topic\": \"Interpretação política dos resultados do primeiro turno, destacando a desvantagem de Lula para Flávio Bolsonaro e perdas de votos em municípios.\",\n  \"subtopics\": [\n    \"Diferença de votos entre Lula e Flávio Bolsonaro\",\n    \"Perdas de votos de Lula em municípios em relação a 2022\",\n    \"Rejeição mais forte em municípios menores e regiões do agronegócio\",\n    \"Enquadramento conservador e rural do resultado eleitoral\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"Marco Antonio Faganello\",\n    \"FGV\",\n    \"Brasil\",\n    \"agronegócio\",\n    \"esquerda\",\n    \"elites desconectadas da nossa realidade\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A esquerda e as elites são incompetentes e soberbas.\",\n    \"O resultado representa uma vitória da ordem, da tradição e do homem do campo sobre a demagogia.\",\n    \"O Brasil produtivo e conservador retomou o protagonismo.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou atrás de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"tendo perdido votos em 98% dos municípios em relação a 2022, segundo dados trazidos por Marco Antonio Faganello\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perdeu votos em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tendo perdido votos em 98% dos municípios em relação a 2022\",\n      \"base_action\": \"tendo perdido votos em 98% dos municípios em relação a 2022\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipalities_share\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A rejeição a esse projeto estatizante e atrasado\",\n      \"action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"object\": \"municípios menores e regiões movidas pelo agronegócio\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"grita mais alto\",\n      \"negation_scope\": null,\n      \"signed_action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"base_action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"population_threshold\",\n          \"kind\": \"count\",\n          \"value\": 50000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"50 mil habitantes\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"O texto apresenta o resultado do primeiro turno como rejeição à esquerda e às elites, e como vitória do Brasil conservador, produtivo e ligado ao campo.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "gpt-6-luna",
+          "provider": "chatgpt",
+          "base_url": null,
+          "prompt_version": "structured_extraction_v5",
+          "prompt_sha256": "64d3774a3f3ede01e50d966a7e25e4ef5018a3fd4a7a8999043678729dce8f9c",
+          "input_sha256": "cf45c78307b0a23f62d9926b77d55e82425d91162c8b866411262640222f4a14",
+          "temperature_requested": 0.1,
+          "temperature_sent": null,
+          "raw_response": "{\n  \"main_topic\": \"Interpretação política dos resultados do primeiro turno, destacando a desvantagem de Lula para Flávio Bolsonaro e perdas de votos em municípios.\",\n  \"subtopics\": [\n    \"Diferença de votos entre Lula e Flávio Bolsonaro\",\n    \"Perdas de votos de Lula em municípios em relação a 2022\",\n    \"Rejeição mais forte em municípios menores e regiões do agronegócio\",\n    \"Enquadramento conservador e rural do resultado eleitoral\"\n  ],\n  \"central_entities\": [\n    \"Lula\",\n    \"Flávio Bolsonaro\",\n    \"Marco Antonio Faganello\",\n    \"FGV\",\n    \"Brasil\",\n    \"agronegócio\",\n    \"esquerda\",\n    \"elites desconectadas da nossa realidade\"\n  ],\n  \"schema_version\": 2,\n  \"opinions\": [\n    \"A esquerda e as elites são incompetentes e soberbas.\",\n    \"O resultado representa uma vitória da ordem, da tradição e do homem do campo sobre a demagogia.\",\n    \"O Brasil produtivo e conservador retomou o protagonismo.\"\n  ],\n  \"central_relations\": [\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"object\": \"Flávio Bolsonaro\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"ficou atrás de\",\n      \"negation_scope\": null,\n      \"signed_action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"base_action\": \"ficou nada menos do que 3,3 milhões de votos atrás de\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"vote_gap\",\n          \"kind\": \"count\",\n          \"value\": 3300000,\n          \"unit\": \"vote\",\n          \"status\": \"exact\",\n          \"expression\": \"3,3 milhões de votos\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"Lula\",\n      \"action\": \"tendo perdido votos em 98% dos municípios em relação a 2022, segundo dados trazidos por Marco Antonio Faganello\",\n      \"object\": \"municípios\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"perdeu votos em\",\n      \"negation_scope\": null,\n      \"signed_action\": \"tendo perdido votos em 98% dos municípios em relação a 2022\",\n      \"base_action\": \"tendo perdido votos em 98% dos municípios em relação a 2022\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"municipalities_share\",\n          \"kind\": \"percentage\",\n          \"value\": 98,\n          \"unit\": \"%\",\n          \"status\": \"exact\",\n          \"expression\": \"98%\"\n        },\n        {\n          \"role\": \"comparison_year\",\n          \"kind\": \"year\",\n          \"value\": 2022,\n          \"unit\": null,\n          \"status\": \"exact\",\n          \"expression\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"subject\": \"A rejeição a esse projeto estatizante e atrasado\",\n      \"action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"object\": \"municípios menores e regiões movidas pelo agronegócio\",\n      \"polarity\": \"affirmed\",\n      \"predicate\": \"grita mais alto\",\n      \"negation_scope\": null,\n      \"signed_action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"base_action\": \"grita mais alto justamente nos municípios menores, com até 50 mil habitantes, e nas regiões movidas pelo agronegócio\",\n      \"duration_status\": \"absent\",\n      \"duration_value\": null,\n      \"duration_unit\": null,\n      \"duration_expression\": null,\n      \"assertion_type\": \"asserted\",\n      \"numeric_values\": [\n        {\n          \"role\": \"population_threshold\",\n          \"kind\": \"count\",\n          \"value\": 50000,\n          \"unit\": \"person\",\n          \"status\": \"exact\",\n          \"expression\": \"50 mil habitantes\"\n        }\n      ]\n    }\n  ],\n  \"narrative_frame\": \"O texto apresenta o resultado do primeiro turno como rejeição à esquerda e às elites, e como vitória do Brasil conservador, produtivo e ligado ao campo.\",\n  \"has_internal_contradiction\": false,\n  \"internal_contradiction_score\": 0\n}",
+          "status": "valid"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "cache_schema": "stage_cache_v1",
+    "implementation": {
+      "llm/clients.py": "908a334bfd9db502f94b77e4552cdf2207e7798a21b406667fa3d08916582f22",
+      "llm/retry.py": "0ab07cd4012587fad9bf15f86f492856ca333b418130aa21121b34f3259cba2c",
+      "llm/recovery.py": "4e18aef6cf02c0970db9c6a5908f479476d293709af3a5d15f154b687be5e146",
+      "llm/credentials.py": "ee45f14a94534466073d22c5f962bd0b8d4225c7ea0dd36b8fb0f66f9fb16d48",
+      "topic_drift/extraction.py": "2d4822bb99e339565e89f5984173feb9fc96c20a39c101d70d8d4acc3dd69c73",
+      "topic_drift/models.py": "60a2ecf1dcd2dafd95a2e14528a3c970c6ee475917de3ed0be8403aaf12a27a9",
+      "topic_drift/qualifiers.py": "50981e0b7972d649415cd6999e2ff8e763402f7144f2c307fe26e3fe6019336b"
+    },
+    "libraries": {
+      "openai": "2.29.0",
+      "google-genai": "1.68.0"
+    },
+    "prompt_version": "structured_extraction_v5",
+    "prompt": "c9f331372e9c17dc89e618ce39923dcf341e153540e4c8b0f46b7d7f7fca20bd"
+  },
+  "output_sha256": "87644aa9ffb285510f9ec055a799f469665f4070232c18d3a2ffc5bea1d9da07"
+}
