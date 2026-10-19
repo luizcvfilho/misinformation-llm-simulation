@@ -1,6 +1,6 @@
 # Plano de escrita do TCC orientado por evidências
 
-**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações nos capítulos é acompanhada em `docs/plano_revisao_tcc.md`. Esta atualização de planejamento não significa que os capítulos já tenham sido revisados.
+**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações nos capítulos é acompanhada em `docs/plano_revisao_tcc.md`. A Etapa 1 consolidou o planejamento e a Etapa 2 revisou o capítulo 3; os capítulos 1 e 2 ainda aguardam as etapas correspondentes.
 
 ## 1. Pergunta, argumento e escopo consolidados
 
@@ -128,6 +128,18 @@ Conferir a seção da fonte primária antes de associá-la a uma afirmação nos
 Explicar a passagem de reescrita fiel a retransmissão interpretativa: o modo final admite omissões e interpretações de motivo ou causalidade, mas restringe invenção de detalhes concretos. Registros finais indicam ausência do título separado tanto na reescrita quanto na extração; não transferir a assimetria de auditorias anteriores ao experimento final.
 
 Identificar cadeias antigas somente no recorte exploratório que as exige. Não transportar escores entre versões ou substituir S por N.
+
+**Proveniência conferida na Etapa 2:** os totais de 2.327 saídas no detector e 2.281 pares/51 sinalizações na auditoria provêm dos CSVs `audit/PreTrainedAudit/pretrained_fake_news_summary.csv` e `audit/LocalAudit/audit_summary.csv` das 12 execuções abaixo, em `output/runs/`:
+
+| Conjunto | Conservadora | Progressista | Conspiratória | Cética |
+| --- | --- | --- | --- | --- |
+| Geral | `20260326_235646` | `20260327_082745` | `20260327_235633` | `20260328_120949` |
+| Ciência | `20260329_010133` | `20260329_183930` | `20260329_230134` | `20260330_095024` |
+| Política | `20260331_000153` | `20260331_073343` | `20260331_232329` | `20260401_073809` |
+
+A execução parcial de ciência/progressista `20260329_111102` registrou 143 saídas e não entra na agregação; foi selecionada a posterior `20260329_183930`, da mesma condição. As rodadas adicionais de política são `20260413_223616`, `20260413_224624`, `20260413_225416` e `20260413_230539`: 400 saídas, 392 pares e cinco sinalizações. Em todos esses recortes, o detector pré-treinado atribuiu zero classes falsas.
+
+O recorte de 25 saídas do plano anterior é outra execução, registrada em `output/execution_report.md` em 14/04/2026, com cinco notícias gerais, perspectiva conspiratória e seis configurações: uma falhou nas cinco solicitações e cinco produziram 25 saídas válidas. O detector avaliou 25 saídas e atribuiu zero classes falsas; a auditoria processou 25 pares e sinalizou um. Os CSVs agregados dessa execução estão em `output/audit/PreTrainedAudit/` e `output/audit/LocalAudit/`, fora dos diretórios individuais das rodadas anteriores. Não confundir esse ensaio com uma amostra de 25 notícias independentes ou com a matriz principal.
 
 ### 3.4 Materiais e métodos
 
@@ -292,6 +304,6 @@ BERTopic só entra se houver análise existente e pertinente. Não condicionar o
 
 ## 9. Alterações para replicar no Overleaf
 
-Esta etapa altera planejamento e orientação locais: `docs/plano_escrita_tcc.md`, `docs/plano_revisao_tcc.md`, `docs/base_bibliografica_tcc.md` e a orientação científica em `docs/template_tcc_ic_ufrj.md`. Nenhum desses documentos tem destino obrigatório no Overleaf. Não há sincronização necessária agora, inclusive de `main.tex`; nenhum capítulo, referência ou figura foi alterado nesta etapa.
+Na Etapa 1 foram alterados somente os documentos locais de planejamento e orientação. Na Etapa 2 foram revisados `tcc/elementos-textuais/capitulo-3.tex`, a cópia bibliográfica `tcc/elementos-postextuais/referencias.bib` e uma linha de compatibilidade em `tcc/formatacao.tex`. Replicar em `elementos-textuais/capitulo-3.tex`, `elementos-postextuais/referencias.bib` e `formatacao.tex` no Overleaf, respectivamente. Em `formatacao.tex`, trocar `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` para seleção automática do driver. A correção preserva a compatibilidade com pdfLaTeX e permitiu a compilação integrada; o template canônico não foi alterado. Recompilar e atualizar a bibliografia. `main.tex` permanece inalterado.
 
-Na revisão dos capítulos, seguir os caminhos exatos do checklist em `docs/plano_revisao_tcc.md`. A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib` no Overleaf; sua sincronização permanece na revisão bibliográfica. Alterações locais não chegam automaticamente ao Overleaf.
+Os documentos em `docs/` não têm destino obrigatório no Overleaf. A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib` e sua cópia local foi sincronizada na Etapa 2, sem alteração da base canônica. Seguir também o checklist em `docs/plano_revisao_tcc.md`. Alterações locais não chegam automaticamente ao Overleaf.

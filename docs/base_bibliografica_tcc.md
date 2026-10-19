@@ -14,6 +14,8 @@ verificadas novamente nesta atualização.
 
 **Atualização de escopo:** 19/10/2026, para alinhar as orientações às simulações finais e às decisões do autor. Esta atualização não constitui nova verificação dos metadados ou releitura integral das fontes; preservar as datas de conferência acima.
 
+**Conferência pontual para o capítulo 3, em 19/10/2026:** consultados os resumos e metadados oficiais de `buechel2020memolon`, `saha2026judgebudget` e `haldar2025ratingroulette`, além da página do recurso `mohammad2018vadresource`. A consulta sustenta as afirmações restritas sobre recursos lexicais multilíngues/traduções e variabilidade/consultas repetidas do avaliador; não constitui releitura integral desses artigos nem revalidação das demais referências. As quatro chaves já existiam na base canônica; a bibliografia de `tcc/` foi sincronizada para permitir as citações no capítulo revisado.
+
 ## 1. Escopo da revisão
 
 Esta base apoia o TCC sobre **deriva informacional e afetiva em cadeias de reescrita de notícias por agentes baseados em LLMs**. A pergunta de pesquisa é:
