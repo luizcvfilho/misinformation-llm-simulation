@@ -12,19 +12,15 @@ verificadas novamente nesta atualização.
 
 **Plano de uso na escrita:** [`plano_escrita_tcc.md`](plano_escrita_tcc.md)
 
-**Atualização de escopo:** 19/10/2026, para alinhar as orientações às simulações finais e às decisões do autor. Esta atualização não constitui nova verificação dos metadados ou releitura integral das fontes; preservar as datas de conferência acima.
+**Atualização do escopo:** 19/10/2026.
 
-**Conferência pontual para o capítulo 3, em 19/10/2026:** consultados os resumos e metadados oficiais de `buechel2020memolon`, `saha2026judgebudget` e `haldar2025ratingroulette`, além da página do recurso `mohammad2018vadresource`. A consulta sustenta as afirmações restritas sobre recursos lexicais multilíngues/traduções e variabilidade/consultas repetidas do avaliador; não constitui releitura integral desses artigos nem revalidação das demais referências. As quatro chaves já existiam na base canônica; a bibliografia de `tcc/` foi sincronizada para permitir as citações no capítulo revisado.
-
-**Conferência para o capítulo 2, em 19/10/2026:** consultados os resumos e metadados primários de `mohammad2025vadv2`, `mohammad2025breaking` e `buechel2020memolon`, a página oficial do NRC e os resumos de `saha2026judgebudget` e `haldar2025ratingroulette`. As afirmações novas se limitam à ampliação dos léxicos, às expressões compostas, à transferência multilíngue, às traduções e à variabilidade/estimação de médias do avaliador. Foi adicionada a referência `robrokoolsvadbert`, cuja ficha oficial foi consultada para documentar o estimador neural. A ficha não informa data de publicação; usar o identificador público do responsável e `s.d.`, sem inferir data ou nome civil. A rubrica VAD por LLM e as regras de agregação são decisões deste projeto, documentadas no código e nos protocolos, sem atribuição indevida a essas fontes. Esta conferência não constitui revisão integral das demais referências.
-
-## 1. Escopo da revisão
+## 1. Escopo da base bibliográfica
 
 Esta base apoia o TCC sobre **deriva informacional e afetiva em cadeias de reescrita de notícias por agentes baseados em LLMs**. A pergunta de pesquisa é:
 
 > Em que medida a ordem e o tipo de perspectiva atribuída a agentes LLM alteram o conteúdo e o enquadramento emocional de uma notícia ao longo de uma cadeia de reescritas?
 
-O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações de tema, subtópicos, entidades, relações, contradição interna e VAD. O STDI não verifica fatos contra fontes externas e não mede crença, exposição ou compartilhamento humano.
+O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações de tema, subtópicos, entidades, relações, contradição interna e VAD. O STDI não verifica fatos contra fontes externas e não mede crença, exposição ou compartilhamento humano. A rubrica VAD por LLM e as regras de agregação são decisões deste projeto, documentadas no código e nos protocolos, sem atribuição indevida às fontes dos recursos afetivos.
 
 O escopo final contém seis rodadas: três geradores (`gpt-6-luna`, `grok-build-0.1` e `gemini-3.5-flash-lite`) sobre dois corpora de 50 entradas, em inglês e português, com oito trajetórias em quatro árvores. Inglês usa STDI/VAD Dual; português usa STDI/VAD LLM. Configurações e arquivos estão em `docs/plano_escrita_tcc.md`. A bibliografia deve fundamentar essa configuração sem sugerir que os corpora isolam um efeito do idioma.
 
@@ -182,9 +178,9 @@ Nas simulações finais, português usa VAD por LLM (`gpt-6-luna`). Inglês cons
 
 ## 7. Pendências bibliográficas e documentais
 
-- Conferir as fontes primárias das afirmações novas sobre avaliação por LLM, repetição e comparação semântica; literatura adicional só será incorporada quando necessária a uma frase ou decisão específica.
-- Identificar no capítulo de métodos a revisão e os parâmetros efetivos de `RobroKools/vad-bert`, cuja referência de documentação foi adicionada na Etapa 3; registrar separadamente a rubrica e a implementação próprias do VAD LLM.
+- Consultar as fontes primárias para cada afirmação nova sobre avaliação por LLM, estimadores VAD, repetição e comparação semântica; incorporar literatura adicional somente quando necessária a uma frase ou decisão específica.
+- Identificar no capítulo de métodos a revisão e os parâmetros efetivos de `RobroKools/vad-bert`; registrar separadamente a rubrica e a implementação próprias do VAD LLM.
 - Documentar a origem, a licença e os critérios de preparação dos dois corpora finais.
 - Verificar se a banca espera exclusivamente artigos revisados por pares; `grootendorst2022bertopic` e `guo2021truth` exigem atenção ao tipo de publicação registrado.
 
-A ausência de referência humana numérica é limitação da avaliação realizada, não atividade a completar. Não exigir segundo anotador, valores esperados ou correlação com notas inexistentes para concluir a escrita. A atualização de escopo da Etapa 1 não adicionou ou removeu referências; a Etapa 3 acrescentou somente a ficha oficial `robrokoolsvadbert` e manteve a cópia bibliográfica de `tcc/` sincronizada com a base canônica.
+A ausência de referência humana numérica é limitação da avaliação realizada, não atividade a completar. Não exigir segundo anotador, valores esperados ou correlação com notas inexistentes para concluir a escrita.

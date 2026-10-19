@@ -1,17 +1,35 @@
 \chapter{MATERIAIS E MÉTODOS}
 \label{ch:metodos}
 
-% TODO: documentar versões, parâmetros, datas, unidades de análise e tratamento de falhas.
+% TODO: descrever as seis rodadas finais com base nas configurações e nos resultados salvos.
 \section{DADOS}
+% Dois corpora de 50 entradas: descrições políticas em inglês e legendas jornalísticas em português.
+% Documentar seleção, limpeza, ordem, identificadores, hashes, origem e licença; não são traduções.
 
-\section{MODELO, AGENTES E PERSPECTIVAS}
+\section{MODELOS, AGENTES E PERSPECTIVAS}
+% Separar os três geradores do gpt-6-luna usado na extração, avaliação estrutural e VAD LLM.
+% Documentar parâmetros efetivamente enviados: temperatura 0,8 para Grok/Gemini, omitida para GPT-6.
 
 \section{GERAÇÃO DAS CADEIAS DE REESCRITA}
+% Oito trajetórias de quatro posições em quatro árvores: NNNN, CCCC, PPPP, DDDD, CCPP, PPCC, DDNN, NNDD.
+% Explicar modo interpretativo, NeutralRelay e prefixos compartilhados: 1.200 nós por rodada.
+% As 1.600 posições projetadas não são gerações independentes; distinguir falhas, retomadas e cache.
 
 \section{EXTRAÇÃO ESTRUTURAL}
+% Registrar versões e ausência do título separado; narrative_frame não tem peso próprio no índice.
 
 \section{STRUCTURED TOPIC DRIFT INDEX}
+% Inglês: Dual (Cluster/LLM); português: LLM. Distinguir conteúdo, contradição interna e VAD.
+% Três avaliações estruturais por par, com média de STDIs completos e registro de atalhos/ausências.
+% Repetição do avaliador não repete geração, extração ou VAD; tentativa após falha e cache são distintos.
+% Separar distância ao original, mudança contra o pai efetivo e soma cumulativa, que pode exceder 1.
 
 \section{ANÁLISE DE VALÊNCIA, ATIVAÇÃO E DOMINÂNCIA}
+% Inglês: BERT/LLM em VAD Dual; português: LLM. Dual promedia derivas normalizadas, não vetores brutos.
+% NRC e MEmoLon são alternativas exploratórias, sem adoção no cálculo das rodadas finais.
 
-\section{PROTOCOLO DE VALIDAÇÃO E ANÁLISE}
+\section{PROCEDIMENTOS DE AVALIAÇÃO E ANÁLISE}
+% Usar comparações quantitativas, casos controlados e inspeções qualitativas existentes, sem notas humanas esperadas.
+% Comparar trajetórias e geradores de forma pareada por entrada dentro de cada corpus, respeitando dependências.
+% O ramo LLM/VAD LLM salvo em inglês aproxima o procedimento português, sem isolar o efeito do idioma.
+% Não presumir execução de sensibilidades, testes ou intervalos sem localizar o artefato correspondente.

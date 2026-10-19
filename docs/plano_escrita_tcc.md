@@ -1,6 +1,6 @@
 # Plano de escrita do TCC orientado por evidências
 
-**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações é acompanhada em `docs/plano_revisao_tcc.md`: a Etapa 1 consolidou o planejamento e as Etapas 2–4 revisaram, respectivamente, os capítulos 3, 2 e 1. O projeto compilou com sucesso após a revisão da Introdução. A conferência global e os esboços seguintes permanecem na Etapa 5.
+**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. Orienta a escrita dos capítulos 4–7 a partir das análises existentes e a preparação da versão de entrega.
 
 ## 1. Pergunta, argumento e escopo consolidados
 
@@ -37,6 +37,8 @@ Todos os diretórios abaixo estão em `output/interaction_graph/app_runs/`:
 | Português, 50 entradas | `gemini-3.5-flash-lite` | `simulation_ui_20261019_124942-GEMINIBR` | LLM | LLM |
 
 Os resumos conferidos em 19/10/2026 registram quatro árvores, 50 entradas por árvore e 1.200 reescritas bem-sucedidas por rodada, sem erro de reescrita. Isso documenta cobertura de execução, não qualidade dos textos ou validação do índice. Usar os `*_summary.json` e `*_steps.jsonl` de cada árvore, sem contar simultaneamente nós únicos e suas projeções em trajetórias.
+
+Os 24 resumos e os 7.200 registros de nós únicos documentam essas contagens e os métodos da tabela. Todos os registros apresentam reescrita `success` e STDI selecionado `valid` tanto contra o original quanto incremental. Os hashes dos corpora completos permanecem iguais aos da Seção 2.2. Esses estados finais não comprovam ausência de tentativas anteriores após falha nem permitem contar requisições a partir do número de nós.
 
 **Configurações comuns registradas:** modo `interpretive`, prompt `interpretive_v2`, extração e avaliação estrutural por `chatgpt` / `gpt-6-luna`, três avaliações estruturais por par e VAD por LLM com `gpt-6-luna`. Em inglês, VAD Dual também usa `RobroKools/vad-bert`, e STDI Dual inclui Cluster com `sentence-transformers/all-MiniLM-L6-v2`. Nas rodadas brasileiras, VAD e STDI são LLM; não atribuir a elas BERT ou embeddings para esses cálculos.
 
@@ -105,7 +107,7 @@ Não antecipar resultados estatísticos finais, afirmar validade geral dos pesos
 | Detectores e limites | `su2024adapting`, `wu2024sheepdog`, `whitehouse2022knowledge`. | Deriva e checagem factual são diferentes; pilotos próprios não são benchmarks factuais. |
 | Representação semântica | `reimers2019sbert`, `wang2020minilm`. | MiniLM pertence ao caminho Cluster, não ao comparador LLM das rodadas brasileiras. |
 | Dimensão afetiva | `buechel2017emobank`, `mohammad2018vad`, `buechel2020memolon`, `buechel2020memolondata`, `mohammad2018vadresource`, `mohammad2025vadv2`, `mohammad2025breaking`. | Distinguir modelo neural, normas lexicais e LLM; disponibilidade em português não comprova validade no corpus. |
-| Estimador neural utilizado | `robrokoolsvadbert`, ficha oficial adicionada na Etapa 3. | Documenta BERT para regressão VAD e o idioma inglês; não é validação em português nem referência humana de verdade. A data de publicação não foi informada. |
+| Estimador neural utilizado | `robrokoolsvadbert`, ficha oficial do modelo. | Documenta BERT para regressão VAD e o idioma inglês; não é validação em português nem referência humana de verdade. A data de publicação não foi informada. |
 | Avaliação por LLM e repetição | `saha2026judgebudget`, `haldar2025ratingroulette`, `abdurahman2025primer`. | Repetição descreve variabilidade, sem validar pesos ou acurácia; três avaliações são decisão de orçamento. |
 
 Conferir a seção da fonte primária antes de associá-la a uma afirmação nos capítulos. A literatura pode recomendar validação humana sem que ela tenha sido realizada neste estudo; explicitar a diferença. Fórmulas e agregação pertencem ao capítulo 4. BERTopic só aparece se sustentar uma análise efetivamente usada, sem incorporação ao STDI.
@@ -130,7 +132,7 @@ Explicar a passagem de reescrita fiel a retransmissão interpretativa: o modo fi
 
 Identificar cadeias antigas somente no recorte exploratório que as exige. Não transportar escores entre versões ou substituir S por N.
 
-**Proveniência conferida na Etapa 2:** os totais de 2.327 saídas no detector e 2.281 pares/51 sinalizações na auditoria provêm dos CSVs `audit/PreTrainedAudit/pretrained_fake_news_summary.csv` e `audit/LocalAudit/audit_summary.csv` das 12 execuções abaixo, em `output/runs/`:
+**Proveniência dos diagnósticos iniciais:** os totais de 2.327 saídas no detector e 2.281 pares/51 sinalizações na auditoria provêm dos CSVs `audit/PreTrainedAudit/pretrained_fake_news_summary.csv` e `audit/LocalAudit/audit_summary.csv` das 12 execuções abaixo, em `output/runs/`:
 
 | Conjunto | Conservadora | Progressista | Conspiratória | Cética |
 | --- | --- | --- | --- | --- |
@@ -171,6 +173,8 @@ STDI_dual = (F(S_cluster, A_selected) + mean_j F(S_llm_j, A_selected)) / 2
 ```
 
 As três avaliações estruturais reutilizam textos, estruturas e VAD. Promediar STDIs completos, sem aplicar a fórmula aos componentes médios. Em Dual/Dual, os ramos exibidos usam VAD Modelo e VAD LLM, respectivamente; o total reaplica VAD Dual aos dois ramos antes da média 50/50. A média dos ramos exibidos pode diferir do total final.
+
+Separar a quantidade configurada de avaliações das requisições efetivas: cada avaliação tem seu tratamento de tentativas após falha, pode reutilizar uma resposta compatível e pode ser dispensada pelo atalho registrado para textos idênticos. O cache preserva o resultado de uma operação anterior; não gera uma réplica independente. Conferir essas situações na proveniência, sem converter três avaliações solicitadas em três chamadas novas obrigatórias por par.
 
 Preservar contagens solicitadas/válidas, notas, justificativas, respostas e desvio padrão amostral. Repetição não equivale a repetir extração, VAD ou geração, nem comprova suficiência de três notas. Ausências não são zeros; não preencher um método com escores de outro. O agregado exige os componentes requeridos pela configuração. Desacordo entre métodos não é confiança calibrada.
 
@@ -274,14 +278,13 @@ Números e interpretações das auditorias são resultados deste estudo, não da
 
 ## 6. Ordem prática e pendências de redação
 
-1. Consolidar este plano, base bibliográfica e orientações científicas: Etapa 1 da revisão.
-2. Revisar capítulo 3, encerrando a evolução no desenho final: Etapa 2.
-3. Complementar capítulo 2 para fundamentar métodos efetivos: Etapa 3.
-4. Ajustar objetivos, escopo e contribuições no capítulo 1: Etapa 4.
-5. Conferir capítulos, esboços seguintes, citações e compilação: Etapa 5.
-6. Redigir Materiais e métodos com parâmetros salvos; Resultados com análises existentes; Discussão com limites; Conclusão, resumo e abstract. Não aguardar notas humanas numéricas ou novas simulações.
+1. Redigir Materiais e métodos com dados, parâmetros, modelos e versões salvos.
+2. Redigir Resultados a partir das análises existentes, separando diagnósticos históricos e rodadas finais.
+3. Redigir Discussão com o alcance das comparações e as limitações do desenho e da mensuração.
+4. Redigir Conclusão, respondendo à pergunta de pesquisa no alcance dos resultados apresentados.
+5. Preparar resumo, abstract e elementos institucionais, conferindo a coerência e a apresentação da versão de entrega.
 
-Pendências documentais: localizar análises citadas; conferir origem, licença e preparação dos corpora; verificar contagens históricas; consultar fontes primárias para frases novas; sincronizar a bibliografia LaTeX. Não converter conferências de redação em promessas de experimentos ou sensibilidades não executadas.
+Pendências da redação: localizar o artefato de cada análise citada; detalhar origem, licença e preparação dos corpora; documentar modelos, parâmetros e versões; consultar fontes primárias para frases novas. Preservar os denominadores e os recortes históricos identificados neste plano e conferir outros recortes caso sejam acrescentados. Manter as bibliografias sincronizadas quando houver mudanças e realizar a conferência visual final. Não aguardar notas humanas numéricas ou novas simulações, nem converter tarefas documentais em promessas de experimentos ou sensibilidades não executadas.
 
 BERTopic só entra se houver análise existente e pertinente. Não condicionar o término à sua execução nem alterar retroativamente o STDI.
 
@@ -301,14 +304,14 @@ BERTopic só entra se houver análise existente e pertinente. Não condicionar o
 
 ## 8. Prompt inicial para futuras conversas
 
-> Leia `AGENTS.md`, `docs/template_tcc_ic_ufrj.md`, `docs/base_bibliografica_tcc.md`, `docs/plano_escrita_tcc.md`, `docs/plano_revisao_tcc.md` e `references.bib`. Vamos executar a etapa [NÚMERO] ou escrever a seção [NOME]. As seis rodadas são finais; não haverá notas humanas numéricas esperadas. Use análises existentes e identifique evidências. Preserve VAD LLM em português e BERT/LLM em inglês. Mencione cenários antigos somente quando necessários a uma análise citada. Não trate STDI como verificação factual. Marque somente tarefas concluídas no plano de revisão e informe os arquivos/caminhos para reprodução no Overleaf.
+> Leia `AGENTS.md`, `docs/template_tcc_ic_ufrj.md`, `docs/base_bibliografica_tcc.md`, `docs/plano_escrita_tcc.md` e `references.bib`. Vamos escrever a seção [NOME]. As seis rodadas são finais; não haverá notas humanas numéricas esperadas. Use análises existentes e identifique evidências. Preserve VAD LLM em português e BERT/LLM em inglês. Mencione cenários antigos somente quando necessários a uma análise citada. Não trate STDI como verificação factual. Informe os arquivos e caminhos para reprodução no Overleaf.
 
 ## 9. Alterações para replicar no Overleaf
 
-Na Etapa 4, substituir somente `elementos-textuais/capitulo-1.tex` no Overleaf pelo conteúdo de `tcc/elementos-textuais/capitulo-1.tex` e recompilar. A revisão da Introdução não alterou `main.tex`, a formatação ou a bibliografia. Foram atualizados também este plano e `docs/plano_revisao_tcc.md`, sem destino obrigatório no Overleaf.
+Ao transferir alterações de redação, substituir os arquivos correspondentes de `tcc/elementos-textuais/capitulo-*.tex` em `elementos-textuais/capitulo-*.tex` no Overleaf. Preservar a estrutura de pastas e as inclusões de `main.tex`, salvo mudança necessária na organização do trabalho.
 
-Se as etapas anteriores ainda não tiverem sido transferidas, substituir também `elementos-textuais/capitulo-2.tex`, `elementos-textuais/capitulo-3.tex` e `elementos-postextuais/referencias.bib` pelos conteúdos locais atuais. A Etapa 3 adicionou a ficha `robrokoolsvadbert` à base canônica `references.bib` e à cópia usada pelo TCC; nenhuma referência foi acrescentada na Etapa 4.
+A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib` no Overleaf e à cópia local `tcc/elementos-postextuais/referencias.bib`. Ao alterar referências, manter as três versões correspondentes sincronizadas.
 
-A correção de compatibilidade de `tcc/formatacao.tex` precisou ser reaplicada na Etapa 3: trocar `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` em `formatacao.tex` no Overleaf, permitindo seleção automática do driver. A compilação integrada foi bem-sucedida e pdfLaTeX permanece a configuração recomendada no Overleaf. O template canônico não foi alterado. Recompilar e atualizar a bibliografia. `main.tex` permanece inalterado.
+A cópia de trabalho `tcc/formatacao.tex` usa `\usepackage{graphicx}` para permitir seleção automática do driver. Se a cópia do Overleaf ainda contiver `\usepackage[pdftex]{graphicx}`, substituir apenas essa linha em `formatacao.tex`. Manter pdfLaTeX como compilador recomendado e preservar o template canônico.
 
-Os documentos em `docs/` não têm destino obrigatório no Overleaf. A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib`; a cópia local foi sincronizada nas Etapas 2 e 3, incluindo a nova referência na última etapa. Seguir também o checklist em `docs/plano_revisao_tcc.md`. Alterações locais não chegam automaticamente ao Overleaf.
+Após transferir fontes ou referências, recompilar o projeto e atualizar a bibliografia quando necessário. Os documentos em `docs/` e `tcc/README.md` não têm destino obrigatório no Overleaf. Alterações locais não chegam automaticamente ao Overleaf.
