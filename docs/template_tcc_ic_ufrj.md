@@ -384,7 +384,9 @@ Em particular:
 - identificar pilotos como exploratórios;
 - documentar corpus, amostra, modelo, versão, prompt, parâmetros, data e unidade de análise;
 - citar resultados produzidos pelo projeto como resultados deste estudo, não como achados da literatura externa;
-- não afirmar que pesos ou faixas do STDI estão validados antes da validação humana prevista.
+- apresentar a avaliação do STDI conforme as comparações quantitativas e inspeções qualitativas realizadas; não afirmar que pesos ou faixas foram calibrados contra referência humana numérica inexistente;
+- conforme a decisão de escopo de 19/10/2026, não haverá atribuição humana de notas esperadas aos pares: sua ausência é uma limitação, não uma atividade obrigatória futura;
+- tratar as seis rodadas identificadas no plano como simulações finais e mencionar cenários anteriores somente quando necessários à análise citada.
 
 ## 15. Checklist para cada entrega
 

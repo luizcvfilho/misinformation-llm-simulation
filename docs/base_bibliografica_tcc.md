@@ -12,17 +12,23 @@ verificadas novamente nesta atualização.
 
 **Plano de uso na escrita:** [`plano_escrita_tcc.md`](plano_escrita_tcc.md)
 
+**Atualização de escopo:** 19/10/2026, para alinhar as orientações às simulações finais e às decisões do autor. Esta atualização não constitui nova verificação dos metadados ou releitura integral das fontes; preservar as datas de conferência acima.
+
 ## 1. Escopo da revisão
 
-Esta base apoia o TCC sobre **deriva informacional e afetiva em cadeias de reescrita de notícias por agentes baseados em LLMs**. A pergunta de pesquisa provisória é:
+Esta base apoia o TCC sobre **deriva informacional e afetiva em cadeias de reescrita de notícias por agentes baseados em LLMs**. A pergunta de pesquisa é:
 
 > Em que medida a ordem e o tipo de perspectiva atribuída a agentes LLM alteram o conteúdo e o enquadramento emocional de uma notícia ao longo de uma cadeia de reescritas?
 
 O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações de tema, subtópicos, entidades, relações, contradição interna e VAD. O STDI não verifica fatos contra fontes externas e não mede crença, exposição ou compartilhamento humano.
 
+O escopo final contém seis rodadas: três geradores (`gpt-6-luna`, `grok-build-0.1` e `gemini-3.5-flash-lite`) sobre dois corpora de 50 entradas, em inglês e português, com oito trajetórias em quatro árvores. Inglês usa STDI/VAD Dual; português usa STDI/VAD LLM. Configurações e arquivos estão em `docs/plano_escrita_tcc.md`. A bibliografia deve fundamentar essa configuração sem sugerir que os corpora isolam um efeito do idioma.
+
+Não haverá atribuição humana de notas numéricas esperadas aos pares. As análises quantitativas e qualitativas existentes serão descritas com seus limites, e os campos históricos vazios não são uma etapa pendente. A ausência de referência humana numérica independente limita a avaliação do instrumento; fontes que recomendam esse procedimento podem orientar a discussão dessa limitação, sem implicar que ele foi realizado ou será acrescentado ao TCC.
+
 ### Classificação usada
 
-- **Núcleo:** deve aparecer no texto, pois fundamenta diretamente o problema, o método ou a validação.
+- **Núcleo:** deve aparecer no texto, pois fundamenta diretamente o problema, o método ou a avaliação.
 - **Complementar:** útil para comparação, discussão ou decisão metodológica específica.
 - **Fora do núcleo:** artigo válido, mas pouco alinhado ao recorte atual; manter apenas se o escopo mudar.
 
@@ -36,7 +42,7 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | `liu2024skepticism` | Liu et al. (2024), *From Skepticism to Acceptance* | Simulação de propagação de notícias falsas com personas, memória e reflexão. É importante como comparação entre mudança de atitude e mudança do texto. | Trabalhos relacionados e discussão | Núcleo |
 | `frisch2024interaction` | Frisch e Giulianelli (2024), *LLM Agents in Interaction* | Sustenta a necessidade de avaliar consistência das personas e alinhamento linguístico durante interações. | Personas, ameaças à validade e discussão | Núcleo |
 | `chen2025rpa` | Chen et al. (2025), survey sobre avaliação de role-playing agents | Oferece taxonomia e diretrizes para avaliar agentes com papéis. Ajuda a justificar critérios de fidelidade, consistência e validade. | Fundamentação metodológica e protocolo de avaliação | Núcleo |
-| `abdurahman2025primer` | Abdurahman et al. (2025), primer de avaliação de LLMs em ciências sociais | Fundamenta documentação de modelo e prompt, repetição, análise de sensibilidade e validação contra julgamento humano. | Método, validade e limitações | Núcleo |
+| `abdurahman2025primer` | Abdurahman et al. (2025), primer de avaliação de LLMs em ciências sociais | Fundamenta documentação de modelo e prompt, repetição e discussão de validade. Distinguir as recomendações de sensibilidade e validação humana dos procedimentos efetivamente realizados; a anotação numérica humana não compõe o escopo final. | Método, validade e limitações | Núcleo |
 | `su2024adapting` | Su, Cardie e Nakov (2024), adaptação de detectores de fake news à era dos LLMs | Mostra que autoria humana/máquina e geração/paráfrase afetam detectores. Ajuda a contextualizar por que classificação binária e sinais de estilo são insuficientes para o problema do TCC. | Introdução, detectores iniciais e discussão | Núcleo |
 | `yang2025rethink` | Yang et al. (2025), revisão de detecção de rumores na era dos LLMs | Revisão recente para organizar detecção, cognição, interação e comportamento, incluindo modelagem baseada em agentes. | Estado da arte | Núcleo |
 | `guo2021truth` | Guo et al. (2021), evolução empírica de verdade para notícia falsa | Antecedente direto da noção de evolução de conteúdo; apresenta o conjunto FNE com estágios verdade → fake → fake evoluída. | Fundamentação da evolução textual | Núcleo |
@@ -44,8 +50,8 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | `entman1993framing` | Entman (1993), teoria de enquadramento | Base conceitual para diferenciar mudança de enquadramento, seleção e saliência de falsidade factual. | Fundamentação conceitual do STDI | Núcleo |
 | `lazer2018science` | Lazer et al. (2018), *The Science of Fake News* | Referência interdisciplinar para definir o problema de notícias falsas e situar respostas científicas. | Introdução e definições | Núcleo |
 | `vosoughi2018spread` | Vosoughi, Roy e Aral (2018), propagação de notícias verdadeiras e falsas | Evidência empírica clássica sobre diferenças de difusão no Twitter. Não deve ser apresentada como evidência de transformação textual. | Introdução | Núcleo |
-| `reimers2019sbert` | Reimers e Gurevych (2019), Sentence-BERT | Fundamenta embeddings de sentenças e comparação por similaridade cosseno. | Método do STDI | Núcleo |
-| `wang2020minilm` | Wang et al. (2020), MiniLM | Fundamenta a família do encoder usada por `all-MiniLM-L6-v2`. O artigo não descreve sozinho o ajuste específico do sentence-transformer; citar também SBERT e documentar o identificador do modelo. | Método do STDI | Núcleo |
+| `reimers2019sbert` | Reimers e Gurevych (2019), Sentence-BERT | Fundamenta embeddings e similaridade cosseno no caminho Cluster, incluído no STDI Dual das rodadas inglesas. Não atribuir esse comparador ao STDI LLM das rodadas brasileiras. | Método do STDI | Núcleo |
+| `wang2020minilm` | Wang et al. (2020), MiniLM | Fundamenta a família do encoder `all-MiniLM-L6-v2` usado pelo Cluster. O artigo não descreve sozinho seu ajuste como sentence-transformer; citar também SBERT e documentar o identificador. | Método do STDI | Núcleo |
 | `buechel2017emobank` | Buechel e Hahn (2017), EmoBank | Fundamenta a representação dimensional de emoção em valência, arousal e dominância em texto. | Fundamentação e método VAD | Núcleo |
 | `mohammad2018vad` | Mohammad (2018), NRC VAD Lexicon v1 | Fundamenta as normas VAD humanas para termos em inglês, obtidas por Best-Worst Scaling. É a fonte científica do NRC v1; as traduções posteriores precisam da referência do recurso. | Fundamentação e limitações do VAD | Núcleo |
 
@@ -55,9 +61,9 @@ O trabalho propõe o Structured Topic Drift Index (STDI) para medir alterações
 | --- | --- | --- |
 | `liu2025mosaic` | Comparar simulação com grafo dirigido, personas, disseminação e moderação. | O foco inclui ações como curtir, compartilhar e sinalizar; o TCC mede transformação textual, não comportamento real de plataforma. |
 | `wang2025echo` | Discutir polarização, estruturas de rede e comparação com modelos clássicos de opinião. | Não usar para afirmar que as cadeias atuais reproduzem câmaras de eco; o desenho do TCC não implementa a mesma dinâmica. |
-| `buechel2020memolon` | Buechel, Rücker e Hahn (ACL 2020), *Learning and Evaluating Emotion Lexicons for 91 Languages*. Fundamenta a construção multilíngue de léxicos afetivos por transferência e aprendizado multitarefa. Fonte do candidato MEmoLon, disponível em português e inglês. | As predições são lexicais; o método não infere contexto ou negação de documentos completos. A avaliação lexical do artigo não valida os nossos escores agregados por notícia. |
+| `buechel2020memolon` | Buechel, Rücker e Hahn (ACL 2020), *Learning and Evaluating Emotion Lexicons for 91 Languages*. Fundamenta a construção multilíngue de léxicos por transferência e aprendizado multitarefa. Fonte do MEmoLon, explorado em português e inglês, sem adoção nas simulações finais. | As predições são lexicais; o método não infere contexto ou negação de documentos completos. A avaliação lexical do artigo não valida os nossos escores agregados por notícia. |
 | `buechel2020memolondata` | Referenciar o conjunto oficial MEmoLon v1.0 no Zenodo, publicado em 12/05/2020, DOI `10.5281/zenodo.3756607`. O projeto recomenda a variante `MTL_grouped`, usada nesta comparação. | Distinguir artigo, código e conjunto de dados. O recurso tem licença CC BY 4.0. Registrar variante, idioma e hash do TSV; a agregação e o tratamento de duplicatas pertencem à implementação deste estudo. |
-| `mohammad2018vadresource` | Documentar a distribuição oficial do NRC v1 e as traduções automáticas atualizadas em agosto de 2022, incluindo português. Complementa o artigo `mohammad2018vad`, sem duplicá-lo. | As palavras foram traduzidas por Google Translate; os valores afetivos das entradas em inglês foram preservados. Não são novas anotações VAD humanas em português. Polissemia, entradas traduzidas duplicadas e adequação cultural precisam ser avaliadas. |
+| `mohammad2018vadresource` | Documentar o NRC v1 e as traduções automáticas de agosto de 2022, incluindo português, usados no piloto bilíngue. Complementa `mohammad2018vad`, sem duplicá-lo. | As palavras foram traduzidas por Google Translate com preservação dos valores ingleses. Não são novas anotações humanas em português. Polissemia, duplicatas e adequação cultural são limites da interpretação dos testes. |
 | `mohammad2025vadv2` | Fundamentar o NRC VAD v2, incluído novamente na comparação exploratória com BERT e MEmoLon em 02/10/2026. Preservar também o histórico da avaliação inicial. Metadados e método conferidos no artigo e recurso oficial. | Avaliações humanas de termos em inglês; a confiabilidade lexical não valida a agregação por notícia nem o uso em português. Não é um modelo neural de texto completo. |
 | `mohammad2025breaking` | Fundamentar as expressões compostas incluídas no NRC VAD v2, presente na comparação atual dos três estimadores. Metadados e descrição do recurso conferidos em 01/10/2026 na ACL Anthology. | O casamento por expressão mais longa e a média por ocorrência são decisões desta implementação, não métodos de avaliação textual validados pelo artigo. |
 | `wu2024sheepdog` | Sustentar a vulnerabilidade de detectores baseados em estilo a reenquadramentos produzidos por LLMs. | O problema é robustez de detecção, não mensuração de deriva. |
@@ -78,6 +84,7 @@ textos, estruturas e VAD para isolar a variabilidade do judge. A regra de média
 completos e a exigência de todas as avaliações válidas são decisões desta implementação.
 A rubrica ordinal e a média numérica continuam sendo convenções operacionais do estudo.
 Não apresentar a repetição como validação dos pesos ou como evidência de veracidade externa.
+As três avaliações estruturais por par estão nas rodadas finais; elas não representam novas gerações ou anotação humana. Não condicionar a redação à realização de um novo conjunto anotado. Eventual recomendação da literatura deve ser apresentada como limite do estudo quando o procedimento não foi adotado.
 
 ## 4. Trabalhos mantidos fora do núcleo
 
@@ -89,9 +96,9 @@ Não apresentar a repetição como validação dos pesos ou como evidência de v
 
 Não é necessário apagar esses registros do `.bib`: mantê-los documentados evita refazer a triagem caso o escopo mude.
 
-### Decisão sobre os recursos VAD em 01/10/2026
+### Decisão histórica sobre os recursos VAD em 01/10/2026
 
-A comparação ativa nos dois notebooks passou de BERT versus NRC v2.1 para **BERT atual versus MEmoLon MTL_grouped**, reutilizando os textos dos testes anteriores e recalculando os dois estimadores. Os resultados anteriores do candidato NRC foram substituídos nos diretórios de auditoria; o commit `d09cd838edbd827750933181775efe315c55763f` preserva aquele estágio. As fontes NRC v2 continuam na bibliografia como histórico, sem status de candidato ativo. O NRC v1 traduzido fica documentado para possível comparação futura.
+A comparação nos dois notebooks passou de BERT versus NRC v2.1 para **BERT atual versus MEmoLon MTL_grouped**, reutilizando os textos dos testes anteriores e recalculando os estimadores. Os resultados NRC foram substituídos nos diretórios de auditoria; `d09cd838edbd827750933181775efe315c55763f` preserva aquele estágio. A retirada do NRC dessa comparação foi revertida em 02/10. O NRC v1 traduzido também foi examinado no piloto bilíngue preservado. Esses estados históricos não definem a configuração final.
 
 ### Atualização da comparação em 02/10/2026
 
@@ -102,6 +109,12 @@ Após a consolidação, por decisão do pesquisador, somente o notebook unificad
 O MEmoLon usa aprendizado multitarefa em nível lexical para expandir recursos em 91 idiomas; disponibilidade em português não prova validade em notícias portuguesas. Neste estudo, entradas duplicadas após normalização são promediadas, e cada ocorrência do termo mais longo reconhecido contribui igualmente para a média do documento. A escala nativa VAD 1–9 é transformada por `(valor + 1)/2` para 1–5, ou por `(valor - 1)/8` para 0–1. A conversão iguala amplitudes teóricas, sem calibrar estimadores. Os testes refeitos são em inglês e não têm referência humana independente; cobertura lexical e maior variação não demonstram superioridade.
 
 Fontes primárias conferidas: [artigo MEmoLon](https://aclanthology.org/2020.acl-main.112/), [conjunto oficial](https://zenodo.org/records/3756607), [documentação do projeto](https://github.com/JULIELab/MEmoLon), [artigo NRC v1](https://aclanthology.org/P18-1017/) e [distribuição e traduções NRC](https://saifmohammad.com/WebPages/nrc-vad.html).
+
+### Escolha final do VAD e interpretação em 19/10/2026
+
+As comparações de `output/audit/PortugueseVADLexiconComparison/`, `VADThreeModelContextContrastAudit/`, `SimulationVADModelComparison/` e `LLMVADComparison_20261006/` integram o percurso de escolha do instrumento. Conforme a decisão do pesquisador, os candidatos lexicais avaliados não apresentaram comportamento considerado satisfatório para substituir o modelo inicial no uso pretendido. Essa trajetória motivou a implementação de VAD por LLM, sem demonstrar que os recursos sejam inadequados em geral ou que o LLM seja universalmente superior.
+
+Nas simulações finais, português usa VAD por LLM (`gpt-6-luna`). Inglês conserva `RobroKools/vad-bert` juntamente com o LLM, em VAD Dual. O Dual combina as derivas normalizadas dos estimadores, não vetores brutos antes da distância. BERT, NRC e MEmoLon não são referências humanas de verdade nesta avaliação. As fontes dos léxicos fundamentam a história da escolha e as limitações, sem alegação de uso desses léxicos no cálculo final. Separar essa escolha afetiva da seleção do comparador estrutural STDI.
 
 ## 5. Mapa de leitura por tema
 
@@ -141,7 +154,7 @@ Fontes primárias conferidas: [artigo MEmoLon](https://aclanthology.org/2020.acl
 7. `buechel2020memolon`
 8. `buechel2020memolondata`
 
-### Validação científica
+### Avaliação e limites de validade
 
 1. `abdurahman2025primer`
 2. `chen2025rpa`
@@ -158,11 +171,14 @@ Fontes primárias conferidas: [artigo MEmoLon](https://aclanthology.org/2020.acl
 5. Ao comparar métodos, relatar diferenças de corpus, idioma, modelo, prompt, unidade de análise e objetivo.
 6. Para artigos de 2025–2026, conferir novamente os metadados na versão final do TCC.
 7. Se uma nova fonte for usada no texto, adicioná-la simultaneamente a este documento e a `references.bib`.
+8. Não transformar recomendações da literatura em procedimentos supostamente executados ou pendências excluídas pelo autor. A análise qualitativa realizada não equivale a anotação numérica humana independente.
+9. Ao citar uma auditoria anterior, informar a versão e apenas as cadeias necessárias à identificação daquele recorte, sem apresentar o catálogo de desenhos descartados.
 
-## 7. Lacunas ainda abertas
+## 7. Pendências bibliográficas e documentais
 
-- Validar o STDI com julgamento humano e, se possível, um segundo anotador.
-- Procurar literatura adicional sobre avaliação de métricas de mudança semântica pareada.
-- Definir uma referência específica para o modelo VAD efetivamente usado (`RobroKools/vad-bert`), além das referências gerais de VAD.
-- Documentar a origem e a licença do corpus final de notícias.
+- Conferir as fontes primárias das afirmações novas sobre avaliação por LLM, repetição e comparação semântica; literatura adicional só será incorporada quando necessária a uma frase ou decisão específica.
+- Documentar uma referência específica do modelo `RobroKools/vad-bert`, mantido no VAD Dual em inglês, além das fontes conceituais; identificar separadamente a rubrica e a implementação próprias do VAD LLM.
+- Documentar a origem, a licença e os critérios de preparação dos dois corpora finais.
 - Verificar se a banca espera exclusivamente artigos revisados por pares; `grootendorst2022bertopic` e `guo2021truth` exigem atenção ao tipo de publicação registrado.
+
+A ausência de referência humana numérica é limitação da avaliação realizada, não atividade a completar. Não exigir segundo anotador, valores esperados ou correlação com notas inexistentes para concluir a escrita. Nenhuma referência foi adicionada ou removida nesta atualização de escopo.
