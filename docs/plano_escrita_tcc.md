@@ -1,6 +1,6 @@
 # Plano de escrita do TCC orientado por evidências
 
-**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações nos capítulos é acompanhada em `docs/plano_revisao_tcc.md`. A Etapa 1 consolidou o planejamento e a Etapa 2 revisou o capítulo 3; os capítulos 1 e 2 ainda aguardam as etapas correspondentes.
+**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações é acompanhada em `docs/plano_revisao_tcc.md`: a Etapa 1 consolidou o planejamento, a Etapa 2 revisou o capítulo 3 e a Etapa 3 complementou o capítulo 2. O capítulo 1 aguarda a Etapa 4 e a conferência global permanece na Etapa 5.
 
 ## 1. Pergunta, argumento e escopo consolidados
 
@@ -105,6 +105,7 @@ Não antecipar resultados estatísticos finais, afirmar validade geral dos pesos
 | Detectores e limites | `su2024adapting`, `wu2024sheepdog`, `whitehouse2022knowledge`. | Deriva e checagem factual são diferentes; pilotos próprios não são benchmarks factuais. |
 | Representação semântica | `reimers2019sbert`, `wang2020minilm`. | MiniLM pertence ao caminho Cluster, não ao comparador LLM das rodadas brasileiras. |
 | Dimensão afetiva | `buechel2017emobank`, `mohammad2018vad`, `buechel2020memolon`, `buechel2020memolondata`, `mohammad2018vadresource`, `mohammad2025vadv2`, `mohammad2025breaking`. | Distinguir modelo neural, normas lexicais e LLM; disponibilidade em português não comprova validade no corpus. |
+| Estimador neural utilizado | `robrokoolsvadbert`, ficha oficial adicionada na Etapa 3. | Documenta BERT para regressão VAD e o idioma inglês; não é validação em português nem referência humana de verdade. A data de publicação não foi informada. |
 | Avaliação por LLM e repetição | `saha2026judgebudget`, `haldar2025ratingroulette`, `abdurahman2025primer`. | Repetição descreve variabilidade, sem validar pesos ou acurácia; três avaliações são decisão de orçamento. |
 
 Conferir a seção da fonte primária antes de associá-la a uma afirmação nos capítulos. A literatura pode recomendar validação humana sem que ela tenha sido realizada neste estudo; explicitar a diferença. Fórmulas e agregação pertencem ao capítulo 4. BERTopic só aparece se sustentar uma análise efetivamente usada, sem incorporação ao STDI.
@@ -304,6 +305,8 @@ BERTopic só entra se houver análise existente e pertinente. Não condicionar o
 
 ## 9. Alterações para replicar no Overleaf
 
-Na Etapa 1 foram alterados somente os documentos locais de planejamento e orientação. Na Etapa 2 foram revisados `tcc/elementos-textuais/capitulo-3.tex`, a cópia bibliográfica `tcc/elementos-postextuais/referencias.bib` e uma linha de compatibilidade em `tcc/formatacao.tex`. Replicar em `elementos-textuais/capitulo-3.tex`, `elementos-postextuais/referencias.bib` e `formatacao.tex` no Overleaf, respectivamente. Em `formatacao.tex`, trocar `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` para seleção automática do driver. A correção preserva a compatibilidade com pdfLaTeX e permitiu a compilação integrada; o template canônico não foi alterado. Recompilar e atualizar a bibliografia. `main.tex` permanece inalterado.
+Na Etapa 1 foram alterados somente documentos locais de planejamento e orientação. A Etapa 2 revisou o capítulo 3; a Etapa 3 revisou `tcc/elementos-textuais/capitulo-2.tex` e adicionou a ficha `robrokoolsvadbert` a `references.bib` e à cópia `tcc/elementos-postextuais/referencias.bib`. Nesta etapa, substituir `elementos-textuais/capitulo-2.tex` e `elementos-postextuais/referencias.bib` no Overleaf pelos conteúdos locais atuais. O capítulo 3 também deve ser transferido caso ainda não tenha sido sincronizado após a Etapa 2.
 
-Os documentos em `docs/` não têm destino obrigatório no Overleaf. A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib` e sua cópia local foi sincronizada na Etapa 2, sem alteração da base canônica. Seguir também o checklist em `docs/plano_revisao_tcc.md`. Alterações locais não chegam automaticamente ao Overleaf.
+A correção de compatibilidade de `tcc/formatacao.tex` precisou ser reaplicada na Etapa 3: trocar `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` em `formatacao.tex` no Overleaf, permitindo seleção automática do driver. A compilação integrada foi bem-sucedida e pdfLaTeX permanece a configuração recomendada no Overleaf. O template canônico não foi alterado. Recompilar e atualizar a bibliografia. `main.tex` permanece inalterado.
+
+Os documentos em `docs/` não têm destino obrigatório no Overleaf. A base canônica `references.bib` corresponde a `elementos-postextuais/referencias.bib`; a cópia local foi sincronizada nas Etapas 2 e 3, incluindo a nova referência na última etapa. Seguir também o checklist em `docs/plano_revisao_tcc.md`. Alterações locais não chegam automaticamente ao Overleaf.

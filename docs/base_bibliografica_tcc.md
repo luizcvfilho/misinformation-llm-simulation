@@ -16,6 +16,8 @@ verificadas novamente nesta atualização.
 
 **Conferência pontual para o capítulo 3, em 19/10/2026:** consultados os resumos e metadados oficiais de `buechel2020memolon`, `saha2026judgebudget` e `haldar2025ratingroulette`, além da página do recurso `mohammad2018vadresource`. A consulta sustenta as afirmações restritas sobre recursos lexicais multilíngues/traduções e variabilidade/consultas repetidas do avaliador; não constitui releitura integral desses artigos nem revalidação das demais referências. As quatro chaves já existiam na base canônica; a bibliografia de `tcc/` foi sincronizada para permitir as citações no capítulo revisado.
 
+**Conferência para o capítulo 2, em 19/10/2026:** consultados os resumos e metadados primários de `mohammad2025vadv2`, `mohammad2025breaking` e `buechel2020memolon`, a página oficial do NRC e os resumos de `saha2026judgebudget` e `haldar2025ratingroulette`. As afirmações novas se limitam à ampliação dos léxicos, às expressões compostas, à transferência multilíngue, às traduções e à variabilidade/estimação de médias do avaliador. Foi adicionada a referência `robrokoolsvadbert`, cuja ficha oficial foi consultada para documentar o estimador neural. A ficha não informa data de publicação; usar o identificador público do responsável e `s.d.`, sem inferir data ou nome civil. A rubrica VAD por LLM e as regras de agregação são decisões deste projeto, documentadas no código e nos protocolos, sem atribuição indevida a essas fontes. Esta conferência não constitui revisão integral das demais referências.
+
 ## 1. Escopo da revisão
 
 Esta base apoia o TCC sobre **deriva informacional e afetiva em cadeias de reescrita de notícias por agentes baseados em LLMs**. A pergunta de pesquisa é:
@@ -63,6 +65,7 @@ Não haverá atribuição humana de notas numéricas esperadas aos pares. As an�
 | --- | --- | --- |
 | `liu2025mosaic` | Comparar simulação com grafo dirigido, personas, disseminação e moderação. | O foco inclui ações como curtir, compartilhar e sinalizar; o TCC mede transformação textual, não comportamento real de plataforma. |
 | `wang2025echo` | Discutir polarização, estruturas de rede e comparação com modelos clássicos de opinião. | Não usar para afirmar que as cadeias atuais reproduzem câmaras de eco; o desenho do TCC não implementa a mesma dinâmica. |
+| `robrokoolsvadbert` | Documentar o estimador neural inicial `RobroKools/vad-bert`, mantido no VAD Dual em inglês. Fonte primária: [ficha oficial](https://huggingface.co/RobroKools/vad-bert), consultada em 19/10/2026; descreve BERT ajustado para regressão das três dimensões e identifica o idioma inglês. Citar no capítulo 2 e no método. | É documentação de modelo, não artigo de validação. Não informa data de publicação; o registro usa `s.d.`. Não sustenta validade em português, igualdade com a rubrica LLM ou superioridade empírica. Limite de entrada e forma de uso devem ser registrados a partir da implementação e da revisão efetivamente utilizadas. |
 | `buechel2020memolon` | Buechel, Rücker e Hahn (ACL 2020), *Learning and Evaluating Emotion Lexicons for 91 Languages*. Fundamenta a construção multilíngue de léxicos por transferência e aprendizado multitarefa. Fonte do MEmoLon, explorado em português e inglês, sem adoção nas simulações finais. | As predições são lexicais; o método não infere contexto ou negação de documentos completos. A avaliação lexical do artigo não valida os nossos escores agregados por notícia. |
 | `buechel2020memolondata` | Referenciar o conjunto oficial MEmoLon v1.0 no Zenodo, publicado em 12/05/2020, DOI `10.5281/zenodo.3756607`. O projeto recomenda a variante `MTL_grouped`, usada nesta comparação. | Distinguir artigo, código e conjunto de dados. O recurso tem licença CC BY 4.0. Registrar variante, idioma e hash do TSV; a agregação e o tratamento de duplicatas pertencem à implementação deste estudo. |
 | `mohammad2018vadresource` | Documentar o NRC v1 e as traduções automáticas de agosto de 2022, incluindo português, usados no piloto bilíngue. Complementa `mohammad2018vad`, sem duplicá-lo. | As palavras foram traduzidas por Google Translate com preservação dos valores ingleses. Não são novas anotações humanas em português. Polissemia, duplicatas e adequação cultural são limites da interpretação dos testes. |
@@ -155,6 +158,7 @@ Nas simulações finais, português usa VAD por LLM (`gpt-6-luna`). Inglês cons
 6. `mohammad2018vadresource`
 7. `buechel2020memolon`
 8. `buechel2020memolondata`
+9. `robrokoolsvadbert`
 
 ### Avaliação e limites de validade
 
@@ -179,8 +183,8 @@ Nas simulações finais, português usa VAD por LLM (`gpt-6-luna`). Inglês cons
 ## 7. Pendências bibliográficas e documentais
 
 - Conferir as fontes primárias das afirmações novas sobre avaliação por LLM, repetição e comparação semântica; literatura adicional só será incorporada quando necessária a uma frase ou decisão específica.
-- Documentar uma referência específica do modelo `RobroKools/vad-bert`, mantido no VAD Dual em inglês, além das fontes conceituais; identificar separadamente a rubrica e a implementação próprias do VAD LLM.
+- Identificar no capítulo de métodos a revisão e os parâmetros efetivos de `RobroKools/vad-bert`, cuja referência de documentação foi adicionada na Etapa 3; registrar separadamente a rubrica e a implementação próprias do VAD LLM.
 - Documentar a origem, a licença e os critérios de preparação dos dois corpora finais.
 - Verificar se a banca espera exclusivamente artigos revisados por pares; `grootendorst2022bertopic` e `guo2021truth` exigem atenção ao tipo de publicação registrado.
 
-A ausência de referência humana numérica é limitação da avaliação realizada, não atividade a completar. Não exigir segundo anotador, valores esperados ou correlação com notas inexistentes para concluir a escrita. Nenhuma referência foi adicionada ou removida nesta atualização de escopo.
+A ausência de referência humana numérica é limitação da avaliação realizada, não atividade a completar. Não exigir segundo anotador, valores esperados ou correlação com notas inexistentes para concluir a escrita. A atualização de escopo da Etapa 1 não adicionou ou removeu referências; a Etapa 3 acrescentou somente a ficha oficial `robrokoolsvadbert` e manteve a cópia bibliográfica de `tcc/` sincronizada com a base canônica.

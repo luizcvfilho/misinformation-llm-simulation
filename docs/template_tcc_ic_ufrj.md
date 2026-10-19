@@ -96,6 +96,8 @@ Não migrar o projeto para XeLaTeX, LuaLaTeX, `biblatex` ou Biber sem uma necess
 
 Os arquivos `formatacao.tex` e `url16023.sty` são marcados pelo próprio modelo como arquivos que não devem ser modificados. Mudanças neles só devem ocorrer para corrigir incompatibilidade confirmada ou cumprir orientação institucional posterior. Toda mudança deve ser pequena, documentada e conferida visualmente.
 
+**Compatibilidade confirmada em 19/10/2026:** o compilador integrado executa Tectonic/XeTeX e falha quando a cópia de trabalho força o driver pdfTeX em `graphicx`. A substituição de `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` somente em `tcc/formatacao.tex` permite seleção automática do driver e foi necessária para a compilação das revisões. A correção identificada na Etapa 2 precisou ser reaplicada na Etapa 3, cujo estado inicial novamente forçava pdfTeX. A compilação integrada foi bem-sucedida após o ajuste. PdfLaTeX permanece recomendado para o Overleaf; a linha sem driver explícito é compatível com ele. O template canônico e as regras de margens, fontes e espaçamento foram preservados. A conferência visual global continua no checklist de entrega.
+
 ## 4. Uso no Overleaf
 
 1. Criar um projeto com **New Project > Upload Project** e enviar o ZIP do template.
