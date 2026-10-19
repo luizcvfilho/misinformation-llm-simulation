@@ -1,6 +1,6 @@
 # Plano de escrita do TCC orientado por evidências
 
-**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações é acompanhada em `docs/plano_revisao_tcc.md`: a Etapa 1 consolidou o planejamento, a Etapa 2 revisou o capítulo 3 e a Etapa 3 complementou o capítulo 2. O capítulo 1 aguarda a Etapa 4 e a conferência global permanece na Etapa 5.
+**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. A aplicação das alterações é acompanhada em `docs/plano_revisao_tcc.md`: a Etapa 1 consolidou o planejamento e as Etapas 2–4 revisaram, respectivamente, os capítulos 3, 2 e 1. O projeto compilou com sucesso após a revisão da Introdução. A conferência global e os esboços seguintes permanecem na Etapa 5.
 
 ## 1. Pergunta, argumento e escopo consolidados
 
@@ -305,7 +305,9 @@ BERTopic só entra se houver análise existente e pertinente. Não condicionar o
 
 ## 9. Alterações para replicar no Overleaf
 
-Na Etapa 1 foram alterados somente documentos locais de planejamento e orientação. A Etapa 2 revisou o capítulo 3; a Etapa 3 revisou `tcc/elementos-textuais/capitulo-2.tex` e adicionou a ficha `robrokoolsvadbert` a `references.bib` e à cópia `tcc/elementos-postextuais/referencias.bib`. Nesta etapa, substituir `elementos-textuais/capitulo-2.tex` e `elementos-postextuais/referencias.bib` no Overleaf pelos conteúdos locais atuais. O capítulo 3 também deve ser transferido caso ainda não tenha sido sincronizado após a Etapa 2.
+Na Etapa 4, substituir somente `elementos-textuais/capitulo-1.tex` no Overleaf pelo conteúdo de `tcc/elementos-textuais/capitulo-1.tex` e recompilar. A revisão da Introdução não alterou `main.tex`, a formatação ou a bibliografia. Foram atualizados também este plano e `docs/plano_revisao_tcc.md`, sem destino obrigatório no Overleaf.
+
+Se as etapas anteriores ainda não tiverem sido transferidas, substituir também `elementos-textuais/capitulo-2.tex`, `elementos-textuais/capitulo-3.tex` e `elementos-postextuais/referencias.bib` pelos conteúdos locais atuais. A Etapa 3 adicionou a ficha `robrokoolsvadbert` à base canônica `references.bib` e à cópia usada pelo TCC; nenhuma referência foi acrescentada na Etapa 4.
 
 A correção de compatibilidade de `tcc/formatacao.tex` precisou ser reaplicada na Etapa 3: trocar `\usepackage[pdftex]{graphicx}` por `\usepackage{graphicx}` em `formatacao.tex` no Overleaf, permitindo seleção automática do driver. A compilação integrada foi bem-sucedida e pdfLaTeX permanece a configuração recomendada no Overleaf. O template canônico não foi alterado. Recompilar e atualizar a bibliografia. `main.tex` permanece inalterado.
 

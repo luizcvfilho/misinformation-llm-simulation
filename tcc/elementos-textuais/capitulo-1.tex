@@ -18,7 +18,8 @@ A comparação entre a notícia original e sua versão final permite detectar um
 
 Também é necessário decompor a transformação. Duas versões podem preservar o tema geral e, ainda assim, selecionar subtópicos diferentes, omitir entidades, alterar relações, introduzir contradições internas ou modificar o enquadramento afetivo. A teoria do enquadramento descreve como seleção e saliência organizam a apresentação de uma realidade percebida \cite{entman1993framing}; ela ajuda a caracterizar mudanças de ênfase sem convertê-las automaticamente em juízos de verdade. Nesse sentido, a lacuna abordada por este TCC é a necessidade de observar, de maneira estruturada e interpretável, como diferentes dimensões textuais variam em cadeias de reescrita condicionadas por perspectivas e ordens distintas.
 
-Para enfrentar essa lacuna, o estudo propõe o \textit{Structured Topic Drift Index} (STDI). O índice operacionaliza a deriva por componentes relacionados a tema, subtópicos, entidades e relações, acompanhados de sinais complementares de contradição interna e de valência, ativação e dominância (VAD). O STDI não é apresentado como detector de notícias falsas nem como medida de verdade. Sua validade depende da correspondência entre os componentes calculados e julgamentos humanos sobre as mudanças observadas, além de análises de sensibilidade a decisões de modelagem.
+Para enfrentar essa lacuna, o estudo propõe o \textit{Structured Topic Drift Index} (STDI). O índice operacionaliza a deriva por componentes relacionados a tema, subtópicos, entidades e relações, acompanhados de sinais complementares de contradição interna e de valência, ativação e dominância (VAD). O STDI não é apresentado como detector de notícias falsas nem como medida de verdade. Seu comportamento é examinado por comparações quantitativas entre procedimentos de cálculo, casos controlados e inspeções qualitativas.
+
 
 \section{QUESTÃO DE PESQUISA E OBJETIVOS}
 \label{sec:questao-objetivos}
@@ -27,25 +28,31 @@ A pergunta que orienta o trabalho é: \emph{em que medida a ordem e o tipo de pe
 
 O objetivo geral é desenvolver e avaliar um procedimento estruturado para medir a deriva informacional e afetiva em cadeias controladas de reescrita de notícias por agentes baseados em LLMs.
 
-Como objetivos específicos, pretende-se:
+Para alcançar esse objetivo, foram definidos os seguintes objetivos específicos:
 
 \begin{alineas}
-  \item construir cadeias de reescrita nas quais as mesmas notícias sejam submetidas a diferentes sequências de perspectivas;
+  \item organizar trajetórias de reescrita nas quais os mesmos textos sejam submetidos a diferentes sequências de perspectivas;
   \item extrair de cada versão representações estruturadas de tema, subtópicos, entidades, relações e enquadramento;
-  \item mensurar tanto as mudanças entre etapas consecutivas quanto o afastamento em relação à notícia original;
+  \item mensurar as mudanças entre etapas consecutivas, o afastamento em relação ao texto original e o acúmulo de mudanças ao longo da trajetória;
   \item incorporar sinais afetivos de VAD sem tratá-los como evidência de falsidade factual;
-  \item comparar os cenários de forma pareada por notícia, considerando a incerteza e possíveis variáveis de confusão;
-  \item avaliar o STDI em relação a julgamentos humanos e examinar sua sensibilidade a pesos, modelos, \textit{prompts} e repetições.
+  \item comparar cenários e modelos geradores de forma pareada por entrada dentro de cada corpus, considerando as dependências entre trajetórias e as condições de geração e avaliação;
+  \item examinar o comportamento do STDI por comparações quantitativas e inspeções qualitativas de pares controlados e versões geradas, identificando desacordos e limites de interpretação dos escores.
 \end{alineas}
 
 \section{ESCOPO E CONTRIBUIÇÕES}
 \label{sec:escopo-contribuicoes}
 
-O estudo utiliza agentes LLM como instrumentos de uma simulação computacional, não como substitutos de participantes humanos. As perspectivas fornecidas nos \textit{prompts} são condições experimentais e não garantem personalidades estáveis. Por esse motivo, eventuais diferenças entre cadeias serão descritas como associações com as condições observadas, salvo quando o desenho e a análise sustentarem uma interpretação causal mais forte. A documentação do modelo, da versão, dos parâmetros, dos \textit{prompts}, das datas de execução e das unidades de análise segue recomendações de avaliação de LLMs em pesquisa social \cite{abdurahman2025primer} e de avaliação de agentes de interpretação de papéis \cite{chen2025rpa}.
+O estudo utiliza agentes LLM como instrumentos de uma simulação computacional, sem equivalência com participantes humanos. As perspectivas fornecidas nos \textit{prompts} são condições experimentais e não garantem personalidades estáveis. As diferenças entre trajetórias são descritas como associações com as condições observadas. A documentação de modelos, versões, parâmetros, \textit{prompts}, datas de execução e unidades de análise se apoia nas recomendações de avaliação de LLMs em pesquisa social \cite{abdurahman2025primer} e de agentes de interpretação de papéis \cite{chen2025rpa}.
 
-As contribuições pretendidas são: um protocolo reprodutível para gerar e comparar cadeias de reescrita; uma decomposição interpretável da deriva textual por meio do STDI; a separação explícita entre mudança incremental e distância ao original; e uma avaliação empírica de como diferentes perspectivas e ordens se associam às trajetórias das notícias. A contribuição é instrumental e metodológica. Ela não inclui uma solução de checagem factual externa, uma estimativa de crença humana nem uma reprodução completa das interações de uma plataforma social.
+O recorte empírico reúne seis rodadas finais, combinando dois corpora com três modelos geradores: \texttt{gpt-6-luna}, \texttt{grok-build-0.1} e \texttt{gemini-3.5-flash-lite}. Um corpus contém 50 descrições de notícias políticas em inglês; o outro contém 50 legendas de publicações jornalísticas em português no contexto eleitoral brasileiro, após preparação e limpeza. Em cada corpus, os mesmos itens são usados nas condições dos três geradores. Os corpora têm conteúdos e origens diferentes e não constituem traduções dos mesmos textos.
+
+Cada rodada aplica oito trajetórias de quatro posições, com perspectivas conservadora, progressista, conspiratória e de retransmissão neutra. Essas trajetórias são organizadas em quatro árvores com prefixos compartilhados: etapas iniciais comuns produzem a mesma saída para seus descendentes. Assim, o pareamento por entrada permite comparar condições sobre o mesmo material, mas trajetórias que compartilham etapas não são gerações independentes. O desenho adota retransmissão interpretativa, na qual cada agente recebe a mensagem de seu antecessor, sem acesso automático ao artigo original para recompor o que foi omitido.
+
+Nas rodadas em inglês, a comparação estrutural combina o caminho Cluster, baseado em embeddings e regras, com a avaliação por LLM; o VAD combina o modelo neural inicial e o LLM. Nas rodadas em português, tanto a comparação estrutural quanto o VAD usam LLM. As configurações são detalhadas no Capítulo \ref{ch:metodos}. Como também diferem corpus e procedimento de avaliação, o contraste entre os dois grupos não isola um efeito do idioma.
+
+As contribuições do trabalho são um protocolo documentado de geração e comparação de trajetórias; uma decomposição interpretável da deriva por meio do STDI; a separação entre mudança incremental, distância ao original e acúmulo de mudanças; e uma avaliação empírica das associações entre perspectivas, ordens e trajetórias nos recortes estudados. Essa contribuição instrumental e metodológica está limitada pelas escolhas de representação e avaliação e pela ausência de referência humana numérica independente. Ela não inclui checagem factual externa, estimativa de crença humana ou reprodução completa de uma plataforma social.
 
 \section{ORGANIZAÇÃO DO TRABALHO}
 \label{sec:organizacao}
 
-Além desta Introdução, o Capítulo \ref{ch:fundamentacao} apresenta a fundamentação teórica e os trabalhos relacionados. O Capítulo \ref{ch:evolucao} reconstrói a evolução metodológica que levou da classificação binária ao STDI. O Capítulo \ref{ch:metodos} descreve dados, agentes, geração das cadeias, extração estrutural, cálculo das métricas e protocolo de validação. O Capítulo \ref{ch:resultados} reúne os resultados do estudo. O Capítulo \ref{ch:discussao} interpreta esses resultados à luz da literatura e das ameaças à validade. Por fim, o Capítulo \ref{ch:conclusao} responde à pergunta de pesquisa dentro dos limites do desenho adotado e apresenta possibilidades de trabalhos futuros.
+Além desta Introdução, o Capítulo \ref{ch:fundamentacao} apresenta os conceitos e trabalhos relacionados, incluindo avaliação por LLM e representação semântica e afetiva. O Capítulo \ref{ch:evolucao} reconstrói a evolução metodológica da classificação binária ao STDI e ao desenho final. O Capítulo \ref{ch:metodos} descreve dados, agentes, geração das trajetórias, extração, métricas e procedimentos de avaliação e análise adotados. O Capítulo \ref{ch:resultados} reúne os resultados do estudo. O Capítulo \ref{ch:discussao} interpreta esses resultados à luz da literatura e das ameaças à validade. Por fim, o Capítulo \ref{ch:conclusao} responde à pergunta de pesquisa dentro dos limites do desenho adotado e apresenta possibilidades de trabalhos futuros.
