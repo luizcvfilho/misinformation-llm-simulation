@@ -4,6 +4,7 @@ import json
 import re
 from copy import deepcopy
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from queue import Empty
 from time import monotonic
@@ -504,7 +505,7 @@ def _render_provider_rpm_limits() -> dict[str, int]:
         default=widget_default(
             "simulation_advanced_settings_rpm_providers",
             [legacy_provider] if legacy_rpm else [],
-            [],
+            None,
         ),
         key="simulation_advanced_settings_rpm_providers",
         help="Select any number of providers and set a separate RPM limit for each.",
@@ -604,10 +605,11 @@ def _render_graph_queue() -> None:
     with export_placeholder.container():
         st.download_button(
             "Export graph queue ZIP",
-            data=build_graph_queue_archive(st.session_state.graph_queue),
+            data=partial(build_graph_queue_archive, deepcopy(st.session_state.graph_queue)),
             file_name="graph_queue.zip",
             mime="application/zip",
             key="download_graph_queue_zip",
+            on_click="ignore",
             disabled=not st.session_state.graph_queue,
             width="stretch",
             help=(

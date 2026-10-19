@@ -436,9 +436,13 @@ def test_cancelled_batch_still_finishes_prepared_runs_and_saves_costs(tmp_path):
     assert job.events.queue[-1][1]["cancelled"] is True
 
 
-def test_ui_exposes_and_retains_simultaneous_run_setting(tmp_path):
+def test_ui_exposes_and_retains_simultaneous_run_setting(tmp_path, monkeypatch):
+    from streamlit.elements.lib import policies
     from streamlit.testing.v1 import AppTest
 
+    monkeypatch.setattr(policies, "_shown_default_value_warning", False)
+    warnings = []
+    monkeypatch.setattr(policies._LOGGER, "warning", lambda *args, **_: warnings.append(args))
     path = tmp_path / "settings_app.py"
     path.write_text(
         """
@@ -482,6 +486,7 @@ st.session_state.settings = _render_advanced_settings()
     ui.multiselect(key="simulation_advanced_settings_rpm_providers").set_value([]).run()
     assert not ui.exception
     assert ui.session_state.settings["provider_rpm_limits"] == {}
+    assert warnings == []
 
 
 def test_ui_restores_previous_single_provider_rpm_configuration():

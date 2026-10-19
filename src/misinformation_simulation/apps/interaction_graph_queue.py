@@ -6,7 +6,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
-from zipfile import ZIP_DEFLATED, ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from misinformation_simulation.apps.interaction_graph_state import graph_nodes_to_forms
 from misinformation_simulation.apps.interaction_graph_ui import (
@@ -105,7 +105,10 @@ def build_graph_queue_archive(queue: list[dict[str, Any]]) -> bytes:
             )[1]
             file_name = f"{index:0{position_width}d}_{slug}.json"
             payload = build_editor_graph_payload(graph["nodes"])
+            # Fixed ZIP metadata keeps identical queues at the same download URL.
+            info = ZipInfo(file_name)
+            info.compress_type = ZIP_DEFLATED
             archive.writestr(
-                file_name, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+                info, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
             )
     return buffer.getvalue()

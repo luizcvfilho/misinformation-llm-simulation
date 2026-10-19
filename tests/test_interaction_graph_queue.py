@@ -327,6 +327,78 @@ def test_queue_archive_preserves_folder_import_order_with_over_99_graphs() -> No
     assert len(set(names)) == 101
 
 
+def test_queue_archive_is_stable_over_time_and_changes_with_exported_content(monkeypatch):
+    graphs = []
+    nodes = [create_default_node_form(1)]
+    queue.add_graph(graphs, "First", nodes)
+    queue.add_graph(graphs, "Second", nodes)
+    monkeypatch.setattr("zipfile.time.localtime", lambda *_: (2026, 10, 19, 12, 0, 0, 0, 0, 0))
+    original = queue.build_graph_queue_archive(graphs)
+    monkeypatch.setattr("zipfile.time.localtime", lambda *_: (2026, 10, 19, 16, 0, 0, 0, 0, 0))
+    assert queue.build_graph_queue_archive(graphs) == original
+
+    graphs[0]["nodes"][0]["model"] = "updated-model"
+    edited = queue.build_graph_queue_archive(graphs)
+    assert edited != original
+    graphs[0]["name"] = "Renamed"
+    renamed = queue.build_graph_queue_archive(graphs)
+    assert renamed != edited
+    queue.move_graph(graphs, 1, -1)
+    assert queue.build_graph_queue_archive(graphs) != renamed
+
+
+def test_queue_zip_is_deferred_and_exports_the_rendered_snapshot(monkeypatch):
+    downloads = []
+    builds = []
+    download_button = sections.st.download_button
+
+    def capture_download(label, **kwargs):
+        if kwargs.get("key") == "download_graph_queue_zip":
+            downloads.append(kwargs)
+        return download_button(label, **kwargs)
+
+    def build_archive(graphs):
+        builds.append(deepcopy(graphs))
+        return queue.build_graph_queue_archive(graphs)
+
+    monkeypatch.setattr(sections.st, "download_button", capture_download)
+    monkeypatch.setattr(sections, "build_graph_queue_archive", build_archive)
+    graphs = []
+    nodes = [create_default_node_form(1)]
+    queue.add_graph(graphs, "First", nodes)
+    snapshot = deepcopy(graphs)
+    app = AppTest.from_string(
+        "from misinformation_simulation.apps import interaction_graph_sections as sections\n"
+        "sections._render_graph_queue()"
+    )
+    app.session_state["graph_nodes"] = nodes
+    app.session_state["graph_queue"] = graphs
+    app.run(timeout=30)
+    app.run(timeout=30)
+    assert not app.exception
+    assert builds == []
+    button = next(item for item in app.get("download_button") if item.proto.label.endswith("ZIP"))
+    assert button.proto.url == ""
+    assert button.proto.deferred_file_id
+    assert button.proto.ignore_rerun
+
+    graphs[0]["nodes"][0]["model"] = "updated-model"
+    with ZipFile(BytesIO(downloads[-1]["data"]())) as archive:
+        assert json.loads(archive.read(archive.namelist()[0])) == build_editor_graph_payload(
+            snapshot[0]["nodes"]
+        )
+    assert builds == [snapshot]
+
+    app.session_state["graph_queue"] = graphs
+    app.run(timeout=30)
+    assert not app.exception
+    assert len(builds) == 1
+    with ZipFile(BytesIO(downloads[-1]["data"]())) as archive:
+        assert json.loads(archive.read(archive.namelist()[0])) == build_editor_graph_payload(
+            graphs[0]["nodes"]
+        )
+
+
 @pytest.mark.parametrize("judge_repeats", [None, 1, 5])
 def test_run_queue_continues_after_one_graph_fails(tmp_path, judge_repeats) -> None:
     nodes = [create_default_node_form(1)]
