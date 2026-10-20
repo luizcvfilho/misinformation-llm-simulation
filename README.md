@@ -87,7 +87,7 @@ uv sync --locked
 uv run jupyter lab notebooks/elections_2026_eda.ipynb
 ```
 
-It reads `data/Eleições 2026/`, including the three post Parquets, the nested Meta Ad Library CSV,
+It reads `data/elections_2026_source/`, including the three post Parquets, the nested Meta Ad Library CSV,
 and the BRPOL aggregate ZIP. It audits schemas, missingness, duplicate IDs and captions, publication
 dates, source groups, candidate metadata, account concentration, observed engagement, lexical
 patterns, ad range endpoints, and TSE collection coverage. Organic posts, ads, and overlapping
@@ -101,6 +101,11 @@ manual review for election relevance and sufficient standalone context. The cand
 the interaction-graph workflow with `description` as the text column; `category` denotes the source
 group. Review the source package README's use conditions before sharing data or executed outputs.
 The notebook does not run simulations.
+
+The source directory was renamed from `data/Eleições 2026/` to
+`data/elections_2026_source/` to use an ASCII path without spaces. Frozen simulation
+CSVs and saved execution metadata retain the original source path as historical
+provenance; their text, ordering, and file hashes are unchanged by the directory rename.
 
 The simulation input collection in `data/elections_2026/` contains
 two CSV files with the same 100 posts from 26 accounts classified as national outlets
