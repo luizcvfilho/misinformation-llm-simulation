@@ -42,6 +42,8 @@ Os 24 resumos e os 7.200 registros de nós únicos documentam essas contagens e 
 
 **Configurações comuns registradas:** modo `interpretive`, prompt `interpretive_v2`, extração e avaliação estrutural por `chatgpt` / `gpt-6-luna`, três avaliações estruturais por par e VAD por LLM com `gpt-6-luna`. Em inglês, VAD Dual também usa `RobroKools/vad-bert`, e STDI Dual inclui Cluster com `sentence-transformers/all-MiniLM-L6-v2`. Nas rodadas brasileiras, VAD e STDI são LLM; não atribuir a elas BERT ou embeddings para esses cálculos.
 
+**Conferência para o Capítulo 4 em 19/10/2026:** os registros finais identificam a rubrica VAD `llm_vad_expressed_tone_v2`; não atribuir a eles a `v1` descrita no piloto. A conferência dos 7.200 nós não encontrou divergências entre IDs/textos originais salvos e o recorte ordenado dos respectivos CSVs. A primeira redação de Materiais e métodos está em `tcc/elementos-textuais/capitulo-4.tex`, com evidências documentadas em `docs/tcc_chapter_4_evidence.md`. A compilação integrada do projeto foi bem-sucedida. Licenças específicas dos textos e revisão imutável dos pesos locais não foram estabelecidas pelos registros examinados; o capítulo explicita esses limites.
+
 O código corrente identifica `structured_extraction_v5`, `structured_judge_v5`, `cluster_v4` e `dual_stdi_v6`. Conferir as versões preservadas em cada resultado, sem atribuí-las retroativamente às auditorias. O identificador `dual_stdi_v6`, sozinho, não significa que foi selecionado o método Dual.
 
 ### 2.2 Corpora e congelamento
@@ -217,6 +219,10 @@ Entre corpora, distinguir idioma/conteúdo e método: inglês usa STDI/VAD Dual;
 
 Organizar em blocos, priorizando as rodadas finais:
 
+**Primeira redação implementada em 19/10/2026:** `tcc/elementos-textuais/capitulo-5.tex`, com sete tabelas geradas em `capitulo-5-tabelas.tex` e 14 figuras vetoriais em `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
+
+O capítulo inclui evolução contra o original, incrementos e variação do afastamento; boxplots finais; contrastes pareados de continuações, sequências e geradores; decomposição e direção VAD; comparação Cluster/LLM em inglês com VAD próprio e comum; comparação dos corpora com LLM/LLM; indicadores lexicais de números, atribuição e incerteza, extensão e contagens de entidades/relações; e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. Os indicadores lexicais são aproximações exploratórias e não constituem anotação validada. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
+
 1. Diagnósticos dos detectores como motivação, sem repetir extensamente o histórico.
 2. Comparação exploratória e escolha de VAD, separadas das simulações finais.
 3. Avaliação STDI por casos controlados, comparação de métodos e inspeções qualitativas, substituindo a seção prevista de validação humana.
@@ -278,8 +284,8 @@ Números e interpretações das auditorias são resultados deste estudo, não da
 
 ## 6. Ordem prática e pendências de redação
 
-1. Redigir Materiais e métodos com dados, parâmetros, modelos e versões salvos.
-2. Redigir Resultados a partir das análises existentes, separando diagnósticos históricos e rodadas finais.
+1. Revisar a primeira redação de Materiais e métodos, já desenvolvida com dados, parâmetros, modelos e versões salvos.
+2. Revisar a primeira redação de Resultados e suas evidências, já implementadas com diagnósticos históricos separados das seis rodadas finais.
 3. Redigir Discussão com o alcance das comparações e as limitações do desenho e da mensuração.
 4. Redigir Conclusão, respondendo à pergunta de pesquisa no alcance dos resultados apresentados.
 5. Preparar resumo, abstract e elementos institucionais, conferindo a coerência e a apresentação da versão de entrega.
