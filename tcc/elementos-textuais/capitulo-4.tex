@@ -82,7 +82,7 @@ Português & \texttt{gemini-3.5-flash-lite} & 19/10 & LLM & LLM \\
 
 A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo \texttt{gpt-6-luna}, pelo provedor \texttt{chatgpt}, realiza a extração estrutural, a avaliação estrutural por LLM e a estimação VAD por LLM. No corpus inglês, o caminho Cluster utiliza adicionalmente o encoder \texttt{sentence-transformers/all-MiniLM-L6-v2}, enquanto o VAD Dual inclui \texttt{RobroKools/vad-bert}. Esses dois modelos locais não participam do STDI ou do VAD selecionados nas rodadas brasileiras.
 
-Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \texttt{gpt-6-luna}. Assim, o valor solicitado nos metadados não demonstra que todos os provedores receberam a mesma configuração de amostragem. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados, sem assegurar que uma nova chamada futura ao mesmo identificador reproduza os textos.
+Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \texttt{gpt-6-luna}. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados, sem assegurar que uma nova chamada futura ao mesmo identificador reproduza os textos.
 
 \subsection{Perspectivas atribuídas aos agentes}
 
