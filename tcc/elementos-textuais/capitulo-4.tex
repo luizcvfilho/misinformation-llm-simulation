@@ -32,19 +32,21 @@ As legendas selecionadas passaram por limpeza textual para uso nas simulações.
 
 \subsection{Congelamento e conferência das entradas}
 
-Para identificar os arquivos utilizados, foram conferidos os resumos SHA-256 dos dois CSVs completos, apresentados na Tabela \ref{tab:hashes-corpora}. O hash identifica o arquivo inteiro; a regra de recorte define quais registros desse arquivo participam da simulação. A conferência dos textos originais salvos nos 7.200 registros de nós das seis rodadas não encontrou divergências em relação às respectivas entradas selecionadas. Essa verificação documenta a correspondência das entradas, sem avaliar a qualidade ou a veracidade dos textos.
+Para identificar os arquivos utilizados, foram conferidos os resumos SHA-256 dos arquivos \path{data/graphs/graph_politics_news.csv} e \path{data/elections_2026/simulation_news_100_cleaned.csv}, apresentados na Tabela \ref{tab:hashes-corpora}. Cada hash identifica o respectivo CSV completo, que contém 100 notícias, e não apenas o recorte das primeiras 50 utilizado nas simulações. A conferência dos textos originais salvos nos 7.200 registros de nós das seis rodadas não encontrou divergências em relação às respectivas entradas selecionadas. Essa verificação documenta a correspondência das entradas, sem avaliar a qualidade ou a veracidade dos textos.
 
 \begin{table}[htb]
 \centering
 \caption{Identificação dos arquivos completos dos corpora por SHA-256.}
 \label{tab:hashes-corpora}
-\begin{tabular}{lp{10.2cm}}
+\begin{tabular}{p{6.2cm}p{8.2cm}}
 \hline
-Corpus & SHA-256, em duas linhas a concatenar \\
+Corpus e arquivo completo & SHA-256, em duas linhas a concatenar \\
 \hline
-Inglês & \texttt{46fabffefde42ed7a8746d97093f1dab19} \newline
+Inglês \newline \path{data/graphs/graph_politics_news.csv}
+        & \texttt{46fabffefde42ed7a8746d97093f1dab19} \newline
           \texttt{f5f1524908e4217432aea755cffb64} \\
-Português & \texttt{89582261293f87d494390b4e08e63b5c4} \newline
+Português \newline \path{data/elections_2026/simulation_news_100_cleaned.csv}
+           & \texttt{89582261293f87d494390b4e08e63b5c4} \newline
              \texttt{10b1b1ad2e606fa164d58c351f9abea} \\
 \hline
 \end{tabular}
