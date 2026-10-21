@@ -44,12 +44,14 @@ Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das 
 
 Os diagnósticos iniciais apresentados no Capítulo \ref{ch:evolucao} motivaram a passagem da classificação binária para a descrição de transformações graduais. Eles não integram as seis rodadas finais nem constituem uma avaliação factual dessas saídas. Em particular, um detector manter a mesma classe enquanto um texto é reescrito não demonstra preservação de conteúdo, assim como uma alteração detectada pela auditoria não estabelece falsidade externa.
 
-Uma evidência delimitada sobre o comportamento do STDI é a auditoria controlada corrigida de 5 de outubro, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}. Os dois comparadores produziram escores completos nos 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados. As expectativas de ordenação foram atendidas em seis dos nove contrastes pelo Cluster e em nove pelo LLM; são expectativas das construções, sem referência humana numérica independente.
+Uma evidência delimitada sobre o comportamento do STDI é a auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}. Os dois comparadores produziram escores completos nos 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados. As expectativas de ordenação foram atendidas em seis dos nove contrastes pelo Cluster e em nove pelo LLM; são expectativas das construções, sem referência humana numérica independente.
 
-\begin{table}[htbp]
+\begin{center}
+\begin{minipage}{\textwidth}
 \centering
 \small
-\caption{STDI médio de variantes selecionadas na auditoria controlada de 5 de outubro.}
+\newfixedcaption{\controlAuditCaption}{table}
+\controlAuditCaption{STDI médio de variantes selecionadas na auditoria controlada de 5 de outubro.}
 \label{tab:resultados-controles}
 \begin{tabular}{lrr}
 \hline
@@ -65,11 +67,20 @@ Contradição interna & 0,396 & 0,484 \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir de \texttt{change\_type\_summary.csv} da auditoria. Cada média utiliza três cenários pareados, com VAD BERT comum.}
-\end{table}
+\end{minipage}
+\end{center}
 
-Naquele recorte, o Cluster atribuiu maior deriva às paráfrases do que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator. A inspeção de uma paráfrase do cenário eleitoral mostrou a ausência de uma entidade na extração, embora ela permanecesse no texto. O diagnóstico evidencia que um escore pode refletir diferenças de representação, além da transformação textual pretendida. A auditoria utilizou \texttt{structured\_extraction\_v4}, \texttt{structured\_judge\_v3}, \texttt{cluster\_v3} e \texttt{dual\_stdi\_v3}; seus números não são atribuídos às versões finais nem apresentados como validação automática da ampliação posterior dos qualificadores numéricos.
+Naquele recorte, o Cluster atribuiu maior deriva às paráfrases do que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator.
 
-O piloto afetivo de 6 de outubro, preservado em \path{output/audit/LLMVADComparison_20261006/}, também registrou diferenças entre estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. A amplitude nominal comum não eliminou as diferenças de comportamento. Esses resultados exploratórios contribuíram para a escolha metodológica, mas maior variação não demonstra maior acurácia, e a rubrica daquele piloto deve ser distinguida da versão \texttt{v2} utilizada nas rodadas finais.
+A inspeção das estruturas extraídas mostrou que parte da pontuação pode decorrer de inconsistências da extração, mesmo quando a informação é preservada no texto reescrito. No cenário eleitoral fictício, a entidade ``cadastro eleitoral'' (\textit{voter register}) continuava mencionada na paráfrase e nas relações extraídas, mas foi omitida de sua lista de entidades centrais. A lista do original continha três entidades; a da paráfrase, apenas duas. Essa diferença entre as listas resultou em deriva de entidades de 0,333 no Cluster, contribuindo para o STDI sem corresponder à remoção dessa informação do texto. O caso evidencia que o escore também é sensível à representação estruturada produzida pelo extrator, e não apenas às alterações efetivamente realizadas na reescrita.
+
+No método LLM, o acesso aos textos completos oferece um mecanismo para atenuar o impacto dessas inconsistências, pois o avaliador pode identificar informações preservadas na reescrita, mesmo quando omitidas da estrutura extraída. O escore próximo de zero atribuído à paráfrase eleitoral é compatível com essa possibilidade. Entretanto, esse caso isolado não permite concluir que o método seja, de modo geral, menos suscetível a erros de extração.
+
+\begin{sloppypar}
+A extração dessa auditoria utilizou \texttt{structured\_\allowbreak extraction\_\allowbreak v4}, e o juiz, \texttt{structured\_\allowbreak judge\_\allowbreak v3}. Os comparadores foram identificados como \texttt{cluster\_v3} e \texttt{dual\_stdi\_v3}. Esses resultados não são atribuídos às versões finais nem apresentados como validação automática da ampliação posterior dos qualificadores numéricos.
+\end{sloppypar}
+
+O piloto de comparação afetiva entre BERT e LLM, realizado durante o desenvolvimento do método, também registrou diferenças entre estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. A amplitude nominal comum não eliminou as diferenças de comportamento. Esses resultados exploratórios contribuíram para a escolha metodológica, mas maior variação não demonstra maior acurácia. O piloto caracteriza uma etapa de desenvolvimento do método e não constitui uma validação dos resultados das rodadas finais.
 
 Os controles, os 50 pares históricos e os casos diagnósticos de desenvolvimento são conjuntos distintos. Nenhum deles é somado às notícias finais como um conjunto humano anotado. A análise seguinte examina os textos efetivamente gerados nas seis condições finais.
 
@@ -102,7 +113,7 @@ O padrão varia com o gerador. Em GPT, CCPP e PPCC apresentam os maiores escores
 \legend{Fonte: elaboração própria. 50 entradas por trajetória e gerador.}
 \end{figure}
 
-Os boxplots da Figura \ref{fig:resultados-boxplots} mostram sobreposição entre várias trajetórias interpretativas e a presença de casos afastados da região central. A diferença entre médias deve, portanto, ser lida juntamente com a distribuição e com as comparações pareadas. A separação de NNNN é mais regular que a ordenação entre CCCC, PPPP e as sequências mistas.
+Os boxplots da Figura \ref{fig:resultados-boxplots} mostram que várias trajetórias interpretativas apresentam faixas de STDI semelhantes, embora suas médias possam diferir. Há também notícias com escores afastados dos valores em que se concentra a maior parte dos casos. Por isso, uma média mais alta não significa que a trajetória produza maior deriva em todas as notícias: é necessário observar a dispersão dos escores e comparar as mesmas notícias entre trajetórias. Entre as condições avaliadas, NNNN apresenta menores escores de forma mais consistente. Já a ordem de maior ou menor deriva entre CCCC, PPPP e as sequências mistas varia conforme a condição.
 
 \subsection{Mudança produzida em cada passagem}
 
@@ -115,8 +126,10 @@ O STDI incremental $I_t$, definido na Equação \ref{eq:stdi-incremental}, descr
 \label{fig:resultados-incremental}
 \legend{Fonte: elaboração própria. Configurações selecionadas e 50 entradas por curva.}
 \end{figure}
+\FloatBlock
 
 \TabelaCincoIncremental
+\FloatBlock
 
 Na quarta posição de DDNN, o incremento médio é 0,150, 0,071 e 0,043 em inglês, para GPT, Grok e Gemini, respectivamente; em português, é 0,057, 0,012 e 0,014. Esses números coexistem com afastamentos finais entre 0,446 e 0,563 nessa trajetória. A baixa mudança local não significa recuperação do original: pode representar preservação da mensagem já transformada.
 
@@ -138,12 +151,13 @@ Um valor negativo indica menor escore contra o original, e não um incremento ne
 \label{fig:resultados-delta}
 \legend{Fonte: elaboração própria. A primeira posição não possui diferença anterior nesta análise.}
 \end{figure}
+\FloatBlock
 
-O afastamento não cresce monotonicamente em todas as notícias. Entre as 1.200 transições projetadas das posições dois a quatro de cada rodada, ocorreram reduções do escore em 320, 372 e 300 posições inglesas e em 311, 374 e 363 posições brasileiras, para GPT, Grok e Gemini, respectivamente. Esses denominadores incluem prefixos repetidos nas projeções e descrevem transições de trajetórias, sem representar observações independentes. A Seção \ref{sec:resultados-casos} mostra que algumas reduções acompanham mudanças pequenas de redação, o que impede interpretá-las automaticamente como restauração informacional.
+O STDI em relação ao original nem sempre aumenta a cada reescrita: em algumas passagens, a nova versão recebe um escore menor que a anterior. Para contar essas reduções, foram consideradas, em cada rodada, as três transições entre posições consecutivas (da primeira para a segunda, da segunda para a terceira e da terceira para a quarta), nas oito trajetórias das 50 notícias, totalizando 1.200 transições. Em inglês, houve redução em 320 transições com GPT, 372 com Grok e 300 com Gemini; em português, os totais foram 311, 374 e 363, respectivamente. Como algumas trajetórias compartilham as mesmas reescritas iniciais, suas transições comuns aparecem mais de uma vez nessa contagem. Portanto, os totais descrevem as trajetórias, sem representar 1.200 mudanças independentes. Além disso, um escore menor não comprova recuperação da informação original. A Seção \ref{sec:resultados-casos} apresenta casos em que essa redução acompanha apenas pequenas mudanças de redação.
 
-A soma $B_4$ dos quatro incrementos também difere do afastamento final. Ao atribuir o mesmo peso às oito trajetórias, sua média varia de 0,877 a 1,124 em inglês e de 0,756 a 0,854 em português; as médias correspondentes de $O_4$ variam de 0,427 a 0,469 e de 0,434 a 0,450. A soma descreve o percurso de mudanças e pode ultrapassar um, sem representar percentual de informação perdida.
+A soma $B_4$ reúne as mudanças medidas nas quatro passagens da trajetória, enquanto $O_4$ compara apenas a última versão com o texto original. Assim, $B_4$ descreve o percurso de reescritas, e $O_4$, o afastamento ao final desse percurso; seus valores não precisam coincidir. Calculadas com o mesmo peso para as oito trajetórias, as médias de $B_4$ entre os três geradores variam de 0,877 a 1,124 no corpus inglês e de 0,756 a 0,854 no corpus português. Já as médias de $O_4$ ficam entre 0,427 e 0,469 em inglês e entre 0,434 e 0,450 em português. Como $B_4$ soma quatro escores, seu valor pode ultrapassar um. Isso não corresponde à proporção de informação perdida, mas à soma das mudanças medidas ao longo da trajetória.
 
-\clearpage
+\FloatBlock
 \section{CONTRASTES ENTRE PERSPECTIVAS, SEQUÊNCIAS E GERADORES}
 \label{sec:resultados-contrastes}
 
@@ -165,7 +179,7 @@ DDNN--DDDD apresenta diferença média negativa em cinco das seis condições. A
 \legend{Fonte: elaboração própria. Valores positivos indicam maior escore na primeira trajetória do contraste.}
 \end{figure}
 
-As comparações de composição invertida são menores e menos regulares. CCPP--PPCC varia de $-0,011$ a 0,030 entre as seis condições. NNDD--DDNN varia de $-0,019$ a 0,040, com mudança de sinal entre geradores e corpora. A Figura \ref{fig:resultados-contrastes} evidencia essa heterogeneidade. Não se encontra uma direção única para as inversões consideradas, e o desenho não separa a ordem das posições ocupadas e da perspectiva final.
+As comparações CCPP--PPCC e NNDD--DDNN envolvem trajetórias com as mesmas perspectivas e a mesma quantidade de agentes de cada tipo, mas em ordens diferentes. As diferenças médias de STDI final são pequenas: CCPP--PPCC varia de $-0,011$ a 0,030 entre as seis condições, enquanto NNDD--DDNN varia de $-0,019$ a 0,040. Valores positivos indicam maior afastamento na primeira trajetória; valores negativos, na segunda. A mudança de sinal entre geradores e corpora mostra que nenhuma das duas ordens produz maior afastamento médio em todas as condições, como ilustra a Figura \ref{fig:resultados-contrastes}. Além disso, inverter a sequência também altera a perspectiva do último agente: CCPP termina em P e PPCC em C; NNDD termina em D e DDNN em N. Por isso, essas comparações não permitem separar o efeito da ordem ao longo da trajetória do efeito da perspectiva responsável pela última reescrita.
 
 As diferenças entre geradores dependem da trajetória. Em inglês, GPT apresenta maior média final que Grok e Gemini em CCPP e PPCC, mas não em DDDD, cuja maior média selecionada é a de Gemini. Em português, GPT supera os outros dois em CCPP e PPCC, enquanto Grok e Gemini apresentam maiores escores que GPT nas três trajetórias DDDD, DDNN e NNDD. Portanto, um ranking único de geradores ocultaria a associação entre modelo, perspectiva e caminho. Essas comparações são pareadas dentro do corpus; não envolvem pareamento entre as notícias inglesas e brasileiras.
 
@@ -182,19 +196,24 @@ A Figura \ref{fig:resultados-componentes} apresenta as médias dos componentes c
 \legend{Fonte: elaboração própria. Inglês: componentes do Dual selecionado; português: componentes do LLM selecionado.}
 \end{figure}
 
-A contradição interna apresenta médias menores: entre 0,0002 e 0,0044 em inglês e entre 0,0017 e 0,0269 em português. Ela é não nula em duas, quatorze e treze das 400 posições finais inglesas e em seis, 38 e 42 posições brasileiras, para GPT, Grok e Gemini. A unidade dessa contagem é a posição final de uma trajetória; as mesmas 50 notícias participam dos oito caminhos. Baixa contradição interna não demonstra veracidade nem ausência de transformação: é possível construir um relato internamente coerente e distante da entrada.
+Na quarta posição, a contradição interna apresenta médias menores: entre 0,0002 e 0,0044 em inglês e entre 0,0017 e 0,0269 em português. Para verificar sua ocorrência ao longo de todo o processo, foram consideradas também as versões intermediárias, totalizando 1.200 reescritas por gerador em cada corpus. Cada nó do grafo foi contado uma única vez, sem duplicar as reescritas dos trechos compartilhados entre trajetórias. Na avaliação em relação ao original, o componente de contradição interna recebeu escore maior que zero em 6 reescritas com GPT, 41 com Grok e 37 com Gemini no corpus inglês. No corpus português, os totais foram 14, 107 e 115, respectivamente. Ao todo, foram 320 das 7.200 reescritas avaliadas.
 
-Os componentes não devem ser somados diretamente para reconstruir o STDI completo. Os quatro componentes de conteúdo têm pesos iguais, enquanto contradição e VAD utilizam a distância restante, conforme o Capítulo \ref{ch:metodos}. Além disso, o ramo LLM é agregado a partir de escores completos de avaliações repetidas. O mapa de calor permite localizar padrões de mudança, sem apresentar contribuições como parcelas aditivas simples.
+Essa contagem se refere a versões com escore positivo, e não ao número de contradições distintas ou de notícias afetadas. Uma contradição pode persistir e ser identificada em mais de uma reescrita da mesma notícia. Baixa contradição interna não demonstra veracidade nem ausência de transformação: é possível construir um relato internamente coerente e distante da entrada.
 
-Para observar a direção afetiva, a Figura \ref{fig:resultados-vad-direcao} utiliza os valores brutos do VAD LLM, calculando a diferença entre a versão final e o original em cada dimensão. Esse recorte emprega o mesmo tipo de estimador nos dois corpora. Não se constrói um vetor bruto Dual, pois esse método combina derivas normalizadas, e não os vetores antes da distância.
+No ramo LLM, calcula-se um STDI completo para cada uma das três avaliações do mesmo par de textos e, em seguida, a média desses escores. Os valores apresentados no mapa de calor descrevem separadamente a intensidade média de cada componente. Eles permitem identificar quais dimensões apresentam maior mudança, mas não representam parcelas que possam ser somadas diretamente para obter o STDI final.
+
+A Figura \ref{fig:resultados-vad-direcao} compara exclusivamente a quarta e última versão de cada trajetória com o texto original. Para cada notícia, calcula-se a nota atribuída pelo LLM à versão final menos a nota atribuída ao original, separadamente para valência, ativação e dominância, antes da normalização. Cada barra apresenta a média dessas diferenças entre as 50 notícias de uma mesma trajetória, gerador e corpus. Portanto, a média é calculada entre notícias, e não entre iterações. Não se somam nem se promediam as mudanças das quatro passagens. Valores positivos indicam que a dimensão apresenta, em média, uma nota maior na versão final do que no original, e valores negativos indicam uma nota menor. O mesmo procedimento e o mesmo tipo de estimador são utilizados nos dois corpora.
+
+No VAD Dual, a magnitude da mudança é calculada e normalizada separadamente por BERT e LLM e, depois, essas derivas são combinadas por média. Portanto, o Dual fornece um escore de quanto o perfil afetivo mudou, sem preservar o sentido de aumento ou redução em cada dimensão. Ele não produz um novo conjunto de notas de valência, ativação e dominância pela média dos dois estimadores. Por isso, a análise da direção das mudanças utiliza diretamente as notas do LLM.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{chapter5/vad_signed_changes.pdf}
-\caption{Mudanças médias com sinal em valência, ativação e dominância, estimadas pelo LLM entre original e quarta posição. Valores positivos indicam aumento na dimensão, na escala nominal de um a cinco.}
+\caption{Diferença média entre a quarta versão e o original nas notas de valência, ativação e dominância atribuídas pelo LLM. Cada barra reúne 50 diferenças, uma por notícia. Valores positivos indicam aumento, e negativos, redução. As notas utilizadas no cálculo variam de um a cinco.}
 \label{fig:resultados-vad-direcao}
 \legend{Fonte: elaboração própria. Cada barra utiliza 50 pares; dimensões afetivas não medem emoção do leitor.}
 \end{figure}
+\FloatBlock
 
 Em DDDD, DDNN e NNDD, a valência média diminui e a ativação aumenta em todos os geradores e corpora. Em DDDD, a mudança média de valência vai de $-0,758$ a $-1,162$ em inglês e de $-0,832$ a $-1,476$ em português. A ativação nessa trajetória aumenta entre 0,794 e 1,542 em inglês e entre 0,826 e 2,022 em português. NNNN apresenta mudanças próximas de zero em comparação com essas trajetórias.
 
@@ -219,8 +238,9 @@ A Tabela \ref{tab:resultados-metodos} resume 400 posições finais por gerador, 
 \label{fig:resultados-metodos-dispersao}
 \legend{Fonte: elaboração própria. 400 pontos por painel, com dependência entre trajetórias da mesma notícia.}
 \end{figure}
+\FloatBlock
 
-A diferença absoluta média com VAD comum é 0,122 em GPT, 0,110 em Grok e 0,109 em Gemini. Portanto, uma diferença média próxima de zero, como a de Grok, não significa escores próximos em todos os pares: diferenças positivas e negativas podem se compensar. As correlações de Spearman dos conjuntos de posições finais com VAD comum são 0,718, 0,518 e 0,641, respectivamente. Elas descrevem associação de ordenação, não igualdade dos valores ou validade factual. Como o agregado reúne trajetórias distintas, sua associação também reflete a separação entre tipos de caminho; os resultados por trajetória permanecem disponíveis nos dados derivados.
+A diferença absoluta média com VAD comum é 0,122 em GPT, 0,110 em Grok e 0,109 em Gemini. Portanto, uma diferença média próxima de zero, como a de Grok, não significa escores próximos em todos os pares: diferenças positivas e negativas podem se compensar. As correlações de Spearman dos conjuntos de posições finais com VAD comum são 0,718, 0,518 e 0,641, respectivamente. Elas indicam em que medida os pares de textos que recebem escores mais altos por um método também tendem a receber escores mais altos pelo outro. Isso não significa que os valores atribuídos sejam iguais nem que os métodos determinem a veracidade dos textos. Como o cálculo reúne as oito trajetórias, parte dessa associação pode decorrer de ambos os métodos atribuírem escores menores ou maiores aos mesmos tipos de trajetória. Por isso, a correlação do conjunto deve ser examinada também separadamente em cada trajetória, cujos resultados estão disponíveis nos dados derivados.
 
 Dentro de NNNN, essas correlações são 0,298 com GPT, 0,148 com Grok e 0,579 com Gemini. Entre as oito trajetórias, variam de 0,298 a 0,669 em GPT, de 0,148 a 0,526 em Grok e de 0,502 a 0,744 em Gemini. A ordenação dos pares não é igualmente semelhante em todos os caminhos; o coeficiente agregado não substitui essa verificação por trajetória.
 
@@ -274,14 +294,16 @@ Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores;
 \label{fig:resultados-corpora-final}
 \legend{Fonte: elaboração própria. 50 entradas por corpus, gerador e trajetória. As hastes descrevem dispersão, não confiança.}
 \end{figure}
+\FloatBlock
 
 As diferenças de nível não apresentam direção única. Em DDDD, a média LLM inglesa é 0,505 com GPT, 0,574 com Grok e 0,608 com Gemini; as brasileiras são 0,520, 0,557 e 0,576. Em CCPP, as médias são 0,497, 0,451 e 0,506 em inglês, e 0,539, 0,456 e 0,497 em português. Assim, não se sustenta uma afirmação geral de maior deriva em um dos idiomas.
 
 \TabelaCincoLlmIncremental
+\FloatBlock
 
 A Tabela \ref{tab:resultados-llm-incremental} compara a mudança local final com o mesmo procedimento. Em NNNN, os incrementos médios ingleses são 0,018, 0,002 e 0,002 para GPT, Grok e Gemini, próximos dos brasileiros de 0,019, 0,003 e 0,003. Em DDNN, as médias ficam entre 0,008 e 0,053 em inglês e entre 0,012 e 0,057 em português. Assim, a preservação local nas passagens neutras também aparece quando se iguala a mensuração afetiva e estrutural.
 
-Nas trajetórias interpretativas, o incremento comum não estabelece uma direção única entre corpora. Em CCPP, por exemplo, as médias inglesas são 0,185, 0,132 e 0,149, e as brasileiras, 0,207, 0,129 e 0,157, para GPT, Grok e Gemini. Os agregados das quatro posições foram exportados juntamente com os escores contra o original. A comparação de corpora tem alcance descritivo: padronizar o comparador e o estimador afetivo não controla o acontecimento, o formato da notícia ou a distribuição das características originais.
+Nas trajetórias interpretativas, a comparação da terceira com a quarta versão, usando STDI LLM e VAD LLM nos dois corpora, não indica que um deles apresente mudanças maiores de forma consistente. Em CCPP, por exemplo, o incremento médio é maior em português com GPT (0,207, diante de 0,185 em inglês) e Gemini (0,157, diante de 0,149). Com Grok, ocorre o contrário: a média é 0,132 em inglês e 0,129 em português. Os dados derivados incluem também os resumos de cada uma das quatro posições e os escores em relação ao original. Essas comparações descrevem os conjuntos analisados. Embora utilizem o mesmo procedimento de mensuração, os corpora contêm notícias sobre acontecimentos distintos, com formatos, extensões e características diferentes. Por isso, as diferenças observadas não podem ser atribuídas exclusivamente ao idioma.
 
 \section{CARACTERÍSTICAS DAS NOTÍCIAS E DERIVA FINAL}
 \label{sec:resultados-atributos}
@@ -292,7 +314,7 @@ Esta análise examina se características dos textos originais estão associadas
 
 A extensão é contada por palavras separadas por espaços. A contagem numérica considera expressões distintas com algarismos, incluindo decimais e percentuais; não interpreta automaticamente seu papel como data, quantidade ou valor monetário. Marcadores de atribuição são localizados por uma lista explícita de expressões, como \textit{according to}, \textit{said}, \textit{segundo}, \textit{afirmou} e \textit{disse}. Marcadores de incerteza incluem, entre outros, \textit{may}, \textit{could}, \textit{allegedly}, ``pode'', ``teria'', ``suspeita'' e ``possível''. As listas e expressões regulares estão congeladas no script e no manifesto da análise.
 
-Esses indicadores são aproximações lexicais, sem anotação semântica validada. A ocorrência de ``pode'', por exemplo, não demonstra por si só incerteza epistêmica, e a ausência de uma expressão da lista não demonstra ausência de atribuição. As contagens de entidades e relações utilizam uma única extração original de referência por notícia, proveniente da árvore N da rodada GPT, mantida fixa entre geradores. Dessa forma, a variável explicativa não muda em função da extração de cada condição comparada.
+Esses indicadores são aproximações lexicais, sem anotação semântica validada. A ocorrência de ``pode'', por exemplo, não demonstra por si só incerteza epistêmica, e a ausência de uma expressão da lista não demonstra ausência de atribuição. Para cada notícia, as quantidades de entidades e relações são calculadas uma única vez, a partir de uma extração do texto original já registrada na execução com GPT. Essas mesmas contagens são utilizadas nas análises dos três geradores, evitando que diferenças entre extrações do mesmo original alterem as características atribuídas à notícia.
 
 Os textos ingleses têm mediana de 57,5 palavras, com mínimo de 36 e máximo de 134; os brasileiros, mediana de 142, com mínimo de 69 e máximo de 218. Algum algarismo aparece em 25 das 50 notícias inglesas e nas 50 brasileiras. Marcadores de atribuição aparecem em 17 e 49 entradas, respectivamente; marcadores de incerteza, em sete e 22. A ausência de um grupo brasileiro sem números e o grupo de apenas uma entrada sem marcador de atribuição impedem comparações equilibradas de presença e ausência nessas duas características.
 

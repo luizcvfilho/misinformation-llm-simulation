@@ -236,6 +236,28 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
     return nodes, features, sources
 
 
+def summarize_contradictions(nodes: pd.DataFrame) -> pd.DataFrame:
+    """Count positive original-reference scores once per generated node."""
+    assert not nodes.duplicated(["run", "news_id", "node_id"]).any()
+    rows = []
+    for (corpus, generator), group in nodes.groupby(["corpus", "generator"]):
+        scores = group.contradiction_vs_original.astype(float)
+        assert np.isfinite(scores).all() and scores.between(0, 1).all()
+        positive = int(scores.gt(0).sum())
+        rows.append(
+            {
+                "corpus": corpus,
+                "generator": generator,
+                "reference": "original",
+                "n_rewrites": len(group),
+                "n_positive": positive,
+                "n_zero": int(scores.eq(0).sum()),
+                "fraction_positive": positive / len(group),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def project_paths(nodes: pd.DataFrame) -> pd.DataFrame:
     paths = []
     for chain in CHAINS:
@@ -985,6 +1007,7 @@ def main() -> None:
     tables = summarize(paths, features)
     for name, frame in {
         "unique_nodes": nodes,
+        "contradiction_summary": summarize_contradictions(nodes),
         "path_positions": paths,
         "original_features": features,
         **tables,

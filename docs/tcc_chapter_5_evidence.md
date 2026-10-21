@@ -79,7 +79,8 @@ replicates. Interquartile bands show article dispersion, not uncertainty of a me
 | Six final path contrasts and fraction with positive differences | `paired_contrasts.csv` |
 | Paired generator comparisons | `generator_contrasts.csv` |
 | Decreasing original-reference scores at positions 2–4 | `transition_counts.csv` |
-| Components and internal contradiction counts | `component_summary.csv`, final rows of `path_positions.csv` |
+| Final component means | `component_summary.csv`, final rows of `path_positions.csv` |
+| Internal contradiction across all rewrites | `contradiction_summary.csv`, `contradiction_vs_original` in `unique_nodes.csv` |
 | Signed affective changes | `llm_signed_*` fields in final rows of `path_positions.csv` |
 | Method comparisons by reference, iteration and path | `method_comparison.csv` |
 | Feature counts and reference extraction | `original_features.csv` |
@@ -88,6 +89,17 @@ replicates. Interquartile bands show article dispersion, not uncertainty of a me
 | Case selection and all four versions with line references | `case_candidates.json` |
 
 All paths in this table are relative to `output/analysis/tcc_chapter_5/`.
+
+Internal contradiction counts use all 1,200 generated nodes per run, across all
+four positions. Each `(run, news_id, node_id)` is counted once, so shared path
+prefixes are not duplicated. A positive selected original-reference contradiction
+score defines a counted rewrite; missing scores are rejected. English counts
+are 6 (GPT), 41 (Grok), and 37 (Gemini); Portuguese counts are 14, 107, and 115,
+respectively. The total is 320 of 7,200 rewrites. These are versions with positive
+scores, not distinct contradictions, independent observations, or distinct news
+items. A contradiction persisting across successive rewrites can be counted in
+each version. The component heatmap and its reported mean ranges still describe
+the fourth position only.
 
 ### Historical evidence kept separate
 
@@ -159,13 +171,12 @@ checked against saved files and labels. Ruff checks the standalone analysis
 script. Embedded numerical checks cover source inputs, projections and score
 composition rather than re-evaluating model outputs.
 
-The review PDF is exported to `output/pdf/capitulo-5.pdf`. Visual QA and final
-page counts are recorded in `output/analysis/tcc_chapter_5/validation.json`.
+Compiled chapter PDFs are generated only for local review and are not retained
+in the repository. Visual QA and page counts from the initial chapter delivery
+are recorded in `output/analysis/tcc_chapter_5/validation.json`.
 Warnings already present in earlier chapters are outside the Chapter 5 review;
 this task does not claim that the complete thesis is ready for final submission.
 
-Exact Overleaf actions are listed in `docs/tcc_chapter_5_overleaf.md`.
-`output/tcc/chapter_5_overleaf.zip` packages the three required TeX files and all
-14 figure PDFs with paths relative to the Overleaf project root. It excludes
-unrelated files, original datasets, numerical analysis outputs and local tools.
+Overleaf upload instructions are listed in `tcc/README.md`. Transfer the LaTeX
+sources and required figure PDFs directly, preserving their project paths.
 Local edits are not synchronized automatically.
