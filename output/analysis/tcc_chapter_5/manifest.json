@@ -110,19 +110,17 @@
   "original_texts": 100,
   "new_model_calls": 0,
   "analysis": "Descriptive, paired within corpus; no hypothesis tests or population CIs",
-  "features": "Bilingual lexical proxies, frozen original text; first GPT/N-tree extraction",
+  "features": "Original word and numeric-expression counts; first GPT/N-tree entity/relation counts",
   "feature_outcome": "Mean of eight final LLM/LLM path scores per article and generator",
   "feature_rules": {
-    "numbers": "(?<!\\w)\\d+(?:[.,]\\d+)*(?:\\s*%)?",
-    "attribution": "\\b(?:according to|said|says|say|stated|claims?|claimed|alleges?|alleged|accuses?|accused|reports?|reported|segundo|afirma|afirmou|afirmaram|disse|diz|dizem|declarou|alega|alegou|acusou|acusa|informou|relatou|aponta|apontou)\\b",
-    "uncertainty": "\\b(?:may|might|could|possibly|possible|potential|reportedly|allegedly|suspected|suspects?|uncertain|unconfirmed|pode|podem|poderia|poderiam|poss\u00edvel|poss\u00edveis|possibilidade|suposto|suposta|supostos|supostas|suspeita|suspeitas|suspeito|suspeitos|teria|teriam|talvez|hip\u00f3tese)\\b"
+    "numbers": "(?<!\\w)\\d+(?:[.,]\\d+)*(?:\\s*%)?"
   },
   "versions": {
     "pandas": "3.0.1",
     "numpy": "2.4.3",
     "matplotlib": "3.11.2"
   },
-  "script_sha256": "02f3af07a49ef9b49c84e76142896a722d33d80a2529ff84f98a4ee44ac47d62",
+  "script_sha256": "dfe9101573c969a569c7f505741a113a339ae49d67d5a469d8a519d8becd2a0e",
   "figures": [
     "tcc/figuras/chapter5/components.pdf",
     "tcc/figuras/chapter5/corpus_llm_final.pdf",

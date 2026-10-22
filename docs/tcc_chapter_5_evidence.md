@@ -85,7 +85,7 @@ replicates. Interquartile bands show article dispersion, not uncertainty of a me
 | Method comparisons by reference, iteration and path | `method_comparison.csv` |
 | Feature counts and reference extraction | `original_features.csv` |
 | Article-level mean outcome across eight final LLM/LLM paths | `article_outcomes.csv` |
-| Lexical and structural feature associations | `feature_associations.csv`, `feature_associations_by_chain.csv` |
+| Length, numeric-expression and structural feature associations | `feature_associations.csv`, `feature_associations_by_chain.csv` |
 | Case selection and all four versions with line references | `case_candidates.json` |
 
 All paths in this table are relative to `output/analysis/tcc_chapter_5/`.
@@ -117,10 +117,9 @@ the fourth position only.
 
 ## Exploratory feature protocol
 
-Indicators are derived from the original bodies before inspecting their
-associations with outcomes. Fixed bilingual regex lists operationalize
-attribution and uncertainty as lexical proxies. Numbers are distinct regex-matched
-digit expressions, with internal whitespace removed; written-out numbers,
+Original-body features are word counts, numeric-expression counts and extracted
+entity/relation counts. Numbers are distinct regex-matched digit expressions,
+with internal whitespace removed; written-out numbers,
 semantic roles, dates and units are not inferred. Entity/relation counts use
 one original extraction from the GPT N tree per article, fixed across generators.
 This extraction is a measurement, not a human reference.
@@ -131,11 +130,9 @@ also exported. Length-adjusted rank associations correlate residuals after
 separate OLS regressions of feature ranks and outcome ranks on an intercept and
 original-word-count ranks. There are no p-values or causal interpretations.
 
-Every Portuguese original contains a digit expression, and 49/50 have an
-attribution cue. Presence/absence contrasts in these cases are unavailable or
-unbalanced and are explicitly qualified. Only 7/50 English originals contain
-an uncertainty cue. Differences in lexical lists, topics, sources and article
-length prevent interpreting corpus differences as isolated language effects.
+Every Portuguese original contains a digit expression, so its numeric
+presence/absence contrast is unavailable. Topic, source, format and article-length
+differences prevent interpreting corpus differences as isolated language effects.
 Word-length ratios and lexical numeric retention are post-generation diagnostics;
 the latter does not validate quantities or align their referents.
 
@@ -155,12 +152,31 @@ is also present in `case_candidates.json`, with all four versions and references
 | Cluster/LLM disagreement and extraction differences | English / GPT / NNNN | `840a13e28d007c39b74217c8e8a096a7` | `simulation_ui_20261016_213859-GPT/01_01_n_tree/01_01_n_tree_steps.jsonl:280` |
 
 The DDNN case has identical whitespace-normalized second/fourth version tokens,
-but original-reference scores 0.629895833 and 0.706770833. This is retained and
-described as a measurement limitation, without altering source evaluations.
+but original-reference scores 0.629895833 and 0.706770833. The fourth version
+removes one space before a paragraph break (1,517 versus 1,516 characters).
+The extraction cache keys use the exact text, so the variants have different
+keys and different saved extractions. All three original-reference judge samples
+in the fourth position report cache misses. In contrast, the second and third
+positions have exactly identical texts and saved extractions, identical
+original-reference scores, and all three third-position judge samples report
+cache hits. This is retained and described as a measurement limitation, without
+altering source evaluations.
 The fuel case drops from 0.62 to 0.401041667 while retaining the hidden-elite
 interpretation. The neutral English case has native scores 0.593898948 Cluster,
 0.0703125 LLM and selected Dual 0.331101988; extracted entities change from six
 to one, with Cluster entity drift 0.833333333 and relation drift 0.912847317.
+The original and rewritten texts differ in wording, so their extraction inputs
+have different hashes and the original extraction cannot be reused for the
+rewrite. Positions two through four contain exactly identical rewritten texts
+and saved extractions. All three original-reference judge samples report cache
+misses in position two and cache hits in positions three and four. The LLM
+judge receives both available full texts alongside the extracted structures.
+Its final entity component is zero and its relation component is 0.25; the
+saved rationale identifies a small shift from legislation introduced as part
+of an agenda to legislation proposed by the person mentioned. The missing
+extracted entities remain mentioned in the rewrite. This supports a case-specific
+interpretation that direct text access attenuates the extraction inconsistency,
+without establishing general superiority or access to omitted source content.
 
 ## Validation and delivery
 
@@ -174,6 +190,9 @@ composition rather than re-evaluating model outputs.
 Compiled chapter PDFs are generated only for local review and are not retained
 in the repository. Visual QA and page counts from the initial chapter delivery
 are recorded in `output/analysis/tcc_chapter_5/validation.json`.
+The current feature-analysis revision is recorded separately under
+`feature_analysis_revision`, including checks that retained numerical results
+are unchanged and the affected thesis pages were visually reviewed.
 Warnings already present in earlier chapters are outside the Chapter 5 review;
 this task does not claim that the complete thesis is ready for final submission.
 

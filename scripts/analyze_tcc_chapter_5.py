@@ -44,19 +44,6 @@ CONTRASTS = [
     ("NNDD", "DDNN"),
 ]
 NUMBER = re.compile(r"(?<!\w)\d+(?:[.,]\d+)*(?:\s*%)?", re.UNICODE)
-ATTRIBUTION = re.compile(
-    r"\b(?:according to|said|says|say|stated|claims?|claimed|alleges?|alleged|"
-    r"accuses?|accused|reports?|reported|segundo|afirma|afirmou|afirmaram|disse|"
-    r"diz|dizem|declarou|alega|alegou|acusou|acusa|informou|relatou|aponta|apontou)\b",
-    re.IGNORECASE,
-)
-UNCERTAINTY = re.compile(
-    r"\b(?:may|might|could|possibly|possible|potential|reportedly|allegedly|"
-    r"suspected|suspects?|uncertain|unconfirmed|pode|podem|poderia|poderiam|"
-    r"possível|possíveis|possibilidade|suposto|suposta|supostos|supostas|"
-    r"suspeita|suspeitas|suspeito|suspeitos|teria|teriam|talvez|hipótese)\b",
-    re.IGNORECASE,
-)
 COLORS = dict(
     zip(
         CHAINS,
@@ -129,10 +116,6 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
                             "original_words": len(original.split()),
                             "numeric_tokens": len(numeric_tokens(original)),
                             "has_numbers": bool(NUMBER.search(original)),
-                            "attribution_cues": len(ATTRIBUTION.findall(original)),
-                            "uncertainty_cues": len(UNCERTAINTY.findall(original)),
-                            "has_attribution": bool(ATTRIBUTION.search(original)),
-                            "has_uncertainty": bool(UNCERTAINTY.search(original)),
                             "entities": len(structure["central_entities"]),
                             "relations": len(structure["central_relations"]),
                             "feature_reference_file": path.relative_to(ROOT).as_posix(),
@@ -367,13 +350,11 @@ def summarize(paths: pd.DataFrame, features: pd.DataFrame) -> dict[str, pd.DataF
     continuous = [
         "original_words",
         "numeric_tokens",
-        "attribution_cues",
-        "uncertainty_cues",
         "entities",
         "relations",
         "word_ratio",
     ]
-    binary = ["has_numbers", "has_attribution", "has_uncertainty"]
+    binary = ["has_numbers"]
     for (corpus, generator), group in article.groupby(["corpus", "generator"]):
         for feature in continuous:
             x = group[feature].rank().to_numpy()
@@ -718,41 +699,7 @@ def create_figures(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None
     fig.savefig(FIGURES / "corpus_llm_final.pdf", bbox_inches="tight")
     fig.savefig(OUT / "corpus_llm_final.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
-    association = tables["feature_associations"]
-    fig, axes = plt.subplots(1, 2, figsize=(9.4, 4.7), sharey=True)
-    selected = ["numeric_tokens", "attribution_cues", "uncertainty_cues", "entities", "relations"]
-    labels = ["Numeric tokens", "Attribution cues", "Uncertainty cues", "Entities", "Relations"]
-    for i, corpus in enumerate(CORPORA):
-        ax = axes[i]
-        for j, generator in enumerate(GENERATORS):
-            subset = association[
-                (association.corpus == corpus) & (association.generator == generator)
-            ].set_index("feature")
-            ax.plot(
-                np.arange(5) + (j - 1) * 0.12,
-                subset.loc[selected, "spearman"],
-                "o",
-                ms=5,
-                label=generator,
-            )
-            ax.plot(
-                np.arange(5) + (j - 1) * 0.12,
-                subset.loc[selected, "length_adjusted_rank_correlation"],
-                "x",
-                ms=5,
-                color=plt.rcParams["axes.prop_cycle"].by_key()["color"][j],
-            )
-        ax.set_xticks(range(5), labels, rotation=40, ha="right")
-        ax.set_title(corpus)
-        ax.axhline(0, color="black", lw=0.7)
-        ax.set_ylim(-0.8, 0.8)
-        ax.set_ylabel("Rank association (dot: raw; x: length-adjusted)")
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=3, frameon=False)
-    fig.tight_layout(rect=(0, 0.07, 1, 1))
-    fig.savefig(FIGURES / "news_features.pdf", bbox_inches="tight")
-    fig.savefig(OUT / "news_features.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    create_feature_figure(tables)
     fig, axes = axes_grid()
     article = tables["article_outcomes"]
     for i, corpus in enumerate(CORPORA):
@@ -765,6 +712,44 @@ def create_figures(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None
             if i == 1:
                 ax.set_xlabel("Original whitespace word count")
     save_figure(fig, "length_and_drift")
+
+
+def create_feature_figure(tables: dict[str, pd.DataFrame]) -> None:
+    association = tables["feature_associations"]
+    fig, axes = plt.subplots(1, 2, figsize=(9.4, 3.6), sharey=True)
+    selected = ["numeric_tokens", "entities", "relations"]
+    labels = ["Numeric tokens", "Entities", "Relations"]
+    for i, corpus in enumerate(CORPORA):
+        ax = axes[i]
+        for j, generator in enumerate(GENERATORS):
+            subset = association[
+                (association.corpus == corpus) & (association.generator == generator)
+            ].set_index("feature")
+            ax.plot(
+                np.arange(len(selected)) + (j - 1) * 0.12,
+                subset.loc[selected, "spearman"],
+                "o",
+                ms=5,
+                label=generator,
+            )
+            ax.plot(
+                np.arange(len(selected)) + (j - 1) * 0.12,
+                subset.loc[selected, "length_adjusted_rank_correlation"],
+                "x",
+                ms=5,
+                color=plt.rcParams["axes.prop_cycle"].by_key()["color"][j],
+            )
+        ax.set_xticks(range(len(selected)), labels, rotation=40, ha="right")
+        ax.set_title(corpus)
+        ax.axhline(0, color="black", lw=0.7)
+        ax.set_ylim(-0.8, 0.8)
+        ax.set_ylabel("Rank association")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=3, frameon=False)
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    fig.savefig(FIGURES / "news_features.pdf", bbox_inches="tight")
+    fig.savefig(OUT / "news_features.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
 
 
 def export_latex_tables(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None:
@@ -910,8 +895,6 @@ def export_latex_tables(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) ->
     for feature, label in [
         ("original_words", "Palavras"),
         ("numeric_tokens", "Números"),
-        ("attribution_cues", "Atribuição"),
-        ("uncertainty_cues", "Incerteza"),
         ("entities", "Entidades"),
         ("relations", "Relações"),
     ]:
@@ -933,7 +916,7 @@ def export_latex_tables(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) ->
         header.replace("Trajetória", "Característica"),
         rows,
         "50 notícias por corpus e gerador. O desfecho é a média dos oito STDIs finais LLM/LLM "
-        "de cada notícia; números, atribuição e incerteza são indicadores lexicais exploratórios.",
+        "de cada notícia. Números são expressões distintas com algarismos.",
     )
     target = ROOT / "tcc/elementos-textuais/capitulo-5-tabelas.tex"
     target.write_text("\n\n".join(definitions) + "\n", encoding="utf-8")
@@ -1028,12 +1011,12 @@ def main() -> None:
         "original_texts": len(features),
         "new_model_calls": 0,
         "analysis": "Descriptive, paired within corpus; no hypothesis tests or population CIs",
-        "features": "Bilingual lexical proxies, frozen original text; first GPT/N-tree extraction",
+        "features": (
+            "Original word and numeric-expression counts; first GPT/N-tree entity/relation counts"
+        ),
         "feature_outcome": "Mean of eight final LLM/LLM path scores per article and generator",
         "feature_rules": {
             "numbers": NUMBER.pattern,
-            "attribution": ATTRIBUTION.pattern,
-            "uncertainty": UNCERTAINTY.pattern,
         },
         "versions": {
             "pandas": pd.__version__,
