@@ -4,6 +4,14 @@
 % A formatação institucional é mantida no arquivo original do template.
 \input{formatacao}
 
+% Allow long identifiers and paths to wrap without adding visible characters.
+\usepackage{xurl}
+% Prefer existing separators before splitting letters or digits.
+\def\UrlBigBreaks{\do\/\do\-\do\_\do\.\do\:}
+\mathchardef\UrlBigBreakPenalty=100
+\mathchardef\UrlBreakPenalty=1000
+\setlength{\emergencystretch}{1em}
+
 \begin{document}
 \pretextual
 

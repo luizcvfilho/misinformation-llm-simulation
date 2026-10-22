@@ -12,7 +12,7 @@ Foram utilizados dois corpora com 50 entradas cada: descrições de notícias po
 
 \subsection{Corpus político em inglês}
 
-O arquivo \path{data/graphs/graph_politics_news.csv} reúne 100 registros selecionados intencionalmente de uma base de 5.519 notícias políticas, acompanhados de um registro de metadados identificado por \texttt{\_\_query\_metadata\_\_}. Para as simulações finais, esse registro foi removido e foram utilizadas as primeiras 50 notícias na ordem do arquivo. O corpo processado corresponde ao campo \texttt{description}. O título e o identificador foram preservados para rastreabilidade, mas o título separado não integrou o contexto de reescrita ou de extração na configuração final.
+O arquivo \path{data/graphs/graph_politics_news.csv} reúne 100 registros selecionados intencionalmente de uma base de 5.519 notícias políticas, acompanhados de um registro de metadados identificado por \path{__query_metadata__}. Para as simulações finais, esse registro foi removido e foram utilizadas as primeiras 50 notícias na ordem do arquivo. O corpo processado corresponde ao campo \path{description}. O título e o identificador foram preservados para rastreabilidade, mas o título separado não integrou o contexto de reescrita ou de extração na configuração final.
 
 A seleção documentada partiu de registros em inglês, com categoria política, descrições de 150 a 3.000 caracteres e pelo menos 25 palavras separadas por espaços, excluindo registros cujo indicador de duplicação de origem fosse verdadeiro. A triagem resultou em 2.178 títulos distintos elegíveis. Buscas por palavras-chave auxiliaram a localização de candidatos. A escolha editorial considerou os títulos e as descrições disponíveis, procurando conflitos explícitos, disputas de política pública, atribuições, incertezas e consequências humanas. Os critérios e as justificativas por item estão preservados em \path{data/graphs/graph_politics_news.selection.md} e nos metadados do CSV.
 
@@ -22,7 +22,7 @@ Os textos disponíveis são descrições fornecidas pela coleta, e não matéria
 
 \subsection{Corpus brasileiro em português}
 
-O segundo corpus corresponde às primeiras 50 entradas, em ordem, de \path{data/elections_2026/simulation_news_100_cleaned.csv}. O arquivo contém 100 legendas selecionadas de publicações de veículos jornalísticos. Os registros preservam o identificador da publicação, a conta de origem, a data, o caminho do corpus de procedência e os campos de seleção \texttt{selection\_rank}, \texttt{topic}, \texttt{event}, \texttt{reason} e \texttt{watch}. Esses campos documentam a ordenação, o assunto e os aspectos que motivaram a inclusão, sem constituir rótulos de veracidade.
+O segundo corpus corresponde às primeiras 50 entradas, em ordem, de \path{data/elections_2026/simulation_news_100_cleaned.csv}. O arquivo contém 100 legendas selecionadas de publicações de veículos jornalísticos. Os registros preservam o identificador da publicação, a conta de origem, a data, o caminho do corpus de procedência e os campos de seleção \path{selection_rank}, \path{topic}, \path{event}, \path{reason} e \path{watch}. Esses campos documentam a ordenação, o assunto e os aspectos que motivaram a inclusão, sem constituir rótulos de veracidade.
 
 No conjunto em português, a seleção priorizou publicações ligadas a um contexto temático comum: as eleições brasileiras de 2026. Esse recorte concentra os assuntos em um mesmo processo político, sem exigir que as publicações descrevam o mesmo acontecimento específico. As 50 entradas utilizadas provêm de 24 contas, com datas de publicação registradas entre 5 e 10 de outubro de 2026, e contêm 45 valores distintos no campo de evento. Enquanto o conjunto em inglês buscou maior diversidade de temas políticos, o conjunto brasileiro privilegiou esse recorte eleitoral. Em ambos, publicações sobre um mesmo acontecimento podem permanecer relacionadas. As publicações foram selecionadas por sua pertinência ao contexto eleitoral e aos objetivos do estudo. Os resultados se referem ao conjunto analisado, sem pretensão de representar todo o noticiário eleitoral brasileiro.
 
@@ -43,11 +43,11 @@ Para identificar os arquivos utilizados, foram conferidos os resumos SHA-256 dos
 Corpus e arquivo completo & SHA-256, em duas linhas a concatenar \\
 \hline
 Inglês \newline \path{data/graphs/graph_politics_news.csv}
-        & \texttt{46fabffefde42ed7a8746d97093f1dab19} \newline
-          \texttt{f5f1524908e4217432aea755cffb64} \\
+        & \path{46fabffefde42ed7a8746d97093f1dab19} \newline
+          \path{f5f1524908e4217432aea755cffb64} \\
 Português \newline \path{data/elections_2026/simulation_news_100_cleaned.csv}
-           & \texttt{89582261293f87d494390b4e08e63b5c4} \newline
-             \texttt{10b1b1ad2e606fa164d58c351f9abea} \\
+           & \path{89582261293f87d494390b4e08e63b5c4} \newline
+             \path{10b1b1ad2e606fa164d58c351f9abea} \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir dos arquivos conferidos em 19 de outubro de 2026.}
@@ -58,7 +58,7 @@ Português \newline \path{data/elections_2026/simulation_news_100_cleaned.csv}
 
 \subsection{Geradores e avaliadores}
 
-Cada corpus foi processado por três geradores: \texttt{gpt-6-luna}, \texttt{grok-build-0.1} e \texttt{gemini-3.5-flash-lite}, identificados nos registros pelos provedores \texttt{chatgpt}, \texttt{grok} e \texttt{gemini}, respectivamente. Cada rodada utiliza um único gerador em todos os seus nós. A Tabela \ref{tab:configuracao-rodadas} apresenta as combinações de corpus, gerador e mensuração. As datas identificam o início pelo diretório de execução, não o horário de conclusão de todas as operações.
+Cada corpus foi processado por três geradores: \path{gpt-6-luna}, \path{grok-build-0.1} e \path{gemini-3.5-flash-lite}, identificados nos registros pelos provedores \path{chatgpt}, \path{grok} e \path{gemini}, respectivamente. Cada rodada utiliza um único gerador em todos os seus nós. A Tabela \ref{tab:configuracao-rodadas} apresenta as combinações de corpus, gerador e mensuração. As datas identificam o início pelo diretório de execução, não o horário de conclusão de todas as operações.
 
 \begin{table}[htb]
 \centering
@@ -69,20 +69,20 @@ Cada corpus foi processado por três geradores: \texttt{gpt-6-luna}, \texttt{gro
 \hline
 Corpus & Gerador & Início em 2026 & STDI & VAD \\
 \hline
-Inglês & \texttt{gpt-6-luna} & 16/10 & Dual & Dual \\
-Inglês & \texttt{grok-build-0.1} & 17/10 & Dual & Dual \\
-Inglês & \texttt{gemini-3.5-flash-lite} & 17/10 & Dual & Dual \\
-Português & \texttt{gpt-6-luna} & 18/10 & LLM & LLM \\
-Português & \texttt{grok-build-0.1} & 18/10 & LLM & LLM \\
-Português & \texttt{gemini-3.5-flash-lite} & 19/10 & LLM & LLM \\
+Inglês & \path{gpt-6-luna} & 16/10 & Dual & Dual \\
+Inglês & \path{grok-build-0.1} & 17/10 & Dual & Dual \\
+Inglês & \path{gemini-3.5-flash-lite} & 17/10 & Dual & Dual \\
+Português & \path{gpt-6-luna} & 18/10 & LLM & LLM \\
+Português & \path{grok-build-0.1} & 18/10 & LLM & LLM \\
+Português & \path{gemini-3.5-flash-lite} & 19/10 & LLM & LLM \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir dos resumos das execuções finais. Cada rodada utiliza 50 entradas.}
 \end{table}
 
-A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo \texttt{gpt-6-luna}, pelo provedor \texttt{chatgpt}, realiza a extração estrutural, a avaliação estrutural por LLM e a estimação VAD por LLM. No corpus inglês, o caminho Cluster utiliza adicionalmente o encoder \texttt{sentence-transformers/all-MiniLM-L6-v2}, enquanto o VAD Dual inclui \texttt{RobroKools/vad-bert}. Esses dois modelos locais não participam do STDI ou do VAD selecionados nas rodadas brasileiras.
+A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo \path{gpt-6-luna}, pelo provedor \path{chatgpt}, realiza a extração estrutural, a avaliação estrutural por LLM e a estimação VAD por LLM. No corpus inglês, o caminho Cluster utiliza adicionalmente o encoder \path{sentence-transformers/all-MiniLM-L6-v2}, enquanto o VAD Dual inclui \path{RobroKools/vad-bert}. Esses dois modelos locais não participam do STDI ou do VAD selecionados nas rodadas brasileiras.
 
-Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \texttt{gpt-6-luna}. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados, sem assegurar que uma nova chamada futura ao mesmo identificador reproduza os textos.
+Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \path{gpt-6-luna}. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados, sem assegurar que uma nova chamada futura ao mesmo identificador reproduza os textos.
 
 \subsection{Perspectivas atribuídas aos agentes}
 
@@ -99,7 +99,7 @@ Símbolo & Orientação da instrução \\
 C & Direita conservadora: tradição, autoridade, nacionalismo, valores familiares, ordem social e responsabilidade individual. \\
 P & Esquerda progressista: justiça social, desigualdade, direitos trabalhistas, causas estruturais e proteção de grupos vulneráveis. \\
 D & Negacionista conspiratória: rejeição de explicações oficiais e interpretação de acontecimentos por manipulação coordenada, interesses ocultos e inversão narrativa. \\
-N & Retransmissora neutra, \texttt{NeutralRelay}: preservação do conteúdo, da ênfase, do tom, das atribuições e do grau de certeza recebidos, com alterações mínimas de redação. \\
+N & Retransmissora neutra, \path{NeutralRelay}: preservação do conteúdo, da ênfase, do tom, das atribuições e do grau de certeza recebidos, com alterações mínimas de redação. \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir das instruções de perspectiva do projeto.}
@@ -112,7 +112,7 @@ A perspectiva N funciona como referência operacional de retransmissão. Sua ins
 
 \subsection{Protocolo de transmissão interpretativa}
 
-As seis rodadas adotam um protocolo de retransmissão interpretativa, no qual cada agente interpreta a mensagem recebida segundo a perspectiva atribuída e produz o relato que transmitiria ao agente seguinte. Na implementação, \texttt{interpretive} é o identificador desse modo de reescrita, enquanto \texttt{interpretive\_v2} identifica a versão do conjunto de instruções (\textit{prompt}) utilizada nas execuções. A adoção desse protocolo no desenvolvimento do projeto foi discutida na Seção \ref{sec:consolidacao-cadeias}.
+As seis rodadas adotam um protocolo de retransmissão interpretativa, no qual cada agente interpreta a mensagem recebida segundo a perspectiva atribuída e produz o relato que transmitiria ao agente seguinte. Na implementação, \path{interpretive} é o identificador desse modo de reescrita, enquanto \path{interpretive_v2} identifica a versão do conjunto de instruções (\textit{prompt}) utilizada nas execuções. A adoção desse protocolo no desenvolvimento do projeto foi discutida na Seção \ref{sec:consolidacao-cadeias}.
 
 Cada nó recebe apenas o texto produzido por seu pai, a perspectiva atribuída e a instrução de idioma. Na primeira posição, o texto recebido é a entrada do corpus. Nas posições seguintes, o agente não recebe a notícia original como contexto adicional, o título separado ou o histórico completo da cadeia. Não há acesso a fontes externas para reconstruir informações omitidas.
 
@@ -158,13 +158,13 @@ Os 24 resumos das árvores registram 50 entradas por árvore e, no conjunto de c
 
 Antes da comparação, cada texto é convertido por LLM em uma representação estruturada: um conjunto de campos que descreve seu tema principal, subtópicos, entidades centrais, relações, opiniões ou recomendações, enquadramento narrativo e contradição interna. Essa organização permite comparar aspectos específicos dos textos, em vez de produzir somente uma avaliação global de mudança. A extração recebe o corpo textual sem o título separado.
 
-A tarefa é orientada por um conjunto de instruções (\textit{prompt}) que especifica os campos a extrair, o formato de resposta em JSON e as regras para representar as informações. Essas instruções solicitam preservar os nomes das entidades conforme aparecem no texto, distinguir afirmações de hipóteses e negações, registrar valores numéricos com seu contexto e não inventar fatos ausentes da entrada. Nas rodadas finais, a versão dessas instruções é identificada na implementação por \texttt{structured\_extraction\_v5}. Esse identificador distingue a versão do prompt da versão 2 do esquema de dados, que define a organização dos campos da representação extraída. As respostas e os metadados da extração são preservados para inspeção.
+A tarefa é orientada por um conjunto de instruções (\textit{prompt}) que especifica os campos a extrair, o formato de resposta em JSON e as regras para representar as informações. Essas instruções solicitam preservar os nomes das entidades conforme aparecem no texto, distinguir afirmações de hipóteses e negações, registrar valores numéricos com seu contexto e não inventar fatos ausentes da entrada. Nas rodadas finais, a versão dessas instruções é identificada na implementação por \path{structured_extraction_v5}. Esse identificador distingue a versão do prompt da versão 2 do esquema de dados, que define a organização dos campos da representação extraída. As respostas e os metadados da extração são preservados para inspeção.
 
 Uma relação representa sujeito, ação e objeto, admitindo objeto vazio em ações intransitivas. Campos adicionais registram ação com sinal, ação base, polaridade, escopo de negação e tipo de asserção. A polaridade distingue afirmação e negação gramaticais, sem indicar verdade ou certeza. Uma hipótese afirmativa e uma hipótese negada podem, portanto, ter o mesmo tipo de asserção e polaridades diferentes. Asserções, hipóteses, recomendações e intenções atribuídas são diferenciadas para evitar que uma possibilidade ou uma fala de terceiro seja automaticamente convertida em fato estabelecido.
 
 Valores numéricos são associados à relação e ao papel que desempenham nela, incluindo tipo, valor, unidade, expressão de origem e estado exato, aproximado ou desconhecido. A representação permite distinguir, por exemplo, quantidade de pessoas, duração e valor monetário. O alinhamento posterior não deve comparar números apenas por proximidade ou posição na lista. Atribuições e finalidades permanecem na ação ou no objeto, e opiniões puras são registradas separadamente de alegações sobre acontecimentos.
 
-A contradição interna descreve incompatibilidades no próprio texto, com escore entre zero e um, considerando severidade e centralidade. Ela não verifica uma alegação contra o mundo externo. O enquadramento narrativo, registrado no campo \texttt{narrative\_frame}, resume a forma predominante de apresentação do relato, quando identificável. Esse campo integra as estruturas fornecidas como contexto ao avaliador LLM, juntamente com os textos completos, mas não recebe um componente ou peso próprio na fórmula do STDI. Tipo de asserção, opiniões e demais qualificadores tampouco recebem, cada um, um peso autônomo: sua utilização depende do comparador. Isso impede interpretar o índice como uma soma de todos os campos extraídos.
+A contradição interna descreve incompatibilidades no próprio texto, com escore entre zero e um, considerando severidade e centralidade. Ela não verifica uma alegação contra o mundo externo. O enquadramento narrativo, registrado no campo \path{narrative_frame}, resume a forma predominante de apresentação do relato, quando identificável. Esse campo integra as estruturas fornecidas como contexto ao avaliador LLM, juntamente com os textos completos, mas não recebe um componente ou peso próprio na fórmula do STDI. Tipo de asserção, opiniões e demais qualificadores tampouco recebem, cada um, um peso autônomo: sua utilização depende do comparador. Isso impede interpretar o índice como uma soma de todos os campos extraídos.
 
 A extração e a comparação constituem etapas diferentes. Uma omissão ou inconsistência da extração pode afetar o caminho Cluster, enquanto o avaliador LLM também recebe os textos completos. A reutilização de estruturas compatíveis reduz o número de extrações, mas não transforma a estrutura preservada em uma referência humana independente.
 
@@ -194,7 +194,7 @@ O índice é uma medida operacional de afastamento, e não uma distância matem�
 
 \subsection{Caminho Cluster}
 
-O caminho Cluster utiliza estruturas extraídas pelo LLM e embeddings de \texttt{sentence-transformers/all-MiniLM-L6-v2}. A representação de sentenças e a comparação por similaridade cosseno se apoiam no procedimento de Sentence-BERT \cite{reimers2019sbert}. MiniLM fundamenta a família de modelos compactos que dá origem ao encoder utilizado \cite{wang2020minilm}. Os artigos fundamentam essas representações, mas as regras de alinhamento e de agregação descritas a seguir pertencem à implementação deste estudo.
+O caminho Cluster utiliza estruturas extraídas pelo LLM e embeddings de \path{sentence-transformers/all-MiniLM-L6-v2}. A representação de sentenças e a comparação por similaridade cosseno se apoiam no procedimento de Sentence-BERT \cite{reimers2019sbert}. MiniLM fundamenta a família de modelos compactos que dá origem ao encoder utilizado \cite{wang2020minilm}. Os artigos fundamentam essas representações, mas as regras de alinhamento e de agregação descritas a seguir pertencem à implementação deste estudo.
 
 Nesse caminho, os quatro componentes de conteúdo são calculados pelas comparações descritas a seguir. O componente $K$, por sua vez, utiliza o escore de contradição interna atribuído pelo LLM durante a extração do texto comparado, sem ser calculado pela similaridade dos embeddings.
 
@@ -235,11 +235,11 @@ Dois zeros recebem zero. A passagem de zero para um valor não nulo recebe um. A
  d_r = d_p + (1-d_p)\,0{,}20\,d_n.
  \label{eq:cluster-relacao}
 \end{equation}
-Datas completas e identificadores são comparados por igualdade, sem variação percentual. Unidades monetárias exigem a mesma moeda e não envolvem conversão cambial. Medidas aproximadas, ambíguas ou incompatíveis mantêm diagnóstico de indisponibilidade do ajuste numérico. Nesse caso, conserva-se a distância semântica ajustada por polaridade, sem inventar um valor. A deriva de relações resulta da soma das distâncias alinhadas e das penalizações por relações excedentes, dividida pelo tamanho da maior lista. A versão estruturada desse caminho é \texttt{cluster\_v4}.
+Datas completas e identificadores são comparados por igualdade, sem variação percentual. Unidades monetárias exigem a mesma moeda e não envolvem conversão cambial. Medidas aproximadas, ambíguas ou incompatíveis mantêm diagnóstico de indisponibilidade do ajuste numérico. Nesse caso, conserva-se a distância semântica ajustada por polaridade, sem inventar um valor. A deriva de relações resulta da soma das distâncias alinhadas e das penalizações por relações excedentes, dividida pelo tamanho da maior lista. A versão estruturada desse caminho é \path{cluster_v4}.
 
 \subsection{Caminho LLM e avaliações repetidas}
 
-O avaliador estrutural LLM recebe os dois textos completos e suas estruturas, com o prompt \texttt{structured\_judge\_v5}. Os metadados técnicos da extração, como o modelo utilizado e a versão do prompt, são preservados nos registros, mas não são enviados ao avaliador LLM como parte das estruturas. Os demais campos estruturais permanecem disponíveis. O avaliador não recebe os escores do Cluster, as notas das outras avaliações ou o rótulo da perspectiva e deve resolver divergências entre estruturas e textos com base nos textos. Não se solicita consulta a evidências externas.
+O avaliador estrutural LLM recebe os dois textos completos e suas estruturas, com o prompt \path{structured_judge_v5}. Os metadados técnicos da extração, como o modelo utilizado e a versão do prompt, são preservados nos registros, mas não são enviados ao avaliador LLM como parte das estruturas. Os demais campos estruturais permanecem disponíveis. O avaliador não recebe os escores do Cluster, as notas das outras avaliações ou o rótulo da perspectiva e deve resolver divergências entre estruturas e textos com base nos textos. Não se solicita consulta a evidências externas.
 
 Para cada um dos cinco componentes estruturais, o \textit{prompt} admite $0$, $0{,}25$, $0{,}5$, $0{,}75$ ou $1$, acompanhados de justificativas. Nos componentes de conteúdo, os níveis representam equivalência, mudança leve de ênfase ou especificidade, mudança relevante no mesmo contexto, mudança forte e diferença essencial. Para contradição interna, representam ausência, tensão periférica, contradição parcial, contradição forte em alegação importante e contradição central. A avaliação de relações já considera papéis, causalidade, atribuições, negação, números e omissões. Os ajustes numéricos e de polaridade do Cluster não são aplicados novamente ao escore LLM.
 
@@ -262,7 +262,7 @@ Nas rodadas inglesas, o STDI selecionado é Dual. Seja $J_{\mathrm{Cl}}$ o escor
  \frac{F(J_{\mathrm{Cl}},A_{\mathrm{sel}})+\overline{F}_{\mathrm{LLM}}(A_{\mathrm{sel}})}{2},
  \label{eq:stdi-dual}
 \end{equation}
-com pesos iguais para os dois caminhos. Nas rodadas brasileiras, o STDI selecionado corresponde apenas à Equação \ref{eq:stdi-llm-media}, com VAD LLM. O identificador do fluxo \texttt{dual\_stdi\_v6} aparece também em registros de seleção LLM e, isoladamente, não demonstra uso de ambos os caminhos.
+com pesos iguais para os dois caminhos. Nas rodadas brasileiras, o STDI selecionado corresponde apenas à Equação \ref{eq:stdi-llm-media}, com VAD LLM. O identificador do fluxo \path{dual_stdi_v6} aparece também em registros de seleção LLM e, isoladamente, não demonstra uso de ambos os caminhos.
 
 Na configuração Dual/Dual, os resultados individuais registrados utilizam fontes afetivas diferentes: o ramo Cluster combina seus componentes estruturais com VAD BERT, enquanto o ramo LLM utiliza VAD LLM. Para obter o STDI Dual, o sistema recalcula os escores completos dos dois caminhos utilizando a mesma deriva VAD Dual e, depois, calcula sua média, conforme a Equação \ref{eq:stdi-dual}. Por isso, tirar diretamente a média dos dois resultados individuais exibidos pode produzir um valor diferente do agregado final.
 
@@ -287,9 +287,9 @@ A soma $B_t$ pode exceder um e não equivale a $O_t$. Mudanças sucessivas podem
 
 Cada texto recebe três valores na escala nominal de um a cinco: valência, relativa à avaliação agradável ou desagradável expressa; ativação, relativa à intensidade do tom; e dominância, relativa à agência ou ao controle emocional expresso. As três dimensões não medem emoção real do leitor, credibilidade ou veracidade. A fundamentação dimensional foi discutida na Seção \ref{sec:representacao-afetiva}.
 
-O estimador neural \texttt{RobroKools/vad-bert} é documentado como BERT ajustado para regressão das três dimensões em inglês \cite{robrokoolsvadbert}. A implementação executa inferência local, com modelo em modo de avaliação, preenchimento por lote e truncamento em 512 tokens WordPiece. O LLM recebe o texto completo segundo seu \textit{prompt}. Por isso, diferenças entre estimadores também podem envolver a extensão efetivamente processada. Nas rodadas em inglês, utilizou-se a revisão \texttt{c4c659fd17dd5807572b3f0f577de8c408401ca7}. O identificador do modelo e os escores produzidos estão preservados nos resultados finais.
+O estimador neural \path{RobroKools/vad-bert} é documentado como BERT ajustado para regressão das três dimensões em inglês \cite{robrokoolsvadbert}. A implementação executa inferência local, com modelo em modo de avaliação, preenchimento por lote e truncamento em 512 tokens WordPiece. O LLM recebe o texto completo segundo seu \textit{prompt}. Por isso, diferenças entre estimadores também podem envolver a extensão efetivamente processada. Nas rodadas em inglês, utilizou-se a revisão \texttt{c4c659fd\allowbreak17dd5807\allowbreak572b3f0f\allowbreak577de8c4\allowbreak08401ca7}. O identificador do modelo e os escores produzidos estão preservados nos resultados finais.
 
-O VAD por LLM utiliza \texttt{gpt-6-luna} com o \textit{prompt} \texttt{llm\_vad\_expressed\_tone\_v2}. O avaliador recebe um único texto, sem seu par, título separado, perspectiva ou escore BERT. A instrução solicita o tom expresso pelo narrador, incluindo avaliações implícitas apoiadas na redação, e diferencia esse tom das emoções relatadas de personagens.
+O VAD por LLM utiliza \path{gpt-6-luna} com o \textit{prompt} \path{llm_vad_expressed_tone_v2}. O avaliador recebe um único texto, sem seu par, título separado, perspectiva ou escore BERT. A instrução solicita o tom expresso pelo narrador, incluindo avaliações implícitas apoiadas na redação, e diferencia esse tom das emoções relatadas de personagens.
 
 As saídas contêm valores, justificativas, trechos de apoio e ambiguidades. O \textit{prompt} esclarece que valência neutra não implica ativação intermediária e que dominância não equivale a certeza, autoridade institucional ou posição hierárquica de um ator. A disponibilidade de um trecho de apoio permite inspecionar a atribuição, sem convertê-la em evidência factual externa. As três avaliações repetidas do comparador estrutural reutilizam esses mesmos valores VAD. Não são três estimações afetivas independentes.
 
@@ -325,7 +325,7 @@ O desenho permite examinar trajetórias homogêneas, continuações distintas de
 
 Escores das três avaliações estruturais, posições sucessivas e respostas recuperadas do cache não ampliam o número de notícias observadas. As rodadas tampouco constituem repetições independentes de geração para cada condição: há uma trajetória observada por entrada e configuração, com compartilhamento dos nós iniciais indicado na Tabela \ref{tab:arvores-finais}. A dispersão do avaliador não estima a variação que seria obtida ao gerar novamente todas as cadeias.
 
-No corpus inglês, os resultados salvos permitem inspecionar os ramos Cluster, LLM e o agregado Dual. Para comparações de procedimento mais próximo do corpus brasileiro, pode-se examinar o ramo LLM com VAD LLM, identificando explicitamente essa escolha. Ainda assim, os corpora diferem em conteúdo, origem e formato, e a comparação entre seus agregados não isola um efeito do idioma. O uso de \texttt{gpt-6-luna} como gerador de uma condição e avaliador de todas introduz uma dependência metodológica a discutir, sem demonstrar por si só favorecimento desse gerador.
+No corpus inglês, os resultados salvos permitem inspecionar os ramos Cluster, LLM e o agregado Dual. Para comparações de procedimento mais próximo do corpus brasileiro, pode-se examinar o ramo LLM com VAD LLM, identificando explicitamente essa escolha. Ainda assim, os corpora diferem em conteúdo, origem e formato, e a comparação entre seus agregados não isola um efeito do idioma. O uso de \path{gpt-6-luna} como gerador de uma condição e avaliador de todas introduz uma dependência metodológica a discutir, sem demonstrar por si só favorecimento desse gerador.
 
 \subsection{Comparação de métodos e características dos textos}
 

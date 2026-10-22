@@ -74,9 +74,7 @@ A inspeção das estruturas extraídas mostrou que parte da pontuação pode dec
 
 No método LLM, o acesso aos textos completos oferece um mecanismo para atenuar o impacto dessas inconsistências, pois o avaliador pode identificar informações preservadas na reescrita, mesmo quando omitidas da estrutura extraída. O escore próximo de zero atribuído à paráfrase eleitoral é compatível com essa possibilidade. Entretanto, esse caso isolado não permite concluir que o método seja, de modo geral, menos suscetível a erros de extração.
 
-\begin{sloppypar}
-A extração dessa auditoria utilizou \texttt{structured\_\allowbreak extraction\_\allowbreak v4}, e o juiz, \texttt{structured\_\allowbreak judge\_\allowbreak v3}. Os comparadores foram identificados como \texttt{cluster\_v3} e \texttt{dual\_stdi\_v3}. Esses resultados não são atribuídos às versões finais nem apresentados como validação automática da ampliação posterior dos qualificadores numéricos.
-\end{sloppypar}
+A extração dessa auditoria utilizou \path{structured_extraction_v4}, e o juiz, \path{structured_judge_v3}. Os comparadores foram identificados como \path{cluster_v3} e \path{dual_stdi_v3}. Esses resultados não são atribuídos às versões finais nem apresentados como validação automática da ampliação posterior dos qualificadores numéricos.
 
 O piloto de comparação afetiva entre BERT e LLM, realizado durante o desenvolvimento do método, também registrou diferenças entre estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. A amplitude nominal comum não eliminou as diferenças de comportamento. Esses resultados exploratórios contribuíram para a escolha metodológica, mas maior variação não demonstra maior acurácia. O piloto caracteriza uma etapa de desenvolvimento do método e não constitui uma validação dos resultados das rodadas finais.
 
