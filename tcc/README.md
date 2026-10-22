@@ -9,7 +9,7 @@ bibliography used by the document is
 `elementos-postextuais/referencias.bib`; keep it synchronized with the
 repository-level `references.bib`.
 
-The current draft contains developed chapters 1–6 and an outline for chapter 7.
+The current draft contains developed chapters 1–7.
 Chapter 5 includes descriptive analyses of all six final simulation rounds,
 paired path and generator comparisons, Cluster/LLM comparisons with native and
 common VAD, a common LLM/LLM corpus comparison, lexical feature diagnostics,
@@ -32,6 +32,14 @@ compilation checks are recorded in `docs/tcc_chapter_6_evidence.md`.
 For this chapter, replace only `elementos-textuais/capitulo-6.tex` in the existing
 Overleaf project. `main.tex` already includes it; no bibliography, figure or
 formatting changes are required. Recompile after uploading the source.
+Chapter 7 answers the research question, synthesizes the study's contributions
+and limits, and outlines extensions beyond the completed experimental scope.
+It uses the existing results without adding simulations or references.
+Its evidence and four-page visual review are recorded in
+`docs/tcc_chapter_7_evidence.md`. For this chapter, replace only
+`elementos-textuais/capitulo-7.tex` in Overleaf. `main.tex` already includes it;
+no bibliography, figure or formatting changes are required. Recompile after
+uploading the source. The complete project compiled successfully after writing.
 For Overleaf, manually upload the updated files from `elementos-textuais/` and
 `figuras/chapter5/`, preserving those paths in the existing project. Chapter 5
 requires both `capitulo-5.tex` and `capitulo-5-tabelas.tex`, together with its

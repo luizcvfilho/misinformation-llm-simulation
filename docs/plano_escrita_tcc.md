@@ -234,7 +234,7 @@ Cada tabela deve informar corpus, denominador, unidade, configuração e versão
 
 ### 3.6 Discussão
 
-**Primeira redação implementada:** `tcc/elementos-textuais/capitulo-6.tex`, com interpretação das trajetórias, componentes, geradores e dimensão afetiva; comparação com a literatura; ameaças à validade; e alcance dos achados. O texto distingue preservação local de recuperação do original e separa variação textual de variação da mensuração. A rastreabilidade está em `docs/tcc_chapter_6_evidence.md`. O capítulo utiliza os resultados existentes, sem novas simulações, avaliações ou alterações bibliográficas, e o projeto completo compilou com sucesso.
+**Primeira redação implementada:** `tcc/elementos-textuais/capitulo-6.tex`, com interpretação das trajetórias, componentes, geradores e dimensão afetiva; comparação com a literatura; ameaças à validade; e alcance dos achados. O texto distingue preservação local de recuperação do original e separa variação textual de variação da mensuração. A rastreabilidade está em `docs/tcc_chapter_6_evidence.md`. O capítulo utiliza os resultados existentes, sem novas simulações, avaliações ou alterações bibliográficas, e o projeto completo compilou com sucesso. A Conclusão foi desenvolvida posteriormente, conforme a Seção 3.7.
 
 Perguntas orientadoras, a responder com as análises existentes:
 
@@ -248,6 +248,8 @@ Discutir prefixos compartilhados, cache, falta de repetições independentes da 
 Comparar alvo e limites com `liu2025stepwise` e `mohamed2025broken`. Usar `chuang2024opinion`, `frisch2024interaction`, `abdurahman2025primer` e fontes de avaliação por LLM para contextualizar limitações, sem atribuir à literatura resultados próprios.
 
 ### 3.7 Conclusão
+
+**Primeira redação implementada em 22/10/2026:** `tcc/elementos-textuais/capitulo-7.tex`, com resposta à pergunta de pesquisa, contribuições e limites do estudo e trabalhos futuros. A síntese distingue os contrastes de perspectiva das comparações de ordem, preservação local de recuperação do original e deriva de veracidade externa. Os números retomam os resultados já apresentados no Capítulo 5; não foram acrescentados experimentos, notas humanas ou referências. A rastreabilidade e a conferência de compilação e apresentação estão em `docs/tcc_chapter_7_evidence.md`. O capítulo ocupa quatro páginas no PDF de revisão, e o projeto completo compilou com sucesso.
 
 - Responder à pergunta no alcance das seis rodadas e análises realizadas.
 - Apresentar contribuição instrumental com avaliação quantitativa/qualitativa delimitada, sem validação humana numérica ou validade geral.
@@ -289,7 +291,7 @@ Números e interpretações das auditorias são resultados deste estudo, não da
 1. Revisar a primeira redação de Materiais e métodos, já desenvolvida com dados, parâmetros, modelos e versões salvos.
 2. Revisar a primeira redação de Resultados e suas evidências, já implementadas com diagnósticos históricos separados das seis rodadas finais.
 3. Revisar a primeira redação de Discussão, já desenvolvida com o alcance das comparações e as limitações do desenho e da mensuração.
-4. Redigir Conclusão, respondendo à pergunta de pesquisa no alcance dos resultados apresentados.
+4. Revisar a primeira redação de Conclusão, já desenvolvida com resposta à pergunta de pesquisa, contribuições, limites e possibilidades de trabalhos futuros.
 5. Preparar resumo, abstract e elementos institucionais, conferindo a coerência e a apresentação da versão de entrega.
 
 Pendências da redação: localizar o artefato de cada análise citada; detalhar origem, licença e preparação dos corpora; documentar modelos, parâmetros e versões; consultar fontes primárias para frases novas. Preservar os denominadores e os recortes históricos identificados neste plano e conferir outros recortes caso sejam acrescentados. Manter as bibliografias sincronizadas quando houver mudanças e realizar a conferência visual final. Não aguardar notas humanas numéricas ou novas simulações, nem converter tarefas documentais em promessas de experimentos ou sensibilidades não executadas.
