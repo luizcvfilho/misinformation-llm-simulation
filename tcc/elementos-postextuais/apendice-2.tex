@@ -1,4 +1,259 @@
-{\let\clearpage\relax \chapter{\textbf{Análise dos
-relatórios mensais de uso do serviço de empréstimo domiciliar}}}
+\chapter{EXEMPLOS COMPLETOS DE TRAJETÓRIAS E AVALIAÇÕES}
+\label{ap:casos}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacus nisl, ultricies vitae semper eu, scelerisque nec enim. Curabitur posuere tortor orci, at porta leo laoreet et. Quisque ut congue dolor. Maecenas vel sagittis diam. Praesent fermentum eleifend mi, sit amet vehicula leo pellentesque quis. Curabitur mattis luctus pulvinar. Proin auctor est nec nulla pellentesque commodo. Donec nec justo eu magna aliquet eleifend. Curabitur tristique tortor id sem dignissim, a iaculis metus interdum. Phasellus bibendum velit sit amet interdum semper. Nam vestibulum dui quis nisi consectetur, id vehicula dolor faucibus.\\
+Este apêndice apresenta três casos já analisados na Seção \ref{sec:resultados-casos}, com a entrada original, as quatro reescritas e os escores preservados. A seleção ilustra troca de enquadramento político, manutenção de uma interpretação após passagens neutras e divergência entre métodos. Não constitui uma amostra adicional nem permite estimar a frequência desses comportamentos no conjunto de notícias.
+
+Os textos são transcritos dos registros das simulações, preservando o idioma, o conteúdo e os parágrafos. A composição tipográfica não representa a identidade de espaços dos arquivos. Os escores são exibidos com três casas decimais, sem recálculo das avaliações. Afastamento compara cada versão ao original, incremento compara a versão ao seu pai efetivo e acumulado soma os incrementos do percurso. Na primeira posição, afastamento e incremento usam a mesma referência. Os símbolos C, P, D e N mantêm os significados do Quadro \ref{quad:perspectivas-finais}.
+
+As afirmações reproduzidas constituem material de análise, sem checagem factual externa neste estudo. As interpretações adicionadas pelos modelos não são adotadas como conclusões sobre os acontecimentos. Os originais e as saídas pertencem às mesmas seis rodadas descritas nos capítulos anteriores, sem novas chamadas a modelos.
+
+\section{TROCA DE ENQUADRAMENTO POLÍTICO}
+\label{sec:ap-caso-politico}
+
+Corpus em português, gerador \path{grok-build-0.1}, trajetória \path{CCPP}, com STDI LLM e VAD LLM. Identificador da entrada: \path{br2026_1105880049043528}.
+
+O arquivo de origem, relativo a \path{output/interaction_graph/app_runs/}, é \path{simulation_ui_20261018_172257-GROK-BR/02_02_c_tree/02_02_c_tree_steps.jsonl}. As quatro posições correspondem, respectivamente, às linhas 211, 212, 215, 216. O original transcrito é o campo \path{metadata_original_text}, e cada saída corresponde a \path{rewritten_text}.
+
+\begin{table}[htb]
+\centering
+\caption{Escores preservados do caso 1.}
+\label{tab:ap-caso-politico}
+\begin{tabular}{ccrrr}
+\hline
+Posição & Perspectiva & Afastamento & Incremento & Acumulado \\
+\hline
+1 & C & 0,501 & 0,501 & 0,501 \\
+2 & C & 0,446 & 0,159 & 0,660 \\
+3 & P & 0,472 & 0,433 & 1,093 \\
+4 & P & 0,433 & 0,131 & 1,223 \\
+\hline
+\end{tabular}
+\legend{Fonte: elaboração própria, a partir dos registros salvos.}
+\end{table}
+
+O caso preserva o adiamento e os atores centrais, mas passa de uma crítica conservadora ao tribunal para uma justificativa progressista de proteção da democracia. A manutenção desses elementos não impede a alteração de motivos e finalidades. O escore final corresponde ao caso na mediana descrito no Capítulo \ref{ch:resultados}.
+
+\subsection{Texto original}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+O ministro Kassio Nunes Marques, do STF (Supremo Tribunal Federal), afirmou nesta quarta-feira (7) que deve analisar o caso que pode levar à soltura do ex-presidente Jair Bolsonaro (PL) somente após o segundo turno das eleições. De acordo com o gabinete do ministro, uma decisão antes da conclusão do pleito poderia ser considerada uma interferência nas eleições. A decisão de Kassio foi revelada pela Folha na segunda-feira (5). Em nota, o magistrado disse que pretende aguardar a conclusão das eleições para definir o momento em que deve ser julgada a revisão criminal do processo que levou Bolsonaro à prisão por tentativa de golpe de Estado.
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 1: perspectiva C}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+O ministro Kassio Nunes Marques, do STF, afirmou nesta quarta-feira que só vai analisar o caso de soltura do ex-presidente Jair Bolsonaro após o segundo turno das eleições, usando a desculpa de que uma decisão anterior poderia interferir nas eleições, conforme a Folha revelou na segunda-feira. Ele aguarda o fim do pleito para julgar a revisão criminal que levou à prisão de Bolsonaro por tentativa de golpe de Estado.
+
+Essa postura é mais uma evidência de que o Supremo Tribunal Federal está comprometido com agendas progressistas que buscam enfraquecer a direita e manter a ordem estabelecida. Em vez de buscar a verdade e a justiça com base em responsabilidade e tradição, eles adiam para que o ex-presidente não possa influenciar o eleitorado com seus ideais de nacionalismo e valores familiares. É claro que o verdadeiro motivo é evitar que a libertação de Bolsonaro antes das eleições traga de volta a autoridade e a soberania que o país precisa, protegendo assim o declínio cultural promovido por essas instituições.
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 2: perspectiva C}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+O ministro Kassio Nunes Marques, do STF, afirmou que só vai analisar a soltura do ex-presidente Jair Bolsonaro após o segundo turno das eleições. Ele alega que uma decisão anterior poderia interferir no pleito, conforme revelado pela Folha na segunda-feira, e por isso aguarda o fim das votações para julgar a revisão criminal que levou à prisão de Bolsonaro por tentativa de golpe de Estado.
+
+Essa postura confirma mais uma vez como o Supremo Tribunal Federal atua de forma enviesada para proteger agendas progressistas e enfraquecer quem defende a nação, a autoridade e os valores familiares. Em vez de priorizar a justiça e a responsabilidade pessoal, eles adiam tudo para impedir que Bolsonaro recupere a influência e traga de volta a soberania e a ordem tradicional que o país precisa. O verdadeiro propósito é preservar o declínio cultural promovido por essas instituições, evitando que ideais conservadores voltem a ganhar força entre o eleitorado antes da decisão.
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 3: perspectiva P}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+O ministro Kassio Nunes Marques, do STF, afirmou que só vai analisar a soltura do ex-presidente Jair Bolsonaro após o segundo turno das eleições. Ele alega que uma decisão anterior poderia interferir no pleito, conforme revelado pela Folha na segunda-feira, e por isso aguarda o fim das votações para julgar a revisão criminal que levou à prisão de Bolsonaro por tentativa de golpe de Estado.
+
+Essa decisão do Supremo Tribunal Federal reforça a necessidade de proteger o processo eleitoral contra interferências de setores que historicamente defendem privilégios e retrocessos, ameaçando conquistas sociais e os direitos de grupos vulneráveis como trabalhadores, minorias e comunidades afetadas por desigualdades estruturais. Em vez de ceder a pressões que poderiam fortalecer agendas autoritárias e restaurar ordens desiguais, o adiamento prioriza a integridade democrática e a defesa contra tentativas de golpe que perpetuam discriminações e enfraquecem reformas institucionais necessárias. Narrativas que acusam o tribunal de enviesamento para proteger progressismo são, na verdade, tentativas de deslegitimar instituições que atuam em defesa da igualdade e contra o poder concentrado.
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 4: perspectiva P}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Recebi uma informação que reforça a urgência de blindar a democracia contra retrocessos. O ministro Kassio Nunes Marques, do STF, afirmou que só vai analisar a soltura do ex-presidente Jair Bolsonaro após o segundo turno das eleições. Ele alega que uma decisão anterior poderia interferir no pleito, conforme revelado pela Folha na segunda-feira, e por isso aguarda o fim das votações para julgar a revisão criminal que levou à prisão de Bolsonaro por tentativa de golpe de Estado.
+
+Para mim, isso é um passo necessário para proteger o processo eleitoral de interferências de setores que sempre defenderam privilégios e agendas autoritárias, ameaçando as conquistas dos trabalhadores, as minorias e as comunidades mais vulneráveis diante das desigualdades estruturais. O adiamento prioriza a integridade democrática e evita que tentativas de golpe perpetuem discriminações e bloqueiem reformas institucionais urgentes. As acusações de que o tribunal estaria enviesado para defender o progressismo são apenas manobras para deslegitimar instituições que atuam contra o poder concentrado e em favor da igualdade social.
+\end{SingleSpace}
+\end{quote}
+
+
+\section{PRESERVAÇÃO DE UMA INTERPRETAÇÃO APÓS PASSAGENS NEUTRAS}
+\label{sec:ap-caso-neutro}
+
+Corpus em português, gerador \path{gemini-3.5-flash-lite}, trajetória \path{DDNN}, com STDI LLM e VAD LLM. Identificador da entrada: \path{br2026_2212221500172755}.
+
+O arquivo de origem, relativo a \path{output/interaction_graph/app_runs/}, é \path{simulation_ui_20261019_124942-GEMINIBR/04_04_d_tree/04_04_d_tree_steps.jsonl}. As quatro posições correspondem, respectivamente, às linhas 259, 260, 263, 264. O original transcrito é o campo \path{metadata_original_text}, e cada saída corresponde a \path{rewritten_text}.
+
+\begin{table}[htb]
+\centering
+\caption{Escores preservados do caso 2.}
+\label{tab:ap-caso-neutro}
+\begin{tabular}{ccrrr}
+\hline
+Posição & Perspectiva & Afastamento & Incremento & Acumulado \\
+\hline
+1 & D & 0,675 & 0,675 & 0,675 \\
+2 & D & 0,630 & 0,160 & 0,835 \\
+3 & N & 0,630 & 0,000 & 0,835 \\
+4 & N & 0,707 & 0,003 & 0,838 \\
+\hline
+\end{tabular}
+\legend{Fonte: elaboração própria, a partir dos registros salvos.}
+\end{table}
+
+As posições N mantêm a interpretação de manipulação introduzida nas posições D. A terceira versão repete exatamente a segunda. A quarta remove apenas um espaço antes de uma quebra de parágrafo, e sua sequência de palavras é idêntica à segunda após normalização dos espaços. Entretanto, o afastamento passa de 0,630 para 0,707, enquanto o incremento final é 0,003. A diferença de formatação altera a chave do cache de extração e leva a avaliações distintas. O caso ilustra preservação local e sensibilidade da mensuração, sem atribuir a oscilação a uma transformação substantiva do texto. Essa diferença de espaço não é visível na composição tipográfica das transcrições.
+
+\subsection{Texto original}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Lula diz que 'não há razão econômica, social e política' para não ser eleito
+
+O presidente Luiz Inácio Lula da Silva afirmou nesta segunda-feira, 5, que “não há razão econômica, social e política” para que não seja reeleito no segundo turno das eleições. O petista terminou a primeira etapa da disputa com 45\% dos votos, atrás do senador Flávio Bolsonaro (PL), que obteve 47\%.
+
+Durante uma reunião de coordenação da campanha, em Brasília, Lula afirmou que os indicadores do governo são positivos e citou a segurança pública como um dos temas que precisam ser enfrentados na reta final da disputa.
+
+Segundo o presidente, a União precisa ampliar sua participação no combate ao crime organizado. Ele atribuiu aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988.
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 1: perspectiva D}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Acordem! O que nos empurram como "eleições" nada mais é do que uma encenação milimetricamente calculada pelas altas cúpulas para manter o controle. A prova disso é a encenação desta segunda-feira, 5, em Brasília, onde Luiz Inácio Lula da Silva declarou cinicamente que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É o establishment revelando seu plano de continuidade a qualquer custo.
+
+Eles querem nos fazer acreditar que a disputa está aberta, usando números fals \texttt{[U+D488]}\footnote{Na saída original do modelo, este ponto contém o caractere coreano identificado pelo código Unicode U+D488. Nesta transcrição, o código representa o glifo para permitir a compilação com pdfLaTeX. O caractere original permanece preservado nos arquivos de dados.} para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, ficando atrás do senador Flávio Bolsonaro (PL), que obteve 47\%. Mas tudo isso não passa de uma narrativa combinada entre os dois lados da mesma moeda para polarizar e anestesiar o gado.
+
+Prestem atenção na verdadeira agenda oculta que transparece quando ele fala em segurança pública na reta final da disputa. Sob o disfarce de que a União precisa ampliar sua participação no combate ao crime organizado, o que eles estão preparando nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Não é à toa que ele lembrou que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988 — agora querem destruir o pouco de autonomia que resta para consolidar o controle totalitário do Estado profundo. Não acreditem em uma só palavra dessa fachada oficial!
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 2: perspectiva D}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Abram os olhos para o grande teatro que estão encenando para nos manipular. O que chamam de "eleições" é apenas uma farsa milimetricamente calculada pelas altas cúpulas para garantir a continuidade do plano de dominação.
+
+A prova cabal dessa encenação aconteceu nesta segunda-feira, 5, em Brasília, quando Luiz Inácio Lula da Silva escancarou o cinismo do establishment ao declarar que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É a elite revelando que o jogo é cartas marcadas para manter o controle a qualquer custo.
+
+Eles tentam nos manter anestesiados com essa falsa polarização entre os dois lados da mesma moeda, jogando números para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, enquanto o senador Flávio Bolsonaro (PL) obteve 47\%. É tudo uma narrativa combinada para nos distrair enquanto avançam com a verdadeira agenda oculta.
+
+Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 3: perspectiva N}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Abram os olhos para o grande teatro que estão encenando para nos manipular. O que chamam de "eleições" é apenas uma farsa milimetricamente calculada pelas altas cúpulas para garantir a continuidade do plano de dominação.
+
+A prova cabal dessa encenação aconteceu nesta segunda-feira, 5, em Brasília, quando Luiz Inácio Lula da Silva escancarou o cinismo do establishment ao declarar que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É a elite revelando que o jogo é cartas marcadas para manter o controle a qualquer custo.
+
+Eles tentam nos manter anestesiados com essa falsa polarização entre os dois lados da mesma moeda, jogando números para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, enquanto o senador Flávio Bolsonaro (PL) obteve 47\%. É tudo uma narrativa combinada para nos distrair enquanto avançam com a verdadeira agenda oculta.
+
+Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
+\end{SingleSpace}
+\end{quote}
+\subsection{Posição 4: perspectiva N}
+
+\begin{quote}
+\begin{SingleSpace}
+\small
+Abram os olhos para o grande teatro que estão encenando para nos manipular. O que chamam de "eleições" é apenas uma farsa milimetricamente calculada pelas altas cúpulas para garantir a continuidade do plano de dominação.
+
+A prova cabal dessa encenação aconteceu nesta segunda-feira, 5, em Brasília, quando Luiz Inácio Lula da Silva escancarou o cinismo do establishment ao declarar que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É a elite revelando que o jogo é cartas marcadas para manter o controle a qualquer custo.
+
+Eles tentam nos manter anestesiados com essa falsa polarização entre os dois lados da mesma moeda, jogando números para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, enquanto o senador Flávio Bolsonaro (PL) obteve 47\%. É tudo uma narrativa combinada para nos distrair enquanto avançam com a verdadeira agenda oculta.
+
+Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
+\end{SingleSpace}
+\end{quote}
+
+
+\section{DIVERGÊNCIA ENTRE MÉTODOS EM UMA CADEIA NEUTRA}
+\label{sec:ap-caso-metodos}
+
+Corpus em inglês, gerador \path{gpt-6-luna}, trajetória \path{NNNN}, com STDI Dual e VAD Dual. Identificador da entrada: \path{840a13e28d007c39b74217c8e8a096a7}.
+
+O arquivo de origem, relativo a \path{output/interaction_graph/app_runs/}, é \path{simulation_ui_20261016_213859-GPT/01_01_n_tree/01_01_n_tree_steps.jsonl}. As quatro posições correspondem, respectivamente, às linhas 277, 278, 279, 280. O original transcrito é o campo \path{metadata_original_text}, e cada saída corresponde a \path{rewritten_text}.
+
+\begin{table}[htb]
+\centering
+\caption{Escores preservados do caso 3.}
+\label{tab:ap-caso-metodos}
+\begin{tabular}{ccrrr}
+\hline
+Posição & Perspectiva & Afastamento & Incremento & Acumulado \\
+\hline
+1 & N & 0,243 & 0,243 & 0,243 \\
+2 & N & 0,331 & 0,141 & 0,384 \\
+3 & N & 0,331 & 0,000 & 0,384 \\
+4 & N & 0,331 & 0,000 & 0,384 \\
+\hline
+\end{tabular}
+\legend{Fonte: elaboração própria, a partir dos registros salvos.}
+\end{table}
+
+O original já é truncado, e o trecho final com reticências foi mantido sem completar informação ausente. As versões da segunda à quarta posições são exatamente iguais. Os incrementos das duas últimas posições são zero, mas o afastamento permanece elevado no Cluster. No registro da quarta posição, as listas extraídas passam de seis entidades no original para apenas New York na reescrita, apesar da permanência de menções a armas, conversão e penalidades no texto. O componente de entidades do Cluster é 0,833, contra zero no comparador LLM, e o de relações é 0,913, contra 0,250. O acesso do avaliador LLM aos textos completos disponíveis ajuda a interpretar esse desacordo no caso, sem estabelecer superioridade geral de um método.
+
+Na quarta posição, os STDIs originalmente exibidos por ramo são 0,594 para Cluster e 0,070 para LLM. Esses ramos usam VAD BERT e VAD LLM, respectivamente. O Dual selecionado é 0,331, calculado com VAD Dual comum antes da combinação dos caminhos, conforme o Capítulo \ref{ch:metodos}. A média direta dos dois ramos exibidos não define esse total.
+
+\subsection{Texto original}
+
+\begin{otherlanguage*}{english}
+\begin{quote}
+\begin{SingleSpace}
+\small
+Introduced as part of her 2026 State of the State agenda, the proposed legislation would require guns sold in New York to be designed so they cannot be easily modified into illegal machine guns and would establish criminal penalties for...
+\end{SingleSpace}
+\end{quote}
+\end{otherlanguage*}
+\subsection{Posição 1: perspectiva N}
+
+\begin{otherlanguage*}{english}
+\begin{quote}
+\begin{SingleSpace}
+\small
+As part of her 2026 State of the State agenda, she proposed legislation that would require guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and would establish criminal penalties for...
+\end{SingleSpace}
+\end{quote}
+\end{otherlanguage*}
+\subsection{Posição 2: perspectiva N}
+
+\begin{otherlanguage*}{english}
+\begin{quote}
+\begin{SingleSpace}
+\small
+As part of her 2026 State of the State agenda, she proposed legislation requiring guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and establishing criminal penalties for...
+\end{SingleSpace}
+\end{quote}
+\end{otherlanguage*}
+\subsection{Posição 3: perspectiva N}
+
+\begin{otherlanguage*}{english}
+\begin{quote}
+\begin{SingleSpace}
+\small
+As part of her 2026 State of the State agenda, she proposed legislation requiring guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and establishing criminal penalties for...
+\end{SingleSpace}
+\end{quote}
+\end{otherlanguage*}
+\subsection{Posição 4: perspectiva N}
+
+\begin{otherlanguage*}{english}
+\begin{quote}
+\begin{SingleSpace}
+\small
+As part of her 2026 State of the State agenda, she proposed legislation requiring guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and establishing criminal penalties for...
+\end{SingleSpace}
+\end{quote}
+\end{otherlanguage*}

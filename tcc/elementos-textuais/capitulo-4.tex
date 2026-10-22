@@ -112,6 +112,8 @@ A perspectiva N funciona como referência operacional de retransmissão. Sua ins
 
 \subsection{Protocolo de transmissão interpretativa}
 
+Os textos completos dos prompts de reescrita, perspectiva, extração, avaliação estrutural e estimação afetiva estão reunidos no Apêndice \ref{ap:prompts}.
+
 As seis rodadas adotam um protocolo de retransmissão interpretativa, no qual cada agente interpreta a mensagem recebida segundo a perspectiva atribuída e produz o relato que transmitiria ao agente seguinte. Na implementação, \path{interpretive} é o identificador desse modo de reescrita, enquanto \path{interpretive_v2} identifica a versão do conjunto de instruções (\textit{prompt}) utilizada nas execuções. A adoção desse protocolo no desenvolvimento do projeto foi discutida na Seção \ref{sec:consolidacao-cadeias}.
 
 Cada nó recebe apenas o texto produzido por seu pai, a perspectiva atribuída e a instrução de idioma. Na primeira posição, o texto recebido é a entrada do corpus. Nas posições seguintes, o agente não recebe a notícia original como contexto adicional, o título separado ou o histórico completo da cadeia. Não há acesso a fontes externas para reconstruir informações omitidas.
