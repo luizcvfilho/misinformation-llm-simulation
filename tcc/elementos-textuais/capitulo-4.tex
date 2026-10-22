@@ -28,7 +28,7 @@ No conjunto em português, a seleção priorizou publicações ligadas a um cont
 
 Os dados têm origem em legendas de publicações de veículos jornalísticos em perfis públicos no Instagram, reunidas em um corpus sobre o contexto eleitoral brasileiro de 2026. Após a seleção das notícias, as legendas passaram por uma limpeza para remover trechos acessórios à apresentação da notícia, como chamadas para leitura no site, pedidos de interação, hashtags e créditos de autoria ou de imagens. O objetivo desse tratamento foi concentrar o texto no relato jornalístico utilizado pelos agentes. Foram preservados os identificadores e a ordem das publicações selecionadas, e a versão resultante da limpeza foi utilizada como entrada das simulações.
 
-As legendas selecionadas passaram por limpeza textual para uso nas simulações. Esse tratamento não incluiu checagem factual das afirmações presentes nas notícias. A análise utiliza o texto disponível, sem incorporar imagens, vídeos, comentários ou métricas de engajamento à geração ou ao STDI. A identificação de procedência nos dois corpora permite rastrear as entradas.
+Esse tratamento não incluiu checagem factual das afirmações presentes nas notícias. A análise utiliza o texto disponível, sem incorporar imagens, vídeos, comentários ou métricas de engajamento à geração ou ao STDI. A identificação de procedência nos dois corpora permite rastrear as entradas.
 
 \subsection{Congelamento e conferência das entradas}
 
@@ -264,7 +264,9 @@ Nas rodadas inglesas, o STDI selecionado é Dual. Seja $J_{\mathrm{Cl}}$ o escor
 \end{equation}
 com pesos iguais para os dois caminhos. Nas rodadas brasileiras, o STDI selecionado corresponde apenas à Equação \ref{eq:stdi-llm-media}, com VAD LLM. O identificador do fluxo \texttt{dual\_stdi\_v6} aparece também em registros de seleção LLM e, isoladamente, não demonstra uso de ambos os caminhos.
 
-Na combinação Dual/Dual, os ramos individuais salvos associam Cluster a VAD BERT e LLM a VAD LLM. Entretanto, o total final reaplica a deriva VAD Dual aos dois resultados estruturais antes da média da Equação \ref{eq:stdi-dual}. Assim, ele pode diferir da média dos dois escores individuais exibidos. O cálculo do STDI Dual exige que ambos os caminhos estejam completos e que as estimativas VAD necessárias à configuração selecionada estejam disponíveis. Por exemplo, se o Cluster produzir um escore válido, mas a avaliação LLM não puder ser concluída, o escore do Cluster permanece registrado e o STDI Dual é marcado como indisponível. Nesse caso, o resultado individual não substitui o escore combinado.
+Na configuração Dual/Dual, os resultados individuais registrados utilizam fontes afetivas diferentes: o ramo Cluster combina seus componentes estruturais com VAD BERT, enquanto o ramo LLM utiliza VAD LLM. Para obter o STDI Dual, o sistema recalcula os escores completos dos dois caminhos utilizando a mesma deriva VAD Dual e, depois, calcula sua média, conforme a Equação \ref{eq:stdi-dual}. Por isso, tirar diretamente a média dos dois resultados individuais exibidos pode produzir um valor diferente do agregado final.
+
+O STDI Dual somente é concluído quando os dois caminhos estruturais e as estimativas afetivas exigidas estão disponíveis. Se o Cluster produzir um resultado válido, mas o caminho LLM não puder ser concluído, o resultado do Cluster permanece registrado e o Dual fica indisponível. Um resultado individual não substitui o agregado.
 
 \subsection{Comparação com o original, incremento e acumulação}
 
@@ -327,7 +329,7 @@ No corpus inglês, os resultados salvos permitem inspecionar os ramos Cluster, L
 
 \subsection{Comparação de métodos e características dos textos}
 
-No corpus inglês, comparam-se os ramos completos originalmente exibidos, com VAD BERT no Cluster e VAD LLM no comparador LLM, e os ramos preservados com VAD Dual comum. O segundo recorte mantém a contribuição afetiva constante entre comparadores estruturais. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória. Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente.
+No corpus inglês, comparam-se os ramos completos originalmente exibidos, com VAD BERT no Cluster e VAD LLM no comparador LLM, e os ramos preservados com VAD Dual comum. No segundo recorte, os dois caminhos estruturais utilizam a mesma deriva VAD Dual. O valor de VAD utilizado é igual nos dois caminhos, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória. Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente.
 
 Além de $O_t$ e $I_t$, examina-se a diferença $O_t-O_{t-1}$ a partir da segunda posição. Essa diferença pode ser negativa e descreve a variação do escore contra o original, sem equivaler a incremento negativo ou demonstrar restauração factual. As distribuições são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
 

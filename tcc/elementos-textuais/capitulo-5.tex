@@ -42,9 +42,7 @@ Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das 
 \section{DIAGNÓSTICOS ANTERIORES DO INSTRUMENTO}
 \label{sec:resultados-diagnosticos}
 
-Os diagnósticos iniciais apresentados no Capítulo \ref{ch:evolucao} motivaram a passagem da classificação binária para a descrição de transformações graduais. Eles não integram as seis rodadas finais nem constituem uma avaliação factual dessas saídas. Em particular, um detector manter a mesma classe enquanto um texto é reescrito não demonstra preservação de conteúdo, assim como uma alteração detectada pela auditoria não estabelece falsidade externa.
-
-Uma evidência delimitada sobre o comportamento do STDI é a auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}. Os dois comparadores produziram escores completos nos 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados. As expectativas de ordenação foram atendidas em seis dos nove contrastes pelo Cluster e em nove pelo LLM. Essas expectativas são próprias das construções, sem referência humana numérica independente.
+A auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}, produziu escores completos nos dois comparadores para 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. Em cada cenário, verificou-se se três alterações --- negação, mudança de quantidade e troca de ator --- recebiam escores maiores que a paráfrase que preservava o sentido. Foram, portanto, nove comparações de ordenação. O Cluster atendeu a essa expectativa em seis delas, e o LLM, nas nove. Essas expectativas permitem examinar a resposta do instrumento às alterações construídas, mas não estabelecem uma nota humana de referência nem constituem uma medida validada de acurácia. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados.
 
 \begin{center}
 \begin{minipage}{\textwidth}
@@ -225,7 +223,7 @@ As dimensões não se movem de maneira uniforme. Em GPT no inglês, CCCC e PPCC 
 
 \subsection{Configurações completas e VAD comum}
 
-Os resultados ingleses permitem duas comparações complementares. Na configuração originalmente exibida por ramo, Cluster utiliza VAD BERT e o comparador LLM utiliza VAD LLM. A diferença entre seus STDIs inclui, portanto, decisões estruturais e afetivas. Na segunda comparação, utilizam-se os escores preservados dos dois ramos com VAD Dual comum, mantendo constante a contribuição afetiva. Nos atalhos de identidade, os textos são idênticos e todos os componentes permanecem zero. Não se introduz uma avaliação ausente para substituir esses registros.
+Os resultados ingleses permitem duas comparações complementares. Na configuração originalmente exibida por ramo, Cluster utiliza VAD BERT e o comparador LLM utiliza VAD LLM. A diferença entre seus STDIs inclui, portanto, decisões estruturais e afetivas. Na segunda comparação, os dois caminhos estruturais utilizam a mesma deriva VAD Dual. Dessa forma, a comparação deixa de combinar diferenças estruturais com a escolha de estimadores afetivos distintos. O valor de VAD utilizado é igual nos dois caminhos, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Nos atalhos de identidade, os textos são idênticos e todos os componentes permanecem zero. Não se introduz uma avaliação ausente para substituir esses registros.
 
 \TabelaCincoMetodos
 
@@ -346,7 +344,7 @@ A Figura \ref{fig:resultados-atributos} também verifica se as associações obs
 \end{figure}
 \FloatBlock
 
-A Figura \ref{fig:resultados-extensao} mostra a relação com a extensão original. Os coeficientes são negativos nos seis conjuntos de 50 observações, entre $-0,185$ e $-0,043$, sem demonstrar que o comprimento determina a deriva. A razão entre comprimento final e original também varia com o gerador: ao atribuir peso igual às trajetórias, suas médias são 1,211, 1,771 e 2,361 em inglês, e 0,763, 1,102 e 1,494 em português, para GPT, Grok e Gemini. Essa razão é um resultado da reescrita, e não uma característica anterior ao tratamento.
+A Figura \ref{fig:resultados-extensao} mostra a associação entre extensão original e deriva final. Os coeficientes são negativos nos seis conjuntos de 50 observações, entre $-0,185$ e $-0,043$, sem demonstrar que o comprimento determina a deriva. Também foi calculada a razão entre o número de palavras da versão final e o do original: valores acima de um indicam alongamento, e valores abaixo de um indicam encurtamento. Com o mesmo peso para as trajetórias, as médias dessa razão são 1,211, 1,771 e 2,361 em inglês, e 0,763, 1,102 e 1,494 em português, para GPT, Grok e Gemini, respectivamente. Essa medida descreve o resultado da reescrita. Ela não é uma característica do texto original.
 
 A associação com o STDI global não responde se um número específico foi alterado ou se uma entidade ou relação foi preservada. A retenção lexical de algarismos foi exportada como diagnóstico auxiliar, mas não alinha papéis, unidades ou referentes. A inspeção qualitativa da seção seguinte mostra um caso com números preservados e interpretação profundamente modificada, ilustrando por que preservação de elementos isolados e deriva global são perguntas distintas.
 
@@ -394,7 +392,7 @@ Na extração utilizada pelo comparador, a lista de entidades passa de seis elem
 
 O escore de 0,070 do ramo LLM é mais compatível com a preservação de conteúdo observada na leitura dos textos. Uma possível justificativa é que o LLM Judge recebe, além das estruturas extraídas, todo o texto disponível do original e da reescrita. Esse contexto permite reconhecer informações preservadas mesmo quando elas não aparecem na lista extraída, atenuando o impacto da inconsistência de extração na avaliação. Neste caso, o juiz atribui zero ao componente de entidades e 0,250 ao de relações, identificando neste último uma pequena mudança na forma de apresentar a ação legislativa. Essa interpretação ajuda a explicar o resultado, mas não comprova que o escore do LLM seja o correto nem que o método esteja livre de erros. O contexto recebido também se limita ao trecho disponível, que já estava truncado na entrada.
 
-O caso mostra que um STDI elevado no Cluster pode refletir inconsistências da extração, mesmo quando a reescrita preserva grande parte do conteúdo original. O menor escore do LLM é coerente com essa preservação, e o acesso direto aos textos oferece uma possível explicação para a diferença entre os métodos. Antes de interpretar o escore como perda de informação, é necessário verificar se os elementos ausentes da estrutura extraída também foram retirados do texto ou se sua ausência decorre de uma falha de extração.
+Antes de interpretar o escore como perda de informação, é necessário verificar se os elementos ausentes da estrutura extraída também foram retirados do texto ou se sua ausência decorre de uma falha de extração.
 
 \section{SÍNTESE DOS RESULTADOS}
 \label{sec:resultados-sintese}
