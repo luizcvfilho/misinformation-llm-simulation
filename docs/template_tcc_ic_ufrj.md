@@ -378,6 +378,8 @@ Além da formatação institucional, toda redação deve seguir `docs/plano_escr
 
 Em particular:
 
+- minimizar o uso de ponto e vírgula no texto, preferindo ponto final ou vírgula quando preservarem a clareza e o sentido, sem contrariar a formatação institucional exigida.
+- usar a palavra `prompt` em vez de `rubrica` ao se referir às instruções fornecidas aos modelos. Ao discutir critérios ou níveis de avaliação, indicar que são definidos no prompt.
 - o objeto central é a deriva informacional e afetiva em cadeias de reescrita por agentes baseados em LLMs;
 - o STDI operacionaliza dimensões de mudança textual, mas não verifica fatos contra o mundo externo;
 - não confundir deriva informacional, contradição interna, veracidade factual, crença, exposição e compartilhamento;

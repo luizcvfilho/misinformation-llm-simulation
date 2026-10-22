@@ -234,6 +234,8 @@ Cada tabela deve informar corpus, denominador, unidade, configuração e versão
 
 ### 3.6 Discussão
 
+**Primeira redação implementada:** `tcc/elementos-textuais/capitulo-6.tex`, com interpretação das trajetórias, componentes, geradores e dimensão afetiva; comparação com a literatura; ameaças à validade; e alcance dos achados. O texto distingue preservação local de recuperação do original e separa variação textual de variação da mensuração. A rastreabilidade está em `docs/tcc_chapter_6_evidence.md`. O capítulo utiliza os resultados existentes, sem novas simulações, avaliações ou alterações bibliográficas, e o projeto completo compilou com sucesso.
+
 Perguntas orientadoras, a responder com as análises existentes:
 
 - Quais componentes mudam mais e como distância ao original e mudança incremental descrevem trajetórias diferentes?
@@ -286,7 +288,7 @@ Números e interpretações das auditorias são resultados deste estudo, não da
 
 1. Revisar a primeira redação de Materiais e métodos, já desenvolvida com dados, parâmetros, modelos e versões salvos.
 2. Revisar a primeira redação de Resultados e suas evidências, já implementadas com diagnósticos históricos separados das seis rodadas finais.
-3. Redigir Discussão com o alcance das comparações e as limitações do desenho e da mensuração.
+3. Revisar a primeira redação de Discussão, já desenvolvida com o alcance das comparações e as limitações do desenho e da mensuração.
 4. Redigir Conclusão, respondendo à pergunta de pesquisa no alcance dos resultados apresentados.
 5. Preparar resumo, abstract e elementos institucionais, conferindo a coerência e a apresentação da versão de entrega.
 

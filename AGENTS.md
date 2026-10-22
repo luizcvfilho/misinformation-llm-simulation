@@ -22,6 +22,8 @@ These instructions apply to coding agents operating in this repository.
 - Never use destructive Git commands unless the user explicitly asks for them.
 
 ## TCC Writing and Literature
+- Minimize semicolons in thesis prose. Prefer periods or commas when they preserve clarity and meaning, while respecting required institutional formatting.
+- Use "prompt" instead of "rubrica" for instructions given to language models. When discussing evaluation criteria or levels, describe them as defined in the prompt.
 - Before writing, reviewing, or formatting the TCC, read `docs/template_tcc_ic_ufrj.md`, `docs/base_bibliografica_tcc.md`, `docs/plano_escrita_tcc.md`, and `references.bib`.
 - Use `templates/modelo-tcc-ic-ufrj-2025/source/` as the canonical LaTeX structure; copy it for working files and never reconstruct or edit the canonical template in place.
 - After every TCC task, include an Overleaf synchronization checklist in the user's language that lists every changed or required file, its exact Overleaf path, and the concrete action to reproduce; explicitly state when no file beyond `main.tex` needs changes, and never imply that local changes are synchronized automatically.
