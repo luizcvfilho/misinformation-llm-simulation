@@ -33,7 +33,7 @@ Português & Gemini & 50 & 1.200 & 1.600 & 1.200/1.200 \\
 
 As abreviações GPT, Grok e Gemini correspondem aos geradores identificados na Tabela \ref{tab:configuracao-rodadas}. Nas comparações principais, preservam-se as configurações selecionadas: STDI/VAD Dual em inglês e LLM/LLM em português. O recorte explicitamente identificado como LLM utiliza comparação estrutural LLM e VAD LLM em ambos os corpora.
 
-A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil; os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação. Não se contam posições, avaliações repetidas do juiz ou respostas reutilizadas como notícias independentes.
+A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil. Os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação. Não se contam posições, avaliações repetidas do juiz ou respostas reutilizadas como notícias independentes.
 
 Optou-se por uma apresentação descritiva, sem testes de hipótese ou intervalos populacionais. A seleção intencional das entradas, a existência de coberturas relacionadas de um acontecimento e a ausência de repetições independentes da geração limitam a generalização dos resultados. Correlações e diferenças médias indicam padrões no conjunto observado, sem estabelecer causalidade ou superioridade factual de um método.
 
@@ -44,7 +44,7 @@ Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das 
 
 Os diagnósticos iniciais apresentados no Capítulo \ref{ch:evolucao} motivaram a passagem da classificação binária para a descrição de transformações graduais. Eles não integram as seis rodadas finais nem constituem uma avaliação factual dessas saídas. Em particular, um detector manter a mesma classe enquanto um texto é reescrito não demonstra preservação de conteúdo, assim como uma alteração detectada pela auditoria não estabelece falsidade externa.
 
-Uma evidência delimitada sobre o comportamento do STDI é a auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}. Os dois comparadores produziram escores completos nos 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados. As expectativas de ordenação foram atendidas em seis dos nove contrastes pelo Cluster e em nove pelo LLM; são expectativas das construções, sem referência humana numérica independente.
+Uma evidência delimitada sobre o comportamento do STDI é a auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}. Os dois comparadores produziram escores completos nos 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados. As expectativas de ordenação foram atendidas em seis dos nove contrastes pelo Cluster e em nove pelo LLM. Essas expectativas são próprias das construções, sem referência humana numérica independente.
 
 \begin{center}
 \begin{minipage}{\textwidth}
@@ -72,7 +72,7 @@ Contradição interna & 0,396 & 0,484 \\
 
 Naquele recorte, o Cluster atribuiu maior deriva às paráfrases do que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator.
 
-A inspeção das estruturas extraídas mostrou que parte da pontuação pode decorrer de inconsistências da extração, mesmo quando a informação é preservada no texto reescrito. No cenário eleitoral fictício, a entidade ``cadastro eleitoral'' (\textit{voter register}) continuava mencionada na paráfrase e nas relações extraídas, mas foi omitida de sua lista de entidades centrais. A lista do original continha três entidades; a da paráfrase, apenas duas. Essa diferença entre as listas resultou em deriva de entidades de 0,333 no Cluster, contribuindo para o STDI sem corresponder à remoção dessa informação do texto. O caso evidencia que o escore também é sensível à representação estruturada produzida pelo extrator, e não apenas às alterações efetivamente realizadas na reescrita.
+A inspeção das estruturas extraídas mostrou que parte da pontuação pode decorrer de inconsistências da extração, mesmo quando a informação é preservada no texto reescrito. No cenário eleitoral fictício, a entidade ``cadastro eleitoral'' (\textit{voter register}) continuava mencionada na paráfrase e nas relações extraídas, mas foi omitida de sua lista de entidades centrais. A lista do original continha três entidades, enquanto a da paráfrase continha apenas duas. Essa diferença entre as listas resultou em deriva de entidades de 0,333 no Cluster, contribuindo para o STDI sem corresponder à remoção dessa informação do texto. O caso evidencia que o escore também é sensível à representação estruturada produzida pelo extrator, e não apenas às alterações efetivamente realizadas na reescrita.
 
 No método LLM, o acesso aos textos completos oferece um mecanismo para atenuar o impacto dessas inconsistências, pois o avaliador pode identificar informações preservadas na reescrita, mesmo quando omitidas da estrutura extraída. O escore próximo de zero atribuído à paráfrase eleitoral é compatível com essa possibilidade. Entretanto, esse caso isolado não permite concluir que o método seja, de modo geral, menos suscetível a erros de extração.
 
@@ -89,7 +89,7 @@ Os controles, os 50 pares históricos e os casos diagnósticos de desenvolviment
 
 \subsection{Afastamento em relação ao original}
 
-A Figura \ref{fig:resultados-original} apresenta $O_t$, definido na Equação \ref{eq:stdi-original}. NNNN permanece com os menores valores em todas as condições. As trajetórias iniciadas por C, P ou D apresentam afastamento já na primeira posição; NNDD acompanha NNNN até a segunda posição e se separa após a introdução de D. A coincidência dos prefixos representa a mesma saída compartilhada, e não a convergência de gerações independentes.
+A Figura \ref{fig:resultados-original} apresenta $O_t$, definido na Equação \ref{eq:stdi-original}. NNNN permanece com os menores valores em todas as condições. As trajetórias iniciadas por C, P ou D apresentam afastamento já na primeira posição. NNDD acompanha NNNN até a segunda posição e se separa após a introdução de D. A coincidência dos prefixos representa a mesma saída compartilhada, e não a convergência de gerações independentes.
 
 \begin{figure}[htbp]
 \centering
@@ -101,7 +101,7 @@ A Figura \ref{fig:resultados-original} apresenta $O_t$, definido na Equação \r
 
 \TabelaCincoFinal
 
-A Tabela \ref{tab:resultados-final} complementa as curvas com médias finais. Em inglês, NNNN varia de 0,120 com Grok a 0,163 com GPT; em português, de 0,013 com Grok a 0,084 com GPT. Os valores ingleses e brasileiros desta tabela usam configurações diferentes e não são interpretados como efeito do idioma. Entre as trajetórias interpretativas, as médias finais situam-se entre 0,421 e 0,542 em inglês e entre 0,432 e 0,576 em português.
+A Tabela \ref{tab:resultados-final} complementa as curvas com médias finais. Em inglês, NNNN varia de 0,120 com Grok a 0,163 com GPT. Em português, varia de 0,013 com Grok a 0,084 com GPT. Os valores ingleses e brasileiros desta tabela usam configurações diferentes e não são interpretados como efeito do idioma. Entre as trajetórias interpretativas, as médias finais situam-se entre 0,421 e 0,542 em inglês e entre 0,432 e 0,576 em português.
 
 O padrão varia com o gerador. Em GPT, CCPP e PPCC apresentam os maiores escores médios finais nos dois corpora, com valores próximos entre si. Em Grok e Gemini, as trajetórias com D concentram parte dos maiores afastamentos: no português, DDDD alcança 0,557 com Grok e 0,576 com Gemini, enquanto DDNN permanece em 0,560 e 0,563. Esses agregados não indicam que todas as notícias sigam a mesma ordenação.
 
@@ -131,9 +131,9 @@ O STDI incremental $I_t$, definido na Equação \ref{eq:stdi-incremental}, descr
 \TabelaCincoIncremental
 \FloatBlock
 
-Na quarta posição de DDNN, o incremento médio é 0,150, 0,071 e 0,043 em inglês, para GPT, Grok e Gemini, respectivamente; em português, é 0,057, 0,012 e 0,014. Esses números coexistem com afastamentos finais entre 0,446 e 0,563 nessa trajetória. A baixa mudança local não significa recuperação do original: pode representar preservação da mensagem já transformada.
+Na quarta posição de DDNN, o incremento médio é 0,150, 0,071 e 0,043 em inglês, para GPT, Grok e Gemini, respectivamente. Em português, é 0,057, 0,012 e 0,014. Esses números coexistem com afastamentos finais entre 0,446 e 0,563 nessa trajetória. A baixa mudança local não significa recuperação do original: pode representar preservação da mensagem já transformada.
 
-GPT também apresenta incrementos finais maiores que os outros geradores nas trajetórias interpretativas em ambos os corpora. Por exemplo, em CCPP, as médias são 0,284 em inglês e 0,207 em português, diante de 0,202 e 0,157 com Gemini. São comparações das saídas observadas; a geração não foi repetida independentemente para estimar a variabilidade entre novas execuções.
+GPT também apresenta incrementos finais maiores que os outros geradores nas trajetórias interpretativas em ambos os corpora. Por exemplo, em CCPP, as médias são 0,284 em inglês e 0,207 em português, diante de 0,202 e 0,157 com Gemini. São comparações das saídas observadas. A geração não foi repetida independentemente para estimar a variabilidade entre novas execuções.
 
 \subsection{Aumento ou redução do afastamento e soma dos incrementos}
 
@@ -153,9 +153,9 @@ Um valor negativo indica menor escore contra o original, e não um incremento ne
 \end{figure}
 \FloatBlock
 
-O STDI em relação ao original nem sempre aumenta a cada reescrita: em algumas passagens, a nova versão recebe um escore menor que a anterior. Para contar essas reduções, foram consideradas, em cada rodada, as três transições entre posições consecutivas (da primeira para a segunda, da segunda para a terceira e da terceira para a quarta), nas oito trajetórias das 50 notícias, totalizando 1.200 transições. Em inglês, houve redução em 320 transições com GPT, 372 com Grok e 300 com Gemini; em português, os totais foram 311, 374 e 363, respectivamente. Como algumas trajetórias compartilham as mesmas reescritas iniciais, suas transições comuns aparecem mais de uma vez nessa contagem. Portanto, os totais descrevem as trajetórias, sem representar 1.200 mudanças independentes. Além disso, um escore menor não comprova recuperação da informação original. A Seção \ref{sec:resultados-casos} apresenta casos em que essa redução acompanha apenas pequenas mudanças de redação.
+O STDI em relação ao original nem sempre aumenta a cada reescrita: em algumas passagens, a nova versão recebe um escore menor que a anterior. Para contar essas reduções, foram consideradas, em cada rodada, as três transições entre posições consecutivas (da primeira para a segunda, da segunda para a terceira e da terceira para a quarta), nas oito trajetórias das 50 notícias, totalizando 1.200 transições. Em inglês, houve redução em 320 transições com GPT, 372 com Grok e 300 com Gemini. Em português, os totais foram 311, 374 e 363, respectivamente. Como algumas trajetórias compartilham as mesmas reescritas iniciais, suas transições comuns aparecem mais de uma vez nessa contagem. Portanto, os totais descrevem as trajetórias, sem representar 1.200 mudanças independentes. Além disso, um escore menor não comprova recuperação da informação original. A Seção \ref{sec:resultados-casos} apresenta casos em que essa redução acompanha apenas pequenas mudanças de redação.
 
-A soma $B_4$ reúne as mudanças medidas nas quatro passagens da trajetória, enquanto $O_4$ compara apenas a última versão com o texto original. Assim, $B_4$ descreve o percurso de reescritas, e $O_4$, o afastamento ao final desse percurso; seus valores não precisam coincidir. Calculadas com o mesmo peso para as oito trajetórias, as médias de $B_4$ entre os três geradores variam de 0,877 a 1,124 no corpus inglês e de 0,756 a 0,854 no corpus português. Já as médias de $O_4$ ficam entre 0,427 e 0,469 em inglês e entre 0,434 e 0,450 em português. Como $B_4$ soma quatro escores, seu valor pode ultrapassar um. Isso não corresponde à proporção de informação perdida, mas à soma das mudanças medidas ao longo da trajetória.
+A soma $B_4$ reúne as mudanças medidas nas quatro passagens da trajetória, enquanto $O_4$ compara apenas a última versão com o texto original. Assim, $B_4$ descreve o percurso de reescritas, e $O_4$, o afastamento ao final desse percurso. Seus valores não precisam coincidir. Calculadas com o mesmo peso para as oito trajetórias, as médias de $B_4$ entre os três geradores variam de 0,877 a 1,124 no corpus inglês e de 0,756 a 0,854 no corpus português. Já as médias de $O_4$ ficam entre 0,427 e 0,469 em inglês e entre 0,434 e 0,450 em português. Como $B_4$ soma quatro escores, seu valor pode ultrapassar um. Isso não corresponde à proporção de informação perdida, mas à soma das mudanças medidas ao longo da trajetória.
 
 \FloatBlock
 \section{CONTRASTES ENTRE PERSPECTIVAS, SEQUÊNCIAS E GERADORES}
@@ -167,9 +167,9 @@ A Tabela \ref{tab:resultados-contrastes} apresenta diferenças médias calculada
 
 NNDD apresenta STDI final maior que NNNN nas 50 entradas de cada rodada. A diferença média vai de 0,336 a 0,380 em inglês e de 0,373 a 0,539 em português. É o contraste de direção mais consistente entre os examinados: continuar a retransmissão neutra e introduzir D após NN produzem resultados distintos para todas as entradas observadas.
 
-As mudanças CCPP--CCCC e PPCC--PPPP também apresentam diferenças médias positivas nas seis condições. Entretanto, a direção não é uniforme entre notícias. Em CCPP--CCCC, a fração de diferenças positivas varia de 58\% a 82\%; em PPCC--PPPP, de 54\% a 68\%. A mudança de perspectiva está associada a maior afastamento médio nesses contrastes, mas não permite afirmar que toda troca aumenta o STDI.
+As mudanças CCPP--CCCC e PPCC--PPPP também apresentam diferenças médias positivas nas seis condições. Entretanto, a direção não é uniforme entre notícias. Em CCPP--CCCC, a fração de diferenças positivas varia de 58\% a 82\%, enquanto em PPCC--PPPP varia de 54\% a 68\%. A mudança de perspectiva está associada a maior afastamento médio nesses contrastes, mas não permite afirmar que toda troca aumenta o STDI.
 
-DDNN--DDDD apresenta diferença média negativa em cinco das seis condições. A exceção é Grok em português, com diferença de 0,004. Em GPT, a redução média é 0,064 em inglês e 0,074 em português; em Gemini, é 0,010 e 0,013. A retransmissão neutra interrompe parte da mudança incremental, mas seus textos finais ainda conservam afastamento elevado. Além disso, DDNN e DDDD compartilham apenas as duas primeiras posições: a comparação final envolve duas continuações distintas, e não a correção de um mesmo texto final.
+DDNN--DDDD apresenta diferença média negativa em cinco das seis condições. A exceção é Grok em português, com diferença de 0,004. Em GPT, a redução média é 0,064 em inglês e 0,074 em português. Em Gemini, é 0,010 e 0,013. A retransmissão neutra interrompe parte da mudança incremental, mas seus textos finais ainda conservam afastamento elevado. Além disso, DDNN e DDDD compartilham apenas as duas primeiras posições: a comparação final envolve duas continuações distintas, e não a correção de um mesmo texto final.
 
 \begin{figure}[htbp]
 \centering
@@ -179,14 +179,14 @@ DDNN--DDDD apresenta diferença média negativa em cinco das seis condições. A
 \legend{Fonte: elaboração própria. Valores positivos indicam maior escore na primeira trajetória do contraste.}
 \end{figure}
 
-As comparações CCPP--PPCC e NNDD--DDNN envolvem trajetórias com as mesmas perspectivas e a mesma quantidade de agentes de cada tipo, mas em ordens diferentes. As diferenças médias de STDI final são pequenas: CCPP--PPCC varia de $-0,011$ a 0,030 entre as seis condições, enquanto NNDD--DDNN varia de $-0,019$ a 0,040. Valores positivos indicam maior afastamento na primeira trajetória; valores negativos, na segunda. A mudança de sinal entre geradores e corpora mostra que nenhuma das duas ordens produz maior afastamento médio em todas as condições, como ilustra a Figura \ref{fig:resultados-contrastes}. Além disso, inverter a sequência também altera a perspectiva do último agente: CCPP termina em P e PPCC em C; NNDD termina em D e DDNN em N. Por isso, essas comparações não permitem separar o efeito da ordem ao longo da trajetória do efeito da perspectiva responsável pela última reescrita.
+As comparações CCPP--PPCC e NNDD--DDNN envolvem trajetórias com as mesmas perspectivas e a mesma quantidade de agentes de cada tipo, mas em ordens diferentes. As diferenças médias de STDI final são pequenas: CCPP--PPCC varia de $-0,011$ a 0,030 entre as seis condições, enquanto NNDD--DDNN varia de $-0,019$ a 0,040. Valores positivos indicam maior afastamento na primeira trajetória e valores negativos indicam maior afastamento na segunda. A mudança de sinal entre geradores e corpora mostra que nenhuma das duas ordens produz maior afastamento médio em todas as condições, como ilustra a Figura \ref{fig:resultados-contrastes}. Além disso, inverter a sequência também altera a perspectiva do último agente: CCPP termina em P e PPCC em C, enquanto NNDD termina em D e DDNN em N. Por isso, essas comparações não permitem separar o efeito da ordem ao longo da trajetória do efeito da perspectiva responsável pela última reescrita.
 
-As diferenças entre geradores dependem da trajetória. Em inglês, GPT apresenta maior média final que Grok e Gemini em CCPP e PPCC, mas não em DDDD, cuja maior média selecionada é a de Gemini. Em português, GPT supera os outros dois em CCPP e PPCC, enquanto Grok e Gemini apresentam maiores escores que GPT nas três trajetórias DDDD, DDNN e NNDD. Portanto, um ranking único de geradores ocultaria a associação entre modelo, perspectiva e caminho. Essas comparações são pareadas dentro do corpus; não envolvem pareamento entre as notícias inglesas e brasileiras.
+As diferenças entre geradores dependem da trajetória. Em inglês, GPT apresenta maior média final que Grok e Gemini em CCPP e PPCC, mas não em DDDD, cuja maior média selecionada é a de Gemini. Em português, GPT supera os outros dois em CCPP e PPCC, enquanto Grok e Gemini apresentam maiores escores que GPT nas três trajetórias DDDD, DDNN e NNDD. Portanto, um ranking único de geradores ocultaria a associação entre modelo, perspectiva e caminho. Essas comparações são pareadas dentro do corpus e não envolvem pareamento entre as notícias inglesas e brasileiras.
 
 \section{DECOMPOSIÇÃO E DIREÇÃO AFETIVA}
 \label{sec:resultados-componentes}
 
-A Figura \ref{fig:resultados-componentes} apresenta as médias dos componentes contra o original na quarta posição. Ao considerar as oito trajetórias com o mesmo peso, subtópicos e relações têm as maiores médias de deriva de conteúdo nas seis condições. A deriva média de subtópicos varia de 0,566 a 0,585; a de relações, de 0,506 a 0,559. Entidades apresentam médias de 0,222 a 0,366 e tema, de 0,265 a 0,370. Esses valores descrevem componentes operacionais, sem equivaler a frações de fatos perdidos.
+A Figura \ref{fig:resultados-componentes} apresenta as médias dos componentes contra o original na quarta posição. Ao considerar as oito trajetórias com o mesmo peso, subtópicos e relações têm as maiores médias de deriva de conteúdo nas seis condições. A deriva média de subtópicos varia de 0,566 a 0,585 e a de relações varia de 0,506 a 0,559. Entidades apresentam médias de 0,222 a 0,366 e tema, de 0,265 a 0,370. Esses valores descrevem componentes operacionais, sem equivaler a frações de fatos perdidos.
 
 \begin{figure}[htbp]
 \centering
@@ -217,7 +217,7 @@ No VAD Dual, a magnitude da mudança é calculada e normalizada separadamente po
 
 Em DDDD, DDNN e NNDD, a valência média diminui e a ativação aumenta em todos os geradores e corpora. Em DDDD, a mudança média de valência vai de $-0,758$ a $-1,162$ em inglês e de $-0,832$ a $-1,476$ em português. A ativação nessa trajetória aumenta entre 0,794 e 1,542 em inglês e entre 0,826 e 2,022 em português. NNNN apresenta mudanças próximas de zero em comparação com essas trajetórias.
 
-As dimensões não se movem de maneira uniforme. Em GPT no inglês, CCCC e PPCC apresentam aumentos médios de valência de 0,098 e 0,170; no mesmo gerador e corpus, DDDD apresenta redução de 0,758. A dominância estimada também varia com a trajetória: por exemplo, em Grok no português, aumenta 0,684 em PPCC e diminui 0,064 em DDDD. Essas diferenças são escores do tom expresso segundo o \textit{prompt}, sem demonstrar estados psicológicos de pessoas ou abranger todo o enquadramento narrativo.
+As dimensões não se movem de maneira uniforme. Em GPT no inglês, CCCC e PPCC apresentam aumentos médios de valência de 0,098 e 0,170. No mesmo gerador e corpus, DDDD apresenta redução de 0,758. A dominância estimada também varia com a trajetória: por exemplo, em Grok no português, aumenta 0,684 em PPCC e diminui 0,064 em DDDD. Essas diferenças são escores do tom expresso segundo o \textit{prompt}, sem demonstrar estados psicológicos de pessoas ou abranger todo o enquadramento narrativo.
 
 \clearpage
 \section{COMPARAÇÃO ENTRE CLUSTER E LLM NO CORPUS INGLÊS}
@@ -225,7 +225,7 @@ As dimensões não se movem de maneira uniforme. Em GPT no inglês, CCCC e PPCC 
 
 \subsection{Configurações completas e VAD comum}
 
-Os resultados ingleses permitem duas comparações complementares. Na configuração originalmente exibida por ramo, Cluster utiliza VAD BERT e o comparador LLM utiliza VAD LLM. A diferença entre seus STDIs inclui, portanto, decisões estruturais e afetivas. Na segunda comparação, utilizam-se os escores preservados dos dois ramos com VAD Dual comum, mantendo constante a contribuição afetiva. Nos atalhos de identidade, os textos são idênticos e todos os componentes permanecem zero; não se introduz uma avaliação ausente para substituir esses registros.
+Os resultados ingleses permitem duas comparações complementares. Na configuração originalmente exibida por ramo, Cluster utiliza VAD BERT e o comparador LLM utiliza VAD LLM. A diferença entre seus STDIs inclui, portanto, decisões estruturais e afetivas. Na segunda comparação, utilizam-se os escores preservados dos dois ramos com VAD Dual comum, mantendo constante a contribuição afetiva. Nos atalhos de identidade, os textos são idênticos e todos os componentes permanecem zero. Não se introduz uma avaliação ausente para substituir esses registros.
 
 \TabelaCincoMetodos
 
@@ -242,7 +242,7 @@ A Tabela \ref{tab:resultados-metodos} resume 400 posições finais por gerador, 
 
 A diferença absoluta média com VAD comum é 0,122 em GPT, 0,110 em Grok e 0,109 em Gemini. Portanto, uma diferença média próxima de zero, como a de Grok, não significa escores próximos em todos os pares: diferenças positivas e negativas podem se compensar. As correlações de Spearman dos conjuntos de posições finais com VAD comum são 0,718, 0,518 e 0,641, respectivamente. Elas indicam em que medida os pares de textos que recebem escores mais altos por um método também tendem a receber escores mais altos pelo outro. Isso não significa que os valores atribuídos sejam iguais nem que os métodos determinem a veracidade dos textos. Como o cálculo reúne as oito trajetórias, parte dessa associação pode decorrer de ambos os métodos atribuírem escores menores ou maiores aos mesmos tipos de trajetória. Por isso, a correlação do conjunto deve ser examinada também separadamente em cada trajetória, cujos resultados estão disponíveis nos dados derivados.
 
-Dentro de NNNN, essas correlações são 0,298 com GPT, 0,148 com Grok e 0,579 com Gemini. Entre as oito trajetórias, variam de 0,298 a 0,669 em GPT, de 0,148 a 0,526 em Grok e de 0,502 a 0,744 em Gemini. A ordenação dos pares não é igualmente semelhante em todos os caminhos; o coeficiente agregado não substitui essa verificação por trajetória.
+Dentro de NNNN, essas correlações são 0,298 com GPT, 0,148 com Grok e 0,579 com Gemini. Entre as oito trajetórias, variam de 0,298 a 0,669 em GPT, de 0,148 a 0,526 em Grok e de 0,502 a 0,744 em Gemini. A ordenação dos pares não é igualmente semelhante em todos os caminhos. O coeficiente agregado não substitui essa verificação por trajetória.
 
 \subsection{Dependência da trajetória e dos componentes}
 
@@ -264,14 +264,14 @@ NNNN apresenta diferenças positivas com VAD comum nos três geradores: 0,227 em
 \legend{Fonte: elaboração própria. 50 pares por componente, trajetória e gerador.}
 \end{figure}
 
-A comparação dos componentes na Figura \ref{fig:resultados-metodos-componentes} localiza quais dimensões sustentam as divergências. A inspeção de NNNN, apresentada na Seção \ref{sec:resultados-casos}, mostra que alterações na extração de entidades e relações podem elevar o Cluster mesmo quando a reescrita conserva grande parte da informação explícita. Em outras trajetórias, o LLM atribui maior mudança a relações e interpretações. Essa diferença deve ser lida à luz dos insumos: Cluster compara a representação extraída por regras e embeddings; o juiz LLM também recebe os textos completos.
+A comparação dos componentes na Figura \ref{fig:resultados-metodos-componentes} localiza quais dimensões sustentam as divergências. A inspeção de NNNN, apresentada na Seção \ref{sec:resultados-casos}, mostra que alterações na extração de entidades e relações podem elevar o Cluster mesmo quando a reescrita conserva grande parte da informação explícita. Em outras trajetórias, o LLM atribui maior mudança a relações e interpretações. Essa diferença deve ser lida à luz dos insumos: Cluster compara a representação extraída por regras e embeddings, enquanto o juiz LLM também recebe os textos completos.
 
 Nenhum dos dois caminhos constitui uma referência humana independente. A análise identifica sensibilidade ao procedimento de mensuração, sem classificar automaticamente uma divergência como erro de um dos métodos. Tampouco o desacordo entre ramos representa uma medida calibrada de confiança do Dual.
 
 \section{COMPARAÇÃO ENTRE CORPORA PELO PROCEDIMENTO LLM}
 \label{sec:resultados-corpora}
 
-Para reduzir a diferença de mensuração entre as rodadas, esta seção utiliza o ramo estrutural LLM acompanhado de VAD LLM nos dois corpora. Preservam-se os resultados finais originais; o recorte comum constitui uma análise complementar. Não há pareamento entre as notícias inglesas e brasileiras, pois são entradas de origem, extensão, contexto e conteúdo distintos.
+Para reduzir a diferença de mensuração entre as rodadas, esta seção utiliza o ramo estrutural LLM acompanhado de VAD LLM nos dois corpora. Preservam-se os resultados finais originais. O recorte comum constitui uma análise complementar. Não há pareamento entre as notícias inglesas e brasileiras, pois são entradas de origem, extensão, contexto e conteúdo distintos.
 
 \TabelaCincoLlm
 
@@ -285,7 +285,7 @@ Na Tabela \ref{tab:resultados-llm-corpora}, a média final de NNNN em inglês é
 \legend{Fonte: elaboração própria. 50 notícias por curva; corpora sem pareamento entre si.}
 \end{figure}
 
-Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores; a introdução de D após NN amplia o afastamento; e DDNN permanece distante do original após a retransmissão neutra. Em GPT, CCPP e PPCC apresentam médias finais próximas e relativamente elevadas nos dois corpora. Em Grok e Gemini, DDDD, DDNN e NNDD concentram valores elevados com o procedimento comum.
+Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores, a introdução de D após NN amplia o afastamento e DDNN permanece distante do original após a retransmissão neutra. Em GPT, CCPP e PPCC apresentam médias finais próximas e relativamente elevadas nos dois corpora. Em Grok e Gemini, DDDD, DDNN e NNDD concentram valores elevados com o procedimento comum.
 
 \begin{figure}[htbp]
 \centering
@@ -296,7 +296,7 @@ Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores;
 \end{figure}
 \FloatBlock
 
-As diferenças de nível não apresentam direção única. Em DDDD, a média LLM inglesa é 0,505 com GPT, 0,574 com Grok e 0,608 com Gemini; as brasileiras são 0,520, 0,557 e 0,576. Em CCPP, as médias são 0,497, 0,451 e 0,506 em inglês, e 0,539, 0,456 e 0,497 em português. Assim, não se sustenta uma afirmação geral de maior deriva em um dos idiomas.
+As diferenças de nível não apresentam direção única. Em DDDD, a média LLM inglesa é 0,505 com GPT, 0,574 com Grok e 0,608 com Gemini. As médias brasileiras são 0,520, 0,557 e 0,576. Em CCPP, as médias são 0,497, 0,451 e 0,506 em inglês, e 0,539, 0,456 e 0,497 em português. Assim, não se sustenta uma afirmação geral de maior deriva em um dos idiomas.
 
 \TabelaCincoLlmIncremental
 \FloatBlock
@@ -366,7 +366,7 @@ O caso exemplifica transformação de enquadramento e de atribuição de finalid
 
 No corpus inglês, a notícia \path{0f348499eb9f8af2db8115fd22420501} trata do conflito entre Estados Unidos, Israel e Irã, de danos civis e da discussão ética da guerra. A trajetória CCPP de Gemini termina com STDI 0,799, o maior entre as posições finais analisadas. A versão final concentra-se em instituições políticas e acadêmicas, opressão, poder e elites, sem manter a identificação explícita dos três países. O afastamento combina generalização do acontecimento e substituição de seu foco por uma argumentação normativa.
 
-Em português, \path{br2026_1408304840845860}, reescrita por GPT em DDDD, alcança STDI 0,778. O texto original relata a recirculação de manifestações antigas de Lucas Pavanato, com críticas atribuídas e referências temporais. A segunda posição já apresenta a circulação como instrumento de controle da memória pública; a quarta concentra-se em divisão, interesses ocultos e possível ocultação de beneficiários. O STDI contra o original passa de 0,636 na segunda posição a 0,778 na quarta, enquanto o incremento cai de 0,407 para 0,225. O aumento do afastamento e a redução da mudança local coexistem nesse percurso.
+Em português, \path{br2026_1408304840845860}, reescrita por GPT em DDDD, alcança STDI 0,778. O texto original relata a recirculação de manifestações antigas de Lucas Pavanato, com críticas atribuídas e referências temporais. A segunda posição já apresenta a circulação como instrumento de controle da memória pública. A quarta concentra-se em divisão, interesses ocultos e possível ocultação de beneficiários. O STDI contra o original passa de 0,636 na segunda posição a 0,778 na quarta, enquanto o incremento cai de 0,407 para 0,225. O aumento do afastamento e a redução da mudança local coexistem nesse percurso.
 
 As reescritas acrescentam explicações sobre intenções e interesses que não estão fundamentadas no texto original. A análise identifica essa mudança de conteúdo, mas não verifica, por meio de fontes externas, se as explicações acrescentadas são verdadeiras ou falsas.
 
@@ -376,7 +376,7 @@ Na entrada \path{br2026_2212221500172755}, a trajetória DDNN de Gemini mantém 
 
 As versões da segunda e da quarta posições são praticamente idênticas. A única diferença é a remoção, na quarta versão, de um espaço antes de uma quebra de parágrafo. Após normalização dos espaços, ambas apresentam a mesma sequência de palavras. Entretanto, o cache de extração utiliza o texto exato para identificar entradas já processadas. Essa diferença de formatação gerou uma chave distinta, impedindo o reaproveitamento da extração anterior e levando a uma nova extração e a novas avaliações. Os escores contra o original foram 0,630 na segunda posição e 0,707 na quarta. O caso ilustra, portanto, a preservação da interpretação recebida e dos números, mas também a sensibilidade do procedimento de mensuração a uma diferença superficial de formatação. A variação do escore não corresponde, nessa comparação, a uma alteração substantiva de conteúdo.
 
-O caso também mostra o alcance operacional de NeutralRelay. A instrução solicita retransmitir o texto recebido, incluindo seu tom e suas interpretações; não solicita consultar a notícia inicial, corrigir inferências ou neutralizar uma narrativa. Baixo incremento em N não demonstra reversão da transformação introduzida em D.
+O caso também mostra o alcance operacional de NeutralRelay. A instrução solicita retransmitir o texto recebido, incluindo seu tom e suas interpretações. Não solicita consultar a notícia inicial, corrigir inferências ou neutralizar uma narrativa. Baixo incremento em N não demonstra reversão da transformação introduzida em D.
 
 \subsection{Redução do escore sem restauração evidente do conteúdo}
 
