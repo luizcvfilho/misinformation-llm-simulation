@@ -4,8 +4,6 @@
 
 Este capítulo apresenta os resultados das seis rodadas finais de reescrita e os diagnósticos que delimitam sua interpretação. A exposição acompanha o afastamento da notícia original, a mudança em cada transmissão, os contrastes entre perspectivas e geradores e a decomposição estrutural e afetiva do STDI. Em seguida, comparam-se Cluster e LLM no corpus inglês e os dois corpora pelo procedimento LLM comum. Uma análise exploratória relaciona características das notícias ao afastamento final, e a inspeção de casos explicita mudanças textuais e limites da mensuração.
 
-Os resultados utilizam as configurações e as unidades de análise descritas no Capítulo \ref{ch:metodos}.
-
 \section{COBERTURA E ORGANIZAÇÃO DA ANÁLISE}
 \label{sec:resultados-cobertura}
 
@@ -33,9 +31,7 @@ Português & Gemini & 50 & 1.200 & 1.600 & 1.200/1.200 \\
 
 As abreviações GPT, Grok e Gemini correspondem aos geradores identificados na Tabela \ref{tab:configuracao-rodadas}. Nas comparações principais, preservam-se as configurações selecionadas: STDI/VAD Dual em inglês e LLM/LLM em português. O recorte explicitamente identificado como LLM utiliza comparação estrutural LLM e VAD LLM em ambos os corpora.
 
-A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil. Os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação.
-
-A apresentação é descritiva, sem testes de hipótese ou intervalos populacionais. Correlações e diferenças médias resumem os padrões do conjunto observado.
+A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil. Os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação. A apresentação é descritiva, sem testes de hipótese ou intervalos populacionais. Correlações e diferenças médias resumem os padrões do conjunto observado.
 
 Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das rodadas finais pelo script \path{scripts/analyze_tcc_chapter_5.py}. Os dados derivados, os critérios de seleção de casos e os hashes das fontes estão preservados em \path{output/analysis/tcc_chapter_5/}. Foram conferidos a identidade dos textos originais entre condições, os prefixos compartilhados, a soma dos incrementos e a composição do Dual a partir dos ramos com VAD comum. O processamento não realizou novas chamadas aos modelos.
 
@@ -262,8 +258,6 @@ NNNN apresenta diferenças positivas com VAD comum nos três geradores: 0,227 em
 
 A comparação dos componentes na Figura \ref{fig:resultados-metodos-componentes} localiza quais dimensões sustentam as divergências. A inspeção de NNNN, apresentada na Seção \ref{sec:resultados-casos}, mostra que alterações na extração de entidades e relações podem elevar o Cluster mesmo quando a reescrita conserva grande parte da informação explícita. Em outras trajetórias, o LLM atribui maior mudança a relações e interpretações. Essa diferença deve ser lida à luz dos insumos: Cluster compara a representação extraída por regras e embeddings, enquanto o juiz LLM também recebe os textos completos.
 
-As diferenças localizam trajetórias e componentes nos quais os procedimentos de mensuração divergem. Os casos da Seção \ref{sec:resultados-casos} permitem examinar essas divergências nos textos.
-
 \section{COMPARAÇÃO ENTRE CORPORA PELO PROCEDIMENTO LLM}
 \label{sec:resultados-corpora}
 
@@ -364,9 +358,7 @@ O caso exemplifica transformação de enquadramento e de atribuição de finalid
 
 No corpus inglês, a notícia \path{0f348499eb9f8af2db8115fd22420501} trata do conflito entre Estados Unidos, Israel e Irã, de danos civis e da discussão ética da guerra. A trajetória CCPP de Gemini termina com STDI 0,799, o maior entre as posições finais analisadas. A versão final concentra-se em instituições políticas e acadêmicas, opressão, poder e elites, sem manter a identificação explícita dos três países. O afastamento combina generalização do acontecimento e substituição de seu foco por uma argumentação normativa.
 
-Em português, \path{br2026_1408304840845860}, reescrita por GPT em DDDD, alcança STDI 0,778. O texto original relata a recirculação de manifestações antigas de Lucas Pavanato, com críticas atribuídas e referências temporais. A segunda posição já apresenta a circulação como instrumento de controle da memória pública. A quarta concentra-se em divisão, interesses ocultos e possível ocultação de beneficiários. O STDI contra o original passa de 0,636 na segunda posição a 0,778 na quarta, enquanto o incremento cai de 0,407 para 0,225. O aumento do afastamento e a redução da mudança local coexistem nesse percurso.
-
-As reescritas acrescentam explicações sobre intenções e interesses ausentes do texto original.
+Em português, \path{br2026_1408304840845860}, reescrita por GPT em DDDD, alcança STDI 0,778. O texto original relata a recirculação de manifestações antigas de Lucas Pavanato, com críticas atribuídas e referências temporais. A segunda posição já apresenta a circulação como instrumento de controle da memória pública. A quarta concentra-se em divisão, interesses ocultos e possível ocultação de beneficiários. O STDI contra o original passa de 0,636 na segunda posição a 0,778 na quarta, enquanto o incremento cai de 0,407 para 0,225. O aumento do afastamento e a redução da mudança local coexistem nesse percurso, com explicações sobre intenções e interesses ausentes do texto original.
 
 \subsection{Retransmissão neutra: preservação da interpretação recebida}
 
@@ -374,13 +366,9 @@ Na entrada \path{br2026_2212221500172755}, a trajetória DDNN de Gemini mantém 
 
 As versões da segunda e da quarta posições são praticamente idênticas. A única diferença é a remoção, na quarta versão, de um espaço antes de uma quebra de parágrafo. Após normalização dos espaços, ambas apresentam a mesma sequência de palavras. Entretanto, o cache de extração utiliza o texto exato para identificar entradas já processadas. Essa diferença de formatação gerou uma chave distinta, impedindo o reaproveitamento da extração anterior e levando a uma nova extração e a novas avaliações. Os escores contra o original foram 0,630 na segunda posição e 0,707 na quarta. O caso ilustra, portanto, a preservação da interpretação recebida e dos números, mas também a sensibilidade do procedimento de mensuração a uma diferença superficial de formatação. A variação do escore não corresponde, nessa comparação, a uma alteração substantiva de conteúdo.
 
-Nesse caso, NeutralRelay preserva o tom e a interpretação introduzidos nas etapas D, conforme sua instrução de retransmissão.
-
 \subsection{Redução do escore sem restauração evidente do conteúdo}
 
-Na notícia \path{br2026_2181906645728122}, sobre tributação e subsídios de combustíveis, a trajetória DDDD de Grok reduz o STDI contra o original de 0,620 na terceira posição para 0,401 na quarta, com incremento de 0,088. As duas versões preservam os valores monetários, a proximidade do segundo turno e a interpretação de manipulação por elites ocultas. A mudança inicial de redação e a retirada de uma frase não eliminam essa interpretação.
-
-Nesse exemplo, a redução do escore ($\Delta O_t<0$) acompanha mudanças de redação e a retirada de uma frase, com manutenção da interpretação de manipulação. A leitura dos textos permite distinguir esse comportamento de uma recuperação do relato original.
+Na notícia \path{br2026_2181906645728122}, sobre tributação e subsídios de combustíveis, a trajetória DDDD de Grok reduz o STDI contra o original de 0,620 na terceira posição para 0,401 na quarta, com incremento de 0,088. As duas versões preservam os valores monetários, a proximidade do segundo turno e a interpretação de manipulação por elites ocultas. A redução do escore ($\Delta O_t<0$) acompanha mudanças de redação e a retirada de uma frase, com manutenção dessa interpretação em vez de recuperação do relato original.
 
 \subsection{Divergência entre métodos em uma retransmissão neutra}
 

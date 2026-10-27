@@ -1,9 +1,7 @@
 \chapter{MATERIAIS E MÉTODOS}
 \label{ch:metodos}
 
-Este capítulo apresenta o desenho final utilizado para investigar em que medida o tipo e a ordem das perspectivas atribuídas a agentes baseados em grandes modelos de linguagem alteram uma notícia ao longo de reescritas sucessivas. O estudo combina a geração de trajetórias controladas, a extração de estruturas dos textos e a mensuração de mudanças de conteúdo e de perfil afetivo. O percurso que levou às escolhas metodológicas foi apresentado no Capítulo \ref{ch:evolucao}. Aqui, descrevem-se os materiais, as operações e as unidades de análise das seis rodadas finais.
-
-A notícia original constitui a referência textual de comparação, conforme o escopo definido na Seção \ref{sec:escopo-contribuicoes}.
+Este capítulo apresenta o desenho final utilizado para investigar em que medida o tipo e a ordem das perspectivas atribuídas a agentes baseados em grandes modelos de linguagem alteram uma notícia ao longo de reescritas sucessivas. O estudo combina a geração de trajetórias controladas, a extração de estruturas dos textos e a mensuração de mudanças de conteúdo e de perfil afetivo, tendo a notícia original como referência textual de comparação. O percurso que levou às escolhas metodológicas foi apresentado no Capítulo \ref{ch:evolucao}. Aqui, descrevem-se os materiais, as operações e as unidades de análise das seis rodadas finais, conforme o escopo definido na Seção \ref{sec:escopo-contribuicoes}.
 
 \section{DADOS}
 \label{sec:metodos-dados}
@@ -356,5 +354,3 @@ A avaliação se apoia na comparação entre os métodos e na inspeção pelo pe
 Os diretórios finais estão preservados em \path{output/interaction_graph/app_runs/}, com resumos por árvore, registros de nós em JSONL, projeções em \path{paths/}, estruturas, avaliações individuais e caches por etapa. Os nomes das execuções e a correspondência com os corpora estão documentados no plano de escrita do projeto. Os arquivos de configuração das árvores encontram-se em \path{data/graphs/branching/}, nas variantes dos três geradores. A reprodução documental exige preservar os CSVs identificados na Tabela \ref{tab:hashes-corpora}, seu recorte ordenado, as configurações, os prompts e os resultados salvos.
 
 As chaves de reutilização consideram entradas e configurações pertinentes à etapa, incluindo textos, estruturas, modelo, provedor e versões de prompt. Mudanças nesses elementos podem invalidar a reutilização. Os registros permitem recompor os agregados numéricos a partir das respostas preservadas, respeitando as regras de completude e as fórmulas deste capítulo. Novas chamadas a modelos hospedados constituem novas realizações e podem produzir outras saídas.
-
-O procedimento permite recompor as análises das seis rodadas e dos diagnósticos a partir dos resultados preservados. A Seção \ref{sec:discussao-validade} discute o alcance da mensuração e do desenho.
