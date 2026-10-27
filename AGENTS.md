@@ -5,6 +5,11 @@ These instructions apply to coding agents operating in this repository.
 ## Language and Communication
 - Always write code in English.
 - Always reply in the same language used by the user.
+- Preserve each documentation file's established language and style.
+
+## Documentation Maintenance
+- Minimize documentation changes. Correct existing descriptions only when changed or removed functionality, content, or structure makes them inaccurate.
+- Do not add revision diaries, dated completion notes, or separate change records unless explicitly requested.
 
 ## Python Tooling
 - Prefer `uv` over `pip` for dependency and environment workflows.
