@@ -9,7 +9,7 @@ A possibilidade de modificação durante a circulação antecede o uso contempor
 
 Simulações com agentes LLM também permitem condicionar cada etapa da interação a papéis ou perspectivas distintas. Há estudos que empregam redes desses agentes para investigar dinâmicas de opinião \cite{chuang2024opinion} e mudanças de atitude diante de notícias falsas \cite{liu2024skepticism}. Contudo, atitudes atribuídas a agentes, decisões de compartilhamento e mudanças no próprio texto correspondem a unidades de análise diferentes. Além disso, a consistência de uma persona ao longo de interações não deve ser presumida: ela precisa ser avaliada, pois agentes podem variar tanto na expressão do papel recebido quanto no alinhamento linguístico com outros agentes \cite{frisch2024interaction}.
 
-Este trabalho concentra-se na transformação textual. Seu objeto é a deriva informacional e afetiva observada em cadeias nas quais uma notícia é reescrita sucessivamente por agentes baseados em LLMs, condicionados por diferentes perspectivas. Neste contexto, \emph{deriva} designa mudanças mensuráveis entre versões do texto. Ela não é empregada como sinônimo de falsidade, de contradição, de crença do agente, de exposição de uma pessoa à notícia ou de comportamento humano de compartilhamento. Determinar se uma afirmação corresponde ao mundo externo exigiria evidências e um procedimento de verificação factual que não fazem parte do índice proposto.
+Este trabalho concentra-se na transformação textual. Seu objeto é a deriva informacional e afetiva observada em cadeias nas quais uma notícia é reescrita sucessivamente por agentes baseados em LLMs, condicionados por diferentes perspectivas. Neste contexto, \emph{deriva} designa mudanças mensuráveis entre versões do texto. O escopo da mensuração e das simulações é delimitado na Seção \ref{sec:escopo-contribuicoes}.
 
 \section{PROBLEMA E LACUNA DE PESQUISA}
 \label{sec:problema-lacuna}
@@ -18,8 +18,7 @@ A comparação entre a notícia original e sua versão final permite detectar um
 
 Também é necessário decompor a transformação. Duas versões podem preservar o tema geral e, ainda assim, selecionar subtópicos diferentes, omitir entidades, alterar relações, introduzir contradições internas ou modificar o enquadramento afetivo. A teoria do enquadramento descreve como seleção e saliência organizam a apresentação de uma realidade percebida \cite{entman1993framing}. Essa perspectiva ajuda a caracterizar mudanças de ênfase sem convertê-las automaticamente em juízos de verdade. Nesse sentido, a lacuna abordada por este TCC é a necessidade de observar, de maneira estruturada e interpretável, como diferentes dimensões textuais variam em cadeias de reescrita condicionadas por perspectivas e ordens distintas.
 
-Para enfrentar essa lacuna, o estudo propõe o \textit{Structured Topic Drift Index} (STDI). O índice operacionaliza a deriva por componentes relacionados a tema, subtópicos, entidades e relações, acompanhados de sinais complementares de contradição interna e de valência, ativação e dominância (VAD). O STDI não é apresentado como detector de notícias falsas nem como medida de verdade. Seu comportamento é examinado por comparações quantitativas entre procedimentos de cálculo, casos controlados e inspeções qualitativas.
-
+Para enfrentar essa lacuna, o estudo propõe o \textit{Structured Topic Drift Index} (STDI). O índice operacionaliza a deriva por componentes relacionados a tema, subtópicos, entidades e relações, acompanhados de sinais complementares de contradição interna e de valência, ativação e dominância (VAD). Seu comportamento é examinado por comparações quantitativas entre procedimentos de cálculo, casos controlados e inspeções qualitativas.
 
 \section{QUESTÃO DE PESQUISA E OBJETIVOS}
 \label{sec:questao-objetivos}
@@ -34,7 +33,7 @@ Para alcançar esse objetivo, foram definidos os seguintes objetivos específico
   \item organizar trajetórias de reescrita nas quais os mesmos textos sejam submetidos a diferentes sequências de perspectivas;
   \item extrair de cada versão representações estruturadas de tema, subtópicos, entidades, relações e enquadramento;
   \item mensurar as mudanças entre etapas consecutivas, o afastamento em relação ao texto original e o acúmulo de mudanças ao longo da trajetória;
-  \item incorporar sinais afetivos de VAD sem tratá-los como evidência de falsidade factual;
+  \item incorporar sinais afetivos de valência, ativação e dominância;
   \item comparar cenários e modelos geradores de forma pareada por entrada dentro de cada corpus, considerando as dependências entre trajetórias e as condições de geração e avaliação;
   \item examinar o comportamento do STDI por comparações quantitativas e inspeções qualitativas de pares controlados e versões geradas, identificando desacordos e limites de interpretação dos escores.
 \end{alineas}
@@ -50,7 +49,7 @@ Cada rodada aplica oito trajetórias de quatro posições, com perspectivas cons
 
 Nas rodadas em inglês, a comparação estrutural combina o caminho Cluster, baseado em embeddings e regras, com a avaliação por LLM. O VAD combina o modelo neural inicial e o LLM. Nas rodadas em português, tanto a comparação estrutural quanto o VAD usam LLM. As configurações são detalhadas no Capítulo \ref{ch:metodos}. Como também diferem corpus e procedimento de avaliação, o contraste entre os dois grupos não isola um efeito do idioma.
 
-As contribuições do trabalho são um protocolo documentado de geração e comparação de trajetórias; uma decomposição interpretável da deriva por meio do STDI; a separação entre mudança incremental, distância ao original e acúmulo de mudanças; e uma avaliação empírica das associações entre perspectivas, ordens e trajetórias nos recortes estudados. Essa contribuição instrumental e metodológica está limitada pelas escolhas de representação e avaliação e pela ausência de referência humana numérica independente. Ela não inclui checagem factual externa, estimativa de crença humana ou reprodução completa de uma plataforma social.
+As contribuições do trabalho são um protocolo documentado de geração e comparação de trajetórias; uma decomposição interpretável da deriva por meio do STDI; a separação entre mudança incremental, distância ao original e acúmulo de mudanças; e uma avaliação empírica das associações entre perspectivas, ordens e trajetórias nos recortes estudados. Essa contribuição instrumental e metodológica está limitada pelas escolhas de representação e avaliação e pela ausência de referência humana numérica independente. O STDI compara versões textuais, a contradição interna descreve incompatibilidades em uma mesma versão e o VAD estima o tom expresso no texto. O estudo não inclui checagem factual externa, mensuração de emoções ou crenças humanas, decisões de exposição e compartilhamento ou reprodução completa de uma plataforma social.
 
 \section{ORGANIZAÇÃO DO TRABALHO}
 \label{sec:organizacao}
