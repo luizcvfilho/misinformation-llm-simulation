@@ -33,7 +33,7 @@ As abreviações GPT, Grok e Gemini correspondem aos geradores identificados na 
 
 A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil. Os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação. A apresentação é descritiva, sem testes de hipótese ou intervalos populacionais. Correlações e diferenças médias resumem os padrões do conjunto observado.
 
-Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das rodadas finais pelo script \path{scripts/analyze_tcc_chapter_5.py}. Os dados derivados, os critérios de seleção de casos e os hashes das fontes estão preservados em \path{output/analysis/tcc_chapter_5/}. Foram conferidos a identidade dos textos originais entre condições, os prefixos compartilhados, a soma dos incrementos e a composição do Dual a partir dos ramos com VAD comum. O processamento não realizou novas chamadas aos modelos.
+Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das rodadas finais pelo script \path{scripts/analyze_tcc_chapter_5.py}. Os dados derivados, os critérios de seleção de casos e os hashes das fontes estão preservados em \path{output/analysis/tcc_chapter_5/}. Foram conferidos a identidade dos textos originais entre condições, os prefixos compartilhados e a composição do Dual a partir dos ramos com VAD comum. O processamento não realizou novas chamadas aos modelos.
 
 \section{DIAGNÓSTICOS ANTERIORES DO INSTRUMENTO}
 \label{sec:resultados-diagnosticos}
@@ -127,27 +127,7 @@ Na quarta posição de DDNN, o incremento médio é 0,150, 0,071 e 0,043 em ingl
 
 GPT também apresenta incrementos finais maiores que os outros geradores nas trajetórias interpretativas em ambos os corpora. Por exemplo, em CCPP, as médias são 0,284 em inglês e 0,207 em português, diante de 0,202 e 0,157 com Gemini.
 
-\subsection{Aumento ou redução do afastamento e soma dos incrementos}
-
-Para distinguir mudança local de mudança no afastamento, calcula-se, a partir da segunda posição,
-\begin{equation}
- \Delta O_t = O_t-O_{t-1},\qquad t\in\{2,3,4\}.
- \label{eq:resultados-delta-original}
-\end{equation}
-Um valor negativo indica menor escore contra o original, e não um incremento negativo. Como $I_t$ e $\Delta O_t$ comparam objetos distintos, uma passagem pode apresentar mudança local e reduzir o afastamento medido contra a referência inicial.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{chapter5/original_change.pdf}
-\caption{Variação do STDI contra o original entre posições consecutivas. O eixo zero separa aumento e redução do escore. Linhas: medianas; faixas: intervalos interquartis.}
-\label{fig:resultados-delta}
-\legend{Fonte: elaboração própria. A primeira posição não possui diferença anterior nesta análise.}
-\end{figure}
-\FloatBlock
-
-O STDI em relação ao original nem sempre aumenta a cada reescrita: em algumas passagens, a nova versão recebe um escore menor que a anterior. Para contar essas reduções, foram consideradas, em cada rodada, as três transições entre posições consecutivas (da primeira para a segunda, da segunda para a terceira e da terceira para a quarta), nas oito trajetórias das 50 notícias, totalizando 1.200 transições. Em inglês, houve redução em 320 transições com GPT, 372 com Grok e 300 com Gemini. Em português, os totais foram 311, 374 e 363, respectivamente. Como algumas trajetórias compartilham as mesmas reescritas iniciais, suas transições comuns aparecem mais de uma vez nessa contagem. Portanto, os totais descrevem as trajetórias, sem representar 1.200 mudanças independentes. A Seção \ref{sec:resultados-casos} apresenta casos em que essa redução acompanha apenas pequenas mudanças de redação.
-
-A soma $B_4$ reúne as mudanças medidas nas quatro passagens da trajetória, enquanto $O_4$ compara apenas a última versão com o texto original. Assim, $B_4$ descreve o percurso de reescritas, e $O_4$, o afastamento ao final desse percurso. Seus valores não precisam coincidir. Calculadas com o mesmo peso para as oito trajetórias, as médias de $B_4$ entre os três geradores variam de 0,877 a 1,124 no corpus inglês e de 0,756 a 0,854 no corpus português. Já as médias de $O_4$ ficam entre 0,427 e 0,469 em inglês e entre 0,434 e 0,450 em português. Como $B_4$ soma quatro escores, seu valor pode ultrapassar um. Isso não corresponde à proporção de informação perdida, mas à soma das mudanças medidas ao longo da trajetória.
+O afastamento medido em relação ao original não aumenta necessariamente a cada reescrita. Uma redução desse escore pode acompanhar mudanças de redação sem restauração evidente do conteúdo, como ilustrado na análise qualitativa da Seção \ref{sec:resultados-casos}. A leitura conjunta do afastamento, do incremento e dos textos permite interpretar essas situações.
 
 \FloatBlock
 \section{CONTRASTES ENTRE PERSPECTIVAS, SEQUÊNCIAS E GERADORES}
@@ -368,7 +348,7 @@ As versões da segunda e da quarta posições são praticamente idênticas. A ú
 
 \subsection{Redução do escore sem restauração evidente do conteúdo}
 
-Na notícia \path{br2026_2181906645728122}, sobre tributação e subsídios de combustíveis, a trajetória DDDD de Grok reduz o STDI contra o original de 0,620 na terceira posição para 0,401 na quarta, com incremento de 0,088. As duas versões preservam os valores monetários, a proximidade do segundo turno e a interpretação de manipulação por elites ocultas. A redução do escore ($\Delta O_t<0$) acompanha mudanças de redação e a retirada de uma frase, com manutenção dessa interpretação em vez de recuperação do relato original.
+Na notícia \path{br2026_2181906645728122}, sobre tributação e subsídios de combustíveis, a trajetória DDDD de Grok reduz o STDI contra o original de 0,620 na terceira posição para 0,401 na quarta, com incremento de 0,088. As duas versões preservam os valores monetários, a proximidade do segundo turno e a interpretação de manipulação por elites ocultas. A redução do escore acompanha mudanças de redação e a retirada de uma frase, com manutenção dessa interpretação em vez de recuperação do relato original.
 
 \subsection{Divergência entre métodos em uma retransmissão neutra}
 
@@ -385,7 +365,7 @@ Antes de interpretar o escore como perda de informação, é necessário verific
 \section{SÍNTESE DOS RESULTADOS}
 \label{sec:resultados-sintese}
 
-As seis rodadas documentam separação consistente entre a retransmissão neutra e a introdução de D após o prefixo NN, com variação entre geradores e entre as demais trajetórias. As mudanças de C para P e de P para C elevam o afastamento médio nos contrastes de continuação examinados, mas a direção não é uniforme por notícia. A retransmissão neutra após D reduz a mudança local sem recuperar automaticamente o original. Afastamento, incremento e soma do percurso descrevem aspectos distintos, e reduções de escore exigem inspeção antes de serem chamadas de restauração.
+As seis rodadas documentam separação consistente entre a retransmissão neutra e a introdução de D após o prefixo NN, com variação entre geradores e entre as demais trajetórias. As mudanças de C para P e de P para C elevam o afastamento médio nos contrastes de continuação examinados, mas a direção não é uniforme por notícia. A retransmissão neutra após D reduz a mudança local sem recuperar automaticamente o original. Afastamento e incremento descrevem aspectos distintos, e reduções de escore exigem inspeção antes de serem chamadas de restauração.
 
 Subtópicos e relações concentram as maiores médias dos componentes de conteúdo. As trajetórias com D apresentam redução média de valência e aumento de ativação segundo o VAD LLM. A comparação Cluster--LLM mostra divergências dependentes da trajetória, inclusive com VAD comum. O recorte LLM/LLM aproxima o procedimento nos dois corpora e preserva vários padrões relativos, sem produzir uma direção geral de maior deriva atribuível ao idioma.
 

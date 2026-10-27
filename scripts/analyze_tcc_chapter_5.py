@@ -494,7 +494,6 @@ def create_figures(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None
     for metric, name, label in [
         ("original", "original_trajectories", "STDI vs original"),
         ("incremental", "incremental_trajectories", "Incremental STDI"),
-        ("delta_original", "original_change", "Change in STDI vs original"),
         ("llm_original", "corpus_llm_trajectories", "LLM STDI vs original"),
     ]:
         plot_trajectories(paths, metric, name, label)

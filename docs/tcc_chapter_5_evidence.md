@@ -19,7 +19,7 @@ Outputs:
 
 - `output/analysis/tcc_chapter_5/`: CSV tables, case candidates, PNG previews
   and `manifest.json` with source hashes, versions, lexical rules and checks.
-- `tcc/figuras/chapter5/`: 14 PDF vector figures, with English chart labels.
+- `tcc/figuras/chapter5/`: 13 PDF vector figures, with English chart labels.
 - `tcc/elementos-textuais/capitulo-5-tabelas.tex`: seven Portuguese numerical
   table macros placed by the chapter source.
 - `tcc/elementos-textuais/capitulo-5.tex`: manually authored Portuguese prose,
@@ -78,7 +78,6 @@ replicates. Interquartile bands show article dispersion, not uncertainty of a me
 | Final and incremental tables, trajectory curves, common LLM corpus comparisons | `trajectory_summary.csv`, `path_positions.csv` |
 | Six final path contrasts and fraction with positive differences | `paired_contrasts.csv` |
 | Paired generator comparisons | `generator_contrasts.csv` |
-| Decreasing original-reference scores at positions 2–4 | `transition_counts.csv` |
 | Final component means | `component_summary.csv`, final rows of `path_positions.csv` |
 | Internal contradiction across all rewrites | `contradiction_summary.csv`, `contradiction_vs_original` in `unique_nodes.csv` |
 | Signed affective changes | `llm_signed_*` fields in final rows of `path_positions.csv` |

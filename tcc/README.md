@@ -13,8 +13,9 @@ The current draft contains developed chapters 1–7.
 Chapter 5 includes descriptive analyses of all six final simulation rounds,
 paired path and generator comparisons, Cluster/LLM comparisons with native and
 common VAD, a common LLM/LLM corpus comparison, lexical feature diagnostics,
-and inspected qualitative cases. Its 14 vector figures are in `figuras/chapter5/`;
-its seven generated tables are in `elementos-textuais/capitulo-5-tabelas.tex`.
+and inspected qualitative cases. Its 13 vector figures are stored
+in `figuras/chapter5/`; its seven generated tables are in
+`elementos-textuais/capitulo-5-tabelas.tex`.
 Independent human numerical annotations remain outside the study scope.
 Revision completion is recorded in `docs/plano_revisao_tcc.md`
 at the repository root, with the current writing plan in `docs/plano_escrita_tcc.md`.

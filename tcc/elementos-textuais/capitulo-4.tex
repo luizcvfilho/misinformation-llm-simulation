@@ -268,17 +268,14 @@ Na configuração Dual/Dual, os resultados individuais registrados utilizam font
 
 O STDI Dual somente é concluído quando os dois caminhos estruturais e as estimativas afetivas exigidas estão disponíveis. Se o Cluster produzir um resultado válido, mas o caminho LLM não puder ser concluído, o resultado do Cluster permanece registrado e o Dual fica indisponível.
 
-\subsection{Comparação com o original, incremento e acumulação}
+\subsection{Comparação com o original e mudança incremental}
 
-Para uma trajetória com texto inicial $x_0$ e versões $x_1,\ldots,x_4$, distinguem-se três medidas:
+Para uma trajetória com texto inicial $x_0$ e versões $x_1,\ldots,x_4$, distinguem-se duas medidas:
 \begin{align}
  O_t &= \mathrm{STDI}(x_0,x_t), \label{eq:stdi-original}\\
- I_t &= \mathrm{STDI}(x_{t-1},x_t), \label{eq:stdi-incremental}\\
- B_t &= \sum_{r=1}^{t} I_r. \label{eq:stdi-acumulado}
+ I_t &= \mathrm{STDI}(x_{t-1},x_t). \label{eq:stdi-incremental}
 \end{align}
-$O_t$ descreve o afastamento da referência inicial; $I_t$, a mudança produzida pela etapa em relação ao pai efetivo; e $B_t$, a soma dos incrementos do caminho. Nas árvores, cada incremento utiliza o pai do nó, incluindo o prefixo compartilhado.
-
-A soma $B_t$ pode exceder um e não equivale a $O_t$. Mudanças sucessivas podem retornar a elementos anteriores ou modificar aspectos diferentes. Não se interpreta a acumulação como percentual de informação perdida. Quando algum incremento está indisponível, o sistema preserva o número de incrementos válidos e o indicador de completude, distinguindo uma soma parcial de uma trajetória completamente medida.
+$O_t$ descreve o afastamento da referência inicial, enquanto $I_t$ descreve a mudança produzida pela etapa em relação ao pai efetivo. Nas árvores, cada incremento utiliza o pai do nó, incluindo o prefixo compartilhado. Na primeira posição, as duas comparações usam o texto original como referência. Nas posições seguintes, uma mudança local pequena pode coexistir com afastamento elevado da origem, caso a etapa preserve uma mensagem já transformada.
 
 \section{ANÁLISE DE VALÊNCIA, ATIVAÇÃO E DOMINÂNCIA}
 \label{sec:metodos-vad}
@@ -319,7 +316,7 @@ Dimensões ausentes permanecem indisponíveis, e o VAD Dual exige ambos os estim
 
 \subsection{Comparações nas rodadas finais}
 
-A análise organiza os escores por corpus, gerador, entrada, árvore, trajetória e posição. Para cada combinação, distinguem-se STDI contra o original, incremento, soma dos incrementos e componentes. As comparações entre trajetórias e geradores são pareadas pela mesma entrada dentro de cada corpus. Uma diferença entre dois cenários é, portanto, calculada sobre versões derivadas da mesma notícia, preservando essa correspondência na interpretação dos agregados.
+A análise organiza os escores por corpus, gerador, entrada, árvore, trajetória e posição. Para cada combinação, distinguem-se STDI contra o original, incremento e componentes. As comparações entre trajetórias e geradores são pareadas pela mesma entrada dentro de cada corpus. Uma diferença entre dois cenários é, portanto, calculada sobre versões derivadas da mesma notícia, preservando essa correspondência na interpretação dos agregados.
 
 O desenho permite examinar trajetórias homogêneas, continuações distintas de um prefixo comum e inversões de composição entre C e P ou entre D e N. NNNN fornece a referência operacional de retransmissão com alterações mínimas. A análise das posições permite observar mudanças antes e depois da bifurcação, sem contar novamente os prefixos como gerações independentes. As 50 entradas de cada corpus são as unidades de pareamento, com a ressalva de que coberturas relacionadas de um mesmo evento ainda podem introduzir dependência entre entradas.
 
@@ -331,7 +328,7 @@ No corpus inglês, os resultados salvos permitem inspecionar os ramos Cluster, L
 
 No corpus inglês, comparam-se os ramos completos originalmente exibidos, com VAD BERT no Cluster e VAD LLM no comparador LLM, e os ramos preservados com VAD Dual comum. No segundo recorte, os dois caminhos estruturais utilizam a mesma deriva VAD Dual. O valor de VAD utilizado é igual nos dois caminhos, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória. Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente.
 
-Além de $O_t$ e $I_t$, examina-se a diferença $O_t-O_{t-1}$ a partir da segunda posição. Essa diferença pode ser negativa e descreve a variação do escore contra o original, distinguindo-se da mudança incremental entre versões. As distribuições são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
+As distribuições dos escores são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
 
 Uma análise exploratória investiga a associação entre características das notícias originais e a deriva ao final das reescritas. Para cada original, contam-se as palavras separadas por espaços e as expressões distintas com algarismos. Também são contadas as entidades e relações da representação estruturada. Para manter essas duas contagens iguais nas comparações entre geradores, utiliza-se uma única extração do original, proveniente da árvore N da rodada GPT de cada corpus.
 

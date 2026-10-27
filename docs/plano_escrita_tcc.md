@@ -180,7 +180,7 @@ Separar a quantidade configurada de avaliações das requisições efetivas: cad
 
 Preservar contagens solicitadas/válidas, notas, justificativas, respostas e desvio padrão amostral. Repetição não equivale a repetir extração, VAD ou geração, nem comprova suficiência de três notas. Ausências não são zeros; não preencher um método com escores de outro. O agregado exige os componentes requeridos pela configuração. Desacordo entre métodos não é confiança calibrada.
 
-Separar distância ao original, mudança contra o pai efetivo e soma cumulativa dos incrementos. A soma pode exceder 1 e não equivale à distância final; registrar completude e incrementos válidos.
+Distinguir o afastamento em relação ao original da mudança em relação ao pai efetivo.
 
 #### VAD: escolha e configuração final
 
@@ -219,9 +219,9 @@ Entre corpora, distinguir idioma/conteúdo e método: inglês usa STDI/VAD Dual;
 
 Organizar em blocos, priorizando as rodadas finais:
 
-**Primeira redação implementada em 19/10/2026:** `tcc/elementos-textuais/capitulo-5.tex`, com sete tabelas geradas em `capitulo-5-tabelas.tex` e 14 figuras vetoriais em `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
+**Resultados:** `tcc/elementos-textuais/capitulo-5.tex`, com sete tabelas geradas em `capitulo-5-tabelas.tex` e 13 figuras vetoriais incluídas de `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
 
-O capítulo inclui evolução contra o original, incrementos e variação do afastamento; boxplots finais; contrastes pareados de continuações, sequências e geradores; decomposição e direção VAD; comparação Cluster/LLM em inglês com VAD próprio e comum; comparação dos corpora com LLM/LLM; extensão, contagem de expressões numéricas e contagens de entidades/relações; e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. As contagens numéricas não identificam papéis semânticos, e as contagens extraídas não constituem anotação validada. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
+O capítulo inclui evolução contra o original e incrementos; boxplots finais; contrastes pareados de continuações, sequências e geradores; decomposição e direção VAD; comparação Cluster/LLM em inglês com VAD próprio e comum; comparação dos corpora com LLM/LLM; extensão, contagem de expressões numéricas e contagens de entidades/relações; e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. As contagens numéricas não identificam papéis semânticos, e as contagens extraídas não constituem anotação validada. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
 
 1. Diagnósticos dos detectores como motivação, sem repetir extensamente o histórico.
 2. Comparação exploratória e escolha de VAD, separadas das simulações finais.
