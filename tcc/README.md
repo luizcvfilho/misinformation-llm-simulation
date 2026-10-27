@@ -12,10 +12,10 @@ repository-level `references.bib`.
 The current draft contains developed chapters 1–7.
 Chapter 5 includes descriptive analyses of all six final simulation rounds,
 paired path and generator comparisons, Cluster/LLM comparisons with native and
-common VAD, a common LLM/LLM corpus comparison, lexical feature diagnostics,
-and inspected qualitative cases. Its 13 vector figures are stored
-in `figuras/chapter5/`; its seven generated tables are in
-`elementos-textuais/capitulo-5-tabelas.tex`.
+common VAD, a common LLM/LLM corpus comparison, and inspected qualitative cases.
+Its 11 included vector figures are stored in `figuras/chapter5/`; it uses six
+of the seven generated table macros in `elementos-textuais/capitulo-5-tabelas.tex`.
+Lexical feature diagnostics remain available in the analysis script and outputs.
 Independent human numerical annotations remain outside the study scope.
 Revision completion is recorded in `docs/plano_revisao_tcc.md`
 at the repository root, with the current writing plan in `docs/plano_escrita_tcc.md`.
@@ -25,7 +25,7 @@ with the desktop editor after this chapter was written on 2026-10-19.
 Chapter 5 evidence and reproduction instructions are recorded in
 `docs/tcc_chapter_5_evidence.md`. Reproduce its data, figures and numerical tables
 with `uv run --with matplotlib python scripts/analyze_tcc_chapter_5.py`.
-Chapter 4 also documents the added descriptive and lexical analysis procedures.
+Chapter 4 documents the descriptive procedures included in the thesis.
 Chapter 6 interprets the trajectory, generator, component and affective findings,
 compares the study with iterative-generation and agent-evaluation research, and
 discusses measurement, design and generalization limits. Its evidence map and

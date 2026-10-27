@@ -2,7 +2,7 @@
 \label{ch:resultados}
 \input{elementos-textuais/capitulo-5-tabelas.tex}
 
-Este capítulo apresenta os resultados das seis rodadas finais de reescrita e os diagnósticos que delimitam sua interpretação. A exposição acompanha o afastamento da notícia original, a mudança em cada transmissão, os contrastes entre perspectivas e geradores e a decomposição estrutural e afetiva do STDI. Em seguida, comparam-se Cluster e LLM no corpus inglês e os dois corpora pelo procedimento LLM comum. Uma análise exploratória relaciona características das notícias ao afastamento final, e a inspeção de casos explicita mudanças textuais e limites da mensuração.
+Este capítulo apresenta os resultados das seis rodadas finais de reescrita e os diagnósticos que delimitam sua interpretação. A exposição acompanha o afastamento da notícia original, a mudança em cada transmissão, os contrastes entre perspectivas e geradores e a decomposição estrutural e afetiva do STDI. Em seguida, comparam-se Cluster e LLM no corpus inglês e os dois corpora pelo procedimento LLM comum. A inspeção de casos relaciona os escores às mudanças textuais e explicita limites da mensuração.
 
 \section{COBERTURA E ORGANIZAÇÃO DA ANÁLISE}
 \label{sec:resultados-cobertura}
@@ -275,52 +275,6 @@ A Tabela \ref{tab:resultados-llm-incremental} compara a mudança local final com
 
 Nas trajetórias interpretativas, a comparação da terceira com a quarta versão, usando STDI LLM e VAD LLM nos dois corpora, não indica que um deles apresente mudanças maiores de forma consistente. Em CCPP, por exemplo, o incremento médio é maior em português com GPT (0,207, diante de 0,185 em inglês) e Gemini (0,157, diante de 0,149). Com Grok, ocorre o contrário: a média é 0,132 em inglês e 0,129 em português. Os dados derivados incluem também os resumos de cada uma das quatro posições e os escores em relação ao original. O alcance da comparação entre esses corpora distintos é discutido na Seção \ref{sec:discussao-validade}.
 
-\section{CARACTERÍSTICAS DAS NOTÍCIAS E DERIVA FINAL}
-\label{sec:resultados-atributos}
-
-\subsection{Critérios e unidade da análise exploratória}
-
-Esta análise examina se características dos textos originais estão associadas ao afastamento final. Para cada notícia e gerador, utiliza-se como desfecho a média dos oito escores finais LLM/LLM, atribuindo peso igual às trajetórias. Há, portanto, 50 observações por corpus e gerador, e não 400 notícias independentes. Os resultados também foram exportados separadamente por trajetória para permitir verificar a heterogeneidade desse resumo.
-
-A extensão é contada por palavras separadas por espaços. A contagem numérica considera expressões distintas com algarismos, incluindo decimais e percentuais. Ela não interpreta automaticamente seu papel como data, quantidade ou valor monetário e não inclui números escritos por extenso. A expressão regular utilizada está registrada no script e no manifesto da análise.
-
-Para cada notícia, as quantidades de entidades e relações são calculadas uma única vez, a partir de uma extração do texto original já registrada na execução com GPT. Essas mesmas contagens são utilizadas nas análises dos três geradores, evitando que diferenças entre extrações do mesmo original alterem as características atribuídas à notícia. As contagens descrevem a representação produzida pelo extrator.
-
-Os textos ingleses têm mediana de 57,5 palavras, com mínimo de 36 e máximo de 134. Os brasileiros têm mediana de 142, com mínimo de 69 e máximo de 218. Algum algarismo aparece em 25 das 50 notícias inglesas e nas 50 brasileiras. A ausência de notícias sem algarismos no corpus português impede comparar grupos com e sem expressões numéricas nesse conjunto.
-
-\subsection{Associações observadas e influência da extensão}
-
-\TabelaCincoAtributos
-
-A Tabela \ref{tab:resultados-atributos} apresenta correlações descritivas de Spearman. No corpus inglês, a contagem de expressões numéricas associa-se negativamente ao desfecho nos três geradores, com coeficientes de $-0,403$ em GPT, $-0,275$ em Grok e $-0,230$ em Gemini. Nesse recorte, portanto, não se observa o padrão simples de que mais números implicam maior afastamento final. Em português, os coeficientes correspondentes ficam próximos de zero, entre $-0,077$ e $-0,021$.
-
-As contagens de entidades também não apresentam direção uniforme entre geradores no português. Para relações, os coeficientes são pequenos e positivos em inglês, de 0,070 a 0,132, e negativos em português, de $-0,261$ a $-0,110$.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{chapter5/news_features.pdf}
-\caption{Associações entre características originais e média final LLM/LLM por notícia. Círculos: Spearman; cruzes: correlação entre os resíduos dos postos após ajuste linear pela extensão original.}
-\label{fig:resultados-atributos}
-\legend{Fonte: elaboração própria. 50 notícias por corpus e gerador, sem testes de hipótese.}
-\end{figure}
-\FloatBlock
-
-A Figura \ref{fig:resultados-atributos} também verifica se as associações observadas permanecem após um ajuste pelo número de palavras do texto original. Esse cuidado considera que notícias mais longas podem conter mais números, entidades e relações. O procedimento utiliza a ordenação dos valores e desconta, tanto de cada característica quanto do STDI final, a associação linear com a extensão original. Em seguida, calcula a correlação entre as partes restantes. No corpus inglês, a associação entre quantidade de expressões numéricas e STDI final continua negativa após esse ajuste, com coeficientes entre $-0,423$ e $-0,248$. Portanto, essa associação não desaparece quando se considera a extensão dessa forma. O ajuste, porém, não leva em conta diferenças de tema, acontecimento, formato ou seleção das notícias. Os resultados são exploratórios.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{chapter5/length_and_drift.pdf}
-\caption{Extensão original e média do STDI final LLM/LLM nas oito trajetórias de cada notícia. Cada ponto representa uma entrada do corpus.}
-\label{fig:resultados-extensao}
-\legend{Fonte: elaboração própria. 50 observações por painel; contagem de palavras por separação em espaços.}
-\end{figure}
-\FloatBlock
-
-A Figura \ref{fig:resultados-extensao} mostra a associação entre extensão original e deriva final. Os coeficientes são negativos nos seis conjuntos de 50 observações, entre $-0,185$ e $-0,043$. Também foi calculada a razão entre o número de palavras da versão final e o do original: valores acima de um indicam alongamento, e valores abaixo de um indicam encurtamento. Com o mesmo peso para as trajetórias, as médias dessa razão são 1,211, 1,771 e 2,361 em inglês, e 0,763, 1,102 e 1,494 em português, para GPT, Grok e Gemini, respectivamente. Essa medida descreve o resultado da reescrita. Ela não é uma característica do texto original.
-
-A associação com o STDI global não responde se um número específico foi alterado ou se uma entidade ou relação foi preservada. A retenção lexical de algarismos foi exportada como diagnóstico auxiliar, mas não alinha papéis, unidades ou referentes. A inspeção qualitativa da seção seguinte mostra um caso com números preservados e interpretação profundamente modificada, ilustrando por que preservação de elementos isolados e deriva global são perguntas distintas.
-
-\FloatBlock
 \section{ANÁLISE QUALITATIVA DE CASOS}
 \label{sec:resultados-casos}
 
@@ -369,4 +323,4 @@ As seis rodadas documentam separação consistente entre a retransmissão neutra
 
 Subtópicos e relações concentram as maiores médias dos componentes de conteúdo. As trajetórias com D apresentam redução média de valência e aumento de ativação segundo o VAD LLM. A comparação Cluster--LLM mostra divergências dependentes da trajetória, inclusive com VAD comum. O recorte LLM/LLM aproxima o procedimento nos dois corpora e preserva vários padrões relativos, sem produzir uma direção geral de maior deriva atribuível ao idioma.
 
-As análises das características dos textos originais identificam associações com o afastamento após as reescritas. Essas tendências também diferem entre os conjuntos de notícias em inglês e em português. Por exemplo, no conjunto inglês, notícias com mais expressões numéricas tendem a apresentar menor STDI final, enquanto, no conjunto português, essa associação é próxima de zero. As associações com as quantidades de entidades e relações extraídas também variam conforme o conjunto de notícias e o gerador. A leitura dos casos, por sua vez, mostra como as reescritas podem omitir detalhes, acrescentar explicações sobre intenções e manter interpretações recebidas mesmo após passagens por agentes neutros. Ela também mostra que inconsistências da extração podem influenciar os escores sem corresponder a mudanças no texto. O Capítulo \ref{ch:discussao} examina o alcance desses resultados e as limitações do desenho e da mensuração.
+A leitura dos casos mostra como as reescritas podem omitir detalhes, acrescentar explicações sobre intenções e manter interpretações recebidas mesmo após passagens por agentes neutros. Ela também mostra que inconsistências da extração podem influenciar os escores sem corresponder a mudanças no texto. O Capítulo \ref{ch:discussao} examina o alcance desses resultados e as limitações do desenho e da mensuração.

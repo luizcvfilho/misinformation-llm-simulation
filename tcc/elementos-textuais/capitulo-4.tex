@@ -322,19 +322,11 @@ O desenho permite examinar trajetórias homogêneas, continuações distintas de
 
 Há uma trajetória observada por entrada e configuração, com compartilhamento dos nós iniciais indicado na Tabela \ref{tab:arvores-finais}. As avaliações repetidas incidem sobre os textos já gerados.
 
-No corpus inglês, os resultados salvos permitem inspecionar os ramos Cluster, LLM e o agregado Dual. Para comparações de procedimento mais próximo do corpus brasileiro, pode-se examinar o ramo LLM com VAD LLM, identificando explicitamente essa escolha. As implicações das diferenças entre corpora e do avaliador comum são discutidas na Seção \ref{sec:discussao-validade}.
+No corpus inglês, comparam-se os ramos Cluster e LLM em dois recortes: com VAD próprio, BERT no Cluster e LLM no comparador LLM, e com VAD Dual comum aos dois caminhos estruturais. No segundo recorte, a deriva VAD utilizada é igual, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória.
 
-\subsection{Comparação de métodos e características dos textos}
-
-No corpus inglês, comparam-se os ramos completos originalmente exibidos, com VAD BERT no Cluster e VAD LLM no comparador LLM, e os ramos preservados com VAD Dual comum. No segundo recorte, os dois caminhos estruturais utilizam a mesma deriva VAD Dual. O valor de VAD utilizado é igual nos dois caminhos, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória. Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente.
+Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente. As implicações das diferenças entre corpora e do avaliador comum são discutidas na Seção \ref{sec:discussao-validade}.
 
 As distribuições dos escores são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
-
-Uma análise exploratória investiga a associação entre características das notícias originais e a deriva ao final das reescritas. Para cada original, contam-se as palavras separadas por espaços e as expressões distintas com algarismos. Também são contadas as entidades e relações da representação estruturada. Para manter essas duas contagens iguais nas comparações entre geradores, utiliza-se uma única extração do original, proveniente da árvore N da rodada GPT de cada corpus.
-
-Para cada notícia e gerador, calcula-se a média dos escores de deriva em relação ao original nas oito trajetórias, considerando a última reescrita de cada uma. Utilizam-se os escores com avaliação estrutural e VAD por LLM. Obtém-se, assim, um valor por notícia, totalizando 50 observações por corpus e gerador. As características dos originais são relacionadas a esse valor por correlações de Spearman. Também se comparam as médias de deriva entre notícias com e sem expressões numéricas, quando ambos os grupos estão presentes no corpus.
-
-Como textos mais longos podem conter mais elementos de cada tipo, calculam-se também correlações ajustadas pelo número original de palavras. Nesse procedimento, as características e a deriva são transformadas em posições na ordenação dos valores. Regressões lineares descontam a associação dessas posições com a ordenação por tamanho do texto, e os resíduos resultantes são correlacionados. Essas associações são interpretadas de forma descritiva. Como medidas complementares das reescritas, examinam-se a razão entre o número final e inicial de palavras e a proporção das expressões numéricas do original que reaparecem no texto final. Esta última verifica a repetição das expressões, sem determinar se os números mantêm o mesmo significado ou referente.
 
 \subsection{Casos controlados e inspeção qualitativa}
 
