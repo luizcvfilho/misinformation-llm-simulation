@@ -302,13 +302,42 @@ Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LL
 As distribuições dos escores são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
 
 \subsection{Casos controlados e inspeção qualitativa}
+\label{sec:metodos-diagnosticos}
 
-A avaliação do STDI combina a análise dos escores com a leitura dos textos comparados. Durante o desenvolvimento, foram examinados um conjunto histórico de 50 pares e uma auditoria de 36 pares com alterações controladas, como negação, omissão e troca de participantes de uma ação. Esses conjuntos são analisados separadamente. Nos casos controlados, verifica-se como o instrumento responde às alterações introduzidas, sem pressupor uma nota exata de deriva para cada par.
+A avaliação do STDI combina a análise dos escores com a leitura dos textos comparados. Durante o desenvolvimento, foram examinados um conjunto histórico de 50 pares e uma auditoria de 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. Esses conjuntos são analisados separadamente das notícias finais. Nos casos controlados, verifica-se como o instrumento responde às alterações introduzidas, sem pressupor uma nota exata de deriva para cada par.
+
+Na auditoria \path{STDIControlledInformationAudit_20261005}, foram obtidos escores completos nos dois comparadores. Em cada cenário, verificou-se se negação, mudança de quantidade e troca de ator recebiam escores maiores que a paráfrase que preservava o sentido. Nas nove comparações de ordenação, o Cluster atendeu à expectativa em seis e o LLM, nas nove. A Tabela \ref{tab:metodos-controles} apresenta um recorte dos resultados.
+
+\begin{center}
+\begin{minipage}{\textwidth}
+\centering
+\small
+\newfixedcaption{\controlAuditCaption}{table}
+\controlAuditCaption{STDI médio de variantes selecionadas na auditoria controlada de 5 de outubro.}
+\label{tab:metodos-controles}
+\begin{tabular}{lrr}
+\hline
+Variante & Cluster & LLM \\
+\hline
+Identidade & 0,000 & 0,000 \\
+Paráfrase & 0,122 & 0,002 \\
+Negação & 0,162 & 0,439 \\
+Troca de ator & 0,147 & 0,292 \\
+Mudança de quantidade & 0,131 & 0,229 \\
+Omissão & 0,455 & 0,338 \\
+Contradição interna & 0,396 & 0,484 \\
+\hline
+\end{tabular}
+\legend{Fonte: elaboração própria, a partir de \texttt{change\_type\_summary.csv} da auditoria. Cada média utiliza três cenários pareados, com VAD BERT comum.}
+\end{minipage}
+\end{center}
+
+Nesse recorte, o Cluster atribuiu maior deriva às paráfrases que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator. A inspeção também identificou informação preservada no texto, mas ausente da estrutura extraída, contribuindo para o escore do Cluster. O escore próximo de zero atribuído pelo LLM à paráfrase eleitoral é compatível com o reconhecimento dessa informação pelo avaliador, que recebe os textos completos. A auditoria utilizou \path{structured_extraction_v4}, \path{structured_judge_v3}, \path{cluster_v3} e \path{dual_stdi_v3}. Os resultados correspondem a essas versões, anteriores à ampliação dos qualificadores numéricos da configuração final.
+
+O piloto de comparação afetiva entre BERT e LLM também integrou a escolha dos estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. Esses resultados exploratórios mostraram diferenças de comportamento mesmo com amplitude nominal comum. A maior variação não estabelece maior acurácia.
 
 Também foi preparado um conjunto separado de 18 pares de frases sintéticas para verificar situações específicas, como equivalência entre durações e inversão de quem realiza uma ação.
 
 Na inspeção qualitativa, o pesquisador lê o original e a reescrita e consulta as estruturas extraídas, os escores de cada componente e as justificativas do avaliador LLM. Essa leitura ajuda a identificar tanto mudanças no texto, como a inclusão de um motivo ou a alteração de um número, quanto problemas do processamento, como uma entidade presente no texto que não foi extraída. Os resultados são interpretados considerando a versão do instrumento utilizada em cada avaliação.
 
-A avaliação se apoia na comparação entre os métodos e na inspeção pelo pesquisador para examinar o comportamento do instrumento. O Capítulo \ref{ch:resultados} apresenta os resultados das avaliações realizadas.
-
-Os registros preservados permitem recalcular os agregados apresentados a partir das respostas salvas. A organização dos arquivos e os procedimentos de reprodução estão documentados no Apêndice \ref{ap:rastreabilidade}.
+O Capítulo \ref{ch:resultados} apresenta as comparações e os casos das seis rodadas finais. Os registros permitem recalcular os agregados a partir das respostas salvas, conforme os procedimentos de reprodução documentados no Apêndice \ref{ap:rastreabilidade}.

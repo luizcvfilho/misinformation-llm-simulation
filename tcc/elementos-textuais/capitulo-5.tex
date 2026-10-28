@@ -2,7 +2,7 @@
 \label{ch:resultados}
 \input{elementos-textuais/capitulo-5-tabelas.tex}
 
-Este capítulo apresenta os resultados das seis rodadas finais de reescrita e os diagnósticos que delimitam sua interpretação. A exposição acompanha o afastamento da notícia original, a mudança em cada transmissão, os contrastes entre perspectivas e geradores e a decomposição estrutural e afetiva do STDI. Em seguida, comparam-se Cluster e LLM no corpus inglês e os dois corpora pelo procedimento LLM comum. A inspeção de casos relaciona os escores às mudanças textuais e explicita limites da mensuração.
+Este capítulo apresenta os resultados das seis rodadas finais de reescrita. A exposição acompanha o afastamento da notícia original, a mudança em cada transmissão, os contrastes entre perspectivas e geradores e a decomposição estrutural e afetiva do STDI. Em seguida, comparam-se Cluster e LLM no corpus inglês e os dois corpora pelo procedimento LLM comum. A inspeção de casos relaciona os escores às mudanças textuais e explicita limites da mensuração.
 
 \section{COBERTURA E ORGANIZAÇÃO DA ANÁLISE}
 \label{sec:resultados-cobertura}
@@ -34,47 +34,6 @@ As abreviações GPT, Grok e Gemini correspondem aos geradores identificados na 
 A notícia é a unidade de pareamento dentro de cada corpus. Tabelas de resultados finais utilizam 50 escores por trajetória e gerador. As curvas mostram a mediana e o intervalo entre o primeiro e o terceiro quartil. Os boxplots apresentam a distribuição entre notícias, com pontos individuais. Essas faixas descrevem dispersão, e não intervalos de confiança. As diferenças entre trajetórias são calculadas para a mesma entrada antes da agregação. A apresentação é descritiva, sem testes de hipótese ou intervalos populacionais. Correlações e diferenças médias resumem os padrões do conjunto observado.
 
 Os agregados e as figuras foram produzidos a partir dos 24 arquivos de nós das rodadas finais pelo script \path{scripts/analyze_tcc_chapter_5.py}. Os dados derivados, os critérios de seleção de casos e os hashes das fontes estão preservados em \path{output/analysis/tcc_chapter_5/}. Foram conferidos a identidade dos textos originais entre condições, os prefixos compartilhados e a composição do Dual a partir dos ramos com VAD comum. O processamento não realizou novas chamadas aos modelos.
-
-\section{DIAGNÓSTICOS ANTERIORES DO INSTRUMENTO}
-\label{sec:resultados-diagnosticos}
-
-A auditoria controlada, identificada como \path{STDIControlledInformationAudit_20261005} no diretório \path{output/audit/}, produziu escores completos nos dois comparadores para 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. Em cada cenário, verificou-se se três alterações --- negação, mudança de quantidade e troca de ator --- recebiam escores maiores que a paráfrase que preservava o sentido. Foram, portanto, nove comparações de ordenação. O Cluster atendeu a essa expectativa em seis delas, e o LLM, nas nove. O atendimento às expectativas de ordenação descreve a resposta do instrumento às alterações construídas. A Tabela \ref{tab:resultados-controles} apresenta um recorte dos resultados.
-
-\begin{center}
-\begin{minipage}{\textwidth}
-\centering
-\small
-\newfixedcaption{\controlAuditCaption}{table}
-\controlAuditCaption{STDI médio de variantes selecionadas na auditoria controlada de 5 de outubro.}
-\label{tab:resultados-controles}
-\begin{tabular}{lrr}
-\hline
-Variante & Cluster & LLM \\
-\hline
-Identidade & 0,000 & 0,000 \\
-Paráfrase & 0,122 & 0,002 \\
-Negação & 0,162 & 0,439 \\
-Troca de ator & 0,147 & 0,292 \\
-Mudança de quantidade & 0,131 & 0,229 \\
-Omissão & 0,455 & 0,338 \\
-Contradição interna & 0,396 & 0,484 \\
-\hline
-\end{tabular}
-\legend{Fonte: elaboração própria, a partir de \texttt{change\_type\_summary.csv} da auditoria. Cada média utiliza três cenários pareados, com VAD BERT comum.}
-\end{minipage}
-\end{center}
-
-Naquele recorte, o Cluster atribuiu maior deriva às paráfrases do que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator.
-
-A inspeção das estruturas extraídas mostrou que parte da pontuação pode decorrer de inconsistências da extração, mesmo quando a informação é preservada no texto reescrito. No cenário eleitoral fictício, a entidade ``cadastro eleitoral'' (\textit{voter register}) continuava mencionada na paráfrase e nas relações extraídas, mas foi omitida de sua lista de entidades centrais. A lista do original continha três entidades, enquanto a da paráfrase continha apenas duas. Essa diferença entre as listas resultou em deriva de entidades de 0,333 no Cluster, contribuindo para o STDI sem corresponder à remoção dessa informação do texto. O caso evidencia que o escore também é sensível à representação estruturada produzida pelo extrator, e não apenas às alterações efetivamente realizadas na reescrita.
-
-No método LLM, o acesso aos textos completos oferece um mecanismo para atenuar o impacto dessas inconsistências, pois o avaliador pode identificar informações preservadas na reescrita, mesmo quando omitidas da estrutura extraída. O escore próximo de zero atribuído à paráfrase eleitoral é compatível com essa possibilidade.
-
-A extração dessa auditoria utilizou \path{structured_extraction_v4}, e o juiz, \path{structured_judge_v3}. Os comparadores foram identificados como \path{cluster_v3} e \path{dual_stdi_v3}. Os resultados correspondem a essas versões, anteriores à ampliação dos qualificadores numéricos da configuração final.
-
-O piloto de comparação afetiva entre BERT e LLM, realizado durante o desenvolvimento do método, também registrou diferenças entre estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. A amplitude nominal comum não eliminou as diferenças de comportamento. Esses resultados exploratórios integram o desenvolvimento e a escolha dos estimadores afetivos.
-
-Os controles, os 50 pares históricos e os casos diagnósticos de desenvolvimento são conjuntos distintos, analisados separadamente das notícias finais. A análise seguinte examina os textos efetivamente gerados nas seis condições finais.
 
 \section{EVOLUÇÃO DO STDI NAS TRAJETÓRIAS}
 \label{sec:resultados-trajetorias}
@@ -315,12 +274,3 @@ Na extração utilizada pelo comparador, a lista de entidades passa de seis elem
 O escore de 0,070 do ramo LLM é mais compatível com a preservação de conteúdo observada na leitura dos textos. Uma possível justificativa é que o LLM Judge recebe, além das estruturas extraídas, todo o texto disponível do original e da reescrita. Esse contexto permite reconhecer informações preservadas mesmo quando elas não aparecem na lista extraída, atenuando o impacto da inconsistência de extração na avaliação. Neste caso, o juiz atribui zero ao componente de entidades e 0,250 ao de relações, identificando neste último uma pequena mudança na forma de apresentar a ação legislativa. O contexto recebido também se limita ao trecho disponível, que já estava truncado na entrada.
 
 Antes de interpretar o escore como perda de informação, é necessário verificar se os elementos ausentes da estrutura extraída também foram retirados do texto ou se sua ausência decorre de uma falha de extração.
-
-\section{SÍNTESE DOS RESULTADOS}
-\label{sec:resultados-sintese}
-
-As seis rodadas documentam separação consistente entre a retransmissão neutra e a introdução de D após o prefixo NN, com variação entre geradores e entre as demais trajetórias. As mudanças de C para P e de P para C elevam o afastamento médio nos contrastes de continuação examinados, mas a direção não é uniforme por notícia. A retransmissão neutra após D reduz a mudança local sem recuperar automaticamente o original. Afastamento e incremento descrevem aspectos distintos, e reduções de escore exigem inspeção antes de serem chamadas de restauração.
-
-Subtópicos e relações concentram as maiores médias dos componentes de conteúdo. As trajetórias com D apresentam redução média de valência e aumento de ativação segundo o VAD LLM. A comparação Cluster--LLM mostra divergências dependentes da trajetória, inclusive com VAD comum. O recorte LLM/LLM aproxima o procedimento nos dois corpora e preserva vários padrões relativos, sem produzir uma direção geral de maior deriva atribuível ao idioma.
-
-A leitura dos casos mostra como as reescritas podem omitir detalhes, acrescentar explicações sobre intenções e manter interpretações recebidas mesmo após passagens por agentes neutros. Ela também mostra que inconsistências da extração podem influenciar os escores sem corresponder a mudanças no texto. O Capítulo \ref{ch:discussao} examina o alcance desses resultados e as limitações do desenho e da mensuração.
