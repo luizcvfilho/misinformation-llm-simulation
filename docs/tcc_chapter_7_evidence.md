@@ -5,9 +5,10 @@ Chapter source: `tcc/elementos-textuais/capitulo-7.tex`.
 
 The Conclusion synthesizes the completed Chapters 1–6 and answers the research
 question within the scope recorded in `docs/plano_escrita_tcc.md`. It contains
-three sections: the research-question answer, contributions and study limits,
-and future work. No simulations, extractions, model evaluations, new statistical
-analyses or numerical human annotations were added. The institutional template,
+a continuous synthesis of the research-question answer, contributions and study
+limits, followed by a single section for future work. No simulations, extractions,
+model evaluations, new statistical analyses or numerical human annotations were
+added. The institutional template,
 previous chapters and bibliography were preserved.
 
 ## Evidence map
@@ -48,15 +49,15 @@ belief, exposure and sharing remain separate targets from textual drift.
 
 ## Validation and presentation
 
-- The research-question subsection was revised after the author's feedback:
+- The research-question answer was revised after the author's feedback:
   numerical contrasts and path-code listings were replaced by a direct synthesis
   of what can be concluded about content, preservation, order and emotional tone.
   The supporting results remain in Chapter 5; no empirical findings were changed.
 - The complete working project compiled successfully with the desktop editor.
 - The revised project also compiled successfully with the desktop editor.
-  A cached native Tectonic run produced an 85-page review PDF in the current
-  working tree. Chapter 7 occupies PDF pages 79–82, printed pages 77–80
-  (four pages). These page numbers supersede the initial draft's review.
+  A cached native Tectonic run produced an 85-page first-draft review PDF.
+  In that review, Chapter 7 occupied PDF pages 79–82, printed pages 77–80
+  (four pages). These historical page numbers do not describe the revised layout.
 - Cross-references resolve, labels are unique, and the chapter contains no TODOs.
 - The native log has no undefined citations/references, missing-character
   warnings or overfull/underfull boxes. The existing duplicate `@page.1`
