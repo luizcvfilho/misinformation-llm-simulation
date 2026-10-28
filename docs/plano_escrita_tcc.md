@@ -116,11 +116,11 @@ Conferir a seção da fonte primária antes de associá-la a uma afirmação nos
 
 ### 3.3 Evolução metodológica do projeto
 
-**Função:** reconstruir decisões que levaram ao desenho final, sem catálogo de desenhos descartados ou prova geral contra detectores.
+**Função:** apresentar, em três seções, a passagem dos diagnósticos binários à análise de deriva, o desenvolvimento da mensuração estrutural e afetiva e a consolidação das cadeias. Explicitar os problemas observados, as evidências e as decisões resultantes, remetendo os procedimentos de execução e cálculo a Materiais e métodos. A extensão deve preservar esse encadeamento, sem impor duas páginas como limite rígido. Os registros históricos abaixo servem à conferência das evidências, sem exigir sua descrição detalhada no capítulo.
 
 | Período | Etapa | Evidência e uso na redação |
 | --- | --- | --- |
-| Março–abril de 2026 | Coleta, reescrita e auditorias binárias em diferentes conjuntos e geradores. | `output/runs/20260326_*/` a `output/runs/20260413_*/`, `output/execution_report.md` e Git. Relacionar matriz e recortes adicionais do capítulo 3; conferir denominadores sem somar saídas sobrepostas. A resposta binária motivou descrição gradual, sem incapacidade geral dos detectores. |
+| Março–abril de 2026 | Coleta, reescrita e auditorias binárias em diferentes conjuntos e geradores. | `output/runs/20260326_*/` a `output/runs/20260413_*/`, `output/execution_report.md` e Git. Resumir a motivação da medida gradual no capítulo 3, preservando nos registros a matriz, os recortes e seus denominadores, sem somar saídas sobrepostas nem inferir incapacidade geral dos detectores. |
 | Abril–maio de 2026 | STDI, grafo e análises afetivas. | Histórico de `topic_drift/metrics.py` e extração; auditorias `VADPatternAudit/`, `TopicMatchedVADAudit/`, `VADContextContrastAudit/`. Separar fórmulas históricas e contradição interna de falsidade. |
 | Agosto de 2026 | Comparação dos mesmos 50 pares por LLM e embeddings/agrupamento; cobertura e regressão. | `output/stdi_manual_evaluation/`, `output/topic_drift/refreshed_llm/`, `refreshed_cluster/`, `output/stdi_logistic_regression/`. Não foram estabelecidas notas humanas numéricas, e essa anotação não será realizada. Regressões distinguem originais/reformulações, não classes factuais verificadas. |
 | 01–02/10/2026 | Alternativas ao VAD inicial em português e inglês. | Auditorias bilíngues e comparações BERT/NRC/MEmoLon. O pesquisador não considerou os substitutos satisfatórios para o uso pretendido; sustentar a escolha nos diagnósticos, sem superioridade geral. |
