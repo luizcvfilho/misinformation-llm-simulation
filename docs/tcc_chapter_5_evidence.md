@@ -23,8 +23,9 @@ Outputs:
 - `tcc/elementos-textuais/capitulo-5-tabelas.tex`: seven Portuguese numerical
   table macros placed by the chapter source.
 - `tcc/elementos-textuais/capitulo-5.tex`: manually authored Portuguese prose,
-  two additional contextual tables and figure placement. The script does not
-  overwrite this prose.
+  figure placement and qualitative case analysis with cross-references to the
+  transcripts in Appendix B. Coverage is summarized in the chapter opening.
+  The script does not overwrite this prose.
 
 The canonical institutional template is unchanged. `tcc/main.tex` already
 includes Chapter 5 and was not edited. Bibliographies were not changed.
@@ -150,7 +151,16 @@ is also present in `case_candidates.json`, with all four versions and references
 | Decreased score without clear substantive restoration | Portuguese / Grok / DDDD | `br2026_2181906645728122` | `simulation_ui_20261018_172257-GROK-BR/04_04_d_tree/04_04_d_tree_steps.jsonl:142` |
 | Cluster/LLM disagreement and extraction differences | English / GPT / NNNN | `840a13e28d007c39b74217c8e8a096a7` | `simulation_ui_20261016_213859-GPT/01_01_n_tree/01_01_n_tree_steps.jsonl:280` |
 
-### Case presentation in Appendix B
+### Case presentation in the chapter and Appendix B
+
+The chapter presents the six inspected cases in a continuous qualitative section.
+The political-reframing, DDNN preservation and English neutral cases are analyzed
+in prose, with cross-references to their transcripts in Appendix B rather than
+repeating textual excerpts. The appendix includes the full political trajectory,
+the original and second DDNN rewrite with an explanation of later preservation,
+and the English original and fourth rewrite. Their source records and line
+numbers are those listed above and in Appendix B.
+No source texts, scores, generated numerical tables or figure assets are changed.
 
 For Appendix A, the author clarified on 2026-10-22 that missing-topic extraction
 errors also occur in English. The requirement for a non-empty main topic was
