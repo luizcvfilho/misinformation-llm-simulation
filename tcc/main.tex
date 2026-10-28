@@ -12,6 +12,23 @@
 \mathchardef\UrlBreakPenalty=1000
 \setlength{\emergencystretch}{1em}
 
+% Keep each illustration and its caption between complete paragraphs.
+\makeatletter
+\newenvironment{tccillustration}[1]{%
+  \par\addvspace{\intextsep}\noindent
+  \begin{minipage}{\linewidth}%
+  \SingleSpacing
+  \def\@captype{#1}%
+}{%
+  \end{minipage}\par\addvspace{\intextsep}%
+}
+\makeatother
+\renewenvironment{figure}[1][]{\begin{tccillustration}{figure}}{\end{tccillustration}}
+\renewenvironment{table}[1][]{\begin{tccillustration}{table}}{\end{tccillustration}}
+\renewenvironment{quadro}[1][]{\begin{tccillustration}{quadro}}{\end{tccillustration}}
+\clubpenalty=10000
+\widowpenalty=10000
+
 \begin{document}
 \pretextual
 

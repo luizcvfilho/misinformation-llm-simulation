@@ -17,8 +17,7 @@ Its 11 included vector figures are stored in `figuras/chapter5/`; it uses six
 of the seven generated table macros in `elementos-textuais/capitulo-5-tabelas.tex`.
 Lexical feature diagnostics remain available in the analysis script and outputs.
 Independent human numerical annotations remain outside the study scope.
-Revision completion is recorded in `docs/plano_revisao_tcc.md`
-at the repository root, with the current writing plan in `docs/plano_escrita_tcc.md`.
+The current writing plan is in `docs/plano_escrita_tcc.md` at the repository root.
 Chapter 4 evidence checks and remaining provenance limits are recorded in
 `docs/tcc_chapter_4_evidence.md`. The complete working project compiled successfully
 with the desktop editor after this chapter was written on 2026-10-19.
@@ -55,7 +54,7 @@ requires both `capitulo-5.tex` and `capitulo-5-tabelas.tex`, together with its
 figure PDFs. Keep the existing chapter inclusion in `main.tex` and recompile
 with pdfLaTeX after uploading the files. Local edits are not synchronized
 automatically.
-Author, advisor, and co-advisor data are intentionally blank in
-`elementos-pretextuais/personalizar.tex`. The catalog card, approval page,
-Portuguese abstract, and English abstract must be added when their contents
-are consolidated.
+Author, advisor, and co-advisor data are filled in
+`elementos-pretextuais/personalizar.tex`. The Portuguese and English abstracts
+are included. The catalog card and approval page remain pending and must be
+added when their contents are consolidated.
