@@ -101,7 +101,8 @@ this study's operational choices or observations.
 - The complete working LaTeX project compiled successfully with the desktop compiler.
 - Chapter citation keys and cross-references resolve to existing entries/labels.
 - There are no duplicate labels in the current working sources.
-- Hash strings in the chapter concatenate to the verified 64-character digests.
+- Hash strings in Appendix C (`tcc/elementos-postextuais/apendice-3.tex`)
+  retain the 64-character digests recorded in the corpus checks above.
 - `references.bib` and `tcc/elementos-postextuais/referencias.bib` are byte-identical.
 - Compilation success does not replace final visual page-by-page review.
 - The consulted corpus records do not establish per-text redistribution licenses.

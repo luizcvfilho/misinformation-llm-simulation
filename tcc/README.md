@@ -41,8 +41,10 @@ Its evidence and four-page visual review are recorded in
 `elementos-textuais/capitulo-7.tex` in Overleaf. `main.tex` already includes it;
 no bibliography, figure or formatting changes are required. Recompile after
 uploading the source. The complete project compiled successfully after writing.
-For Overleaf, manually upload the updated files from `elementos-textuais/` and
-`figuras/chapter5/`, preserving those paths in the existing project. Chapter 5
+For Overleaf, manually upload the updated files from `elementos-textuais/`,
+`elementos-postextuais/`, and `figuras/chapter5/`, preserving those paths in the
+existing project. Include `elementos-postextuais/apendice-3.tex` through
+`main.tex` for the data identification and execution traceability appendix. Chapter 5
 requires both `capitulo-5.tex` and `capitulo-5-tabelas.tex`, together with its
 figure PDFs. Keep the existing chapter inclusion in `main.tex` and recompile
 with pdfLaTeX after uploading the files. Local edits are not synchronized
