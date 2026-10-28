@@ -224,7 +224,7 @@ Organizar em blocos, priorizando as rodadas finais:
 O capítulo inclui evolução contra o original e incrementos, boxplots finais, contrastes pareados de continuações, sequências e geradores, decomposição e direção VAD, comparação Cluster/LLM em inglês com VAD próprio e comum, comparação dos corpora com LLM/LLM e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
 
 1. Diagnósticos dos detectores como motivação, sem repetir extensamente o histórico.
-2. Comparação exploratória de VAD e auditoria de casos controlados no Capítulo 4, como diagnósticos do desenvolvimento do instrumento, separados das simulações finais.
+2. Procedimentos da comparação exploratória de VAD e da auditoria de casos controlados no Capítulo 4, com síntese dos resultados no Capítulo 3, como diagnósticos do desenvolvimento do instrumento separados das simulações finais.
 3. Comparação de métodos e inspeções qualitativas dos textos das rodadas finais no Capítulo 5, substituindo a seção prevista de validação humana.
 4. Cobertura e regressões somente quando sustentarem diagnóstico relevante, identificando grupos e sem interpretação como checagem factual.
 5. Cobertura de execução e comparação pareada das oito trajetórias nas seis rodadas finais, distinguindo gerador, corpus, STDI e VAD.

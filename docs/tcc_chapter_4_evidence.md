@@ -117,7 +117,26 @@ this study's operational choices or observations.
 ## Overleaf mapping
 
 Replace `elementos-textuais/capitulo-4.tex` with the complete local chapter.
-Keep the existing `main.tex` inclusion of that file. Bibliography files and
-formatting files do not require changes for this chapter. This evidence record,
+Its overview figure is authored directly in LaTeX and requires no image asset
+or additional package. The chapter has seven sections and three subsections,
+with VAD before STDI and the original/incremental definitions next to the index
+formula. All mathematical blocks retain their previous contents.
+
+Exploratory structural-audit and affective-pilot findings are summarized in
+`elementos-textuais/capitulo-3.tex`, within its existing measurement-development
+section. The summary preserves the nine ordering-check counts, the audit
+versions, the common BERT VAD source, and the four affective-pilot means.
+The seven selected per-variant Cluster/LLM means are retained in Chapter 3 as
+`tab:metodos-controles`, with a date-free caption and the three-scenario,
+common-BERT-VAD denominator. Chapter 4 points to that table. Complete diagnostic
+scores remain in the repository audit outputs identified in the writing plan.
+No additional diagnostic appendix is required.
+
+Replace `elementos-textuais/capitulo-3.tex` and
+`elementos-textuais/capitulo-4.tex`. If the previously proposed Appendix D was
+uploaded, remove `elementos-postextuais/apendice-4.tex` and its input line from
+`main.tex`. The current local main file includes only Appendices A-C.
+Recompile the complete project to update numbering, cross-references and lists.
+Bibliography and formatting files do not require changes. This evidence record,
 the updated writing plan and `tcc/README.md` have no required Overleaf destination.
 Local edits are not synchronized automatically.

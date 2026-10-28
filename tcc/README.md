@@ -25,7 +25,13 @@ with the desktop editor after this chapter was written on 2026-10-19.
 Chapter 5 evidence and reproduction instructions are recorded in
 `docs/tcc_chapter_5_evidence.md`. Reproduce its data, figures and numerical tables
 with `uv run --with matplotlib python scripts/analyze_tcc_chapter_5.py`.
-Chapter 4 documents the descriptive procedures included in the thesis.
+Chapter 4 documents the descriptive procedures included in the thesis. Its
+overview figure is authored directly in LaTeX, with seven sections and three
+subsections for the STDI calculation paths. Exploratory diagnostic findings are
+summarized in the existing measurement-development section of Chapter 3.
+Upload the revised Chapters 3 and 4; no additional image or diagnostic appendix
+is required. If the previously proposed Appendix D was uploaded, remove that
+file and its inclusion from `main.tex`. The local main file includes Appendices A-C.
 Chapter 6 interprets the trajectory, generator, component and affective findings,
 compares the study with iterative-generation and agent-evaluation research, and
 discusses measurement, design and generalization limits. Its evidence map and

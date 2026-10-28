@@ -1,14 +1,53 @@
 \chapter{MATERIAIS E MÉTODOS}
 \label{ch:metodos}
 
-Este capítulo apresenta o desenho final utilizado para investigar em que medida o tipo e a ordem das perspectivas atribuídas a agentes baseados em grandes modelos de linguagem alteram uma notícia ao longo de reescritas sucessivas. O estudo combina a geração de trajetórias controladas, a extração de estruturas dos textos e a mensuração de mudanças de conteúdo e de perfil afetivo, tendo a notícia original como referência textual de comparação. O percurso que levou às escolhas metodológicas foi apresentado no Capítulo \ref{ch:evolucao}. Aqui, descrevem-se os materiais, as operações e as unidades de análise das seis rodadas finais, conforme o escopo definido na Seção \ref{sec:escopo-contribuicoes}.
+Este capítulo descreve os materiais e os procedimentos das seis rodadas finais, desde a seleção das entradas e a geração das reescritas até a mensuração e a análise da deriva. A Figura \ref{fig:metodos-visao-geral} apresenta esse percurso. A geração produz versões sucessivas sob perspectivas predefinidas. A mensuração utiliza os textos originais e as reescritas para obter representações estruturadas, estimativas afetivas e escores de mudança. As decisões que conduziram ao desenho final foram discutidas no Capítulo \ref{ch:evolucao}.
+
+\begin{figure}[htbp]
+\centering
+\begin{SingleSpace}
+\small
+\setlength{\tabcolsep}{0pt}
+\begin{tabular}{c}
+\fbox{\parbox{0.88\textwidth}{\centering
+\textbf{Dados de entrada}\\
+Dois corpora de 50 textos: descrições em inglês e legendas em português.}}\\[0.25em]
+$\downarrow$\\[0.25em]
+\fbox{\parbox{0.88\textwidth}{\centering
+\textbf{Geração das reescritas}\\
+Três geradores por corpus, quatro árvores e oito trajetórias de quatro posições.\\
+Cada agente recebe a mensagem do antecessor e a perspectiva atribuída.}}\\[0.25em]
+$\downarrow$\\[0.25em]
+\fbox{\parbox{0.42\textwidth}{\centering
+\textbf{Extração estrutural}\\
+Tema, subtópicos, entidades, relações e campos complementares.}}
+\hspace{0.02\textwidth}
+\fbox{\parbox{0.42\textwidth}{\centering
+\textbf{Estimação afetiva}\\
+Valência, ativação e dominância de cada texto.}}\\[0.25em]
+$\downarrow$\\[0.25em]
+\fbox{\parbox{0.88\textwidth}{\centering
+\textbf{Mensuração da deriva pelo STDI}\\
+Comparação com o original e com o predecessor.\\
+Inglês: STDI e VAD Dual. Português: STDI e VAD LLM.}}\\[0.25em]
+$\downarrow$\\[0.25em]
+\fbox{\parbox{0.88\textwidth}{\centering
+\textbf{Avaliação e análise}\\
+Comparações pareadas dentro de cada corpus, análise dos componentes\\
+e inspeção qualitativa dos textos.}}
+\end{tabular}
+\end{SingleSpace}
+\caption{Visão geral do procedimento das simulações finais. A extração estrutural e a estimação afetiva utilizam os textos originais e as versões produzidas.}
+\label{fig:metodos-visao-geral}
+\legend{Fonte: elaboração própria.}
+\end{figure}
+
+A exposição acompanha essa organização: apresenta os dados, os modelos e o protocolo das cadeias, descreve a extração e o VAD e, em seguida, define o STDI e os procedimentos de avaliação. Os prompts completos e os registros necessários à reprodução estão nos Apêndices \ref{ap:prompts} e \ref{ap:rastreabilidade}. Os diagnósticos exploratórios que fundamentaram a escolha dos procedimentos são sintetizados na Seção \ref{sec:desenvolvimento-stdi}, separados das simulações finais.
 
 \section{DADOS}
 \label{sec:metodos-dados}
 
 Foram utilizados dois corpora com 50 entradas cada: descrições de notícias políticas em inglês e legendas de publicações jornalísticas em português no contexto eleitoral brasileiro de 2026. Cada corpus foi submetido aos mesmos três geradores e às mesmas oito trajetórias. Dentro de um corpus, preservaram-se a seleção, a ordem, os identificadores e os textos de entrada entre geradores. Os corpora não são traduções entre si: diferem em acontecimentos, fontes, período e formato, além do idioma.
-
-\subsection{Corpus político em inglês}
 
 O arquivo \path{data/graphs/graph_politics_news.csv} reúne 100 registros selecionados intencionalmente de uma base de 5.519 notícias políticas, acompanhados de um registro de metadados identificado por \path{__query_metadata__}. Para as simulações finais, esse registro foi removido e foram utilizadas as primeiras 50 notícias na ordem do arquivo. O corpo processado corresponde ao campo \path{description}. O título e o identificador foram preservados para rastreabilidade, mas o título separado não integrou o contexto de reescrita ou de extração na configuração final.
 
@@ -18,9 +57,7 @@ A seleção buscou reunir notícias sobre diferentes temas políticos, limitando
 
 Os textos disponíveis são descrições fornecidas pela coleta, e não matérias integrais: o campo de conteúdo completo da fonte estava indisponível no plano de acesso utilizado. A seleção preservou os valores dos campos originais, incluindo eventuais marcas de HTML, trechos incompletos e linguagem avaliativa dos veículos. Esses elementos integram o material efetivamente recebido pelos agentes. Os registros de coleta e a implementação do projeto identificam o fluxo de obtenção pela API NewsData. Essa procedência não equivale a uma licença de redistribuição dos textos jornalísticos.
 
-\subsection{Corpus brasileiro em português}
-
-O segundo corpus corresponde às primeiras 50 entradas, em ordem, de \path{data/elections_2026/simulation_news_100_cleaned.csv}. O arquivo contém 100 legendas selecionadas de publicações de veículos jornalísticos. Os registros preservam o identificador da publicação, a conta de origem, a data, o caminho do corpus de procedência e os campos de seleção \path{selection_rank}, \path{topic}, \path{event}, \path{reason} e \path{watch}. Esses campos documentam a ordenação, o assunto e os aspectos que motivaram a inclusão.
+O corpus brasileiro em português corresponde às primeiras 50 entradas, em ordem, de \path{data/elections_2026/simulation_news_100_cleaned.csv}. O arquivo contém 100 legendas selecionadas de publicações de veículos jornalísticos. Os registros preservam o identificador da publicação, a conta de origem, a data, o caminho do corpus de procedência e os campos de seleção \path{selection_rank}, \path{topic}, \path{event}, \path{reason} e \path{watch}. Esses campos documentam a ordenação, o assunto e os aspectos que motivaram a inclusão.
 
 No conjunto em português, a seleção priorizou publicações ligadas a um contexto temático comum: as eleições brasileiras de 2026. Esse recorte concentra os assuntos em um mesmo processo político, sem exigir que as publicações descrevam o mesmo acontecimento específico. As 50 entradas utilizadas provêm de 24 contas, com datas de publicação registradas entre 5 e 10 de outubro de 2026, e contêm 45 valores distintos no campo de evento. Enquanto o conjunto em inglês buscou maior diversidade de temas políticos, o conjunto brasileiro privilegiou esse recorte eleitoral. Em ambos, publicações sobre um mesmo acontecimento podem permanecer relacionadas. As publicações foram selecionadas por sua pertinência ao contexto eleitoral e aos objetivos do estudo.
 
@@ -33,25 +70,23 @@ Foi conferida a correspondência entre as entradas selecionadas e os textos orig
 \section{MODELOS, AGENTES E PERSPECTIVAS}
 \label{sec:metodos-modelos}
 
-\subsection{Geradores e avaliadores}
-
-Cada corpus foi processado por três geradores: \path{gpt-6-luna}, \path{grok-build-0.1} e \path{gemini-3.5-flash-lite}, identificados nos registros pelos provedores \path{chatgpt}, \path{grok} e \path{gemini}, respectivamente. Cada rodada utiliza um único gerador em todos os seus nós. A Tabela \ref{tab:configuracao-rodadas} apresenta as combinações de corpus, gerador e mensuração. As datas identificam o início pelo diretório de execução, não o horário de conclusão de todas as operações.
+Cada corpus foi processado por três geradores: \path{gpt-6-luna}, \path{grok-build-0.1} e \path{gemini-3.5-flash-lite}, identificados nos registros pelos provedores \path{chatgpt}, \path{grok} e \path{gemini}, respectivamente. Cada rodada utiliza um único gerador em todos os seus nós. A Tabela \ref{tab:configuracao-rodadas} apresenta as combinações de corpus, gerador e mensuração.
 
 \begin{table}[htb]
 \centering
 \caption{Configuração das seis rodadas finais.}
 \label{tab:configuracao-rodadas}
 \small
-\begin{tabular}{llccc}
+\begin{tabular}{llcc}
 \hline
-Corpus & Gerador & Início em 2026 & STDI & VAD \\
+Corpus & Gerador & STDI & VAD \\
 \hline
-Inglês & \path{gpt-6-luna} & 16/10 & Dual & Dual \\
-Inglês & \path{grok-build-0.1} & 17/10 & Dual & Dual \\
-Inglês & \path{gemini-3.5-flash-lite} & 17/10 & Dual & Dual \\
-Português & \path{gpt-6-luna} & 18/10 & LLM & LLM \\
-Português & \path{grok-build-0.1} & 18/10 & LLM & LLM \\
-Português & \path{gemini-3.5-flash-lite} & 19/10 & LLM & LLM \\
+Inglês & \path{gpt-6-luna} & Dual & Dual \\
+Inglês & \path{grok-build-0.1} & Dual & Dual \\
+Inglês & \path{gemini-3.5-flash-lite} & Dual & Dual \\
+Português & \path{gpt-6-luna} & LLM & LLM \\
+Português & \path{grok-build-0.1} & LLM & LLM \\
+Português & \path{gemini-3.5-flash-lite} & LLM & LLM \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir dos resumos das execuções finais. Cada rodada utiliza 50 entradas.}
@@ -61,9 +96,7 @@ A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo 
 
 Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \path{gpt-6-luna}. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados.
 
-\subsection{Perspectivas atribuídas aos agentes}
-
-Os agentes são definidos por instruções de perspectiva aplicadas a uma operação de reescrita. O Quadro \ref{quad:perspectivas-finais} sintetiza as quatro perspectivas presentes no desenho final.
+Para cada operação de reescrita, o gerador é condicionado por uma instrução de perspectiva que define o agente nessa passagem. O Quadro \ref{quad:perspectivas-finais} sintetiza as quatro perspectivas presentes no desenho final.
 
 \begin{quadro}[htb]
 \centering
@@ -87,10 +120,6 @@ A perspectiva N funciona como referência operacional de retransmissão. Sua ins
 \section{GERAÇÃO DAS CADEIAS DE REESCRITA}
 \label{sec:metodos-cadeias}
 
-\subsection{Protocolo de transmissão interpretativa}
-
-Os textos completos dos prompts de reescrita, perspectiva, extração, avaliação estrutural e estimação afetiva estão reunidos no Apêndice \ref{ap:prompts}.
-
 As seis rodadas adotam um protocolo de retransmissão interpretativa, no qual cada agente interpreta a mensagem recebida segundo a perspectiva atribuída e produz o relato que transmitiria ao agente seguinte. Na implementação, \path{interpretive} é o identificador desse modo de reescrita, enquanto \path{interpretive_v2} identifica a versão do conjunto de instruções (\textit{prompt}) utilizada nas execuções. A adoção desse protocolo no desenvolvimento do projeto foi discutida na Seção \ref{sec:consolidacao-cadeias}.
 
 Cada nó recebe apenas o texto produzido por seu pai, a perspectiva atribuída e a instrução de idioma. Na primeira posição, o texto recebido é a entrada do corpus. Nas posições seguintes, o agente não recebe a notícia original como contexto adicional, o título separado ou o histórico completo da cadeia. Não há acesso a fontes externas para reconstruir informações omitidas.
@@ -99,9 +128,7 @@ O protocolo admite seleção de alegações, omissão de contexto e qualificador
 
 O idioma de saída acompanha o corpus: inglês ou português. A resposta solicitada contém somente a mensagem retransmitida, sem título, rótulo da perspectiva ou explicação do processo. A cadeia resultante permite observar como a saída de uma etapa se torna a entrada efetiva da etapa seguinte.
 
-\subsection{Árvores, trajetórias e prefixos compartilhados}
-
-O desenho contém quatro árvores enraizadas no texto original e oito trajetórias de quatro posições, conforme a Tabela \ref{tab:arvores-finais}. Em cada árvore, as duas primeiras reescritas são compartilhadas por duas trajetórias. Após esse prefixo, um ramo mantém a perspectiva e o outro a substitui nas duas posições restantes.
+Para aplicar esse protocolo às diferentes sequências de perspectivas, o desenho contém quatro árvores enraizadas no texto original e oito trajetórias de quatro posições, conforme a Tabela \ref{tab:arvores-finais}. Em cada árvore, as duas primeiras reescritas são compartilhadas por duas trajetórias. Após esse prefixo, um ramo mantém a perspectiva e o outro a substitui nas duas posições restantes.
 
 \begin{table}[htb]
 \centering
@@ -141,10 +168,38 @@ A contradição interna descreve incompatibilidades no próprio texto, com escor
 
 A extração e a comparação constituem etapas diferentes. Uma omissão ou inconsistência da extração pode afetar o caminho Cluster, enquanto o avaliador LLM também recebe os textos completos. A reutilização de estruturas compatíveis reduz o número de extrações.
 
+\section{ANÁLISE DE VALÊNCIA, ATIVAÇÃO E DOMINÂNCIA}
+\label{sec:metodos-vad}
+
+Cada texto recebe três valores na escala nominal de um a cinco: valência, relativa à avaliação agradável ou desagradável expressa; ativação, relativa à intensidade do tom; e dominância, relativa à agência ou ao controle emocional expresso. A fundamentação dimensional foi discutida na Seção \ref{sec:representacao-afetiva}.
+
+O estimador neural \path{RobroKools/vad-bert} é documentado como BERT ajustado para regressão das três dimensões em inglês \cite{robrokoolsvadbert}. A implementação executa inferência local, com modelo em modo de avaliação, preenchimento por lote e truncamento em 512 tokens WordPiece. O LLM recebe o texto completo segundo seu \textit{prompt}. Por isso, diferenças entre estimadores também podem envolver a extensão efetivamente processada. Nas rodadas em inglês, utilizou-se a revisão \texttt{c4c659fd\allowbreak17dd5807\allowbreak572b3f0f\allowbreak577de8c4\allowbreak08401ca7}. O identificador do modelo e os escores produzidos estão preservados nos resultados finais.
+
+O VAD por LLM utiliza \path{gpt-6-luna} com o \textit{prompt} \path{llm_vad_expressed_tone_v2}. O avaliador recebe um único texto, sem seu par, título separado, perspectiva ou escore BERT. A instrução solicita o tom expresso pelo narrador, incluindo avaliações implícitas apoiadas na redação, e diferencia esse tom das emoções relatadas de personagens.
+
+As saídas do estimador LLM contêm valores, justificativas, trechos de apoio e ambiguidades. O \textit{prompt} esclarece que valência neutra não implica ativação intermediária e que dominância não equivale a certeza, autoridade institucional ou posição hierárquica de um ator. Os trechos de apoio permitem inspecionar a atribuição. As três avaliações repetidas do comparador estrutural reutilizam esses mesmos valores VAD.
+
+A partir dessas notas individuais, calcula-se a mudança afetiva entre versões. Para uma dimensão $q\in\{V,A,D\}$ e estimador $m$, a deriva entre referência $x$ e versão $y$ é
+\begin{equation}
+ a_{m,q}(x,y)=\min\left(\frac{|q_m(y)-q_m(x)|}{4},1\right).
+ \label{eq:vad-dimensao}
+\end{equation}
+A amplitude teórica quatro normaliza a diferença absoluta da escala de um a cinco. A deriva afetiva do estimador é
+\begin{equation}
+ A_m(x,y)=\frac{a_{m,V}(x,y)+a_{m,A}(x,y)+a_{m,D}(x,y)}{3}.
+ \label{eq:vad-estimador}
+\end{equation}
+Nas rodadas inglesas, seleciona-se
+\begin{equation}
+ A_{\mathrm{Dual}}=\frac{A_{\mathrm{BERT}}+A_{\mathrm{LLM}}}{2}.
+ \label{eq:vad-dual}
+\end{equation}
+Promediam-se as derivas normalizadas, e não os vetores brutos antes de calcular a distância. Dessa forma, mudanças de sinais opostos estimadas pelos dois métodos não se anulam. Não há um vetor VAD bruto Dual. Nas rodadas brasileiras, $A_{\mathrm{sel}}=A_{\mathrm{LLM}}$.
+
+Dimensões ausentes permanecem indisponíveis, e o VAD Dual exige ambos os estimadores completos. Para interpretar a direção afetiva, consideram-se os valores e as diferenças com sinal, pois o componente do STDI usa magnitudes absolutas. NRC e MEmoLon integram os diagnósticos de escolha discutidos no Capítulo \ref{ch:evolucao}, mas não entram no cálculo das rodadas finais.
+
 \section{STRUCTURED TOPIC DRIFT INDEX}
 \label{sec:metodos-stdi}
-
-\subsection{Componentes e fórmula de agregação}
 
 O Structured Topic Drift Index (STDI) combina quatro componentes de conteúdo, um sinal de contradição interna e a deriva afetiva. Sejam $T$, $U$, $E$ e $R$ as mudanças de tema, subtópicos, entidades e relações, respectivamente; $K$ representa contradição interna e $A$ a deriva VAD. Todos os componentes completos pertencem ao intervalo $[0,1]$. A parcela de conteúdo é
 \begin{equation}
@@ -161,9 +216,18 @@ Por fim, a deriva afetiva é incorporada ao escore intermediário obtido. Denota
  F(J,A) = J + (1-J)\,0{,}20\,A.
  \label{eq:stdi-completo}
 \end{equation}
-No cálculo adotado, os quatro componentes de conteúdo recebem pesos iguais de 0,25. A contradição interna e a deriva afetiva são incorporadas em sequência, cada uma com coeficiente de 0,20 sobre a distância restante até um. Os incrementos não equivalem a parcelas fixas de 20\% do total: sua contribuição diminui conforme o escore anterior se aproxima de um. Por construção, $F(J,A)$ permanece em $[0,1]$. Essa notação permite aplicar a mesma função aos escores intermediários e às fontes de VAD descritos nas subseções seguintes.
+No cálculo adotado, os quatro componentes de conteúdo recebem pesos iguais de 0,25. A contradição interna e a deriva afetiva são incorporadas em sequência, cada uma com coeficiente de 0,20 sobre a distância restante até um. Os incrementos não equivalem a parcelas fixas de 20\% do total: sua contribuição diminui conforme o escore anterior se aproxima de um. Por construção, $F(J,A)$ permanece em $[0,1]$. Essa notação permite aplicar a mesma função aos escores intermediários dos comparadores e à fonte afetiva selecionada, definida na Seção \ref{sec:metodos-vad}.
 
 O índice é uma medida operacional de afastamento, e não uma distância matemática cuja simetria e desigualdade triangular tenham sido demonstradas. Em particular, o ajuste numérico do Cluster utiliza a magnitude de referência, e a contradição diz respeito ao texto comparado, não a uma distância entre dois valores de contradição. No caso especial de texto e contexto idênticos, o fluxo registra um atalho com escore zero e dispensa nova consulta ao avaliador estrutural.
+
+Para uma trajetória com texto inicial $x_0$ e versões $x_1,\ldots,x_4$, distinguem-se duas medidas:
+\begin{align}
+ O_t &= \mathrm{STDI}(x_0,x_t), \label{eq:stdi-original}\\
+ I_t &= \mathrm{STDI}(x_{t-1},x_t). \label{eq:stdi-incremental}
+\end{align}
+$O_t$ descreve o afastamento da referência inicial, enquanto $I_t$ descreve a mudança produzida pela etapa em relação ao pai efetivo. Nas árvores, cada incremento utiliza o pai do nó, incluindo o prefixo compartilhado. Na primeira posição, as duas comparações usam o texto original como referência. Nas posições seguintes, uma mudança local pequena pode coexistir com afastamento elevado da origem, caso a etapa preserve uma mensagem já transformada.
+
+O cálculo dos componentes estruturais segue um dos dois caminhos descritos a seguir. Quando ambos são selecionados, seus escores completos são combinados no modo Dual.
 
 \subsection{Caminho Cluster}
 
@@ -241,103 +305,27 @@ Na configuração Dual/Dual, os resultados individuais registrados utilizam font
 
 O STDI Dual somente é concluído quando os dois caminhos estruturais e as estimativas afetivas exigidas estão disponíveis. Se o Cluster produzir um resultado válido, mas o caminho LLM não puder ser concluído, o resultado do Cluster permanece registrado e o Dual fica indisponível.
 
-\subsection{Comparação com o original e mudança incremental}
-
-Para uma trajetória com texto inicial $x_0$ e versões $x_1,\ldots,x_4$, distinguem-se duas medidas:
-\begin{align}
- O_t &= \mathrm{STDI}(x_0,x_t), \label{eq:stdi-original}\\
- I_t &= \mathrm{STDI}(x_{t-1},x_t). \label{eq:stdi-incremental}
-\end{align}
-$O_t$ descreve o afastamento da referência inicial, enquanto $I_t$ descreve a mudança produzida pela etapa em relação ao pai efetivo. Nas árvores, cada incremento utiliza o pai do nó, incluindo o prefixo compartilhado. Na primeira posição, as duas comparações usam o texto original como referência. Nas posições seguintes, uma mudança local pequena pode coexistir com afastamento elevado da origem, caso a etapa preserve uma mensagem já transformada.
-
-\section{ANÁLISE DE VALÊNCIA, ATIVAÇÃO E DOMINÂNCIA}
-\label{sec:metodos-vad}
-
-\subsection{Estimadores e prompt}
-
-Cada texto recebe três valores na escala nominal de um a cinco: valência, relativa à avaliação agradável ou desagradável expressa; ativação, relativa à intensidade do tom; e dominância, relativa à agência ou ao controle emocional expresso. A fundamentação dimensional foi discutida na Seção \ref{sec:representacao-afetiva}.
-
-O estimador neural \path{RobroKools/vad-bert} é documentado como BERT ajustado para regressão das três dimensões em inglês \cite{robrokoolsvadbert}. A implementação executa inferência local, com modelo em modo de avaliação, preenchimento por lote e truncamento em 512 tokens WordPiece. O LLM recebe o texto completo segundo seu \textit{prompt}. Por isso, diferenças entre estimadores também podem envolver a extensão efetivamente processada. Nas rodadas em inglês, utilizou-se a revisão \texttt{c4c659fd\allowbreak17dd5807\allowbreak572b3f0f\allowbreak577de8c4\allowbreak08401ca7}. O identificador do modelo e os escores produzidos estão preservados nos resultados finais.
-
-O VAD por LLM utiliza \path{gpt-6-luna} com o \textit{prompt} \path{llm_vad_expressed_tone_v2}. O avaliador recebe um único texto, sem seu par, título separado, perspectiva ou escore BERT. A instrução solicita o tom expresso pelo narrador, incluindo avaliações implícitas apoiadas na redação, e diferencia esse tom das emoções relatadas de personagens.
-
-As saídas contêm valores, justificativas, trechos de apoio e ambiguidades. O \textit{prompt} esclarece que valência neutra não implica ativação intermediária e que dominância não equivale a certeza, autoridade institucional ou posição hierárquica de um ator. Os trechos de apoio permitem inspecionar a atribuição. As três avaliações repetidas do comparador estrutural reutilizam esses mesmos valores VAD.
-
-\subsection{Normalização e VAD Dual}
-
-Para uma dimensão $q\in\{V,A,D\}$ e estimador $m$, a deriva entre referência $x$ e versão $y$ é
-\begin{equation}
- a_{m,q}(x,y)=\min\left(\frac{|q_m(y)-q_m(x)|}{4},1\right).
- \label{eq:vad-dimensao}
-\end{equation}
-A amplitude teórica quatro normaliza a diferença absoluta da escala de um a cinco. A deriva afetiva do estimador é
-\begin{equation}
- A_m(x,y)=\frac{a_{m,V}(x,y)+a_{m,A}(x,y)+a_{m,D}(x,y)}{3}.
- \label{eq:vad-estimador}
-\end{equation}
-Nas rodadas inglesas, seleciona-se
-\begin{equation}
- A_{\mathrm{Dual}}=\frac{A_{\mathrm{BERT}}+A_{\mathrm{LLM}}}{2}.
- \label{eq:vad-dual}
-\end{equation}
-Promediam-se as derivas normalizadas, e não os vetores brutos antes de calcular a distância. Dessa forma, mudanças de sinais opostos estimadas pelos dois métodos não se anulam. Não há um vetor VAD bruto Dual. Nas rodadas brasileiras, $A_{\mathrm{sel}}=A_{\mathrm{LLM}}$.
-
-Dimensões ausentes permanecem indisponíveis, e o VAD Dual exige ambos os estimadores completos. Para interpretar a direção afetiva, consideram-se os valores e as diferenças com sinal, pois o componente do STDI usa magnitudes absolutas. NRC e MEmoLon integram os diagnósticos de escolha discutidos no Capítulo \ref{ch:evolucao}, mas não entram no cálculo das rodadas finais.
-
 \section{PROCEDIMENTOS DE AVALIAÇÃO E ANÁLISE}
 \label{sec:metodos-analise}
 
-\subsection{Comparações nas rodadas finais}
+A análise organiza os escores por corpus, gerador, entrada, árvore, trajetória e posição, distinguindo afastamento do original, incremento e componentes. As diferenças entre trajetórias e geradores são calculadas sobre versões derivadas da mesma notícia, antes da agregação. As 50 entradas de cada corpus são as unidades de pareamento, embora coberturas relacionadas de um mesmo evento possam introduzir dependência entre entradas.
 
-A análise organiza os escores por corpus, gerador, entrada, árvore, trajetória e posição. Para cada combinação, distinguem-se STDI contra o original, incremento e componentes. As comparações entre trajetórias e geradores são pareadas pela mesma entrada dentro de cada corpus. Uma diferença entre dois cenários é, portanto, calculada sobre versões derivadas da mesma notícia, preservando essa correspondência na interpretação dos agregados.
+Examinam-se trajetórias homogêneas, continuações de um prefixo comum e inversões de composição entre C e P ou entre D e N, com NNNN como referência de retransmissão com alterações mínimas. Há uma trajetória observada por entrada e configuração. Os prefixos compartilhados, identificados na Tabela \ref{tab:arvores-finais}, não são contados novamente como gerações independentes. As avaliações repetidas incidem sobre textos já gerados.
 
-O desenho permite examinar trajetórias homogêneas, continuações distintas de um prefixo comum e inversões de composição entre C e P ou entre D e N. NNNN fornece a referência operacional de retransmissão com alterações mínimas. A análise das posições permite observar mudanças antes e depois da bifurcação, sem contar novamente os prefixos como gerações independentes. As 50 entradas de cada corpus são as unidades de pareamento, com a ressalva de que coberturas relacionadas de um mesmo evento ainda podem introduzir dependência entre entradas.
-
-Há uma trajetória observada por entrada e configuração, com compartilhamento dos nós iniciais indicado na Tabela \ref{tab:arvores-finais}. As avaliações repetidas incidem sobre os textos já gerados.
-
-No corpus inglês, comparam-se os ramos Cluster e LLM em dois recortes: com VAD próprio, BERT no Cluster e LLM no comparador LLM, e com VAD Dual comum aos dois caminhos estruturais. No segundo recorte, a deriva VAD utilizada é igual, embora seu acréscimo ao STDI dependa do escore estrutural anterior, conforme a fórmula de agregação. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória.
+No corpus inglês, comparam-se Cluster e LLM com VAD próprio de cada ramo, BERT e LLM respectivamente, e com VAD Dual comum. O recorte comum iguala a deriva afetiva utilizada, mas seu acréscimo ao STDI continua dependente do escore estrutural anterior. Utilizam-se diferenças pareadas, diferenças absolutas e correlações descritivas de Spearman, com identificação da trajetória.
 
 Entre corpora, o procedimento comum utiliza comparação estrutural LLM e VAD LLM, tanto contra o original quanto incrementalmente. As implicações das diferenças entre corpora e do avaliador comum são discutidas na Seção \ref{sec:discussao-validade}.
 
-As distribuições dos escores são apresentadas por medianas, quartis e pontos individuais. As tabelas também informam médias. A análise é descritiva, sem testes de hipótese ou intervalos populacionais, preservando o alcance da seleção intencional e as dependências entre entradas e trajetórias.
+As distribuições são apresentadas por medianas, quartis e pontos individuais, e as tabelas também informam médias. Essas estatísticas descrevem o conjunto observado, sem testes de hipótese ou intervalos populacionais, considerando a seleção intencional e as dependências entre entradas e trajetórias.
 
-\subsection{Casos controlados e inspeção qualitativa}
-\label{sec:metodos-diagnosticos}
+Durante o desenvolvimento, foram examinados um conjunto histórico de 50 pares e uma auditoria de 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. Esses conjuntos são analisados separadamente das notícias finais. Os controles verificam a resposta do instrumento às alterações introduzidas, sem pressupor uma nota exata para cada par.
 
-A avaliação do STDI combina a análise dos escores com a leitura dos textos comparados. Durante o desenvolvimento, foram examinados um conjunto histórico de 50 pares e uma auditoria de 36 pares primários, construídos a partir de três cenários fictícios e doze tipos de variante. Esses conjuntos são analisados separadamente das notícias finais. Nos casos controlados, verifica-se como o instrumento responde às alterações introduzidas, sem pressupor uma nota exata de deriva para cada par.
+Na auditoria de 36 pares, verificou-se se negação, mudança de quantidade e troca de ator recebiam escores maiores que uma paráfrase em cada cenário, totalizando nove comparações de ordenação. A Seção \ref{sec:desenvolvimento-stdi} sintetiza os resultados e identifica as versões utilizadas, e a Tabela \ref{tab:metodos-controles} apresenta as médias de variantes selecionadas.
 
-Na auditoria \path{STDIControlledInformationAudit_20261005}, foram obtidos escores completos nos dois comparadores. Em cada cenário, verificou-se se negação, mudança de quantidade e troca de ator recebiam escores maiores que a paráfrase que preservava o sentido. Nas nove comparações de ordenação, o Cluster atendeu à expectativa em seis e o LLM, nas nove. A Tabela \ref{tab:metodos-controles} apresenta um recorte dos resultados.
-
-\begin{center}
-\begin{minipage}{\textwidth}
-\centering
-\small
-\newfixedcaption{\controlAuditCaption}{table}
-\controlAuditCaption{STDI médio de variantes selecionadas na auditoria controlada de 5 de outubro.}
-\label{tab:metodos-controles}
-\begin{tabular}{lrr}
-\hline
-Variante & Cluster & LLM \\
-\hline
-Identidade & 0,000 & 0,000 \\
-Paráfrase & 0,122 & 0,002 \\
-Negação & 0,162 & 0,439 \\
-Troca de ator & 0,147 & 0,292 \\
-Mudança de quantidade & 0,131 & 0,229 \\
-Omissão & 0,455 & 0,338 \\
-Contradição interna & 0,396 & 0,484 \\
-\hline
-\end{tabular}
-\legend{Fonte: elaboração própria, a partir de \texttt{change\_type\_summary.csv} da auditoria. Cada média utiliza três cenários pareados, com VAD BERT comum.}
-\end{minipage}
-\end{center}
-
-Nesse recorte, o Cluster atribuiu maior deriva às paráfrases que o LLM, enquanto o LLM respondeu mais intensamente à negação e à troca de ator. A inspeção também identificou informação preservada no texto, mas ausente da estrutura extraída, contribuindo para o escore do Cluster. O escore próximo de zero atribuído pelo LLM à paráfrase eleitoral é compatível com o reconhecimento dessa informação pelo avaliador, que recebe os textos completos. A auditoria utilizou \path{structured_extraction_v4}, \path{structured_judge_v3}, \path{cluster_v3} e \path{dual_stdi_v3}. Os resultados correspondem a essas versões, anteriores à ampliação dos qualificadores numéricos da configuração final.
-
-O piloto de comparação afetiva entre BERT e LLM também integrou a escolha dos estimadores. Nos 30 pares de simulação, derivados de cinco notícias em seis cadeias anteriores, a deriva VAD média foi 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250. Esses resultados exploratórios mostraram diferenças de comportamento mesmo com amplitude nominal comum. A maior variação não estabelece maior acurácia.
+O piloto afetivo compara BERT e LLM sobre textos mantidos constantes: vinte pares sintéticos e trinta pares de simulação derivados de cinco notícias em seis cadeias anteriores. Os resultados dessa comparação exploratória também são retomados na Seção \ref{sec:desenvolvimento-stdi}.
 
 Também foi preparado um conjunto separado de 18 pares de frases sintéticas para verificar situações específicas, como equivalência entre durações e inversão de quem realiza uma ação.
 
-Na inspeção qualitativa, o pesquisador lê o original e a reescrita e consulta as estruturas extraídas, os escores de cada componente e as justificativas do avaliador LLM. Essa leitura ajuda a identificar tanto mudanças no texto, como a inclusão de um motivo ou a alteração de um número, quanto problemas do processamento, como uma entidade presente no texto que não foi extraída. Os resultados são interpretados considerando a versão do instrumento utilizada em cada avaliação.
+A inspeção qualitativa relaciona os escores ao conteúdo recebido e produzido. O pesquisador lê o original e a reescrita e consulta as estruturas, os componentes e as justificativas do avaliador LLM. Essa leitura distingue mudanças textuais, como a inclusão de um motivo ou a alteração de um número, de problemas de processamento, como uma entidade preservada que não foi extraída. A interpretação considera a versão do instrumento utilizada em cada avaliação.
 
-O Capítulo \ref{ch:resultados} apresenta as comparações e os casos das seis rodadas finais. Os registros permitem recalcular os agregados a partir das respostas salvas, conforme os procedimentos de reprodução documentados no Apêndice \ref{ap:rastreabilidade}.
+O Capítulo \ref{ch:resultados} apresenta as comparações e os casos das seis rodadas finais. Sua recomposição a partir das respostas salvas segue os procedimentos do Apêndice \ref{ap:rastreabilidade}.

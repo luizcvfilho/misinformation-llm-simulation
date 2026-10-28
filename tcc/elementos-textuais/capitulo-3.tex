@@ -15,13 +15,36 @@ Nos diagnósticos realizados, o detector não atribuiu a classe falsa às saída
 
 O desenvolvimento do STDI partiu de uma representação estruturada dos textos, com tema, subtópicos, entidades e relações. Essa decomposição permitiu localizar dimensões de mudança que um rótulo global não distinguia. Uma notícia poderia manter seus participantes e seu assunto principal e, ainda assim, alterar as ações e as justificativas atribuídas a eles. Foram incorporados também a contradição interna e os sinais de valência, ativação e dominância (VAD), para acompanhar a consistência do relato e seu tom afetivo. A representação passou, assim, a reunir componentes examináveis separadamente, além do escore combinado.
 
-As inspeções de paráfrases e alterações controladas mostraram a necessidade de considerar o sentido das expressões comparadas. A proximidade entre embeddings nem sempre distinguia preservação de significado de mudanças como negação, troca de atores ou alteração de quantidades. Também foram observadas inconsistências entre os textos e as estruturas extraídas, indicando que parte da variação dos escores podia decorrer da representação produzida pelo extrator. A análise precisou, portanto, considerar tanto as transformações textuais quanto sua representação estruturada. Os resultados e as versões desses diagnósticos são apresentados na Seção \ref{sec:metodos-diagnosticos}.
+As inspeções de paráfrases e alterações controladas mostraram a necessidade de considerar o sentido das expressões comparadas. A proximidade entre embeddings nem sempre distinguia preservação de significado de mudanças como negação, troca de atores ou alteração de quantidades. Também foram observadas inconsistências entre os textos e as estruturas extraídas, indicando que parte da variação dos escores podia decorrer da representação produzida pelo extrator. A análise precisou, portanto, considerar tanto as transformações textuais quanto sua representação estruturada. Os procedimentos de avaliação são descritos na Seção \ref{sec:metodos-analise}.
+
+A auditoria controlada de transformação informacional examinou 36 pares, construídos a partir de três cenários fictícios e doze tipos de variante. Negação, troca de ator e mudança de quantidade foram comparadas à paráfrase que preservava o sentido, totalizando nove expectativas de ordenação. O Cluster atendeu a seis e o LLM, às nove. Nesse recorte, o Cluster atribuiu maior deriva às paráfrases, enquanto o LLM respondeu mais intensamente à negação e à troca de ator. A auditoria utilizou \path{structured_extraction_v4}, \path{structured_judge_v3}, \path{cluster_v3} e \path{dual_stdi_v3}, com VAD BERT comum. Esses resultados apoiaram o diagnóstico do instrumento nessas versões, sem constituir uma referência humana numérica independente ou comprovar o desempenho da configuração final, posterior à ampliação dos qualificadores numéricos. A Tabela \ref{tab:metodos-controles} apresenta as médias de variantes selecionadas desse recorte.
+
+\begin{table}[htbp]
+\centering
+\caption{STDI médio de variantes selecionadas na auditoria controlada de transformação informacional.}
+\label{tab:metodos-controles}
+\small
+\begin{tabular}{lrr}
+\hline
+Variante & Cluster & LLM \\
+\hline
+Identidade & 0,000 & 0,000 \\
+Paráfrase & 0,122 & 0,002 \\
+Negação & 0,162 & 0,439 \\
+Troca de ator & 0,147 & 0,292 \\
+Mudança de quantidade & 0,131 & 0,229 \\
+Omissão & 0,455 & 0,338 \\
+Contradição interna & 0,396 & 0,484 \\
+\hline
+\end{tabular}
+\legend{Fonte: elaboração própria, a partir de \texttt{change\_type\_summary.csv} da auditoria. Cada média utiliza três cenários pareados, com VAD BERT comum.}
+\end{table}
 
 Esses diagnósticos orientaram o aprimoramento das regras estruturais e a incorporação de avaliação por LLM. No caminho Cluster, foram introduzidos tratamentos explícitos de polaridade e valores numéricos, complementando a comparação por embeddings. No caminho LLM, o avaliador passou a receber os textos e as estruturas extraídas e a atribuir notas aos componentes conforme um \textit{prompt}. O acesso ao texto permite examinar informações que a extração pode ter representado de modo incompleto. Os dois caminhos foram mantidos como métodos selecionáveis, e o modo Dual passou a combinar seus escores. Essa organização permite examinar o desacordo entre procedimentos e relacioná-lo aos textos e às representações utilizados.
 
 A escolha afetiva considerou o modelo inicial \path{RobroKools/vad-bert} e alternativas lexicais NRC e MEmoLon. A análise de textos em português e inglês exigia examinar a adequação dos estimadores às entradas utilizadas. Os testes incluíram controles de polaridade e contexto e textos de simulações preservadas. Foram inspecionadas cobertura lexical, resposta às alterações de contexto e diferenças de escala e extensão processada. Nos recortes examinados, os candidatos lexicais não apresentaram comportamento considerado satisfatório para substituir o estimador inicial no uso pretendido. Essa avaliação orientou a busca por uma alternativa capaz de fornecer notas e justificativas inspecionáveis para cada texto.
 
-Esse percurso motivou o VAD por LLM, baseado na avaliação individual do tom expresso. O piloto comparativo mostrou diferenças entre os perfis produzidos por BERT e LLM. A inspeção das notas e justificativas permitiu examinar a relação entre redação, tom e avaliação afetiva, sem tomar a maior variação como prova de acurácia. Na configuração final, português utiliza VAD por LLM, enquanto inglês mantém BERT e LLM no modo Dual. A escolha afetiva é independente da seleção do comparador estrutural, e sua operacionalização é descrita no Capítulo \ref{ch:metodos}.
+Esse percurso motivou o VAD por LLM, baseado na avaliação individual do tom expresso. No piloto de comparação afetiva entre BERT e LLM, trinta pares de simulação derivados de cinco notícias em seis cadeias anteriores apresentaram deriva VAD média de 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250, respectivamente. Esses resultados exploratórios mostraram diferenças entre estimadores e motivaram a inspeção das notas e justificativas, sem tomar a maior variação como prova de acurácia. O piloto antecede o prompt afetivo adotado nas rodadas finais. Na configuração final, português utiliza VAD por LLM, enquanto inglês mantém BERT e LLM no modo Dual. A escolha afetiva é independente da seleção do comparador estrutural, e sua operacionalização é descrita no Capítulo \ref{ch:metodos}.
 
 \section{CONSOLIDAÇÃO DAS CADEIAS DE REESCRITA}
 \label{sec:consolidacao-cadeias}
