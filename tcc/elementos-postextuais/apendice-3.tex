@@ -3,7 +3,7 @@
 
 Este apêndice reúne a identificação dos arquivos de entrada e os procedimentos de registro, persistência e recuperação das seis rodadas finais descritas no Capítulo \ref{ch:metodos}. Esses elementos permitem conferir os dados utilizados e recompor as análises a partir das respostas preservadas.
 
-\section{IDENTIFICAÇÃO DOS CORPORA E CONFERÊNCIA DAS ENTRADAS}
+\section{IDENTIFICAÇÃO DOS DADOS E CONFERÊNCIA DAS ENTRADAS}
 
 Para identificar os arquivos utilizados, foram conferidos os resumos SHA-256 dos arquivos \path{data/graphs/graph_politics_news.csv} e \path{data/elections_2026/simulation_news_100_cleaned.csv}, apresentados na Tabela \ref{tab:hashes-corpora}. Os valores correspondem à conferência documentada em 19 de outubro de 2026. Cada hash identifica o respectivo CSV completo, que contém 100 notícias, e não apenas o recorte das primeiras 50 utilizado nas simulações. No corpus inglês, o registro \path{__query_metadata__} foi excluído antes da seleção das primeiras 50 entradas. No corpus português, foram utilizadas as primeiras 50 entradas do arquivo limpo, em ordem.
 
@@ -28,7 +28,7 @@ Português \newline \path{data/elections_2026/simulation_news_100_cleaned.csv}
 
 A conferência dos identificadores e dos textos originais salvos nos 7.200 registros de nós das seis rodadas não encontrou divergências em relação às respectivas entradas selecionadas. A identificação do arquivo completo por hash e a conferência do recorte ordenado são verificações complementares: a primeira identifica o CSV, enquanto a segunda confirma quais entradas foram efetivamente utilizadas.
 
-\section{REGISTROS, PERSISTÊNCIA E RETOMADA}
+\section{REGISTROS DAS EXECUÇÕES E REPRODUÇÃO DAS ANÁLISES}
 
 Os resultados preservam o texto recebido, o texto produzido, a identificação do nó e de seu pai, o gerador, a perspectiva, os estados de processamento e os escores. Há registros dos nós únicos e projeções das trajetórias. Para contar reescritas, utilizam-se os registros dos nós únicos. Para acompanhar uma sequência, utiliza-se a projeção, preservando a identidade dos nós compartilhados.
 
@@ -38,9 +38,7 @@ As chaves de reutilização consideram entradas e configurações pertinentes à
 
 Os 24 resumos das árvores registram 50 entradas por árvore e, no conjunto de cada rodada, 1.200 reescritas concluídas, sem erro final de reescrita. Os 7.200 nós apresentam STDI selecionado válido tanto na comparação com o original quanto na incremental. Esses estados documentam a cobertura final disponível e não permitem inferir quantas tentativas foram necessárias para concluir cada operação. As análises usam os estados e a proveniência de cada etapa para distinguir ausência de mensuração de um valor efetivamente igual a zero.
 
-\section{ORGANIZAÇÃO DOS ARQUIVOS E RECOMPOSIÇÃO DAS ANÁLISES}
-
-Os diretórios finais estão preservados em \path{output/interaction_graph/app_runs/}, com resumos por árvore, registros de nós em JSONL, projeções em \path{paths/}, estruturas, avaliações individuais e caches por etapa. A configuração de corpus, gerador e mensuração de cada rodada está apresentada na Tabela \ref{tab:configuracao-rodadas}. Os nomes dos diretórios de execução e sua correspondência com os corpora estão documentados em \path{docs/plano_escrita_tcc.md}. Os arquivos de configuração das árvores encontram-se em \path{data/graphs/branching/}, nas variantes dos três geradores.
+Esses registros estão organizados nos diretórios finais de \path{output/interaction_graph/app_runs/}, com resumos por árvore, registros de nós em JSONL, projeções em \path{paths/}, estruturas, avaliações individuais e caches por etapa. A configuração de corpus, gerador e mensuração de cada rodada está apresentada na Tabela \ref{tab:configuracao-rodadas}. Os nomes dos diretórios de execução e sua correspondência com os corpora estão documentados em \path{docs/plano_escrita_tcc.md}. Os arquivos de configuração das árvores encontram-se em \path{data/graphs/branching/}, nas variantes dos três geradores.
 
 Os agregados e as figuras do Capítulo \ref{ch:resultados} são produzidos pelo script \path{scripts/analyze_tcc_chapter_5.py}. Os dados derivados e o manifesto com a identificação das fontes estão preservados em \path{output/analysis/tcc_chapter_5/}.
 
