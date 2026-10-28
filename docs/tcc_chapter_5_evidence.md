@@ -150,7 +150,7 @@ is also present in `case_candidates.json`, with all four versions and references
 | Decreased score without clear substantive restoration | Portuguese / Grok / DDDD | `br2026_2181906645728122` | `simulation_ui_20261018_172257-GROK-BR/04_04_d_tree/04_04_d_tree_steps.jsonl:142` |
 | Cluster/LLM disagreement and extraction differences | English / GPT / NNNN | `840a13e28d007c39b74217c8e8a096a7` | `simulation_ui_20261016_213859-GPT/01_01_n_tree/01_01_n_tree_steps.jsonl:280` |
 
-### Complete DDNN illustration in Appendix B
+### Case presentation in Appendix B
 
 For Appendix A, the author clarified on 2026-10-22 that missing-topic extraction
 errors also occur in English. The requirement for a non-empty main topic was
@@ -159,20 +159,17 @@ prompt design. The appendix's comparison framed around the three cases' language
 was removed, together with its corresponding Chapter 4 cross-reference sentence.
 The prompt text, saved data and scores were not changed.
 
-Appendix B transcribes the original Chapter 5 case `br2026_2212221500172755`,
-Portuguese / Gemini / DDNN, from
+Appendix B presents the original and second rewrite of the Chapter 5 case
+`br2026_2212221500172755`, Portuguese / Gemini / DDNN, with its saved scores
+and a brief explanation from
 `simulation_ui_20261019_124942-GEMINIBR/04_04_d_tree/04_04_d_tree_steps.jsonl`,
 lines 259, 260, 263 and 264, relative to `output/interaction_graph/app_runs/`.
-The original, four rewrites and scores were copied from the saved records.
-
-The first rewrite contains the stray Hangul character U+D488 in the saved
-Gemini response and checkpoint, not in the source corpus. For pdfLaTeX
-compatibility, the appendix displays `[U+D488]` at that exact location with a
-footnote identifying the original character and the presentation-only change.
-The raw records retain the character, and the incomplete word before it is not
-silently corrected. No alternative trajectory is included. No model calls,
-rescoring, data edits or changes to aggregate results were made. Prompt-composition
-hash checks were repeated against the original case's saved records.
+The full transcripts remain in those records. Appendix B retains the complete
+political-reframing trajectory and only the original and final text of the
+English neutral case, together with their saved scores and record locations.
+The first, third and fourth DDNN rewrites are not reproduced in the appendix.
+The first rewrite's stray Hangul character U+D488 remains in the source records.
+The source records and aggregate results remain unchanged.
 
 ### Whitespace-sensitive DDNN case retained in Chapter 5
 

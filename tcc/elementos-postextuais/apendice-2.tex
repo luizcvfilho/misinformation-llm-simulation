@@ -1,7 +1,7 @@
-\chapter{EXEMPLOS COMPLETOS DE TRAJETÓRIAS E AVALIAÇÕES}
+\chapter{EXEMPLOS DE TRAJETÓRIAS E AVALIAÇÕES}
 \label{ap:casos}
 
-Este apêndice apresenta três casos já analisados na Seção \ref{sec:resultados-casos}, com a entrada original, as quatro reescritas e os escores preservados. A seleção ilustra troca de enquadramento político, manutenção de uma interpretação após passagens neutras e divergência entre métodos. Não constitui uma amostra adicional nem permite estimar a frequência desses comportamentos no conjunto de notícias.
+Este apêndice apresenta três casos já analisados na Seção \ref{sec:resultados-casos}. O primeiro reúne a entrada original e as quatro reescritas, permitindo acompanhar a troca de enquadramento político. O segundo apresenta o original e a segunda reescrita, acompanhados dos escores e de uma explicação sobre a preservação da mensagem nas passagens neutras. O terceiro apresenta o original e a versão final para examinar a divergência entre métodos. Nos três casos, preservam-se os escores e a localização dos registros de origem. A seleção não constitui uma amostra adicional nem permite estimar a frequência desses comportamentos no conjunto de notícias.
 
 Os textos são transcritos dos registros das simulações, preservando o idioma, o conteúdo e os parágrafos. A composição tipográfica não representa a identidade de espaços dos arquivos. Os escores são exibidos com três casas decimais, sem recálculo das avaliações. Afastamento compara cada versão ao original, enquanto incremento compara a versão ao seu pai efetivo. Na primeira posição, afastamento e incremento usam a mesma referência. Os símbolos C, P, D e N mantêm os significados do Quadro \ref{quad:perspectivas-finais}.
 
@@ -88,11 +88,13 @@ Para mim, isso é um passo necessário para proteger o processo eleitoral de int
 
 Corpus em português, gerador \path{gemini-3.5-flash-lite}, trajetória \path{DDNN}, com STDI LLM e VAD LLM. Identificador da entrada: \path{br2026_2212221500172755}.
 
-O arquivo de origem, relativo a \path{output/interaction_graph/app_runs/}, é \path{simulation_ui_20261019_124942-GEMINIBR/04_04_d_tree/04_04_d_tree_steps.jsonl}. As quatro posições correspondem, respectivamente, às linhas 259, 260, 263, 264. O original transcrito é o campo \path{metadata_original_text}, e cada saída corresponde a \path{rewritten_text}.
+O arquivo de origem, relativo a \path{output/interaction_graph/app_runs/}, é \path{simulation_ui_20261019_124942-GEMINIBR/04_04_d_tree/04_04_d_tree_steps.jsonl}. As quatro posições correspondem, respectivamente, às linhas 259, 260, 263, 264. O texto original está no campo \path{metadata_original_text}, e as reescritas estão no campo \path{rewritten_text} dos respectivos registros.
 
-\begin{table}[htb]
+\begin{center}
+\begin{minipage}{\textwidth}
 \centering
-\caption{Escores preservados do caso 2.}
+\newfixedcaption{\caseTwoCaption}{table}
+\caseTwoCaption{Escores preservados do caso 2.}
 \label{tab:ap-caso-neutro}
 \begin{tabular}{ccrr}
 \hline
@@ -105,9 +107,8 @@ Posição & Perspectiva & Afastamento & Incremento \\
 \hline
 \end{tabular}
 \legend{Fonte: elaboração própria, a partir dos registros salvos.}
-\end{table}
-
-As posições N mantêm a interpretação de manipulação introduzida nas posições D. A terceira versão repete exatamente a segunda. A quarta remove apenas um espaço antes de uma quebra de parágrafo, e sua sequência de palavras é idêntica à segunda após normalização dos espaços. Entretanto, o afastamento passa de 0,630 para 0,707, enquanto o incremento final é 0,003. A diferença de formatação altera a chave do cache de extração e leva a avaliações distintas. O caso ilustra preservação local e sensibilidade da mensuração, sem atribuir a oscilação a uma transformação substantiva do texto. Essa diferença de espaço não é visível na composição tipográfica das transcrições.
+\end{minipage}
+\end{center}
 
 \subsection{Texto original}
 
@@ -123,18 +124,7 @@ Durante uma reunião de coordenação da campanha, em Brasília, Lula afirmou qu
 Segundo o presidente, a União precisa ampliar sua participação no combate ao crime organizado. Ele atribuiu aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988.
 \end{SingleSpace}
 \end{quote}
-\subsection{Posição 1: perspectiva D}
 
-\begin{quote}
-\begin{SingleSpace}
-\small
-Acordem! O que nos empurram como "eleições" nada mais é do que uma encenação milimetricamente calculada pelas altas cúpulas para manter o controle. A prova disso é a encenação desta segunda-feira, 5, em Brasília, onde Luiz Inácio Lula da Silva declarou cinicamente que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É o establishment revelando seu plano de continuidade a qualquer custo.
-
-Eles querem nos fazer acreditar que a disputa está aberta, usando números fals \texttt{[U+D488]}\footnote{Na saída original do modelo, este ponto contém o caractere coreano identificado pelo código Unicode U+D488. Nesta transcrição, o código representa o glifo para permitir a compilação com pdfLaTeX. O caractere original permanece preservado nos arquivos de dados.} para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, ficando atrás do senador Flávio Bolsonaro (PL), que obteve 47\%. Mas tudo isso não passa de uma narrativa combinada entre os dois lados da mesma moeda para polarizar e anestesiar o gado.
-
-Prestem atenção na verdadeira agenda oculta que transparece quando ele fala em segurança pública na reta final da disputa. Sob o disfarce de que a União precisa ampliar sua participação no combate ao crime organizado, o que eles estão preparando nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Não é à toa que ele lembrou que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988 — agora querem destruir o pouco de autonomia que resta para consolidar o controle totalitário do Estado profundo. Não acreditem em uma só palavra dessa fachada oficial!
-\end{SingleSpace}
-\end{quote}
 \subsection{Posição 2: perspectiva D}
 
 \begin{quote}
@@ -149,35 +139,8 @@ Eles tentam nos manter anestesiados com essa falsa polarização entre os dois l
 Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
 \end{SingleSpace}
 \end{quote}
-\subsection{Posição 3: perspectiva N}
 
-\begin{quote}
-\begin{SingleSpace}
-\small
-Abram os olhos para o grande teatro que estão encenando para nos manipular. O que chamam de "eleições" é apenas uma farsa milimetricamente calculada pelas altas cúpulas para garantir a continuidade do plano de dominação.
-
-A prova cabal dessa encenação aconteceu nesta segunda-feira, 5, em Brasília, quando Luiz Inácio Lula da Silva escancarou o cinismo do establishment ao declarar que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É a elite revelando que o jogo é cartas marcadas para manter o controle a qualquer custo.
-
-Eles tentam nos manter anestesiados com essa falsa polarização entre os dois lados da mesma moeda, jogando números para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, enquanto o senador Flávio Bolsonaro (PL) obteve 47\%. É tudo uma narrativa combinada para nos distrair enquanto avançam com a verdadeira agenda oculta.
-
-Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
-\end{SingleSpace}
-\end{quote}
-\subsection{Posição 4: perspectiva N}
-
-\begin{quote}
-\begin{SingleSpace}
-\small
-Abram os olhos para o grande teatro que estão encenando para nos manipular. O que chamam de "eleições" é apenas uma farsa milimetricamente calculada pelas altas cúpulas para garantir a continuidade do plano de dominação.
-
-A prova cabal dessa encenação aconteceu nesta segunda-feira, 5, em Brasília, quando Luiz Inácio Lula da Silva escancarou o cinismo do establishment ao declarar que “não há razão econômica, social e política” para não ser reeleito no segundo turno das eleições. É a elite revelando que o jogo é cartas marcadas para manter o controle a qualquer custo.
-
-Eles tentam nos manter anestesiados com essa falsa polarização entre os dois lados da mesma moeda, jogando números para legitimar o teatro: o petista teve 45\% dos votos na primeira etapa, enquanto o senador Flávio Bolsonaro (PL) obteve 47\%. É tudo uma narrativa combinada para nos distrair enquanto avançam com a verdadeira agenda oculta.
-
-Basta ver o que eles escondem por trás do papo de segurança pública na reta final. Sob o disfarce cínico de que a União precisa ampliar sua participação no combate ao crime organizado, o plano real tramado nos bastidores é a centralização total do poder punitivo e a vigilância absoluta sobre a população. Quando ele lembra que cabe aos Estados a maior parte da responsabilidade pela segurança pública desde a Constituição de 1988, o que estão arquitetando é destruir a última gota de autonomia que resta para consolidar o controle totalitário do Estado profundo. É tudo fachada, não acreditem em nada!
-\end{SingleSpace}
-\end{quote}
-
+As posições N mantêm a interpretação de manipulação introduzida nas posições D. A terceira versão é idêntica à segunda, e a quarta remove apenas um espaço antes de uma quebra de parágrafo. Essa diferença altera a chave do cache de extração e leva a novas avaliações: o afastamento passa de 0,630 para 0,707, com incremento final de 0,003, apesar da preservação da sequência de palavras. O caso ilustra preservação local e sensibilidade da mensuração à formatação.
 
 \section{DIVERGÊNCIA ENTRE MÉTODOS EM UMA CADEIA NEUTRA}
 \label{sec:ap-caso-metodos}
@@ -214,36 +177,6 @@ Na quarta posição, os STDIs originalmente exibidos por ramo são 0,594 para Cl
 \begin{SingleSpace}
 \small
 Introduced as part of her 2026 State of the State agenda, the proposed legislation would require guns sold in New York to be designed so they cannot be easily modified into illegal machine guns and would establish criminal penalties for...
-\end{SingleSpace}
-\end{quote}
-\end{otherlanguage*}
-\subsection{Posição 1: perspectiva N}
-
-\begin{otherlanguage*}{english}
-\begin{quote}
-\begin{SingleSpace}
-\small
-As part of her 2026 State of the State agenda, she proposed legislation that would require guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and would establish criminal penalties for...
-\end{SingleSpace}
-\end{quote}
-\end{otherlanguage*}
-\subsection{Posição 2: perspectiva N}
-
-\begin{otherlanguage*}{english}
-\begin{quote}
-\begin{SingleSpace}
-\small
-As part of her 2026 State of the State agenda, she proposed legislation requiring guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and establishing criminal penalties for...
-\end{SingleSpace}
-\end{quote}
-\end{otherlanguage*}
-\subsection{Posição 3: perspectiva N}
-
-\begin{otherlanguage*}{english}
-\begin{quote}
-\begin{SingleSpace}
-\small
-As part of her 2026 State of the State agenda, she proposed legislation requiring guns sold in New York to be designed so they cannot be easily modified into illegal machine guns, and establishing criminal penalties for...
 \end{SingleSpace}
 \end{quote}
 \end{otherlanguage*}
