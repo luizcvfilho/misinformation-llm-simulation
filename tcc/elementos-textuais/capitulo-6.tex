@@ -1,30 +1,24 @@
 \chapter{DISCUSSÃO}
 \label{ch:discussao}
 
-Este capítulo interpreta os resultados das seis rodadas finais, relaciona-os à literatura e discute seus limites. A análise examina como as perspectivas e suas sequências modificam a mensagem e em que medida o STDI representa essas mudanças, com base nas evidências do Capítulo \ref{ch:resultados}.
+Este capítulo discute como as perspectivas e suas sequências participam da transformação das notícias nas seis rodadas finais e em que medida o STDI representa essas mudanças. A interpretação das evidências do Capítulo \ref{ch:resultados} é articulada à literatura, seguida dos limites da mensuração e do desenho experimental.
 
-\section{INTERPRETAÇÃO DOS RESULTADOS}
+\section{INTERPRETAÇÃO DOS RESULTADOS E DIÁLOGO COM A LITERATURA}
 \label{sec:discussao-interpretacao}
-
-\subsection{Transformação do conteúdo e preservação de elementos isolados}
 
 As maiores médias de deriva em subtópicos e relações (Seção \ref{sec:resultados-componentes}) indicam que manter o assunto e os participantes não basta para preservar a mensagem. As reescritas podem conservar o acontecimento central e modificar sua ênfase, as justificativas das ações e a interpretação das consequências.
 
-Os casos da Seção \ref{sec:resultados-casos} ilustram esse padrão. Na notícia sobre revisão criminal, a mudança de perspectiva substitui justificativas para a mesma decisão. Nos exemplos conspiratórios, acrescentam-se explicações sobre manipulação e interesses ocultos, apesar da preservação de nomes e percentuais. Manter um elemento, como um número, não significa preservar seu papel na mensagem.
+Os casos da Seção \ref{sec:resultados-casos} tornam essas mudanças mais concretas. Na notícia sobre revisão criminal, a mudança de perspectiva substitui justificativas para a mesma decisão. Nos exemplos conspiratórios, acrescentam-se explicações sobre manipulação e interesses ocultos, apesar da preservação de nomes e percentuais. Manter um elemento, como um número, não significa preservar seu papel na mensagem. A baixa contradição interna é compatível com esse processo, pois omitir circunstâncias e acrescentar motivos não exige produzir afirmações incompatíveis. Uma medida que buscasse apenas contradições internas poderia deixar de identificar omissões de contexto, mudanças de ênfase ou acréscimos de justificativas.
 
-A baixa contradição interna é compatível com esse processo: omitir circunstâncias e acrescentar motivos não exige produzir afirmações incompatíveis. Uma medida centrada apenas em contradição deixaria, portanto, parte das transformações sem descrição. A decomposição do STDI amplia essa observação, mas escores semelhantes podem resultar de mudanças distintas e exigem leitura dos componentes e dos textos.
+Essa necessidade de decompor a mudança aproxima o estudo do FUSE e do FUSE-EVAL de \citeonline{liu2025stepwise}, discutidos no Capítulo \ref{ch:fundamentacao}. A proximidade está na transformação gradual de notícias e na avaliação multidimensional. A diferença principal está no alvo: FUSE examina a evolução de notícias verdadeiras para falsas no protocolo dos autores, enquanto o STDI descreve afastamento de uma referência textual. A decomposição do índice permite localizar dimensões da transformação, mas escores semelhantes podem resultar de mudanças distintas e exigem leitura dos componentes e dos textos. Como os instrumentos foram avaliados em protocolos e conjuntos de referência distintos, a aproximação entre as abordagens não permite comparar diretamente seus escores.
 
-\subsection{Mudança local, afastamento e retransmissão neutra}
-
-O comportamento de DDNN mostra que preservar o texto recebido e preservar a notícia de origem são objetivos diferentes. Nas passagens neutras, pequenos incrementos coexistem com afastamento elevado em relação ao original. NeutralRelay conserva a interpretação recebida, conforme sua instrução. O agente não consulta a notícia inicial para desfazer alterações anteriores. A manutenção de uma narrativa conspiratória nessas passagens representa, portanto, fidelidade local à mensagem já transformada.
+Além de identificar o que mudou, é necessário acompanhar como a transformação se mantém ao longo da cadeia. O comportamento de DDNN mostra que preservar o texto recebido e preservar a notícia de origem são objetivos diferentes. Nas passagens neutras, pequenos incrementos coexistem com afastamento elevado em relação ao original. NeutralRelay conserva a interpretação recebida, conforme sua instrução, sem consultar a notícia inicial para desfazer alterações anteriores. A manutenção de uma narrativa conspiratória nessas passagens representa, portanto, fidelidade local à mensagem já transformada.
 
 Esse resultado justifica observar conjuntamente $O_t$ e $I_t$, definidos na Seção \ref{sec:metodos-stdi}. O primeiro informa quanto a versão se afasta da origem. O segundo localiza a mudança em cada transmissão. Apenas o incremento final poderia sugerir estabilidade sem mostrar o afastamento anterior. Apenas a comparação com o original ocultaria que as últimas passagens pouco acrescentaram à transformação.
 
-Também é necessário examinar o que acompanha uma redução de $O_t$. No caso sobre combustíveis, a queda do escore não elimina a interpretação de manipulação por elites. Já no caso de versões equivalentes após normalização de espaços, a oscilação envolve novas extrações e avaliações. Assim, um escore menor contra o original indica redução da medida, mas não garante recuperação informacional.
+O acompanhamento desse percurso também é central em \citeonline{mohamed2025broken}, que investigam distorções em cadeias de tradução e reformulação, usando a saída de uma etapa na seguinte. Os casos deste estudo reforçam a utilidade de observar as versões intermediárias: elas mostram tanto a introdução de interpretações quanto sua preservação nas passagens posteriores. As diferenças de perspectivas, extensão das cadeias e mensuração, porém, impedem comparar diretamente os valores obtidos nos dois trabalhos.
 
-\subsection{Perspectivas, sequências e geradores}
-
-O contraste NNDD--NNNN oferece a evidência mais consistente sobre as perspectivas: a continuação com D produz maior STDI final nas 50 entradas de cada rodada. O prefixo compartilhado permite comparar duas continuações da mesma mensagem. Como D solicita interpretações conspiratórias e N solicita preservação, o resultado também expressa a diferença entre os tipos de transformação autorizados pelas instruções.
+A comparação das continuações permite examinar como as instruções participam desse processo. O contraste NNDD--NNNN oferece a evidência mais consistente sobre as perspectivas: a continuação com D produz maior STDI final nas 50 entradas de cada rodada. O prefixo compartilhado permite comparar duas continuações da mesma mensagem. Como D solicita interpretações conspiratórias e N solicita preservação, o resultado também expressa a diferença entre os tipos de transformação autorizados pelas instruções.
 
 Nas continuações CCPP--CCCC e PPCC--PPPP, o afastamento médio aumenta nas seis condições, embora algumas notícias apresentem a direção oposta. Uma interpretação sugerida pelos casos políticos é que a nova perspectiva passa a contestar ou substituir justificativas introduzidas anteriormente, acrescentando outra transformação ao relato. Essa leitura descreve o mecanismo observado nos casos examinados.
 
@@ -32,63 +26,40 @@ As inversões CCPP--PPCC e NNDD--DDNN mantêm a composição das perspectivas, m
 
 As diferenças entre geradores também variaram conforme a trajetória (Seção \ref{sec:resultados-contrastes}). GPT apresentou maiores médias finais em CCPP e PPCC nos dois corpora, enquanto Grok e Gemini concentraram parte dos maiores valores nas trajetórias com D. Esse comportamento indica que a comparação entre modelos precisa considerar a perspectiva e o percurso de reescrita. Uma ordenação geral dos geradores ocultaria essas diferenças.
 
-\subsection{Tom afetivo e alcance da noção de enquadramento}
+Essa variação pode ser situada em relação a \citeonline{chuang2024opinion}, que mostram a participação de tendências do modelo e de viés induzido por \textit{prompt} na dinâmica de populações de agentes. No presente estudo, o comportamento de uma trajetória também reflete a instrução, o modelo e a mensagem recebida, sem poder ser atribuído apenas à perspectiva solicitada. Essa aproximação ajuda a interpretar os resultados, sem demonstrar que os mecanismos examinados pelos autores tenham sido medidos nas cadeias de reescrita.
 
-A redução média de valência e o aumento de ativação nas trajetórias DDDD, DDNN e NNDD aparecem nos três geradores e nos dois corpora segundo o VAD LLM. Esse padrão acompanha os casos em que o relato passa a enfatizar ameaça, manipulação ou controle. A direção das mudanças acrescenta informação à magnitude resumida pelo STDI: aumentos e reduções de valência podem produzir a mesma deriva afetiva.
+A consistência variável de perfis encontrada por \citeonline{frisch2024interaction} reforça a necessidade de examinar a aderência à persona nas saídas. Os casos deste estudo apresentam interpretações compatíveis com as instruções, mas não houve avaliação independente e sistemática dessa fidelidade em todas as reescritas. Em DDNN, por exemplo, a preservação da narrativa recebida é compatível com a tarefa de retransmissão atribuída a N, sem indicar que o agente tenha adotado uma crença.
+
+As transformações observadas também envolvem o tom expresso. A redução média de valência e o aumento de ativação nas trajetórias DDDD, DDNN e NNDD aparecem nos três geradores e nos dois corpora segundo o VAD LLM. Esse padrão acompanha os casos em que o relato passa a enfatizar ameaça, manipulação ou controle. A direção das mudanças acrescenta informação à magnitude resumida pelo STDI: aumentos e reduções de valência podem produzir a mesma deriva afetiva.
 
 O EmoBank \cite{buechel2017emobank} distingue a emoção expressa no texto da emoção sentida por quem o lê. Neste estudo, o VAD estima o tom da mensagem conforme o \textit{prompt} de avaliação. O enquadramento também envolve escolhas de responsabilização e justificativa que VAD não esgota. Como \path{narrative_frame} não recebe um componente próprio, a resposta sobre enquadramento emocional resulta dos sinais afetivos em conjunto com a leitura qualitativa.
 
-\section{COMPARAÇÃO COM A LITERATURA}
-\label{sec:discussao-literatura}
-
-\subsection{Geração iterativa e avaliação multidimensional}
-
-\citeonline{mohamed2025broken} investigam distorções em cadeias de tradução e reformulação, usando a saída de uma etapa na seguinte. Os casos deste estudo reforçam a utilidade de acompanhar esse percurso. As diferenças de perspectivas, extensão das cadeias e mensuração, porém, impedem comparar diretamente os valores obtidos.
-
-Em relação ao FUSE e ao FUSE-EVAL de \citeonline{liu2025stepwise}, a proximidade está na transformação gradual de notícias e na avaliação multidimensional, discutidas no Capítulo \ref{ch:fundamentacao}. A diferença principal está no alvo: FUSE examina a evolução de notícias verdadeiras para falsas no protocolo dos autores, enquanto o STDI descreve afastamento de uma referência textual. Neste trabalho, a combinação de componentes estruturais com comparações locais e contra a origem permite examinar tanto a mudança quanto sua manutenção. Os instrumentos foram avaliados em protocolos e conjuntos de referência distintos.
-
-\subsection{Condicionamento por persona e comportamento observado}
-
-\citeonline{chuang2024opinion} mostram que tendências do modelo e viés induzido por \textit{prompt} participam da dinâmica de populações de agentes. Essa combinação ajuda a interpretar a variação entre geradores observada aqui: o comportamento de uma trajetória reflete a instrução, o modelo e a mensagem recebida, sem poder ser atribuído apenas à perspectiva solicitada.
-
-A consistência variável de perfis encontrada por \citeonline{frisch2024interaction} também indica que a aderência à persona precisa ser examinada nas saídas. Os casos deste estudo apresentam interpretações compatíveis com as instruções, mas não houve avaliação independente e sistemática dessa fidelidade em todas as reescritas. Em DDNN, a preservação da narrativa recebida é compatível com a tarefa de retransmissão atribuída a N.
-
-\subsection{Julgamento por LLM e validade da mensuração}
-
-As oscilações observadas no STDI tornam pertinente a preocupação de \citeonline{haldar2025ratingroulette} com a inconsistência de notas entre execuções de avaliadores LLM. A repetição permite examinar essa variabilidade, mas sua interpretação deve distinguir estabilidade de validade. \citeonline{saha2026judgebudget} estudam a estimação de médias sob orçamento limitado. As três avaliações fixas adotadas aqui fornecem uma estimativa operacional da média das notas. Conforme as recomendações de \citeonline{abdurahman2025primer}, preservar textos, estruturas, configurações e notas permite recompor e inspecionar os resultados. A Seção \ref{sec:discussao-validade} examina os limites das representações e dos critérios de avaliação.
+A necessidade de ler os textos junto aos escores aparece ainda nas reduções de $O_t$. No caso sobre combustíveis, a queda do escore não elimina a interpretação de manipulação por elites. Já no caso de versões equivalentes após normalização de espaços, a oscilação envolve novas extrações e avaliações. Assim, um escore menor contra o original indica redução da medida, mas não garante recuperação informacional. A interpretação das trajetórias depende, portanto, de distinguir mudanças da mensagem e variações do procedimento utilizado para representá-la e avaliá-la.
 
 \section{AMEAÇAS À VALIDADE E LIMITAÇÕES}
 \label{sec:discussao-validade}
 
-\subsection{Representação, agregação e ausência de referência independente}
-
-A extração pode introduzir diferenças que não correspondem a alterações no texto. No caso inglês de NNNN, discutido na Seção \ref{sec:resultados-casos}, elementos preservados na reescrita deixam de aparecer na estrutura, elevando componentes do Cluster. O acesso do juiz LLM aos textos completos permite reconhecer parte dessa informação, mas não o torna uma referência independente ou livre de erro.
+Os limites da mensuração começam na representação dos textos. A extração pode introduzir diferenças que não correspondem a alterações de conteúdo. No caso inglês de NNNN, discutido na Seção \ref{sec:resultados-casos}, elementos preservados na reescrita deixam de aparecer na estrutura, elevando componentes do Cluster. O acesso do juiz LLM aos textos completos permite reconhecer parte dessa informação, mas não o torna uma referência independente ou livre de erro.
 
 Mesmo usando o mesmo VAD, Cluster e LLM atribuem escores diferentes, e essa diferença varia entre trajetórias (Seção \ref{sec:resultados-metodos}). Não se trata, portanto, de uma diferença fixa entre as escalas. A correlação geral pode refletir a separação entre trajetórias de menor e maior deriva, sem indicar concordância sobre quais notícias mais se afastam do original dentro de cada trajetória. As divergências ajudam a selecionar pares para inspeção, mas não medem a confiabilidade do Dual. Como ambos utilizam informações da mesma extração, sua combinação pode manter erros compartilhados.
 
-A agregação descrita na Seção \ref{sec:metodos-stdi} envolve convenções sem calibração humana: pesos, níveis de avaliação definidos nos \textit{prompts} e uso de médias numéricas. Não foi demonstrado que diferenças iguais na escala correspondam a mudanças percebidas como equivalentes, nem foram estabelecidos limiares validados para classificar a deriva. A contribuição de contradição e VAD também depende do escore anterior, impedindo interpretar seus coeficientes como parcelas fixas do total.
+A agregação descrita na Seção \ref{sec:metodos-stdi} acrescenta convenções sem calibração humana: pesos, níveis de avaliação definidos nos \textit{prompts} e uso de médias numéricas. Não foi demonstrado que diferenças iguais na escala correspondam a mudanças percebidas como equivalentes, nem foram estabelecidos limiares validados para classificar a deriva. A contribuição de contradição e VAD também depende do escore anterior, impedindo interpretar seus coeficientes como parcelas fixas do total.
 
 Os controles e a inspeção qualitativa permitem examinar respostas a alterações conhecidas e reconhecer problemas de processamento. Seus resultados, porém, estão limitados às versões utilizadas e aos casos selecionados. Eles não estimam a frequência de cada problema nem substituem uma referência humana numérica independente.
 
-\subsection{Avaliador comum, repetição e estabilidade operacional}
+A esses limites se soma a dependência do avaliador. O uso de \path{gpt-6-luna} na geração de uma condição e na extração e avaliação de todas introduz dependência metodológica. Um procedimento comum favorece a comparação, mas preferências por estilos ou interpretações podem afetar os escores. O desenho não permite quantificar esse efeito. O uso do mesmo modelo na geração e na avaliação não demonstra, por si só, que ele favoreça os textos que produziu.
 
-O uso de \path{gpt-6-luna} na geração de uma condição e na extração e avaliação de todas introduz dependência metodológica. Um procedimento comum favorece a comparação, mas preferências por estilos ou interpretações podem afetar os escores. O desenho não permite quantificar esse efeito. O uso do mesmo modelo na geração e na avaliação não demonstra, por si só, que ele favoreça os textos que produziu.
+A oscilação entre avaliações torna pertinente a preocupação de \citeonline{haldar2025ratingroulette} com a inconsistência de notas entre execuções de avaliadores LLM. As três avaliações estruturais adotadas aqui repetem o julgamento do mesmo par, mantendo o \textit{prompt}, os textos, as estruturas extraídas e o VAD constantes. Sua média é uma estimativa operacional, e a dispersão descreve a variação entre essas notas. \citeonline{saha2026judgebudget} estudam a estimação de médias sob orçamento limitado com alocação adaptativa de consultas, enquanto este estudo utiliza três avaliações fixas. A repetição permite examinar variabilidade, mas estabilidade e validade permanecem propriedades distintas.
 
-As três avaliações estruturais correspondem a julgamentos repetidos do mesmo par de textos pelo LLM avaliador, mantendo o \textit{prompt}, os textos, as estruturas extraídas e o VAD constantes. A dispersão indica quanto as notas desses julgamentos variam entre si. Essa variação não representa a incerteza de toda a geração e mensuração, nem revela necessariamente erros sistemáticos associados ao \textit{prompt}. A ausência de repetições independentes da geração e de variações sistemáticas dos \textit{prompts} limita a avaliação da estabilidade dos padrões observados.
+Essa dispersão não representa a incerteza de toda a geração e mensuração, nem revela necessariamente erros sistemáticos associados ao \textit{prompt}. A ausência de repetições independentes da geração e de variações sistemáticas dos \textit{prompts} limita a avaliação da estabilidade dos padrões observados. Conforme as recomendações de \citeonline{abdurahman2025primer}, preservar textos, estruturas, configurações e notas permite recompor e inspecionar os resultados, sem suprir essas limitações.
 
 A reutilização por cache preserva decisões anteriores, sem produzir novas observações independentes. O caso de versões que diferem apenas por um espaço mostra que uma nova chave pode levar a outra extração e a outros escores, apesar da equivalência de conteúdo. Isso exige cautela ao atribuir significado a pequenas diferenças. Os procedimentos de cache e recuperação de falhas, detalhados no Apêndice \ref{ap:rastreabilidade}, permitem recompor os resultados salvos, mas não garantem que novas chamadas reproduzam as mesmas saídas.
 
-\subsection{Desenho, dependências e alcance descritivo}
-
-As comparações entre trajetórias e geradores usam escores de versões que partem da mesma notícia original, dentro de cada corpus. Contudo, nem todos os resultados são independentes: notícias distintas podem tratar de acontecimentos relacionados, e algumas trajetórias compartilham as primeiras reescritas. Repetir avaliações ou reutilizar respostas não aumenta o número de notícias analisadas.
-
-Inverter uma sequência também muda a perspectiva do último agente. Assim, não é possível separar o efeito da ordem daquele associado à perspectiva final.
+O alcance das comparações também depende da organização do experimento. As trajetórias e os geradores são comparados a partir da mesma notícia original, dentro de cada corpus. Contudo, notícias distintas podem tratar de acontecimentos relacionados, e algumas trajetórias compartilham as primeiras reescritas. Repetir avaliações ou reutilizar respostas não aumenta o número de notícias analisadas. Além disso, a mudança conjunta da ordem e da perspectiva final limita a atribuição das diferenças a um fator isolado.
 
 Por isso, médias, quartis e correlações descrevem o conjunto observado, sem estimar efeitos populacionais isolados. A uniformidade do contraste NNDD--NNNN não garante o mesmo padrão em notícias futuras. Escores próximos não bastam para concluir que duas trajetórias tenham o mesmo comportamento.
 
-\subsection{Corpora, dimensão afetiva e generalização}
-
-Os corpora diferem em origem, formato, extensão e acontecimentos, além do idioma, e contêm trechos que podem omitir contexto das publicações integrais. A análise pelo procedimento LLM comum reduz a diferença de mensuração entre as rodadas, mas não torna os itens equivalentes ou pareados. Assim, os padrões encontrados não isolam um efeito linguístico nem representam toda a cobertura política em inglês ou português.
+Entre corpora, há ainda diferenças de origem, formato, extensão e acontecimentos, além do idioma. Os trechos utilizados podem omitir contexto das publicações integrais. A análise pelo procedimento LLM comum reduz a diferença de mensuração entre as rodadas, mas não torna os itens equivalentes ou pareados. Assim, os padrões encontrados não isolam um efeito linguístico nem representam toda a cobertura política em inglês ou português.
 
 A comparação afetiva depende ainda dos estimadores. A conversão para uma amplitude comum não calibra as notas, e diferenças no texto efetivamente processado, como as decorrentes do limite de entrada do BERT, podem afetar os resultados. Os testes exploratórios ajudaram a escolher os estimadores VAD usados no estudo. Eles não comprovam que esses estimadores sejam melhores em outros contextos nem que suas notas correspondam à forma como pessoas avaliariam o tom emocional dos textos.
 
