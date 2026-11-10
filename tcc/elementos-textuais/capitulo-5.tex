@@ -141,7 +141,7 @@ A Tabela \ref{tab:resultados-metodos} resume 400 posições finais por gerador, 
 \end{figure}
 \FloatBlock
 
-A diferença absoluta média com VAD comum é 0,122 em GPT, 0,110 em Grok e 0,109 em Gemini. Portanto, uma diferença média próxima de zero, como a de Grok, não significa escores próximos em todos os pares: diferenças positivas e negativas podem se compensar. As correlações de Spearman dos conjuntos de posições finais com VAD comum são 0,718, 0,518 e 0,641, respectivamente. Elas indicam em que medida os pares de textos que recebem escores mais altos por um método também tendem a receber escores mais altos pelo outro. A correlação descreve a ordenação dos pares, enquanto a diferença absoluta resume a divergência entre os valores atribuídos. Como o cálculo reúne as oito trajetórias, parte dessa associação pode decorrer de ambos os métodos atribuírem escores menores ou maiores aos mesmos tipos de trajetória. Por isso, a correlação do conjunto deve ser examinada também separadamente em cada trajetória, cujos resultados estão disponíveis nos dados derivados.
+A Figura \ref{fig:resultados-metodos-dispersao} mostra pares com escores dos dois lados da diagonal de igualdade, inclusive nos painéis com VAD comum. Em Grok, por exemplo, a diferença média de $-0,004$ resulta da compensação entre diferenças positivas e negativas, enquanto a diferença absoluta média é 0,110. Em GPT e Gemini, as diferenças absolutas médias são 0,122 e 0,109, respectivamente. As correlações de Spearman dos conjuntos de posições finais com VAD comum são 0,718 em GPT, 0,518 em Grok e 0,641 em Gemini. Elas indicam em que medida os pares de textos que recebem escores mais altos por um método também tendem a receber escores mais altos pelo outro. A correlação descreve a ordenação dos pares, enquanto a diferença absoluta resume a divergência entre os valores atribuídos. Como o cálculo reúne as oito trajetórias, parte dessa associação pode decorrer de ambos os métodos atribuírem escores menores ou maiores aos mesmos tipos de trajetória. Por isso, a correlação do conjunto deve ser examinada também separadamente em cada trajetória, cujos resultados estão disponíveis nos dados derivados.
 
 Dentro de NNNN, essas correlações são 0,298 com GPT, 0,148 com Grok e 0,579 com Gemini. Entre as oito trajetórias, variam de 0,298 a 0,669 em GPT, de 0,148 a 0,526 em Grok e de 0,502 a 0,744 em Gemini. A ordenação dos pares não é igualmente semelhante em todos os caminhos.
 
@@ -184,7 +184,7 @@ Na Tabela \ref{tab:resultados-llm-corpora}, a média final de NNNN em inglês é
 \legend{Fonte: elaboração própria. 50 notícias por curva; corpora sem pareamento entre si.}
 \end{figure}
 
-Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores, a introdução de D após NN amplia o afastamento e DDNN permanece distante do original após a retransmissão neutra. Em GPT, CCPP e PPCC apresentam médias finais próximas e relativamente elevadas nos dois corpora. Em Grok e Gemini, DDDD, DDNN e NNDD concentram valores elevados com o procedimento comum.
+As curvas da Figura \ref{fig:resultados-corpora-trajetorias} mostram que, nos dois corpora, NNNN se mantém próxima do original e NNDD se afasta a partir da terceira posição, quando recebe a perspectiva D após o prefixo compartilhado NN. Em DDNN, o afastamento permanece elevado nas duas passagens neutras após DD. Em GPT, CCPP e PPCC apresentam médias finais próximas e relativamente elevadas nos dois corpora. Em Grok e Gemini, DDDD, DDNN e NNDD concentram valores elevados com o procedimento comum.
 
 \begin{figure}[htbp]
 \centering
@@ -195,7 +195,7 @@ Os padrões relativos apresentam semelhanças. NNNN conserva os menores valores,
 \end{figure}
 \FloatBlock
 
-As diferenças de nível não apresentam direção única. Em DDDD, a média LLM inglesa é 0,505 com GPT, 0,574 com Grok e 0,608 com Gemini. As médias brasileiras são 0,520, 0,557 e 0,576. Em CCPP, as médias são 0,497, 0,451 e 0,506 em inglês, e 0,539, 0,456 e 0,497 em português. Assim, não se sustenta uma afirmação geral de maior deriva em um dos idiomas.
+Na Figura \ref{fig:resultados-corpora-final}, a direção da diferença entre as medianas finais depende da trajetória e do gerador. Em CCPP com GPT, a mediana é maior no corpus brasileiro (0,523 contra 0,478), enquanto em DDDD com Gemini ocorre o inverso (0,633 no corpus inglês contra 0,594 no brasileiro). Os intervalos interquartis se sobrepõem nesses dois exemplos, e as diferenças de mediana devem ser lidas junto à dispersão entre notícias.
 
 \TabelaCincoLlmIncremental
 \FloatBlock
