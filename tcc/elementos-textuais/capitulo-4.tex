@@ -94,7 +94,7 @@ Português & \path{gemini-3.5-flash-lite} & LLM & LLM \\
 \legend{Fonte: elaboração própria, a partir dos resumos das execuções finais. Cada rodada utiliza 50 entradas.}
 \end{table}
 
-A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo \path{gpt-6-luna}, pelo provedor \path{chatgpt}, realiza a extração estrutural, a avaliação estrutural por LLM e a estimação VAD por LLM. No corpus inglês, o caminho Cluster utiliza adicionalmente o encoder \path{sentence-transformers/all-MiniLM-L6-v2}, enquanto o VAD Dual inclui \path{RobroKools/vad-bert}. Esses dois modelos locais não participam do STDI ou do VAD selecionados nas rodadas brasileiras.
+A geração deve ser distinguida da mensuração. Em todas as rodadas, o modelo \path{gpt-6-luna}, pelo provedor \path{chatgpt}, realiza a extração estrutural, a avaliação estrutural por LLM e a estimação VAD por LLM. A escolha desse modelo como avaliador comum às seis rodadas foi motivada pelo custo das avaliações. No corpus inglês, o caminho Cluster utiliza adicionalmente o encoder \path{sentence-transformers/all-MiniLM-L6-v2}, enquanto o VAD Dual inclui \path{RobroKools/vad-bert}. Esses dois modelos locais não participam do STDI ou do VAD selecionados nas rodadas brasileiras.
 
 Na reescrita, o sistema solicita temperatura 0,8 para Grok e Gemini. Para identificadores da família GPT-6, o adaptador de requisições omite esse parâmetro. A proveniência da extração e do avaliador estrutural registra temperatura solicitada de 0,1 e temperatura enviada ausente para \path{gpt-6-luna}. Os identificadores de API e as respostas preservadas caracterizam os modelos utilizados.
 
