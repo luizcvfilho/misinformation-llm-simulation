@@ -18,7 +18,7 @@ O conceito de enquadramento permite caracterizar parte dessas mudanças. Para \c
 
 A geração iterativa por LLMs permite investigar esse processo em condições controladas. \citeonline{mohamed2025broken} utilizam cadeias de tradução para examinar o que ocorre quando a saída de uma etapa alimenta a seguinte. Os autores observam acúmulo de distorção associado ao idioma e à complexidade da cadeia e estudam estratégias de \textit{prompt} para mitigá-lo. O trabalho motiva a observação de versões intermediárias, além da comparação final, embora sua tarefa de tradução seja distinta da reescrita condicionada por perspectivas adotada neste TCC.
 
-Uma aproximação mais direta com a transformação de notícias aparece em \citeonline{liu2025stepwise}. Os autores propõem o FUSE, uma simulação em rede com agentes que propagam, comentam, verificam ou observam mensagens durante a evolução de notícias verdadeiras para falsas. O FUSE-EVAL avalia o desvio em dimensões linguísticas e semânticas e é comparado a julgamentos humanos. O interesse pela transformação gradual e pela avaliação multidimensional aproxima esse trabalho do presente estudo. A diferença está no alvo e no desenho: aqui, o foco é o afastamento de uma referência textual ao longo de sequências controladas de perspectivas.
+Uma aproximação mais direta com a transformação de notícias aparece em \citeonline{liu2025stepwise}. Os autores propõem o FUSE, uma simulação em rede com agentes que propagam, comentam, verificam ou observam mensagens durante a evolução de notícias verdadeiras para falsas. A comparação entre seu instrumento de avaliação, o FUSE-EVAL, e as demais abordagens de mensuração é retomada na Seção \ref{sec:avaliacao-llm}.
 
 A classificação automática de veracidade responde a uma questão diferente dessa comparação. \citeonline{su2024adapting} avaliam detectores em combinações de notícias escritas por humanos, geradas por máquinas e parafraseadas por máquinas, mostrando assimetrias de generalização entre condições. \citeonline{wu2024sheepdog} investigam ataques de estilo produzidos por LLMs contra detectores de notícias falsas. Esses estudos mostram por que o modo de geração e a apresentação do texto precisam ser considerados ao interpretar a classificação. Já \citeonline{whitehouse2022knowledge} examinam a integração de conhecimento externo à detecção, com benefícios dependentes da pertinência e da atualidade da base. Uma classe atribuída ao documento não localiza, por si só, as alterações entre versões, e a comparação entre versões não substitui a consulta a evidências factuais.
 
@@ -69,4 +69,56 @@ Na comparação de versões, critérios separados permitem examinar o que motivo
 
 Em pesquisa social, \citeonline{abdurahman2025primer} enfatizam a documentação de modelos, versões e \textit{prompts}, a repetição de condições, a análise de sensibilidade e a comparação com julgamentos humanos. Essas recomendações ajudam a distinguir a possibilidade de recompor um procedimento da validade de sua interpretação. No presente estudo, a avaliação emprega comparações quantitativas, casos controlados e inspeções qualitativas. A ausência de referência humana numérica independente delimita as conclusões sobre os escores. Os procedimentos efetivamente realizados são descritos no Capítulo \ref{ch:metodos}.
 
-A contribuição buscada pelo TCC está na articulação entre sequências controladas de perspectivas, representação estruturada e análise conjunta de mudanças locais e afastamento da origem. A decomposição do STDI permite examinar aspectos que um escore global isolado pode ocultar, enquanto a inspeção dos textos ajuda a interpretar divergências de mensuração. Essa proposta se insere na pesquisa sobre geração iterativa e agentes LLM, com alcance instrumental e descritivo. O capítulo seguinte apresenta as decisões que conduziram desse referencial à abordagem final.
+O Quadro \ref{quad:trabalhos-deriva} compara os trabalhos mais próximos quanto ao objeto de análise, às medidas usadas e às dimensões que o STDI procura distinguir nas cadeias deste estudo.
+
+\begin{quadro}[htb]
+\centering
+\caption{Comparação das abordagens de mensuração da transformação textual.}
+\label{quad:trabalhos-deriva}
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.16\linewidth}
+                    >{\raggedright\arraybackslash}p{0.21\linewidth}
+                    >{\raggedright\arraybackslash}p{0.27\linewidth}
+                    >{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
+\hline
+\textbf{Trabalho} & \textbf{Objeto de análise} & \textbf{Medidas utilizadas} & \textbf{Distinções de interesse neste estudo} \\
+\hline
+\citeonline{zhang2013rumor} &
+Propagação de versões de um rumor em redes simuladas. &
+Alcance das versões segundo o número de revisões. &
+O número de revisões não indica quais elementos mudaram nem quanto o texto se afastou da origem. \\
+\hline
+\citeonline{guo2021truth} &
+Estágios de evolução no corpus Fake News Evolution. &
+Técnicas de desinformação, similaridade textual, palavras-chave, sentimento e desempenho de detecção. &
+A similaridade entre documentos não distingue separadamente mudanças de tema, subtópicos, entidades e relações. \\
+\hline
+\citeonline{mohamed2025broken} &
+Cadeias de tradução e reformulação por LLMs. &
+Similaridade lexical e semântica e, com FActScore, verificação do apoio que o original oferece às afirmações da versão gerada. &
+O FActScore verifica se as afirmações da reescrita têm apoio no original, mas não indica quais informações do original ficaram de fora. \\
+\hline
+\citeonline{liu2025stepwise} (FUSE-EVAL) &
+Comparação entre notícias originais e versões produzidas em uma rede simulada. &
+Mudanças de sentimento, certeza, estilo, referências temporais e perspectiva, além de informação introduzida, conforme o \textit{prompt} publicado. &
+Ao comparar cada versão com o original, o FUSE-EVAL não indica se o agente introduziu uma mudança ou apenas repassou uma alteração já presente no texto que recebeu. \\
+\hline
+Este estudo (STDI) &
+Pares de versões em cadeias controladas de reescrita. &
+Mudanças de tema, subtópicos, entidades e relações, com sinais de contradição interna e deriva afetiva por VAD. &
+Aplica a mesma composição ao afastamento do original e à mudança entre versões consecutivas. \\
+\hline
+\end{tabular}
+}
+\legend{Fonte: elaboração própria com base nos trabalhos citados.}
+\end{quadro}
+
+As métricas de \citeonline{mohamed2025broken} permitem acompanhar a perda de fidelidade ao longo de cadeias de tradução e reformulação. No uso do FActScore pelos autores, o texto original é tomado como referência para verificar se ele sustenta as afirmações da versão gerada. Uma notícia pode, por exemplo, preservar a afirmação de que uma decisão foi adiada e suprimir a condição que explicava o adiamento. As afirmações restantes ainda podem ser sustentadas pelo original. As métricas de similaridade podem reagir à supressão, mas seus escores não indicam se a perda ocorreu na justificativa ou em outro elemento do relato. Para investigar reescritas orientadas por perspectivas, essa diferença importa porque retirar uma explicação pode mudar a leitura do acontecimento sem introduzir uma afirmação incompatível com o original.
+
+O FUSE-EVAL é o instrumento mais próximo do STDI. Os critérios de informação introduzida e de desvio de perspectiva podem captar uma nova justificativa para o mesmo acontecimento \cite{liu2025stepwise}. A pergunta deste estudo também exige saber \emph{o que foi preservado quando a justificativa mudou} e \emph{em que passagem ocorreu a mudança}. Na trajetória sobre a revisão criminal, por exemplo, o adiamento e os participantes centrais continuam reconhecíveis, enquanto a justificativa muda após a troca de perspectiva (Seção \ref{sec:resultados-casos}). Comparar cada versão apenas com a origem mostra quanto ela se afastou, mas escores próximos em duas etapas consecutivas podem corresponder tanto à retransmissão da mesma justificativa quanto à sua substituição por outra igualmente distante da original.
+
+O estudo adota o STDI para combinar essas duas formas de diagnóstico. A decomposição em tema, subtópicos, entidades e relações permite examinar a substituição de uma justificativa junto à preservação do acontecimento e de seus participantes. A comparação com a versão recebida indica a mudança em cada passagem, enquanto a comparação com o original indica o afastamento alcançado. As duas referências são úteis ao comparar ramos que partem da mesma mensagem intermediária e seguem com perspectivas distintas (Seção \ref{sec:metodos-cadeias}). Seria possível aplicar o FUSE-EVAL também a versões consecutivas, mas a troca de referência ainda deixaria suas notas de informação introduzida e de desvio de perspectiva sem a decomposição em elementos que este estudo investiga. \citeonline{liu2025stepwise} compararam as notas do FUSE-EVAL com julgamentos humanos em seu protocolo. A comparação empírica dos dois instrumentos nas mesmas reescritas fica em aberto.
+
+O capítulo seguinte apresenta as decisões que conduziram desse referencial à abordagem final.
