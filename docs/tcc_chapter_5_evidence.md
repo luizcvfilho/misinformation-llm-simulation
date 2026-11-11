@@ -19,7 +19,7 @@ Outputs:
 
 - `output/analysis/tcc_chapter_5/`: CSV tables, case candidates, PNG previews
   and `manifest.json` with source hashes, versions, lexical rules and checks.
-- `tcc/figuras/chapter5/`: 13 PDF vector figures, with English chart labels.
+- `tcc/figuras/chapter6/`: 13 PDF vector figures, with English chart labels.
 - `tcc/elementos-textuais/capitulo-6-tabelas.tex`: seven Portuguese numerical
   table macros placed by the chapter source.
 - `tcc/elementos-textuais/capitulo-6.tex`: manually authored Portuguese prose,

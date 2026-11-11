@@ -21,7 +21,7 @@ from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output/analysis/tcc_chapter_5"
-FIGURES = ROOT / "tcc/figuras/chapter5"
+FIGURES = ROOT / "tcc/figuras/chapter6"
 RUNS = [
     ("English", "GPT", "simulation_ui_20261016_213859-GPT"),
     ("English", "Grok", "simulation_ui_20261017_160546-GROK"),

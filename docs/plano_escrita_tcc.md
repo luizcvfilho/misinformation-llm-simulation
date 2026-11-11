@@ -222,7 +222,7 @@ Distinguir o afastamento em relação ao original da mudança em relação ao pa
 
 Organizar em blocos, priorizando as rodadas finais:
 
-**Resultados:** `tcc/elementos-textuais/capitulo-6.tex`, com seis tabelas geradas incluídas de `capitulo-6-tabelas.tex` e 11 figuras vetoriais incluídas de `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
+**Resultados:** `tcc/elementos-textuais/capitulo-6.tex`, com seis tabelas geradas incluídas de `capitulo-6-tabelas.tex` e 11 figuras vetoriais incluídas de `tcc/figuras/chapter6/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
 
 O capítulo inclui evolução contra o original e incrementos, boxplots finais, contrastes pareados de continuações, sequências e geradores, decomposição e direção VAD, comparação Cluster/LLM em inglês com VAD próprio e comum, comparação dos corpora com LLM/LLM e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
 

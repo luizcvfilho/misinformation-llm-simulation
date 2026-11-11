@@ -17,7 +17,7 @@ A Figura \ref{fig:resultados-original} apresenta $O_t$, definido na Equação \r
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/original_trajectories.pdf}
+\includegraphics[width=\textwidth]{chapter6/original_trajectories.pdf}
 \caption{Evolução do STDI contra o original nas seis rodadas. Linhas: medianas; faixas: intervalos interquartis de 50 notícias. Inglês utiliza Dual/Dual e português, LLM/LLM.}
 \label{fig:resultados-original}
 \legend{Fonte: elaboração própria. Os rótulos dos gráficos são mantidos em inglês.}
@@ -31,7 +31,7 @@ O padrão varia com o gerador. Em GPT, CCPP e PPCC apresentam os maiores escores
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/final_distributions.pdf}
+\includegraphics[width=\textwidth]{chapter6/final_distributions.pdf}
 \caption{Distribuição do STDI contra o original na quarta posição. Cada ponto representa uma notícia; caixas: intervalo interquartil e mediana; hastes: regra de 1,5 intervalo interquartil. Todos os pontos são exibidos, inclusive os externos às hastes.}
 \label{fig:resultados-boxplots}
 \legend{Fonte: elaboração própria. 50 entradas por trajetória e gerador.}
@@ -45,7 +45,7 @@ O STDI incremental $I_t$, definido na Equação \ref{eq:stdi-incremental}, descr
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/incremental_trajectories.pdf}
+\includegraphics[width=\textwidth]{chapter6/incremental_trajectories.pdf}
 \caption{STDI incremental nas quatro posições. A referência de cada ponto é o texto recebido pelo agente daquela posição. Linhas: medianas; faixas: intervalos interquartis.}
 \label{fig:resultados-incremental}
 \legend{Fonte: elaboração própria. Configurações selecionadas e 50 entradas por curva.}
@@ -77,7 +77,7 @@ DDNN--DDDD apresenta diferença média negativa em cinco das seis condições. A
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/paired_contrasts.pdf}
+\includegraphics[width=\textwidth]{chapter6/paired_contrasts.pdf}
 \caption{Diferenças pareadas de STDI final entre trajetórias. Pontos azuis: diferenças por notícia; losangos vermelhos: médias de 50 diferenças. A referência zero indica igualdade entre os escores.}
 \label{fig:resultados-contrastes}
 \legend{Fonte: elaboração própria. Valores positivos indicam maior escore na primeira trajetória do contraste.}
@@ -94,7 +94,7 @@ Subtópicos e relações apresentam as maiores médias de deriva de conteúdo na
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/components.pdf}
+\includegraphics[width=\textwidth]{chapter6/components.pdf}
 \caption{Médias dos componentes na quarta posição, por trajetória, corpus e gerador. Cada célula utiliza 50 entradas; a escala de cores é comum aos painéis.}
 \label{fig:resultados-componentes}
 \legend{Fonte: elaboração própria. Inglês: componentes do Dual selecionado; português: componentes do LLM selecionado.}
@@ -112,7 +112,7 @@ No VAD Dual, a magnitude da mudança é calculada e normalizada separadamente po
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/vad_signed_changes.pdf}
+\includegraphics[width=\textwidth]{chapter6/vad_signed_changes.pdf}
 \caption{Diferença média entre a quarta versão e o original nas notas de valência, ativação e dominância atribuídas pelo LLM. Cada barra reúne 50 diferenças, uma por notícia. Valores positivos indicam aumento, e negativos, redução. As notas utilizadas no cálculo variam de um a cinco.}
 \label{fig:resultados-vad-direcao}
 \legend{Fonte: elaboração própria. Cada barra utiliza 50 pares e descreve o tom expresso no texto.}
@@ -134,7 +134,7 @@ A Tabela \ref{tab:resultados-metodos} resume 400 posições finais por gerador, 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/method_agreement.pdf}
+\includegraphics[width=\textwidth]{chapter6/method_agreement.pdf}
 \caption{Escores finais Cluster e LLM para os mesmos pares ingleses. Linha superior: VAD próprio de cada ramo; inferior: VAD Dual comum. A diagonal indica igualdade numérica. Cores identificam trajetórias.}
 \label{fig:resultados-metodos-dispersao}
 \legend{Fonte: elaboração própria. 400 pontos por painel, com dependência entre trajetórias da mesma notícia.}
@@ -149,7 +149,7 @@ Além de diferir entre geradores, o desacordo varia entre trajetórias. A Figura
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/method_differences.pdf}
+\includegraphics[width=\textwidth]{chapter6/method_differences.pdf}
 \caption{Diferença média Cluster menos LLM na quarta posição, por trajetória. Os dois marcadores distinguem os ramos com VAD próprio e com VAD Dual comum.}
 \label{fig:resultados-metodos-diferencas}
 \legend{Fonte: elaboração própria. Cada marcador utiliza os mesmos 50 pares.}
@@ -159,7 +159,7 @@ NNNN apresenta diferenças positivas com VAD comum nos três geradores: 0,227 em
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/method_components.pdf}
+\includegraphics[width=\textwidth]{chapter6/method_components.pdf}
 \caption{Diferenças médias Cluster menos LLM nos quatro componentes de conteúdo, na quarta posição das trajetórias inglesas.}
 \label{fig:resultados-metodos-componentes}
 \legend{Fonte: elaboração própria. 50 pares por componente, trajetória e gerador.}
@@ -178,7 +178,7 @@ Na Tabela \ref{tab:resultados-llm-corpora}, a média final de NNNN em inglês é
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/corpus_llm_trajectories.pdf}
+\includegraphics[width=\textwidth]{chapter6/corpus_llm_trajectories.pdf}
 \caption{Evolução do afastamento do original usando comparação estrutural LLM e VAD LLM nos dois corpora. Linhas: medianas; faixas: intervalos interquartis.}
 \label{fig:resultados-corpora-trajetorias}
 \legend{Fonte: elaboração própria. 50 notícias por curva; corpora sem pareamento entre si.}
@@ -188,7 +188,7 @@ As curvas da Figura \ref{fig:resultados-corpora-trajetorias} mostram que, nos do
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{chapter5/corpus_llm_final.pdf}
+\includegraphics[width=\textwidth]{chapter6/corpus_llm_final.pdf}
 \caption{STDI final pelo procedimento LLM comum nos corpora inglês e português. Pontos: medianas; hastes: intervalos interquartis.}
 \label{fig:resultados-corpora-final}
 \legend{Fonte: elaboração própria. 50 entradas por corpus, gerador e trajetória. As hastes descrevem dispersão, não confiança.}

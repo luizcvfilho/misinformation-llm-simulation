@@ -13,7 +13,7 @@ The current draft contains developed chapters 1–8.
 Chapter 6 includes descriptive analyses of all six final simulation rounds,
 paired path and generator comparisons, Cluster/LLM comparisons with native and
 common VAD, a common LLM/LLM corpus comparison, and inspected qualitative cases.
-Its 11 included vector figures are stored in `figuras/chapter5/`; it uses six
+Its 11 included vector figures are stored in `figuras/chapter6/`; it uses six
 of the seven generated table macros in `elementos-textuais/capitulo-6-tabelas.tex`.
 Lexical feature diagnostics remain available in the analysis script and outputs.
 Independent human numerical annotations remain outside the study scope.
@@ -47,7 +47,7 @@ Its evidence and four-page visual review are recorded in
 no bibliography, figure or formatting changes are required. Recompile after
 uploading the source. The complete project compiled successfully after writing.
 For Overleaf, manually upload the updated files from `elementos-textuais/`,
-`elementos-postextuais/`, and `figuras/chapter5/`, preserving those paths in the
+`elementos-postextuais/`, and `figuras/chapter6/`, preserving those paths in the
 existing project. Include `elementos-postextuais/apendice-3.tex` through
 `main.tex` for the data identification and execution traceability appendix. Chapter 6
 requires both `capitulo-6.tex` and `capitulo-6-tabelas.tex`, together with its
