@@ -9,48 +9,48 @@ bibliography used by the document is
 `elementos-postextuais/referencias.bib`; keep it synchronized with the
 repository-level `references.bib`.
 
-The current draft contains developed chapters 1–7.
-Chapter 5 includes descriptive analyses of all six final simulation rounds,
+The current draft contains developed chapters 1–8.
+Chapter 6 includes descriptive analyses of all six final simulation rounds,
 paired path and generator comparisons, Cluster/LLM comparisons with native and
 common VAD, a common LLM/LLM corpus comparison, and inspected qualitative cases.
 Its 11 included vector figures are stored in `figuras/chapter5/`; it uses six
-of the seven generated table macros in `elementos-textuais/capitulo-5-tabelas.tex`.
+of the seven generated table macros in `elementos-textuais/capitulo-6-tabelas.tex`.
 Lexical feature diagnostics remain available in the analysis script and outputs.
 Independent human numerical annotations remain outside the study scope.
 The current writing plan is in `docs/plano_escrita_tcc.md` at the repository root.
 Chapter 4 evidence checks and remaining provenance limits are recorded in
 `docs/tcc_chapter_4_evidence.md`. The complete working project compiled successfully
 with the desktop editor after this chapter was written on 2026-10-19.
-Chapter 5 evidence and reproduction instructions are recorded in
+Results chapter evidence and reproduction instructions are recorded in
 `docs/tcc_chapter_5_evidence.md`. Reproduce its data, figures and numerical tables
 with `uv run --with matplotlib python scripts/analyze_tcc_chapter_5.py`.
 Chapter 4 documents the descriptive procedures included in the thesis. Its
-overview figure is authored directly in LaTeX, with seven sections and three
-subsections for the STDI calculation paths. Exploratory diagnostic findings are
+overview figure is authored directly in LaTeX. Chapter 5 defines the STDI and
+describes its calculation paths. Exploratory diagnostic findings are
 summarized in the existing measurement-development section of Chapter 3.
 Upload the revised Chapters 3 and 4; no additional image or diagnostic appendix
 is required. If the previously proposed Appendix D was uploaded, remove that
 file and its inclusion from `main.tex`. The local main file includes Appendices A-C.
-Chapter 6 interprets the trajectory, generator, component and affective findings,
+Chapter 7 interprets the trajectory, generator, component and affective findings,
 compares the study with iterative-generation and agent-evaluation research, and
 discusses measurement, design and generalization limits. Its evidence map and
 compilation checks are recorded in `docs/tcc_chapter_6_evidence.md`.
-For this chapter, replace only `elementos-textuais/capitulo-6.tex` in the existing
+For this chapter, replace only `elementos-textuais/capitulo-7.tex` in the existing
 Overleaf project. `main.tex` already includes it; no bibliography, figure or
 formatting changes are required. Recompile after uploading the source.
-Chapter 7 answers the research question, synthesizes the study's contributions
+Chapter 8 answers the research question, synthesizes the study's contributions
 and limits, and outlines extensions beyond the completed experimental scope.
 It uses the existing results without adding simulations or references.
 Its evidence and four-page visual review are recorded in
 `docs/tcc_chapter_7_evidence.md`. For this chapter, replace only
-`elementos-textuais/capitulo-7.tex` in Overleaf. `main.tex` already includes it;
+`elementos-textuais/capitulo-8.tex` in Overleaf. `main.tex` already includes it;
 no bibliography, figure or formatting changes are required. Recompile after
 uploading the source. The complete project compiled successfully after writing.
 For Overleaf, manually upload the updated files from `elementos-textuais/`,
 `elementos-postextuais/`, and `figuras/chapter5/`, preserving those paths in the
 existing project. Include `elementos-postextuais/apendice-3.tex` through
-`main.tex` for the data identification and execution traceability appendix. Chapter 5
-requires both `capitulo-5.tex` and `capitulo-5-tabelas.tex`, together with its
+`main.tex` for the data identification and execution traceability appendix. Chapter 6
+requires both `capitulo-6.tex` and `capitulo-6-tabelas.tex`, together with its
 figure PDFs. Keep the existing chapter inclusion in `main.tex` and recompile
 with pdfLaTeX after uploading the files. Local edits are not synchronized
 automatically.

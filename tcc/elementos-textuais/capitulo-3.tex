@@ -1,7 +1,7 @@
-\chapter{EVOLUÇÃO METODOLÓGICA DO PROJETO}
+\chapter{DESENVOLVIMENTO DA METODOLOGIA}
 \label{ch:evolucao}
 
-O desenvolvimento do projeto foi orientado pela necessidade de explicar mudanças que os diagnósticos iniciais não descreviam. A passagem para uma medida de deriva, a revisão dos procedimentos de mensuração e a consolidação das cadeias responderam a problemas observados nas reescritas e em sua avaliação. Este capítulo apresenta as evidências que fundamentaram essas decisões. Sua operacionalização é descrita no Capítulo \ref{ch:metodos}.
+O desenvolvimento do projeto foi orientado pela necessidade de explicar mudanças que os diagnósticos iniciais não descreviam. A passagem para uma medida de deriva, a revisão dos procedimentos de mensuração e a consolidação das cadeias responderam a problemas observados nas reescritas e em sua avaliação. Este capítulo apresenta as evidências que fundamentaram essas decisões. Os Capítulos \ref{ch:metodos} e \ref{ch:stdi} descrevem os procedimentos das rodadas finais e o cálculo do índice, respectivamente.
 
 \section{DOS DIAGNÓSTICOS BINÁRIOS À ANÁLISE DE DERIVA}
 \label{sec:diagnosticos-deriva}
@@ -46,7 +46,7 @@ A escolha do estimador afetivo enfrentou um problema distinto: sua adequação a
 
 No piloto entre BERT e LLM, trinta pares de simulação derivados de cinco notícias em seis cadeias anteriores apresentaram deriva VAD média de 0,01986 com BERT e 0,07167 com LLM. Nos vinte controles sintéticos, as médias foram 0,05450 e 0,06250, respectivamente. As diferenças mostraram que a escolha do estimador alterava a descrição afetiva dos mesmos textos. A maior variação não estabelecia maior acurácia, e o piloto antecede o \textit{prompt} afetivo adotado nas rodadas finais.
 
-Esse percurso levou à adoção de VAD por LLM em português e à manutenção de BERT e LLM no modo Dual em inglês. A escolha afetiva permaneceu independente da seleção do comparador estrutural: o STDI combina Cluster e LLM em inglês e utiliza o caminho LLM em português. Os procedimentos de avaliação e as regras de cálculo dessas configurações são apresentados no Capítulo \ref{ch:metodos}.
+Esse percurso levou à adoção de VAD por LLM em português e à manutenção de BERT e LLM no modo Dual em inglês. A escolha afetiva permaneceu independente da seleção do comparador estrutural: o STDI combina Cluster e LLM em inglês e utiliza o caminho LLM em português. As regras de cálculo do STDI para essas configurações são apresentadas no Capítulo \ref{ch:stdi}.
 
 \section{CONSOLIDAÇÃO DAS CADEIAS DE REESCRITA}
 \label{sec:consolidacao-cadeias}

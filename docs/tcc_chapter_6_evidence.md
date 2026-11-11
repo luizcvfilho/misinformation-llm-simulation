@@ -1,6 +1,6 @@
 # Chapter 6 evidence and review record
 
-Chapter source: `tcc/elementos-textuais/capitulo-6.tex`.
+Chapter source: `tcc/elementos-textuais/capitulo-7.tex`.
 The chapter develops the existing Discussion outline using the completed
 Chapters 1–5 and the current thesis writing plan. No model calls, simulations,
 extractions, numerical evaluations or statistical analyses were added.
@@ -110,9 +110,9 @@ word count decreased from 3,934 to 2,245 (42.9%).
 
 ## Overleaf mapping
 
-Replace `elementos-textuais/capitulo-6.tex` in the existing Overleaf project
+Replace `elementos-textuais/capitulo-7.tex` in the existing Overleaf project
 with the complete local chapter source. Keep the existing line
-`\input{elementos-textuais/capitulo-6.tex}` in root `main.tex`.
+`\input{elementos-textuais/capitulo-7.tex}` in root `main.tex`.
 Recompile with pdfLaTeX after replacing the file.
 
 No change is required to `main.tex`, `formatacao.tex`, the bibliography,

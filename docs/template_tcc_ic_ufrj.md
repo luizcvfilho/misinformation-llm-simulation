@@ -242,11 +242,12 @@ O template inclui cinco capítulos apenas como exemplo. A estrutura científica 
 
 1. Introdução;
 2. Fundamentação teórica e trabalhos relacionados;
-3. Evolução metodológica do projeto;
+3. Desenvolvimento da metodologia;
 4. Materiais e métodos;
-5. Resultados;
-6. Discussão;
-7. Conclusão.
+5. Proposta do STDI;
+6. Resultados;
+7. Discussão;
+8. Conclusão.
 
 Essa divisão é uma recomendação do plano de escrita do projeto, não uma exigência formal do template. Ela pode ser ajustada com o orientador. Cada novo capítulo deve ter seu próprio arquivo e ser incluído em `main.tex` com `\input{...}`.
 
@@ -424,8 +425,7 @@ Antes da versão final, confirmar com o orientador ou o IC/UFRJ:
 3. se as margens finais serão uniformes de 25 mm ou 30/30/20/20 mm;
 4. o procedimento vigente para gerar e inserir a ficha catalográfica;
 5. a composição e a forma definitiva da folha de aprovação;
-6. se evolução metodológica será um capítulo próprio ou parte de Materiais e métodos;
-7. quais listas opcionais serão mantidas;
-8. se o glossário será necessário;
-9. o título final, as palavras-chave e os dados completos de orientação e banca.
+6. quais listas opcionais serão mantidas;
+7. se o glossário será necessário;
+8. o título final, as palavras-chave e os dados completos de orientação e banca.
 

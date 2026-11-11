@@ -20,9 +20,9 @@ Outputs:
 - `output/analysis/tcc_chapter_5/`: CSV tables, case candidates, PNG previews
   and `manifest.json` with source hashes, versions, lexical rules and checks.
 - `tcc/figuras/chapter5/`: 13 PDF vector figures, with English chart labels.
-- `tcc/elementos-textuais/capitulo-5-tabelas.tex`: seven Portuguese numerical
+- `tcc/elementos-textuais/capitulo-6-tabelas.tex`: seven Portuguese numerical
   table macros placed by the chapter source.
-- `tcc/elementos-textuais/capitulo-5.tex`: manually authored Portuguese prose,
+- `tcc/elementos-textuais/capitulo-6.tex`: manually authored Portuguese prose,
   figure placement and qualitative case analysis with cross-references to the
   transcripts in Appendix B. Coverage is summarized in the chapter opening.
   The script does not overwrite this prose.

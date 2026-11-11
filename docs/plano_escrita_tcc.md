@@ -1,6 +1,6 @@
 # Plano de escrita do TCC orientado por evidências
 
-**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. Orienta a escrita dos capítulos 4–7 a partir das análises existentes e a preparação da versão de entrega.
+**Atualização de escopo: 19/10/2026.** Este documento concentra a pergunta de pesquisa, o desenho final, o histórico metodológico e o mapa de evidências para a redação. Orienta a escrita dos capítulos 4–8 a partir das análises existentes e a preparação da versão de entrega.
 
 ## 1. Pergunta, argumento e escopo consolidados
 
@@ -112,11 +112,11 @@ Não antecipar resultados estatísticos finais, afirmar validade geral dos pesos
 | Estimador neural utilizado | `robrokoolsvadbert`, ficha oficial do modelo. | Documenta BERT para regressão VAD e o idioma inglês; não é validação em português nem referência humana de verdade. A data de publicação não foi informada. |
 | Avaliação por LLM e repetição | `saha2026judgebudget`, `haldar2025ratingroulette`, `abdurahman2025primer`. | Repetição descreve variabilidade, sem validar pesos ou acurácia; três avaliações são decisão de orçamento. |
 
-Conferir a seção da fonte primária antes de associá-la a uma afirmação nos capítulos. A literatura pode recomendar validação humana sem que ela tenha sido realizada neste estudo; explicitar a diferença. Fórmulas e agregação pertencem ao capítulo 4. BERTopic só aparece se sustentar uma análise efetivamente usada, sem incorporação ao STDI.
+Conferir a seção da fonte primária antes de associá-la a uma afirmação nos capítulos. A literatura pode recomendar validação humana sem que ela tenha sido realizada neste estudo; explicitar a diferença. As fórmulas e a agregação do STDI pertencem ao capítulo 5. BERTopic só aparece se sustentar uma análise efetivamente usada, sem incorporação ao STDI.
 
-### 3.3 Evolução metodológica do projeto
+### 3.3 Desenvolvimento da metodologia
 
-**Função:** apresentar, em três seções, a passagem dos diagnósticos binários à análise de deriva, o desenvolvimento da mensuração estrutural e afetiva e a consolidação das cadeias. Explicitar os problemas observados, as evidências e as decisões resultantes, remetendo os procedimentos de execução e cálculo a Materiais e métodos. A extensão deve preservar esse encadeamento, sem impor duas páginas como limite rígido. Os registros históricos abaixo servem à conferência das evidências, sem exigir sua descrição detalhada no capítulo.
+**Função:** apresentar, em três seções, a passagem dos diagnósticos binários à análise de deriva, o desenvolvimento da mensuração estrutural e afetiva e a consolidação das cadeias. Explicitar os problemas observados, as evidências e as decisões resultantes, remetendo os procedimentos de execução a Materiais e métodos e o cálculo do índice à Proposta do STDI. A extensão deve preservar esse encadeamento, sem impor duas páginas como limite rígido. Os registros históricos abaixo servem à conferência das evidências, sem exigir sua descrição detalhada no capítulo.
 
 | Período | Etapa | Evidência e uso na redação |
 | --- | --- | --- |
@@ -158,29 +158,9 @@ O recorte de 25 saídas do plano anterior é outra execução, registrada em `ou
 
 Referências: `chuang2024opinion`, `frisch2024interaction`, `chen2025rpa`, `abdurahman2025primer`. Fontes internas: `docs/api_costs_and_cache.md`, `docs/llm_error_recovery.md`, resumos e proveniência.
 
-#### Extração e STDI
+#### Extração estrutural
 
 - Distinguir extração LLM e comparação posterior. Descrever tema, subtópicos, entidades, relações, asserção, polaridade, valores numéricos, enquadramento e contradição interna. Nem todo campo extraído tem peso próprio.
-- Identificar uso de Cluster, LLM e Dual. No Cluster, registrar encoder, corpus do agrupamento e regras de alinhamento/qualificadores. O avaliador LLM usa textos e estruturas com rubrica própria, sem checagem factual externa.
-- Manter quatro pesos de conteúdo de 0,25 e incrementos de contradição/VAD, cada um com força 0,20 da distância restante. São convenções do instrumento, sem calibração por anotadores.
-
-Forma operacional, com C como conteúdo, K como contradição e A como deriva VAD:
-
-```text
-C = (theme + subtopic + entity + relation) / 4
-J = C + (1 - C) * 0.20 * K
-F(S, A) = J + (1 - J) * 0.20 * A
-A_dual = (A_model + A_llm) / 2
-STDI_dual = (F(S_cluster, A_selected) + mean_j F(S_llm_j, A_selected)) / 2
-```
-
-As três avaliações estruturais reutilizam textos, estruturas e VAD. Promediar STDIs completos, sem aplicar a fórmula aos componentes médios. Em Dual/Dual, os ramos exibidos usam VAD Modelo e VAD LLM, respectivamente; o total reaplica VAD Dual aos dois ramos antes da média 50/50. A média dos ramos exibidos pode diferir do total final.
-
-Separar a quantidade configurada de avaliações das requisições efetivas: cada avaliação tem seu tratamento de tentativas após falha, pode reutilizar uma resposta compatível e pode ser dispensada pelo atalho registrado para textos idênticos. O cache preserva o resultado de uma operação anterior; não gera uma réplica independente. Conferir essas situações na proveniência, sem converter três avaliações solicitadas em três chamadas novas obrigatórias por par.
-
-Preservar contagens solicitadas/válidas, notas, justificativas, respostas e desvio padrão amostral. Repetição não equivale a repetir extração, VAD ou geração, nem comprova suficiência de três notas. Ausências não são zeros; não preencher um método com escores de outro. O agregado exige os componentes requeridos pela configuração. Desacordo entre métodos não é confiança calibrada.
-
-Distinguir o afastamento em relação ao original da mudança em relação ao pai efetivo.
 
 #### VAD: escolha e configuração final
 
@@ -215,26 +195,49 @@ Nas rodadas finais, comparar cenários e geradores de forma pareada por entrada 
 
 Entre corpora, distinguir idioma/conteúdo e método: inglês usa STDI/VAD Dual; português, LLM/LLM. O ramo LLM salvo em inglês pode oferecer procedimento semelhante ao português, mas não elimina diferenças de corpus. A comparação não isola efeito linguístico.
 
-### 3.5 Resultados
+### 3.5 Proposta do STDI
+
+- Identificar uso de Cluster, LLM e Dual. No Cluster, registrar encoder, corpus do agrupamento e regras de alinhamento/qualificadores. O avaliador LLM usa textos e estruturas com critérios definidos no prompt, sem checagem factual externa.
+- Manter quatro pesos de conteúdo de 0,25 e incrementos de contradição/VAD, cada um com força 0,20 da distância restante. São convenções do instrumento, sem calibração por anotadores.
+
+Forma operacional, com C como conteúdo, K como contradição e A como deriva VAD:
+
+```text
+C = (theme + subtopic + entity + relation) / 4
+J = C + (1 - C) * 0.20 * K
+F(S, A) = J + (1 - J) * 0.20 * A
+A_dual = (A_model + A_llm) / 2
+STDI_dual = (F(S_cluster, A_selected) + mean_j F(S_llm_j, A_selected)) / 2
+```
+
+As três avaliações estruturais reutilizam textos, estruturas e VAD. Promediar STDIs completos, sem aplicar a fórmula aos componentes médios. Em Dual/Dual, os ramos exibidos usam VAD Modelo e VAD LLM, respectivamente; o total reaplica VAD Dual aos dois ramos antes da média 50/50. A média dos ramos exibidos pode diferir do total final.
+
+Separar a quantidade configurada de avaliações das requisições efetivas: cada avaliação tem seu tratamento de tentativas após falha, pode reutilizar uma resposta compatível e pode ser dispensada pelo atalho registrado para textos idênticos. O cache preserva o resultado de uma operação anterior; não gera uma réplica independente. Conferir essas situações na proveniência, sem converter três avaliações solicitadas em três chamadas novas obrigatórias por par.
+
+Preservar contagens solicitadas/válidas, notas, justificativas, respostas e desvio padrão amostral. Repetição não equivale a repetir extração, VAD ou geração, nem comprova suficiência de três notas. Ausências não são zeros; não preencher um método com escores de outro. O agregado exige os componentes requeridos pela configuração. Desacordo entre métodos não é confiança calibrada.
+
+Distinguir o afastamento em relação ao original da mudança em relação ao pai efetivo.
+
+### 3.6 Resultados
 
 Organizar em blocos, priorizando as rodadas finais:
 
-**Resultados:** `tcc/elementos-textuais/capitulo-5.tex`, com seis tabelas geradas incluídas de `capitulo-5-tabelas.tex` e 11 figuras vetoriais incluídas de `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
+**Resultados:** `tcc/elementos-textuais/capitulo-6.tex`, com seis tabelas geradas incluídas de `capitulo-6-tabelas.tex` e 11 figuras vetoriais incluídas de `tcc/figuras/chapter5/`. A análise reproduzível está em `scripts/analyze_tcc_chapter_5.py`, com agregados e manifesto em `output/analysis/tcc_chapter_5/` e rastreabilidade em `docs/tcc_chapter_5_evidence.md`. O Capítulo 4 documenta os procedimentos adicionais. As configurações e os escores originais foram preservados, sem novas chamadas a modelos.
 
 O capítulo inclui evolução contra o original e incrementos, boxplots finais, contrastes pareados de continuações, sequências e geradores, decomposição e direção VAD, comparação Cluster/LLM em inglês com VAD próprio e comum, comparação dos corpora com LLM/LLM e seis casos qualitativos. As estatísticas são descritivas, sem testes de hipótese ou intervalos populacionais. Uma oscilação de STDI em versões lexicalmente equivalentes foi registrada como limite de mensuração, sem modificar os resultados salvos.
 
 1. Diagnósticos dos detectores como motivação, sem repetir extensamente o histórico.
 2. Procedimentos da comparação exploratória de VAD e da auditoria de casos controlados no Capítulo 4, com síntese dos resultados no Capítulo 3, como diagnósticos do desenvolvimento do instrumento separados das simulações finais.
-3. Comparação de métodos e inspeções qualitativas dos textos das rodadas finais no Capítulo 5, substituindo a seção prevista de validação humana.
+3. Comparação de métodos e inspeções qualitativas dos textos das rodadas finais no Capítulo 6, substituindo a seção prevista de validação humana.
 4. Cobertura e regressões somente quando sustentarem diagnóstico relevante, identificando grupos e sem interpretação como checagem factual.
 5. Cobertura de execução e comparação pareada das oito trajetórias nas seis rodadas finais, distinguindo gerador, corpus, STDI e VAD.
 6. Casos qualitativos que expliquem escores, mudanças, convergências e limites do índice.
 
 Cada tabela deve informar corpus, denominador, unidade, configuração e versão, além de incerteza quando disponível e adequada. Não inventar intervalos, testes ou métricas ausentes das análises. Não transportar médias históricas às tabelas finais.
 
-### 3.6 Discussão
+### 3.7 Discussão
 
-**Primeira redação implementada:** `tcc/elementos-textuais/capitulo-6.tex`, com interpretação das trajetórias, componentes, geradores e dimensão afetiva; comparação com a literatura; ameaças à validade; e alcance dos achados. O texto distingue preservação local de recuperação do original e separa variação textual de variação da mensuração. A rastreabilidade está em `docs/tcc_chapter_6_evidence.md`. O capítulo utiliza os resultados existentes, sem novas simulações, avaliações ou alterações bibliográficas, e o projeto completo compilou com sucesso. A Conclusão foi desenvolvida posteriormente, conforme a Seção 3.7.
+**Primeira redação implementada:** `tcc/elementos-textuais/capitulo-7.tex`, com interpretação das trajetórias, componentes, geradores e dimensão afetiva; comparação com a literatura; ameaças à validade; e alcance dos achados. O texto distingue preservação local de recuperação do original e separa variação textual de variação da mensuração. A rastreabilidade está em `docs/tcc_chapter_6_evidence.md`. O capítulo utiliza os resultados existentes, sem novas simulações, avaliações ou alterações bibliográficas, e o projeto completo compilou com sucesso. A Conclusão foi desenvolvida posteriormente, conforme a Seção 3.8.
 
 Perguntas orientadoras, a responder com as análises existentes:
 
@@ -247,9 +250,9 @@ Discutir prefixos compartilhados, cache, falta de repetições independentes da 
 
 Comparar alvo e limites com `liu2025stepwise` e `mohamed2025broken`. Usar `chuang2024opinion`, `frisch2024interaction`, `abdurahman2025primer` e fontes de avaliação por LLM para contextualizar limitações, sem atribuir à literatura resultados próprios.
 
-### 3.7 Conclusão
+### 3.8 Conclusão
 
-**Primeira redação implementada em 22/10/2026:** `tcc/elementos-textuais/capitulo-7.tex`, com resposta à pergunta de pesquisa, contribuições e limites do estudo e trabalhos futuros. A síntese distingue os contrastes de perspectiva das comparações de ordem, preservação local de recuperação do original e deriva de veracidade externa. Os números retomam os resultados já apresentados no Capítulo 5; não foram acrescentados experimentos, notas humanas ou referências. A rastreabilidade e a conferência de compilação e apresentação estão em `docs/tcc_chapter_7_evidence.md`. O capítulo ocupa quatro páginas no PDF de revisão, e o projeto completo compilou com sucesso.
+**Primeira redação implementada em 22/10/2026:** `tcc/elementos-textuais/capitulo-8.tex`, com resposta à pergunta de pesquisa, contribuições e limites do estudo e trabalhos futuros. A síntese distingue os contrastes de perspectiva das comparações de ordem, preservação local de recuperação do original e deriva de veracidade externa. Os números retomam os resultados apresentados no capítulo de Resultados; não foram acrescentados experimentos, notas humanas ou referências. A rastreabilidade e a conferência de compilação e apresentação estão em `docs/tcc_chapter_7_evidence.md`. O capítulo ocupa quatro páginas no PDF de revisão, e o projeto completo compilou com sucesso.
 
 - Responder à pergunta no alcance das seis rodadas e análises realizadas.
 - Apresentar contribuição instrumental com avaliação quantitativa/qualitativa delimitada, sem validação humana numérica ou validade geral.

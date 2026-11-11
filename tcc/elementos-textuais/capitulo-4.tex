@@ -42,7 +42,7 @@ e inspeção qualitativa dos textos.}}
 \legend{Fonte: elaboração própria.}
 \end{figure}
 
-A exposição acompanha essa organização: apresenta os dados, os modelos e o protocolo das cadeias, descreve a extração e o VAD e, em seguida, define o STDI e os procedimentos de avaliação. Os prompts completos estão no Apêndice \ref{ap:prompts}. A identificação dos dados, a localização dos registros e os procedimentos para recompor as análises estão descritos no Apêndice \ref{ap:rastreabilidade}. Os diagnósticos exploratórios que fundamentaram a escolha dos procedimentos são sintetizados na Seção \ref{sec:desenvolvimento-stdi}, separados das simulações finais.
+A exposição acompanha essa organização. Este capítulo apresenta os dados, os modelos, o protocolo das cadeias, a extração estrutural, a estimação afetiva e os procedimentos de avaliação. O Capítulo \ref{ch:stdi} detalha o cálculo dos escores de deriva. Os prompts completos estão no Apêndice \ref{ap:prompts}. A identificação dos dados, a localização dos registros e os procedimentos para recompor as análises estão descritos no Apêndice \ref{ap:rastreabilidade}. Os diagnósticos exploratórios que fundamentaram a escolha dos procedimentos são sintetizados na Seção \ref{sec:desenvolvimento-stdi}, separados das simulações finais.
 
 \section{DADOS}
 \label{sec:metodos-dados}
@@ -200,113 +200,6 @@ Promediam-se as derivas normalizadas, e não os vetores brutos antes de calcular
 
 Dimensões ausentes permanecem indisponíveis, e o VAD Dual exige ambos os estimadores completos. Para interpretar a direção afetiva, consideram-se os valores e as diferenças com sinal, pois o componente do STDI usa magnitudes absolutas. NRC e MEmoLon integram os diagnósticos de escolha discutidos no Capítulo \ref{ch:evolucao}, mas não entram no cálculo das rodadas finais.
 
-\section{STRUCTURED TOPIC DRIFT INDEX}
-\label{sec:metodos-stdi}
-
-O Structured Topic Drift Index (STDI) combina quatro componentes de conteúdo, um sinal de contradição interna e a deriva afetiva. Sejam $T$, $U$, $E$ e $R$ as mudanças de tema, subtópicos, entidades e relações, respectivamente; $K$ representa contradição interna e $A$ a deriva VAD. Todos os componentes completos pertencem ao intervalo $[0,1]$. A parcela de conteúdo é
-\begin{equation}
- C = \frac{T+U+E+R}{4}.
- \label{eq:stdi-conteudo}
-\end{equation}
-A inclusão da contradição produz o escore intermediário pela função $J(C,K)$, acrescentando uma fração da distância restante até um:
-\begin{equation}
- J(C,K) = C + (1-C)\,0{,}20\,K.
- \label{eq:stdi-contradicao}
-\end{equation}
-Por fim, a deriva afetiva é incorporada ao escore intermediário obtido. Denotando esse valor por $J$, a função $F(J,A)$ representa o STDI completo:
-\begin{equation}
- F(J,A) = J + (1-J)\,0{,}20\,A.
- \label{eq:stdi-completo}
-\end{equation}
-No cálculo adotado, os quatro componentes de conteúdo recebem pesos iguais de 0,25. A contradição interna e a deriva afetiva são incorporadas em sequência, cada uma com coeficiente de 0,20 sobre a distância restante até um. Os incrementos não equivalem a parcelas fixas de 20\% do total: sua contribuição diminui conforme o escore anterior se aproxima de um. Por construção, $F(J,A)$ permanece em $[0,1]$. Essa notação permite aplicar a mesma função aos escores intermediários dos comparadores e à fonte afetiva selecionada, definida na Seção \ref{sec:metodos-vad}.
-
-O índice é uma medida operacional de afastamento, e não uma distância matemática cuja simetria e desigualdade triangular tenham sido demonstradas. Em particular, o ajuste numérico do Cluster utiliza a magnitude de referência, e a contradição diz respeito ao texto comparado, não a uma distância entre dois valores de contradição. No caso especial de texto e contexto idênticos, o fluxo registra um atalho com escore zero e dispensa nova consulta ao avaliador estrutural.
-
-Para uma trajetória com texto inicial $x_0$ e versões $x_1,\ldots,x_4$, distinguem-se duas medidas:
-\begin{align}
- O_t &= \mathrm{STDI}(x_0,x_t), \label{eq:stdi-original}\\
- I_t &= \mathrm{STDI}(x_{t-1},x_t). \label{eq:stdi-incremental}
-\end{align}
-$O_t$ descreve o afastamento da referência inicial, enquanto $I_t$ descreve a mudança produzida pela etapa em relação ao pai efetivo. Nas árvores, cada incremento utiliza o pai do nó, incluindo o prefixo compartilhado. Na primeira posição, as duas comparações usam o texto original como referência. Nas posições seguintes, uma mudança local pequena pode coexistir com afastamento elevado da origem, caso a etapa preserve uma mensagem já transformada.
-
-O cálculo dos componentes estruturais segue um dos dois caminhos descritos a seguir. Quando ambos são selecionados, seus escores completos são combinados no modo Dual.
-
-\subsection{Caminho Cluster}
-
-O caminho Cluster utiliza estruturas extraídas pelo LLM e embeddings de \path{sentence-transformers/all-MiniLM-L6-v2}. A representação de sentenças e a comparação por similaridade cosseno se apoiam no procedimento de Sentence-BERT \cite{reimers2019sbert}. MiniLM fundamenta a família de modelos compactos que dá origem ao encoder utilizado \cite{wang2020minilm}. Os artigos fundamentam essas representações, mas as regras de alinhamento e de agregação descritas a seguir pertencem à implementação deste estudo.
-
-Nesse caminho, os quatro componentes de conteúdo são calculados pelas comparações descritas a seguir. O componente $K$, por sua vez, utiliza o escore de contradição interna atribuído pelo LLM durante a extração do texto comparado, sem ser calculado pela similaridade dos embeddings.
-
-Para preparar as comparações de cada árvore, o sistema reúne as expressões extraídas dos textos originais e das reescritas das 50 entradas. Essas expressões são organizadas em listas separadas de temas, subtópicos, entidades, relações e ações. Uma expressão repetida é representada por um único vetor, reutilizado nas comparações em que ela aparece. Essa preparação atende tanto à comparação de uma versão com o original quanto à comparação com a mensagem recebida do nó anterior, sem remover informações das estruturas individuais.
-
-O modelo de embeddings transforma cada expressão em um vetor numérico que permite comparar sua proximidade semântica com outras expressões. Para isso, o texto da expressão é dividido em tokens, com limite de 512 tokens por expressão. O vetor resulta da média das representações dos tokens, ignorando o preenchimento usado para organizar os lotes, conforme indicado pela máscara de atenção. Em seguida, o vetor é normalizado para ter comprimento unitário. O encoder é utilizado com seus parâmetros pré-treinados, sem treinamento adicional para atribuir escores de deriva aos pares do estudo.
-
-A pontuação dos componentes é calculada pela similaridade cosseno entre esses vetores e pelas regras de correspondência descritas a seguir. O K-means também é executado sobre as listas de expressões, mas seus resultados servem apenas para registrar identificadores de grupos para inspeção.\footnote{O agrupamento utiliza dez inicializações e estado aleatório 42. Quando o número de grupos não é informado, adota-se $\min(\max(2,\lceil\sqrt{n}\rceil),n)$ para $n>1$, em que $n$ é o número de expressões distintas da lista. O resultado é limitado pelo número de vetores distintos. Quando há apenas um vetor distinto, forma-se um único grupo.} Esses identificadores não entram no cálculo dos escores: pertencer ao mesmo grupo ou a grupos diferentes não determina a deriva. Assim, o nome Cluster identifica esse caminho da implementação, mas o cálculo se baseia nas similaridades dos embeddings e nos ajustes estruturais. Uma diferença de domínio temático também não impõe automaticamente deriva máxima.
-
-Para o tema principal, rótulos iguais após normalização recebem deriva zero. Nos demais casos, utiliza-se um menos a similaridade cosseno limitada a $[0,1]$.
-
-Para subtópicos e entidades, é necessário comparar duas listas de itens, que podem ter tamanhos diferentes. Calcula-se a similaridade de cada item da referência com cada item da reescrita. O sistema escolhe primeiro o par mais semelhante e marca seus dois itens como utilizados. Em seguida, escolhe o próximo par mais semelhante entre os itens ainda disponíveis, repetindo o processo até que uma das listas não tenha mais itens livres. Cada item participa de apenas uma correspondência. Esse procedimento é chamado guloso porque prioriza a melhor correspondência disponível em cada passo, sem revisar as escolhas anteriores.
-
-As similaridades das correspondências escolhidas são somadas, e o resultado é dividido pelo número de itens da maior lista. Itens sem correspondência contribuem com zero para a soma, mas permanecem considerados no denominador. Assim, omissões e adições reduzem a similaridade agregada. A deriva do componente é calculada como um menos essa similaridade.
-
-Como exemplo hipotético, considere que o original contenha os subtópicos saúde, educação e transporte público, enquanto a reescrita apresente assistência médica e ensino. Suponha que o procedimento selecione saúde--assistência médica, com similaridade de 0,90, e educação--ensino, com similaridade de 0,80. Transporte público fica sem correspondência. Como a maior lista tem três itens, a deriva é
-\[
- d = 1-\frac{0{,}90+0{,}80+0}{3} \approx 0{,}4333.
-\]
-Os valores são apenas ilustrativos. O exemplo mostra que a ausência de um subtópico entra no cálculo mesmo quando os demais encontram correspondências semelhantes. Para entidades, aplica-se o mesmo procedimento. Quando ambas as listas estão vazias, atribui-se deriva zero. Quando apenas uma está vazia, atribui-se deriva um.
-
-Nas relações, o núcleo semântico combina similaridades da relação completa, do sujeito, da ação e do objeto, com pesos 0,45, 0,25, 0,15 e 0,15. A comparação da ação base separa negação explícita e duração registrada, preservando atribuições e finalidades. Quando ambas as ações são intransitivas, a ausência conjunta de objeto não é tratada como uma diferença. O alinhamento guloso dos núcleos ocorre antes dos ajustes de qualificadores.
-
-Se $d_s$ é a distância semântica de uma relação alinhada e $\delta_p$ vale zero para polaridades conhecidas iguais e um para polaridades conhecidas diferentes, aplica-se
-\begin{equation}
- d_p = 0{,}80d_s + 0{,}20\delta_p.
- \label{eq:cluster-polaridade}
-\end{equation}
-Essa regra pode reduzir a distância quando as polaridades coincidem, mesmo que outros aspectos da relação tenham mudado. Não há uma etapa adicional que exija equivalência de predicados para conceder essa redução. Relações sem correspondência contribuem com distância um, sem desconto de polaridade.
-
-Valores numéricos correspondentes são alinhados pelo papel dentro da relação já pareada, após normalização de unidades compatíveis. Para valores escalares exatos, a mudança é
-\begin{equation}
- d_v = \min\left(\frac{|v'-v|}{|v|},1\right), \qquad v\ne 0.
- \label{eq:cluster-numerico}
-\end{equation}
-Dois zeros recebem zero. A passagem de zero para um valor não nulo recebe um. Adições e omissões numéricas explícitas contribuem com um. Entre várias mudanças comparáveis de uma relação, utiliza-se o máximo, $d_n$, e não a média. O ajuste final é
-\begin{equation}
- d_r = d_p + (1-d_p)\,0{,}20\,d_n.
- \label{eq:cluster-relacao}
-\end{equation}
-Datas completas e identificadores são comparados por igualdade, sem variação percentual. Unidades monetárias exigem a mesma moeda e não envolvem conversão cambial. Medidas aproximadas, ambíguas ou incompatíveis mantêm diagnóstico de indisponibilidade do ajuste numérico. Nesse caso, conserva-se a distância semântica ajustada por polaridade, sem inventar um valor. A deriva de relações resulta da soma das distâncias alinhadas e das penalizações por relações excedentes, dividida pelo tamanho da maior lista. A versão estruturada desse caminho é \path{cluster_v4}.
-
-\subsection{Caminho LLM e avaliações repetidas}
-
-O avaliador estrutural LLM recebe os dois textos completos e suas estruturas, com o prompt \path{structured_judge_v5}. Os metadados técnicos da extração, como o modelo utilizado e a versão do prompt, são preservados nos registros, mas não são enviados ao avaliador LLM como parte das estruturas. Os demais campos estruturais permanecem disponíveis. O avaliador não recebe os escores do Cluster, as notas das outras avaliações ou o rótulo da perspectiva e deve resolver divergências entre estruturas e textos com base nos textos. Não se solicita consulta a evidências externas.
-
-Para cada um dos cinco componentes estruturais, o \textit{prompt} admite $0$, $0{,}25$, $0{,}5$, $0{,}75$ ou $1$, acompanhados de justificativas. Nos componentes de conteúdo, os níveis representam equivalência, mudança leve de ênfase ou especificidade, mudança relevante no mesmo contexto, mudança forte e diferença essencial. Para contradição interna, representam ausência, tensão periférica, contradição parcial, contradição forte em alegação importante e contradição central. A avaliação de relações já considera papéis, causalidade, atribuições, negação, números e omissões. Os ajustes numéricos e de polaridade do Cluster não são aplicados novamente ao escore LLM.
-
-Foram configuradas três avaliações estruturais por par, reutilizando textos, extrações e VAD. A repetição permite descrever a variação do mesmo avaliador, tema examinado por \citeonline{haldar2025ratingroulette}. Consultas repetidas para estimar médias também são discutidas por \citeonline{saha2026judgebudget}. O presente estudo adota quantidade fixa por decisão de orçamento e não implementa a alocação adaptativa desse trabalho.
-
-Para cada uma das três avaliações válidas, calcula-se o escore intermediário $J_j=J(C_j,K_j)$, em que $C_j$ é a média dos quatro componentes de conteúdo e $K_j$ é o componente de contradição interna daquela avaliação. Mantendo a mesma deriva afetiva selecionada $A$, calcula-se a média dos escores completos:
-\begin{equation}
- \overline{F}_{\mathrm{LLM}}(A)=\frac{1}{3}\sum_{j=1}^{3}F(J_j,A).
- \label{eq:stdi-llm-media}
-\end{equation}
-Portanto, a média é realizada sobre os STDIs completos. Aplicar a fórmula aos componentes médios poderia produzir outro resultado, devido à agregação não linear. Preservam-se as notas individuais, os estados, as justificativas, as quantidades solicitada e válida e o desvio padrão amostral, quando há pelo menos duas notas disponíveis. O desvio padrão descreve a dispersão das notas do avaliador.
-
-A conclusão do agregado exige todas as avaliações solicitadas e VAD completo. Falhas não entram na média como zeros. Respostas válidas podem ser recuperadas do cache por avaliação, e uma tentativa após falha busca concluir a mesma avaliação. O atalho de textos idênticos é registrado separadamente e dispensa chamadas. Por isso, três avaliações configuradas não implicam três requisições novas em todo par.
-
-\subsection{Combinação Dual e fonte afetiva selecionada}
-
-Nas rodadas inglesas, o STDI selecionado é Dual. Seja $J_{\mathrm{Cl}}$ o escore intermediário do Cluster, calculado a partir de seus componentes de conteúdo e de contradição interna pela Equação \ref{eq:stdi-contradicao}. O escore completo é
-\begin{equation}
- \mathrm{STDI}_{\mathrm{Dual}}=
- \frac{F(J_{\mathrm{Cl}},A_{\mathrm{sel}})+\overline{F}_{\mathrm{LLM}}(A_{\mathrm{sel}})}{2},
- \label{eq:stdi-dual}
-\end{equation}
-com pesos iguais para os dois caminhos. Nas rodadas brasileiras, o STDI selecionado corresponde apenas à Equação \ref{eq:stdi-llm-media}, com VAD LLM. O identificador \path{dual_stdi_v6} designa a versão do fluxo. A configuração registrada determina quais caminhos foram selecionados.
-
-Na configuração Dual/Dual, os resultados individuais registrados utilizam fontes afetivas diferentes: o ramo Cluster combina seus componentes estruturais com VAD BERT, enquanto o ramo LLM utiliza VAD LLM. Para obter o STDI Dual, o sistema recalcula os escores completos dos dois caminhos utilizando a mesma deriva VAD Dual e, depois, calcula sua média, conforme a Equação \ref{eq:stdi-dual}. Por isso, tirar diretamente a média dos dois resultados individuais exibidos pode produzir um valor diferente do agregado final.
-
-O STDI Dual somente é concluído quando os dois caminhos estruturais e as estimativas afetivas exigidas estão disponíveis. Se o Cluster produzir um resultado válido, mas o caminho LLM não puder ser concluído, o resultado do Cluster permanece registrado e o Dual fica indisponível.
-
 \section{PROCEDIMENTOS DE AVALIAÇÃO E ANÁLISE}
 \label{sec:metodos-analise}
 
@@ -330,4 +223,4 @@ Também foi preparado um conjunto separado de 18 pares de frases sintéticas par
 
 A inspeção qualitativa relaciona os escores ao conteúdo recebido e produzido. O pesquisador lê o original e a reescrita e consulta as estruturas, os componentes e as justificativas do avaliador LLM. Essa leitura distingue mudanças textuais, como a inclusão de um motivo ou a alteração de um número, de problemas de processamento, como uma entidade preservada que não foi extraída. A interpretação considera a versão do instrumento utilizada em cada avaliação.
 
-O Capítulo \ref{ch:resultados} apresenta as comparações e os casos das seis rodadas finais. Sua recomposição a partir das respostas salvas segue os procedimentos do Apêndice \ref{ap:rastreabilidade}.
+O Capítulo \ref{ch:stdi} define o índice empregado nessas comparações. O Capítulo \ref{ch:resultados} apresenta os resultados e os casos das seis rodadas finais, que podem ser recompostos a partir das respostas salvas conforme o Apêndice \ref{ap:rastreabilidade}.

@@ -1,4 +1,4 @@
-"""Reproduce Chapter 5 tables and figures from the six frozen final runs.
+"""Reproduce results chapter tables and figures from the six frozen final runs.
 
 Run with ``uv run --with matplotlib python scripts/analyze_tcc_chapter_5.py``.
 No model is loaded and no API is called. All analyses are descriptive.
@@ -917,7 +917,7 @@ def export_latex_tables(paths: pd.DataFrame, tables: dict[str, pd.DataFrame]) ->
         "50 notícias por corpus e gerador. O desfecho é a média dos oito STDIs finais LLM/LLM "
         "de cada notícia. Números são expressões distintas com algarismos.",
     )
-    target = ROOT / "tcc/elementos-textuais/capitulo-5-tabelas.tex"
+    target = ROOT / "tcc/elementos-textuais/capitulo-6-tabelas.tex"
     target.write_text("\n\n".join(definitions) + "\n", encoding="utf-8")
 
 

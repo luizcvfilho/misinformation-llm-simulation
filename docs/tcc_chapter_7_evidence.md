@@ -1,7 +1,7 @@
 # Chapter 7 evidence and review record
 
 Prepared on 2026-10-22 (America/Sao_Paulo).
-Chapter source: `tcc/elementos-textuais/capitulo-7.tex`.
+Chapter source: `tcc/elementos-textuais/capitulo-8.tex`.
 
 The Conclusion synthesizes the completed Chapters 1–6 and answers the research
 question within the scope recorded in `docs/plano_escrita_tcc.md`. It contains
@@ -78,9 +78,9 @@ belief, exposure and sharing remain separate targets from textual drift.
 
 ## Overleaf mapping
 
-Replace the complete contents of `elementos-textuais/capitulo-7.tex` in the
+Replace the complete contents of `elementos-textuais/capitulo-8.tex` in the
 existing Overleaf project with the local chapter source. Root `main.tex`
-already contains `\input{elementos-textuais/capitulo-7.tex}`; preserve that line.
+already contains `\input{elementos-textuais/capitulo-8.tex}`; preserve that line.
 Recompile with pdfLaTeX after uploading the source.
 
 No change is required to `main.tex`, `formatacao.tex`, figures or bibliography.
